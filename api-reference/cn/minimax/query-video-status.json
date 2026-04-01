@@ -1,0 +1,123 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Query Video Status",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas 视频任务状态查询子文档。项目入口为 `/v1/videos/{task_id}`，网关最终会调用上游 `GET https://api.minimax.io/v1/query/video_generation?task_id=...`。"
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "当前 new-api 网关实例"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Video",
+      "description": "MiniMax Overseas 视频任务状态查询"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "查询 MiniMax Overseas 视频任务状态",
+        "description": "查询 MiniMax Overseas 视频任务的最新状态。\n\n项目响应使用统一 OpenAI 风格任务对象。对于已完成任务，`metadata.url` 通常会返回网关代理下载地址；如果需要直接获取成品内容，请继续调用 `/v1/videos/{task_id}/content`。",
+        "operationId": "minimaxOverseasQueryVideoStatus",
+        "tags": [
+          "MiniMax Overseas Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "公开视频任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAIVideo"
+                },
+                "examples": {
+                  "completed": {
+                    "summary": "任务完成",
+                    "value": {
+                      "id": "task_abc123",
+                      "object": "video",
+                      "model": "MiniMax-Hailuo-2.3",
+                      "status": "completed",
+                      "progress": 100,
+                      "created_at": 1742515200,
+                      "completed_at": 1742515235,
+                      "metadata": {
+                        "url": "https://api.example.com/v1/videos/task_abc123/content"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "OpenAIVideo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "completed"
+          },
+          "progress": {
+            "type": "integer",
+            "example": 100
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "completed_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

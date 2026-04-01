@@ -1,0 +1,224 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Text to Image",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas 文生图渠道子文档。该文档是项目统一图像接口的 MiniMax Overseas 视图，只描述当前项目已经实现、且与 MiniMax 官方文生图能力对应的字段子集。\n\n项目入口仍为 `/v1/images/generations`，网关会把本请求转换为上游 `POST https://api.minimax.io/v1/image_generation`。"
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "当前 new-api 网关实例"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Image",
+      "description": "MiniMax Overseas 文生图能力"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "MiniMax Overseas 文生图",
+        "description": "该接口仅适用于 MiniMax Overseas 文生图能力。\n\n当前能力边界：\n- 仅支持模型 `image-01`\n- 已实现字段：`model`、`prompt`、`aspect_ratio`、`width`、`height`、`response_format`、`seed`、`n`、`prompt_optimizer`\n- 统一入口中的 `response_format=b64_json` 会被映射为 MiniMax 官方的 `response_format=base64`",
+        "operationId": "minimaxOverseasTextToImage",
+        "tags": [
+          "MiniMax Overseas Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MiniMaxOverseasTextToImageRequest"
+              },
+              "examples": {
+                "basic_request": {
+                  "summary": "基础请求",
+                  "value": {
+                    "model": "image-01",
+                    "prompt": "A cinematic sunrise over a calm harbor",
+                    "aspect_ratio": "16:9",
+                    "response_format": "b64_json",
+                    "seed": 0,
+                    "n": 1,
+                    "prompt_optimizer": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功，返回统一图像响应结构。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MiniMaxOverseasImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "MiniMaxOverseasTextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "image-01"
+            ],
+            "description": "MiniMax Overseas 文生图模型。当前项目仅实现 `image-01`。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "图像生成提示词。"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "目标宽高比。"
+          },
+          "width": {
+            "type": "integer",
+            "description": "目标宽度。"
+          },
+          "height": {
+            "type": "integer",
+            "description": "目标高度。"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "统一响应格式。`b64_json` 会被网关映射为 MiniMax 官方的 `base64`。"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "随机种子。显式传 `0` 会被保留。"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9,
+            "description": "期望返回的图片数量。"
+          },
+          "prompt_optimizer": {
+            "type": "boolean",
+            "description": "是否启用提示词优化。显式传 `false` 会被保留。"
+          }
+        }
+      },
+      "MiniMaxOverseasImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MiniMaxOverseasImageData"
+            }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MiniMaxOverseasImageMetadata"
+          }
+        }
+      },
+      "MiniMaxOverseasImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "当上游返回 URL 时使用。对应 MiniMax 官方 `data.image_urls[*]`。"
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "当上游返回 Base64 时使用。对应 MiniMax 官方 `data.image_base64[*]`。"
+          }
+        }
+      },
+      "MiniMaxOverseasImageMetadata": {
+        "type": "object",
+        "properties": {
+          "provider_request_id": {
+            "type": "string",
+            "description": "对应 MiniMax 官方 `id`。"
+          },
+          "provider_status_code": {
+            "type": "integer",
+            "description": "对应 MiniMax 官方 `base_resp.status_code`。"
+          },
+          "provider_status_msg": {
+            "type": "string",
+            "description": "对应 MiniMax 官方 `base_resp.status_msg`。"
+          },
+          "success_count": {
+            "type": "integer",
+            "description": "对应 MiniMax 官方 `metadata.success_count`。"
+          },
+          "failed_count": {
+            "type": "integer",
+            "description": "对应 MiniMax 官方 `metadata.failed_count`。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

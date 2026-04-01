@@ -1,0 +1,172 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Text to Video",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas 文生视频渠道子文档。该文档是项目统一视频接口的 MiniMax Overseas 视图，只描述当前项目已经实现、且与 MiniMax 官方文生视频能力对应的字段子集。\n\n项目入口为 `/v1/videos`，网关最终会调用上游 `POST https://api.minimax.io/v1/video_generation`。公开 `seconds` 会映射到上游 `duration`，公开 `size` 会映射到上游 `resolution`。"
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "当前 new-api 网关实例"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Video",
+      "description": "MiniMax Overseas 文生视频能力"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "MiniMax Overseas 文生视频",
+        "description": "该接口仅适用于 MiniMax Overseas 文生视频能力。\n\n当前能力边界：\n- 支持模型 `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-02`、`T2V-01-Director`、`T2V-01`\n- 已实现字段：`model`、`prompt`、`seconds`、`size`\n- 官方可选字段 `prompt_optimizer`、`fast_pretreatment`、`callback_url`、`aigc_watermark` 通过统一入口 `metadata.*` 透传",
+        "operationId": "minimaxOverseasTextToVideo",
+        "tags": [
+          "MiniMax Overseas Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToVideoRequest"
+              },
+              "examples": {
+                "basic_request": {
+                  "summary": "基础文生视频请求",
+                  "value": {
+                    "model": "MiniMax-Hailuo-2.3",
+                    "prompt": "A woman walks through a neon street in the rain.",
+                    "seconds": "6",
+                    "size": "1080P",
+                    "metadata": {
+                      "prompt_optimizer": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回统一 OpenAI 风格视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAIVideo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法，例如缺少 `prompt`，或传入不支持文生视频的模型。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TextToVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "MiniMax-Hailuo-2.3",
+              "MiniMax-Hailuo-02",
+              "T2V-01-Director",
+              "T2V-01"
+            ],
+            "description": "MiniMax Overseas 文生视频模型。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "视频提示词。"
+          },
+          "seconds": {
+            "type": "string",
+            "description": "期望时长（秒）。网关会映射到上游 `duration`。"
+          },
+          "size": {
+            "type": "string",
+            "description": "期望分辨率。网关会映射到上游 `resolution`。常见值包括 `768P`、`1080P`。"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "MiniMax 官方扩展字段透传区。当前项目支持 `prompt_optimizer`、`fast_pretreatment`、`callback_url`、`aigc_watermark`。",
+            "additionalProperties": true
+          }
+        }
+      },
+      "OpenAIVideo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "queued"
+          },
+          "progress": {
+            "type": "integer",
+            "example": 0
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {}
+        }
+      }
+    }
+  }
+}

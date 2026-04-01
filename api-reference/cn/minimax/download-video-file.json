@@ -1,0 +1,79 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Download Video File",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas 视频文件下载子文档。项目入口为 `/v1/videos/{task_id}/content`，网关会在请求时实时调用上游 `GET https://api.minimax.io/v1/files/retrieve` 换取最新 `download_url`，再代理输出视频内容。"
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "当前 new-api 网关实例"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Video",
+      "description": "MiniMax Overseas 视频内容下载"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}/content": {
+      "get": {
+        "summary": "下载 MiniMax Overseas 视频内容",
+        "description": "下载已完成的视频内容。\n\n对 MiniMax Overseas 渠道，网关不会把上游短时效 `download_url` 持久化为稳定结果地址，而是在每次下载时基于内部保存的 `file_id` 实时换取最新下载链接，因此更适合长期稳定访问。",
+        "operationId": "minimaxOverseasDownloadVideoFile",
+        "tags": [
+          "MiniMax Overseas Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "公开视频任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "下载成功，直接返回视频二进制流。",
+            "content": {
+              "video/mp4": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在，或任务尚未生成可下载内容。"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

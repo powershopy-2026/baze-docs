@@ -1,0 +1,247 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Image to Image",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas 图生图渠道子文档。该文档只保留当前项目已经实现、且与 MiniMax 官方图生图能力对应的字段。\n\n项目入口为 `/v1/images/edits`，网关最终会调用上游 `POST https://api.minimax.io/v1/image_generation`。\n\n说明：项目级统一接口还接受 JSON `image` 和 multipart `image` 作为兼容输入，网关会把这些输入标准化为 MiniMax 官方 `subject_reference[].image_file`。这些兼容输入的公开边界在项目级文档中说明，此处仅展开官方能力字段子集。"
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "当前 new-api 网关实例"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Image",
+      "description": "MiniMax Overseas 图生图能力"
+    }
+  ],
+  "paths": {
+    "/v1/images/edits": {
+      "post": {
+        "summary": "MiniMax Overseas 图生图",
+        "description": "该接口仅适用于 MiniMax Overseas 图生图能力。\n\n当前能力边界：\n- 支持模型 `image-01` 与 `image-01-live`\n- 官方字段子集：`model`、`prompt`、`subject_reference`、`aspect_ratio`、`width`、`height`、`response_format`、`seed`、`n`、`prompt_optimizer`\n- `subject_reference` 只在 `application/json` 下公开支持\n- `mask` 不属于本期实现能力，不能出现在该渠道子文档中",
+        "operationId": "minimaxOverseasImageToImage",
+        "tags": [
+          "MiniMax Overseas Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MiniMaxOverseasImageToImageRequest"
+              },
+              "examples": {
+                "official_subject_reference": {
+                  "summary": "使用官方 subject_reference",
+                  "value": {
+                    "model": "image-01-live",
+                    "prompt": "Turn this portrait into a manga cover",
+                    "subject_reference": [
+                      {
+                        "type": "character",
+                        "image_file": "https://example.com/reference.png"
+                      }
+                    ],
+                    "response_format": "url",
+                    "n": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功，返回统一图像响应结构。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MiniMaxOverseasImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法，例如缺少 `subject_reference`，或统一入口兼容字段组合不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "MiniMaxOverseasImageToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt",
+          "subject_reference"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "image-01",
+              "image-01-live"
+            ],
+            "description": "MiniMax Overseas 图生图模型。当前项目支持 `image-01` 与 `image-01-live`。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "图像编辑提示词。"
+          },
+          "subject_reference": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/SubjectReferenceItem"
+            },
+            "description": "MiniMax 官方图生图字段。项目统一入口中的 JSON `image` 或 multipart `image` 最终也会被转换成该结构。"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "目标宽高比。"
+          },
+          "width": {
+            "type": "integer",
+            "description": "目标宽度。"
+          },
+          "height": {
+            "type": "integer",
+            "description": "目标高度。"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "统一响应格式。`b64_json` 会被网关映射为 MiniMax 官方 `base64`。"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "随机种子。"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9,
+            "description": "期望返回的图片数量。"
+          },
+          "prompt_optimizer": {
+            "type": "boolean",
+            "description": "是否启用提示词优化。"
+          }
+        }
+      },
+      "SubjectReferenceItem": {
+        "type": "object",
+        "required": [
+          "type",
+          "image_file"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "主体类型。当前 MiniMax 官方文档只公开 `character`。"
+          },
+          "image_file": {
+            "type": "string",
+            "description": "参考图片 URL 或 Data URL。"
+          }
+        }
+      },
+      "MiniMaxOverseasImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MiniMaxOverseasImageData"
+            }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MiniMaxOverseasImageMetadata"
+          }
+        }
+      },
+      "MiniMaxOverseasImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "b64_json": {
+            "type": "string"
+          }
+        }
+      },
+      "MiniMaxOverseasImageMetadata": {
+        "type": "object",
+        "properties": {
+          "provider_request_id": {
+            "type": "string"
+          },
+          "provider_status_code": {
+            "type": "integer"
+          },
+          "provider_status_msg": {
+            "type": "string"
+          },
+          "success_count": {
+            "type": "integer"
+          },
+          "failed_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Subject Reference to Video",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas 主体参考视频渠道子文档。该文档描述当前项目已经实现、且与 MiniMax 官方 subject-reference-to-video 能力对应的字段子集。\n\n项目入口为 `/v1/videos`，网关最终会调用上游 `POST https://api.minimax.io/v1/video_generation`。`subject_reference` 会按官方结构透传。"
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "当前 new-api 网关实例"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Video",
+      "description": "MiniMax Overseas 主体参考视频能力"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "MiniMax Overseas 主体参考视频",
+        "description": "该接口仅适用于 MiniMax Overseas 主体参考视频能力。\n\n当前能力边界：\n- 仅支持模型 `S2V-01`\n- 已实现字段：`model`、`subject_reference`、`prompt`\n- `prompt` 在该能力下为可选字段\n- 官方扩展字段 `prompt_optimizer`、`callback_url` 通过 `metadata.*` 透传",
+        "operationId": "minimaxOverseasSubjectReferenceToVideo",
+        "tags": [
+          "MiniMax Overseas Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubjectReferenceToVideoRequest"
+              },
+              "examples": {
+                "basic_request": {
+                  "summary": "基础主体参考视频请求",
+                  "value": {
+                    "model": "S2V-01",
+                    "subject_reference": [
+                      {
+                        "type": "character",
+                        "image": [
+                          "https://example.com/assets/subject-reference.png"
+                        ]
+                      }
+                    ],
+                    "metadata": {
+                      "prompt_optimizer": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回统一 OpenAI 风格视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAIVideo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法，例如缺少 `subject_reference`，或传入不支持主体参考视频的模型。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "SubjectReferenceToVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "subject_reference"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "S2V-01"
+            ],
+            "description": "MiniMax Overseas 主体参考视频模型。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "可选的视频提示词。"
+          },
+          "subject_reference": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/VideoSubjectReference"
+            },
+            "description": "MiniMax 官方主体参考字段。"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "MiniMax 官方扩展字段透传区。当前项目支持 `prompt_optimizer`、`callback_url`。",
+            "additionalProperties": true
+          }
+        }
+      },
+      "VideoSubjectReference": {
+        "type": "object",
+        "required": [
+          "type",
+          "image"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "主体类型。当前项目实现与官方文档一致，仅支持 `character`。"
+          },
+          "image": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "description": "主体参考图片数组。"
+          }
+        }
+      },
+      "OpenAIVideo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "queued"
+          },
+          "progress": {
+            "type": "integer",
+            "example": 0
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {}
+        }
+      }
+    }
+  }
+}
