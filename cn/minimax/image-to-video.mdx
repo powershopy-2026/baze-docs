@@ -1,0 +1,42 @@
+---
+title: "首帧图生视频"
+description: "使用 baze平台 的 MiniMax 首帧图生视频能力创建视频任务。"
+openapi: "../api-reference/cn/minimax/image-to-video.json POST /v1/videos"
+---
+
+这个接口是 `baze平台` 的统一视频生成入口之一，适用于 MiniMax 首帧图生视频能力。平台入口是 `/v1/videos`，其中公开字段 `image` 会映射到上游的 `first_frame_image`。
+
+## 快速开始
+
+```bash
+curl --request POST \
+  --url https://baze-api.powerbuyin.top/v1/videos \
+  --header "Authorization: Bearer <token>" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "I2V-01",
+    "image": "https://example.com/assets/first-frame.png",
+    "prompt": "The girl looks at the camera and smiles.",
+    "seconds": "6",
+    "size": "720P"
+  }'
+```
+
+## 字段映射与能力边界
+
+| 平台字段 | MiniMax 上游字段 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | `model` | 是 | 仅支持当前文档列出的首帧图生视频模型 |
+| `image` | `first_frame_image` | 是 | 首帧图片 URL 或 Data URL |
+| `prompt` | `prompt` | 否 | 某些模型下可选 |
+| `seconds` | `duration` | 否 | 平台会映射到上游时长字段 |
+| `size` | `resolution` | 否 | 平台会映射到上游分辨率字段 |
+| `metadata.*` | 同名扩展字段 | 否 | 透传上游扩展字段 |
+
+当前支持的首帧图生视频模型包括 `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-2.3-Fast`、`MiniMax-Hailuo-02`、`I2V-01-Director`、`I2V-01-live`、`I2V-01`。
+
+## 常见错误
+
+- 缺少 `image`
+- 使用未支持的首帧图生视频模型
+- 传入与模型能力不匹配的参数组合

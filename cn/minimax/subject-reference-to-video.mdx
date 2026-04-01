@@ -1,0 +1,47 @@
+---
+title: "主体参考视频"
+description: "使用 baze平台 的 MiniMax 主体参考视频能力创建视频任务。"
+openapi: "../api-reference/cn/minimax/subject-reference-to-video.json POST /v1/videos"
+---
+
+这个接口是 `baze平台` 的统一视频生成入口之一，适用于 MiniMax 主体参考视频能力。平台入口是 `/v1/videos`，`subject_reference` 会按上游支持的官方结构透传。
+
+## 快速开始
+
+```bash
+curl --request POST \
+  --url https://baze-api.powerbuyin.top/v1/videos \
+  --header "Authorization: Bearer <token>" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "S2V-01",
+    "subject_reference": [
+      {
+        "type": "character",
+        "image": [
+          "https://example.com/assets/subject-reference.png"
+        ]
+      }
+    ],
+    "metadata": {
+      "prompt_optimizer": false
+    }
+  }'
+```
+
+## 字段映射与能力边界
+
+| 平台字段 | MiniMax 上游字段 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | `model` | 是 | 当前仅支持 `S2V-01` |
+| `prompt` | `prompt` | 否 | 可选的视频提示词 |
+| `subject_reference` | `subject_reference` | 是 | 按官方结构透传 |
+| `metadata.*` | 同名扩展字段 | 否 | 可透传 `prompt_optimizer`、`callback_url` 等扩展字段 |
+
+当前页面只描述平台已经支持的主体参考视频字段，不代表 MiniMax 官方完整能力集合。
+
+## 常见错误
+
+- 缺少 `subject_reference`
+- 使用未支持的模型
+- `subject_reference` 结构不符合当前公开支持格式

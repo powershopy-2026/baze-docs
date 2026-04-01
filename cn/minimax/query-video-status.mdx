@@ -1,0 +1,26 @@
+---
+title: "查询视频任务状态"
+description: "查询 baze平台 中 MiniMax 视频任务的最新状态。"
+openapi: "../api-reference/cn/minimax/query-video-status.json GET /v1/videos/{task_id}"
+---
+
+这个接口用于查询 `baze平台` 中 MiniMax 视频任务的最新状态。视频生成接口通常会先返回任务对象，你需要使用 `task_id` 轮询这个状态接口，直到任务进入完成状态。
+
+## 快速开始
+
+```bash
+curl --request GET \
+  --url https://baze-api.powerbuyin.top/v1/videos/task_abc123 \
+  --header "Authorization: Bearer <token>"
+```
+
+## 返回行为
+
+- `task_id` 对应平台统一任务 ID
+- 平台响应使用统一视频任务对象
+- 对于已完成任务，`metadata.url` 通常会返回平台下载路由，而不是上游短时效下载地址
+
+## 常见错误
+
+- 使用不存在的 `task_id`
+- 在任务尚未完成时直接依赖下载地址

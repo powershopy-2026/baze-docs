@@ -1,0 +1,45 @@
+---
+title: "首尾帧图生视频"
+description: "使用 baze平台 的 MiniMax 首尾帧图生视频能力创建视频任务。"
+openapi: "../api-reference/cn/minimax/start-end-to-video.json POST /v1/videos"
+---
+
+这个接口是 `baze平台` 的统一视频生成入口之一，适用于 MiniMax 首尾帧图生视频能力。平台入口是 `/v1/videos`，其中 `images[0]` 和 `images[1]` 会分别映射到上游的 `first_frame_image` 和 `last_frame_image`。
+
+## 快速开始
+
+```bash
+curl --request POST \
+  --url https://baze-api.powerbuyin.top/v1/videos \
+  --header "Authorization: Bearer <token>" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "MiniMax-Hailuo-02",
+    "images": [
+      "https://example.com/assets/frame-start.png",
+      "https://example.com/assets/frame-end.png"
+    ],
+    "prompt": "The child grows up naturally.",
+    "seconds": "6",
+    "size": "1080P"
+  }'
+```
+
+## 字段映射与能力边界
+
+| 平台字段 | MiniMax 上游字段 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | `model` | 是 | 当前仅支持 `MiniMax-Hailuo-02` |
+| `images[0]` | `first_frame_image` | 是 | 首帧图片 |
+| `images[1]` | `last_frame_image` | 是 | 尾帧图片 |
+| `prompt` | `prompt` | 否 | 视频提示词 |
+| `seconds` | `duration` | 否 | 平台会映射到上游时长字段 |
+| `size` | `resolution` | 否 | 平台会映射到上游分辨率字段 |
+
+`images` 必须严格包含 2 张图片，顺序固定为 `[首帧, 尾帧]`。
+
+## 常见错误
+
+- `images` 数量不是 2
+- 使用了未支持的模型
+- 图片顺序错误，导致结果不符合预期
