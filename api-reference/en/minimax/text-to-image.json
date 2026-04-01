@@ -8,7 +8,7 @@
   "servers": [
     {
       "url": "baze-api.powerbuyin.top",
-      "description": "Current new-api gateway instance"
+      "description": "Public baze platform API endpoint"
     }
   ],
   "tags": [
@@ -101,7 +101,7 @@
             "enum": [
               "image-01"
             ],
-            "description": "MiniMax Overseas text-to-image model. The current project implements only `image-01`."
+            "description": "MiniMax Overseas text-to-image model. The baze platform implements only `image-01`."
           },
           "prompt": {
             "type": "string",

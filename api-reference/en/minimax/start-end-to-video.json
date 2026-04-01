@@ -3,12 +3,12 @@
   "info": {
     "title": "MiniMax Overseas - Start End to Video",
     "version": "1.0.0",
-    "description": "MiniMax Overseas start-end-to-video subdocument. This subdocument describes the subset of fields currently implemented in the project and mapped to the official MiniMax start-end-to-video capability.\n\nThe platform entry path is `/v1/videos`, and the gateway ultimately calls upstream `POST https://api.minimax.io/v1/video_generation`. Public `images[0]` / `images[1]` map to upstream `first_frame_image` / `last_frame_image`."
+    "description": "MiniMax Overseas start-end-to-video subdocument. This subdocument describes the subset of fields that the baze platform currently implements and maps to the official MiniMax start-end-to-video capability.\n\nThe baze platform entry path is `/v1/videos`, and the gateway ultimately calls upstream `POST https://api.minimax.io/v1/video_generation`. Public `images[0]` / `images[1]` map to upstream `first_frame_image` / `last_frame_image`."
   },
   "servers": [
     {
       "url": "baze-api.powerbuyin.top",
-      "description": "Current new-api gateway instance"
+      "description": "Public baze platform API endpoint"
     }
   ],
   "tags": [
@@ -127,7 +127,7 @@
           },
           "metadata": {
             "type": "object",
-            "description": "Pass-through area for official MiniMax extension fields. The current project supports `prompt_optimizer`, `callback_url`, and `aigc_watermark`.",
+            "description": "Pass-through area for official MiniMax extension fields. The baze platform supports `prompt_optimizer`, `callback_url`, and `aigc_watermark`.",
             "additionalProperties": true
           }
         }

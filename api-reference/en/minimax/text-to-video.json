@@ -8,7 +8,7 @@
   "servers": [
     {
       "url": "baze-api.powerbuyin.top",
-      "description": "Current new-api gateway instance"
+      "description": "Public baze platform API endpoint"
     }
   ],
   "tags": [
@@ -120,7 +120,7 @@
           },
           "metadata": {
             "type": "object",
-            "description": "Pass-through area for official MiniMax extension fields. The current project supports `prompt_optimizer`, `fast_pretreatment`, `callback_url`, and `aigc_watermark`.",
+            "description": "Pass-through area for official MiniMax extension fields. The baze platform supports `prompt_optimizer`, `fast_pretreatment`, `callback_url`, and `aigc_watermark`.",
             "additionalProperties": true
           }
         }
