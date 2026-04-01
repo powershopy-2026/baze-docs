@@ -4,7 +4,7 @@ description: "下载 baze平台 中已经完成的 MiniMax 视频内容。"
 openapi: "../api-reference/cn/minimax/download-video-file.json GET /v1/videos/{task_id}/content"
 ---
 
-这个接口用于下载 `baze平台` 中已经完成的 MiniMax 视频内容。平台不会把上游短时效 `download_url` 直接持久化为稳定结果地址，而是在请求时基于保存的 `file_id` 实时换取最新下载链接，再代理返回视频内容。
+这个接口用于下载 `baze平台` 中已经完成的 MiniMax 视频内容。对于已经完成且可下载的任务，你可以使用 `/v1/videos/{task_id}/content` 获取平台返回的视频文件内容，而不需要依赖上游临时下载地址。
 
 ## 快速开始
 

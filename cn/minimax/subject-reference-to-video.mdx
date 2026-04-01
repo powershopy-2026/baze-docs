@@ -4,7 +4,7 @@ description: "使用 baze平台 的 MiniMax 主体参考视频能力创建视频
 openapi: "../api-reference/cn/minimax/subject-reference-to-video.json POST /v1/videos"
 ---
 
-这个接口是 `baze平台` 的统一视频生成入口之一，适用于 MiniMax 主体参考视频能力。平台入口是 `/v1/videos`，`subject_reference` 会按上游支持的官方结构透传。
+这个接口是 `baze平台` 的统一视频生成入口之一，适用于 MiniMax 主体参考视频能力。平台入口是 `/v1/videos`。当前公开支持的 `subject_reference` 仅限本页和 OpenAPI 文档中列出的结构，不代表 MiniMax 上游的完整主体参考能力集合。
 
 ## 快速开始
 
@@ -35,10 +35,10 @@ curl --request POST \
 | --- | --- | --- | --- |
 | `model` | `model` | 是 | 当前仅支持 `S2V-01` |
 | `prompt` | `prompt` | 否 | 可选的视频提示词 |
-| `subject_reference` | `subject_reference` | 是 | 按官方结构透传 |
+| `subject_reference` | `subject_reference` | 是 | 当前仅支持文档中列出的公开结构 |
 | `metadata.*` | 同名扩展字段 | 否 | 可透传 `prompt_optimizer`、`callback_url` 等扩展字段 |
 
-当前页面只描述平台已经支持的主体参考视频字段，不代表 MiniMax 官方完整能力集合。
+当前公开支持的 `subject_reference` 结构为对象数组，数组项仅包含 `type` 和 `image`，其中 `type` 当前仅支持 `character`。超出该范围的上游字段或结构不在当前平台接口支持范围内。
 
 ## 常见错误
 
