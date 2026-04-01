@@ -1,0 +1,51 @@
+---
+title: "图生图"
+description: "使用 baze平台 的 MiniMax 图生图能力编辑图像。"
+openapi: "../api-reference/cn/minimax/image-to-image.json POST /v1/images/edits"
+---
+
+这个接口是 `baze平台` 的统一图生图入口之一，适用于 MiniMax 图生图能力。平台入口是 `/v1/images/edits`，请求会映射到 MiniMax 上游的 `POST https://api.minimax.io/v1/image_generation`。
+
+## 快速开始
+
+```bash
+curl --request POST \
+  --url https://baze-api.powerbuyin.top/v1/images/edits \
+  --header "Authorization: Bearer <token>" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "image-01-live",
+    "prompt": "Turn this portrait into a manga cover",
+    "subject_reference": [
+      {
+        "type": "character",
+        "image_file": "https://example.com/reference.png"
+      }
+    ],
+    "response_format": "url",
+    "n": 1
+  }'
+```
+
+## 字段映射与能力边界
+
+| 平台字段 | MiniMax 上游字段 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | `model` | 是 | 支持 `image-01` 与 `image-01-live` |
+| `prompt` | `prompt` | 是 | 图像编辑提示词 |
+| `subject_reference` | `subject_reference` | 是 | 仅在 `application/json` 下公开支持 |
+| `aspect_ratio` | `aspect_ratio` | 否 | 宽高比 |
+| `width` | `width` | 否 | 目标宽度 |
+| `height` | `height` | 否 | 目标高度 |
+| `response_format` | `response_format` | 否 | 返回 URL 或 Base64 |
+| `seed` | `seed` | 否 | 随机种子 |
+| `n` | `n` | 否 | 返回图片数量 |
+| `prompt_optimizer` | `prompt_optimizer` | 否 | 是否启用提示词优化 |
+
+`mask` 不在当前平台公开支持范围内，不应出现在 MiniMax 图生图请求中。
+
+## 常见错误
+
+- 缺少 `subject_reference`
+- 使用未支持的模型
+- 传入了当前平台未公开支持的字段，例如 `mask`
