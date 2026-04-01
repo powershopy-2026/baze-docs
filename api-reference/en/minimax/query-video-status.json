@@ -1,0 +1,123 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Query Video Status",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas video task status query subdocument. The platform entry path is `/v1/videos/{task_id}`, and the gateway ultimately calls upstream `GET https://api.minimax.io/v1/query/video_generation?task_id=...`."
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "Current new-api gateway instance"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Video",
+      "description": "MiniMax Overseas video task status query"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "Query MiniMax Overseas video task status",
+        "description": "Query the latest status of a MiniMax Overseas video task.\n\nThe platform response uses the unified OpenAI-style task object. For completed tasks, `metadata.url` usually returns the gateway download route. If you need the final file content directly, continue with `/v1/videos/{task_id}/content`.",
+        "operationId": "minimaxOverseasQueryVideoStatus",
+        "tags": [
+          "MiniMax Overseas Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Public video task ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAIVideo"
+                },
+                "examples": {
+                  "completed": {
+                    "summary": "Task completed",
+                    "value": {
+                      "id": "task_abc123",
+                      "object": "video",
+                      "model": "MiniMax-Hailuo-2.3",
+                      "status": "completed",
+                      "progress": 100,
+                      "created_at": 1742515200,
+                      "completed_at": 1742515235,
+                      "metadata": {
+                        "url": "https://api.example.com/v1/videos/task_abc123/content"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "OpenAIVideo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "completed"
+          },
+          "progress": {
+            "type": "integer",
+            "example": 100
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "completed_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Download Video File",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas video file download subdocument. The platform entry path is `/v1/videos/{task_id}/content`. On each request, the gateway calls upstream `GET https://api.minimax.io/v1/files/retrieve` to fetch the latest `download_url` and then proxies the video content back to you."
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "Current new-api gateway instance"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Video",
+      "description": "MiniMax Overseas video content download"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}/content": {
+      "get": {
+        "summary": "Download MiniMax Overseas video content",
+        "description": "Download completed video content.\n\nFor the MiniMax Overseas channel, the gateway does not persist the upstream short-lived `download_url` as a stable result URL. Instead, it uses the stored `file_id` to fetch a fresh download link for each request, which is better suited for long-term stable access.",
+        "operationId": "minimaxOverseasDownloadVideoFile",
+        "tags": [
+          "MiniMax Overseas Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Public video task ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download succeeded. Returns the video binary stream directly.",
+            "content": {
+              "video/mp4": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The task does not exist, or it has not produced downloadable content yet."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

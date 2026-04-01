@@ -1,0 +1,247 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Image to Image",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas image-to-image subdocument. This subdocument keeps only the fields that are currently implemented in the project and mapped to the official MiniMax image-to-image capability.\n\nThe platform entry path is `/v1/images/edits`, and the gateway ultimately calls upstream `POST https://api.minimax.io/v1/image_generation`.\n\nNote: the platform-level unified API also accepts JSON `image` and multipart `image` as compatibility inputs. The gateway normalizes those inputs to official MiniMax `subject_reference[].image_file`. The public support boundary for those compatibility inputs is documented at the platform level. This subdocument only expands the official capability field subset."
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "Current new-api gateway instance"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Image",
+      "description": "MiniMax Overseas image-to-image capability"
+    }
+  ],
+  "paths": {
+    "/v1/images/edits": {
+      "post": {
+        "summary": "MiniMax Overseas image to image",
+        "description": "This endpoint only applies to the MiniMax Overseas image-to-image capability.\n\nCurrent support boundary:\n- Supported models: `image-01` and `image-01-live`\n- Supported official field subset: `model`, `prompt`, `subject_reference`, `aspect_ratio`, `width`, `height`, `response_format`, `seed`, `n`, `prompt_optimizer`\n- `subject_reference` is publicly supported only under `application/json`\n- `mask` is outside the current implementation scope and must not appear in this channel subdocument",
+        "operationId": "minimaxOverseasImageToImage",
+        "tags": [
+          "MiniMax Overseas Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MiniMaxOverseasImageToImageRequest"
+              },
+              "examples": {
+                "official_subject_reference": {
+                  "summary": "Use official subject_reference",
+                  "value": {
+                    "model": "image-01-live",
+                    "prompt": "Turn this portrait into a manga cover",
+                    "subject_reference": [
+                      {
+                        "type": "character",
+                        "image_file": "https://example.com/reference.png"
+                      }
+                    ],
+                    "response_format": "url",
+                    "n": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Call succeeded. Returns the unified image response structure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MiniMaxOverseasImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters, for example missing `subject_reference` or using an invalid compatibility-field combination on the unified endpoint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "MiniMaxOverseasImageToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt",
+          "subject_reference"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "image-01",
+              "image-01-live"
+            ],
+            "description": "MiniMax Overseas image-to-image model. The current project supports `image-01` and `image-01-live`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Image editing prompt."
+          },
+          "subject_reference": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/SubjectReferenceItem"
+            },
+            "description": "Official MiniMax image-to-image field. JSON `image` or multipart `image` inputs from the platform unified endpoint are also converted to this structure."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Target aspect ratio."
+          },
+          "width": {
+            "type": "integer",
+            "description": "Target width."
+          },
+          "height": {
+            "type": "integer",
+            "description": "Target height."
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "Unified response format. `b64_json` is mapped by the gateway to official MiniMax `base64`."
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Random seed."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9,
+            "description": "Expected number of returned images."
+          },
+          "prompt_optimizer": {
+            "type": "boolean",
+            "description": "Whether to enable prompt optimization."
+          }
+        }
+      },
+      "SubjectReferenceItem": {
+        "type": "object",
+        "required": [
+          "type",
+          "image_file"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Subject type. The current official MiniMax docs only publish `character`."
+          },
+          "image_file": {
+            "type": "string",
+            "description": "Reference image URL or Data URL."
+          }
+        }
+      },
+      "MiniMaxOverseasImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MiniMaxOverseasImageData"
+            }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MiniMaxOverseasImageMetadata"
+          }
+        }
+      },
+      "MiniMaxOverseasImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "b64_json": {
+            "type": "string"
+          }
+        }
+      },
+      "MiniMaxOverseasImageMetadata": {
+        "type": "object",
+        "properties": {
+          "provider_request_id": {
+            "type": "string"
+          },
+          "provider_status_code": {
+            "type": "integer"
+          },
+          "provider_status_msg": {
+            "type": "string"
+          },
+          "success_count": {
+            "type": "integer"
+          },
+          "failed_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

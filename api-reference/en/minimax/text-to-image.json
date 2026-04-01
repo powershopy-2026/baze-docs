@@ -1,0 +1,224 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax Overseas - Text to Image",
+    "version": "1.0.0",
+    "description": "MiniMax Overseas text-to-image subdocument. This subdocument is the MiniMax Overseas view of the platform unified image API and describes only the subset of fields that are currently implemented and mapped to the official MiniMax text-to-image capability.\n\nThe platform entry path remains `/v1/images/generations`, and the gateway converts the request to upstream `POST https://api.minimax.io/v1/image_generation`."
+  },
+  "servers": [
+    {
+      "url": "baze-api.powerbuyin.top",
+      "description": "Current new-api gateway instance"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Overseas Image",
+      "description": "MiniMax Overseas text-to-image capability"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "MiniMax Overseas text to image",
+        "description": "This endpoint only applies to the MiniMax Overseas text-to-image capability.\n\nCurrent support boundary:\n- Only `image-01` is supported\n- Implemented fields: `model`, `prompt`, `aspect_ratio`, `width`, `height`, `response_format`, `seed`, `n`, `prompt_optimizer`\n- `response_format=b64_json` on the unified endpoint is mapped to official MiniMax `response_format=base64`",
+        "operationId": "minimaxOverseasTextToImage",
+        "tags": [
+          "MiniMax Overseas Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MiniMaxOverseasTextToImageRequest"
+              },
+              "examples": {
+                "basic_request": {
+                  "summary": "Basic request",
+                  "value": {
+                    "model": "image-01",
+                    "prompt": "A cinematic sunrise over a calm harbor",
+                    "aspect_ratio": "16:9",
+                    "response_format": "b64_json",
+                    "seed": 0,
+                    "n": 1,
+                    "prompt_optimizer": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Call succeeded. Returns the unified image response structure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MiniMaxOverseasImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "MiniMaxOverseasTextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "image-01"
+            ],
+            "description": "MiniMax Overseas text-to-image model. The current project implements only `image-01`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Image generation prompt."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Target aspect ratio."
+          },
+          "width": {
+            "type": "integer",
+            "description": "Target width."
+          },
+          "height": {
+            "type": "integer",
+            "description": "Target height."
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "Unified response format. `b64_json` is mapped by the gateway to official MiniMax `base64`."
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Random seed. An explicit `0` is preserved."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9,
+            "description": "Expected number of returned images."
+          },
+          "prompt_optimizer": {
+            "type": "boolean",
+            "description": "Whether to enable prompt optimization. An explicit `false` is preserved."
+          }
+        }
+      },
+      "MiniMaxOverseasImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MiniMaxOverseasImageData"
+            }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MiniMaxOverseasImageMetadata"
+          }
+        }
+      },
+      "MiniMaxOverseasImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Used when the upstream returns URLs. Maps to official MiniMax `data.image_urls[*]`."
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "Used when the upstream returns Base64. Maps to official MiniMax `data.image_base64[*]`."
+          }
+        }
+      },
+      "MiniMaxOverseasImageMetadata": {
+        "type": "object",
+        "properties": {
+          "provider_request_id": {
+            "type": "string",
+            "description": "Maps to official MiniMax `id`."
+          },
+          "provider_status_code": {
+            "type": "integer",
+            "description": "Maps to official MiniMax `base_resp.status_code`."
+          },
+          "provider_status_msg": {
+            "type": "string",
+            "description": "Maps to official MiniMax `base_resp.status_msg`."
+          },
+          "success_count": {
+            "type": "integer",
+            "description": "Maps to official MiniMax `metadata.success_count`."
+          },
+          "failed_count": {
+            "type": "integer",
+            "description": "Maps to official MiniMax `metadata.failed_count`."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
