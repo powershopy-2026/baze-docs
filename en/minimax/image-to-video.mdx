@@ -1,0 +1,42 @@
+---
+title: "Image to video"
+description: "Create MiniMax video tasks from a first-frame image on the baze platform."
+openapi: "../api-reference/en/minimax/image-to-video.json POST /v1/videos"
+---
+
+This endpoint is one of the unified video generation entry points on the `baze platform` and targets the MiniMax image-to-video capability. The public path is `/v1/videos`, and platform field `image` maps to upstream `first_frame_image`.
+
+## Quickstart
+
+```bash
+curl --request POST \
+  --url https://baze-api.powerbuyin.top/v1/videos \
+  --header "Authorization: Bearer <token>" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "I2V-01",
+    "image": "https://example.com/assets/first-frame.png",
+    "prompt": "The girl looks at the camera and smiles.",
+    "seconds": "6",
+    "size": "720P"
+  }'
+```
+
+## Field mapping and support boundaries
+
+| Platform field | MiniMax upstream field | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | `model` | Yes | Supported models are `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-2.3-Fast`, `MiniMax-Hailuo-02`, `I2V-01-Director`, `I2V-01-live`, `I2V-01` |
+| `image` | `first_frame_image` | Yes | First-frame image URL or Data URL |
+| `prompt` | `prompt` | No | Optional for some models |
+| `seconds` | `duration` | No | Requested video length |
+| `size` | `resolution` | No | Requested output resolution |
+| `metadata.*` | Matching extension fields | No | Supports public pass-through fields exposed by the platform |
+
+Prompt requirements depend on the selected model. Keep the request within the public field set documented here.
+
+## Common errors
+
+- Omitting `image`
+- Using a model that is not supported for image to video
+- Sending parameter combinations that do not match the selected model capability

@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "baze-api.powerbuyin.top",
+      "url": "https://baze-api.powerbuyin.top",
       "description": "当前 new-api 网关实例"
     }
   ],

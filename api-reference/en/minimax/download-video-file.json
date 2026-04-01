@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "baze-api.powerbuyin.top",
+      "url": "https://baze-api.powerbuyin.top",
       "description": "Public baze platform API endpoint"
     }
   ],

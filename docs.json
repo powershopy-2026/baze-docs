@@ -20,7 +20,16 @@
                 "group": "模型接口",
                 "expanded": true,
                 "pages": [
-                  "cn/Google"
+                  "cn/Google",
+                  "cn/minimax/overview",
+                  "cn/minimax/text-to-image",
+                  "cn/minimax/image-to-image",
+                  "cn/minimax/text-to-video",
+                  "cn/minimax/image-to-video",
+                  "cn/minimax/start-end-to-video",
+                  "cn/minimax/subject-reference-to-video",
+                  "cn/minimax/query-video-status",
+                  "cn/minimax/download-video-file"
                 ]
               }
             ]
@@ -37,7 +46,16 @@
                 "group": "Model APIs",
                 "expanded": true,
                 "pages": [
-                  "en/Google"
+                  "en/Google",
+                  "en/minimax/overview",
+                  "en/minimax/text-to-image",
+                  "en/minimax/image-to-image",
+                  "en/minimax/text-to-video",
+                  "en/minimax/image-to-video",
+                  "en/minimax/start-end-to-video",
+                  "en/minimax/subject-reference-to-video",
+                  "en/minimax/query-video-status",
+                  "en/minimax/download-video-file"
                 ]
               }
             ]

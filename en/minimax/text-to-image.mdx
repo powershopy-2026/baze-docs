@@ -1,0 +1,45 @@
+---
+title: "Text to image"
+description: "Generate images with the baze platform's MiniMax text-to-image capability."
+openapi: "../api-reference/en/minimax/text-to-image.json POST /v1/images/generations"
+---
+
+This endpoint is one of the unified image generation entry points on the `baze platform` and targets the MiniMax text-to-image capability. The public path is `/v1/images/generations`, and the gateway maps the request to MiniMax upstream `POST https://api.minimax.io/v1/image_generation`.
+
+## Quickstart
+
+```bash
+curl --request POST \
+  --url https://baze-api.powerbuyin.top/v1/images/generations \
+  --header "Authorization: Bearer <token>" \
+  --header "Content-Type: application/json" \
+  --data '{
+    "model": "image-01",
+    "prompt": "A cinematic sunrise over a calm harbor",
+    "aspect_ratio": "16:9",
+    "response_format": "b64_json",
+    "n": 1
+  }'
+```
+
+## Field mapping and support boundaries
+
+| Platform field | MiniMax upstream field | Required | Notes |
+| --- | --- | --- | --- |
+| `model` | `model` | Yes | Currently only `image-01` is supported |
+| `prompt` | `prompt` | Yes | Image generation prompt |
+| `aspect_ratio` | `aspect_ratio` | No | Target aspect ratio |
+| `width` | `width` | No | Target width |
+| `height` | `height` | No | Target height |
+| `response_format` | `response_format` | No | `b64_json` maps to upstream `base64` |
+| `seed` | `seed` | No | Random seed |
+| `n` | `n` | No | Number of returned images |
+| `prompt_optimizer` | `prompt_optimizer` | No | Prompt optimization switch |
+
+This page documents only the fields that are currently implemented and exposed by the platform.
+
+## Common errors
+
+- Using an unsupported model
+- Omitting `prompt`
+- Sending an invalid size combination
