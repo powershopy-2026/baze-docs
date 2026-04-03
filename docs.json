@@ -29,7 +29,17 @@
                   "cn/minimax/start-end-to-video",
                   "cn/minimax/subject-reference-to-video",
                   "cn/minimax/query-video-status",
-                  "cn/minimax/download-video-file"
+                  "cn/minimax/download-video-file",
+                  "cn/ali/overview",
+                  "cn/ali/chat",
+                  "cn/ali/text-to-image",
+                  "cn/ali/image-to-image",
+                  "cn/ali/video-first-frame",
+                  "cn/ali/video-first-last-frame",
+                  "cn/byteplus/overview",
+                  "cn/byteplus/image",
+                  "cn/byteplus/video",
+                  "cn/byteplus/video-status"
                 ]
               }
             ]
