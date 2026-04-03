@@ -20,26 +20,37 @@
                 "group": "模型接口",
                 "expanded": true,
                 "pages": [
-                  "cn/Google",
-                  "cn/minimax/overview",
-                  "cn/minimax/text-to-image",
-                  "cn/minimax/image-to-image",
-                  "cn/minimax/text-to-video",
-                  "cn/minimax/image-to-video",
-                  "cn/minimax/start-end-to-video",
-                  "cn/minimax/subject-reference-to-video",
-                  "cn/minimax/query-video-status",
-                  "cn/minimax/download-video-file",
-                  "cn/ali/overview",
-                  "cn/ali/chat",
-                  "cn/ali/text-to-image",
-                  "cn/ali/image-to-image",
-                  "cn/ali/video-first-frame",
-                  "cn/ali/video-first-last-frame",
-                  "cn/byteplus/overview",
-                  "cn/byteplus/image",
-                  "cn/byteplus/video",
-                  "cn/byteplus/video-status"
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "cn/minimax/text-to-image",
+                      "cn/minimax/image-to-image",
+                      "cn/minimax/text-to-video",
+                      "cn/minimax/image-to-video",
+                      "cn/minimax/start-end-to-video",
+                      "cn/minimax/subject-reference-to-video",
+                      "cn/minimax/query-video-status",
+                      "cn/minimax/download-video-file"
+                    ]
+                  },
+                  {
+                    "group": "Ali",
+                    "pages": [
+                      "cn/ali/chat",
+                      "cn/ali/text-to-image",
+                      "cn/ali/image-to-image",
+                      "cn/ali/video-first-frame",
+                      "cn/ali/video-first-last-frame"
+                    ]
+                  },
+                  {
+                    "group": "BytePlus",
+                    "pages": [
+                      "cn/byteplus/image",
+                      "cn/byteplus/video",
+                      "cn/byteplus/video-status"
+                    ]
+                  }
                 ]
               }
             ]
@@ -56,16 +67,37 @@
                 "group": "Model APIs",
                 "expanded": true,
                 "pages": [
-                  "en/Google",
-                  "en/minimax/overview",
-                  "en/minimax/text-to-image",
-                  "en/minimax/image-to-image",
-                  "en/minimax/text-to-video",
-                  "en/minimax/image-to-video",
-                  "en/minimax/start-end-to-video",
-                  "en/minimax/subject-reference-to-video",
-                  "en/minimax/query-video-status",
-                  "en/minimax/download-video-file"
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "en/minimax/text-to-image",
+                      "en/minimax/image-to-image",
+                      "en/minimax/text-to-video",
+                      "en/minimax/image-to-video",
+                      "en/minimax/start-end-to-video",
+                      "en/minimax/subject-reference-to-video",
+                      "en/minimax/query-video-status",
+                      "en/minimax/download-video-file"
+                    ]
+                  },
+                  {
+                    "group": "Ali",
+                    "pages": [
+                      "en/ali/chat",
+                      "en/ali/text-to-image",
+                      "en/ali/image-to-image",
+                      "en/ali/video-first-frame",
+                      "en/ali/video-first-last-frame"
+                    ]
+                  },
+                  {
+                    "group": "BytePlus",
+                    "pages": [
+                      "en/byteplus/image",
+                      "en/byteplus/video",
+                      "en/byteplus/video-status"
+                    ]
+                  }
                 ]
               }
             ]

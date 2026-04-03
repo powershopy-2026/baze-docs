@@ -1,28 +1,4 @@
 ---
 title: "下载视频文件"
-description: "下载 baze平台 中已经完成的 MiniMax 视频内容。"
 openapi: "../api-reference/cn/minimax/download-video-file.json GET /v1/videos/{task_id}/content"
 ---
-
-这个接口用于下载 `baze平台` 中已经完成的 MiniMax 视频内容。对于已经完成且可下载的任务，你可以使用 `/v1/videos/{task_id}/content` 获取平台返回的视频文件内容，而不需要依赖上游临时下载地址。
-
-## 快速开始
-
-```bash
-curl --request GET \
-  --url https://baze-api.powerbuyin.top/v1/videos/task_abc123/content \
-  --header "Authorization: Bearer <token>" \
-  --output minimax-video.mp4
-```
-
-## 路径参数
-
-| 参数 | 位置 | 必填 | 说明 |
-| --- | --- | --- | --- |
-| `task_id` | path | 是 | 已完成的视频任务 ID |
-
-## 常见错误
-
-- 任务不存在
-- 任务尚未生成可下载内容
-- 使用了错误的 `task_id`
