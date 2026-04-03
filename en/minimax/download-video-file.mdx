@@ -1,28 +1,4 @@
 ---
 title: "Download video file"
-description: "Download completed MiniMax video output from the baze platform."
 openapi: "../api-reference/en/minimax/download-video-file.json GET /v1/videos/{task_id}/content"
 ---
-
-Use this endpoint to download completed MiniMax video output from the `baze platform`. The platform does not persist the upstream short-lived `download_url` as a stable result URL. Instead, it refreshes the upstream link on demand with the stored `file_id` and then proxies the video content back to you.
-
-## Quickstart
-
-```bash
-curl --request GET \
-  --url https://baze-api.powerbuyin.top/v1/videos/task_abc123/content \
-  --header "Authorization: Bearer <token>" \
-  --output minimax-video.mp4
-```
-
-## Download behavior
-
-- This route is for completed video tasks only.
-- The platform refreshes the upstream download link when you request the file.
-- A `404` usually means the task does not exist yet or has not produced downloadable content.
-
-## Common errors
-
-- Using a `task_id` that does not exist
-- Trying to download a task before the output is ready
-- Using the wrong `task_id` for the expected file

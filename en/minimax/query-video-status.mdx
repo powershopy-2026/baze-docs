@@ -1,26 +1,4 @@
 ---
 title: "Query video status"
-description: "Query the latest status of a MiniMax video task on the baze platform."
 openapi: "../api-reference/en/minimax/query-video-status.json GET /v1/videos/{task_id}"
 ---
-
-Use this endpoint to query the latest state of a MiniMax video task on the `baze platform`. Video generation requests usually return a task object first, so you should poll this route with `task_id` until the task reaches a completed state.
-
-## Quickstart
-
-```bash
-curl --request GET \
-  --url https://baze-api.powerbuyin.top/v1/videos/task_abc123 \
-  --header "Authorization: Bearer <token>"
-```
-
-## Response behavior
-
-- `task_id` is the platform task ID.
-- The response uses the platform's unified video task object.
-- For completed tasks, `metadata.url` usually points to the platform download route instead of the upstream short-lived download URL.
-
-## Common errors
-
-- Using a `task_id` that does not exist
-- Treating an in-progress task as if it were already downloadable
