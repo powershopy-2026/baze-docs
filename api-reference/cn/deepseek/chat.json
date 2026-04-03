@@ -1,0 +1,643 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DeepSeek 对话补全",
+    "version": "1.0.0",
+    "description": "DeepSeek `chat/completions` 的 C 端 OpenAPI 文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 风格请求。\n\n本文档基于 `docs/channels/deepseek/chat.md` 的官方整理稿，并结合当前网关 DeepSeek 通道的实际实现裁剪，仅描述官方页面中出现且项目当前已实现的字段子集：`model`、`messages`、`thinking`、`frequency_penalty`、`max_tokens`、`presence_penalty`、`response_format`、`stop`、`stream`、`stream_options`、`temperature`、`top_p`、`tools`、`tool_choice`、`logprobs`、`top_logprobs`。\n\n当前内置模型为 `deepseek-chat` 与 `deepseek-reasoner`。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "DeepSeek Chat",
+      "description": "DeepSeek 文本对话、推理与函数调用能力"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "DeepSeek 对话补全",
+        "description": "调用 DeepSeek 的 chat completions 能力。\n\n当前网关内置的 DeepSeek 模型包括 `deepseek-chat` 与 `deepseek-reasoner`。\n\n公开字段：`model`、`messages`、`thinking`、`frequency_penalty`、`max_tokens`、`presence_penalty`、`response_format`、`stop`、`stream`、`stream_options`、`temperature`、`top_p`、`tools`、`tool_choice`、`logprobs`、`top_logprobs`。",
+        "operationId": "deepseekChatCompletions",
+        "tags": [
+          "DeepSeek Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basic_chat": {
+                  "summary": "基础文本对话",
+                  "value": {
+                    "model": "deepseek-chat",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a helpful assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Hi"
+                      }
+                    ],
+                    "stream": false
+                  }
+                },
+                "thinking_json_mode": {
+                  "summary": "思考模式与 JSON 输出",
+                  "value": {
+                    "model": "deepseek-reasoner",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "请输出一个 JSON，对象中包含 summary 和 action_items。"
+                      }
+                    ],
+                    "thinking": {
+                      "type": "enabled"
+                    },
+                    "response_format": {
+                      "type": "json_object"
+                    },
+                    "max_tokens": 1024
+                  }
+                },
+                "tool_calling_stream": {
+                  "summary": "函数调用与流式返回",
+                  "value": {
+                    "model": "deepseek-chat",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "帮我查询北京今天的天气。"
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "根据城市名查询天气",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "城市名称"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": true,
+                    "stream_options": {
+                      "include_usage": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功。非流式模式返回 JSON；流式模式返回 SSE 事件流。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "非流式成功响应",
+                    "value": {
+                      "id": "930c60df-bf64-41c9-a88e-3ec75f81e00e",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "Hello! How can I help you today?",
+                            "role": "assistant"
+                          }
+                        }
+                      ],
+                      "created": 1705651092,
+                      "model": "deepseek-chat",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 10,
+                        "prompt_tokens": 16,
+                        "total_tokens": 26
+                      }
+                    }
+                  }
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE 数据流。每个 `data:` 事件都可按 DeepSeek/OpenAI 兼容的 Chat Completions Chunk 解析；结束时通常返回 `data: [DONE]`。"
+                },
+                "examples": {
+                  "stream": {
+                    "summary": "流式响应片段",
+                    "value": "data: {\"id\":\"1f633d8bfc032625086f14113c411638\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\",\"role\":\"assistant\"},\"finish_reason\":null,\"logprobs\":null}],\"created\":1718345013,\"model\":\"deepseek-chat\",\"system_fingerprint\":\"fp_a49d71b8a1\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"choices\":[{\"delta\":{\"content\":\"Hello\",\"role\":\"assistant\"},\"finish_reason\":null,\"index\":0,\"logprobs\":null}],\"created\":1718345013,\"id\":\"1f633d8bfc032625086f14113c411638\",\"model\":\"deepseek-chat\",\"object\":\"chat.completion.chunk\",\"system_fingerprint\":\"fp_a49d71b8a1\"}\n\ndata: [DONE]\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "param": "messages",
+                        "code": "bad_request_body"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "description": "DeepSeek chat completions 请求体。",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "模型名称。当前网关内置 DeepSeek 模型为 `deepseek-chat` 与 `deepseek-reasoner`。",
+            "enum": [
+              "deepseek-chat",
+              "deepseek-reasoner"
+            ],
+            "example": "deepseek-chat"
+          },
+          "messages": {
+            "type": "array",
+            "description": "对话消息列表。DeepSeek 官方页面支持 `system`、`user`、`assistant`、`tool` 四类消息。",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            },
+            "minItems": 1
+          },
+          "thinking": {
+            "$ref": "#/components/schemas/ThinkingConfig"
+          },
+          "frequency_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "default": 0,
+            "description": "频率惩罚，正值会降低逐字重复相同内容的概率。"
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "最大生成 token 数。输入 token 与输出 token 总和仍受模型上下文长度限制。"
+          },
+          "presence_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "default": 0,
+            "description": "存在惩罚，正值会提高模型讨论新主题的倾向。"
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
+          },
+          "stop": {
+            "description": "停止序列。最多支持 16 个停止序列，可以是单个字符串或字符串数组。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 16
+              }
+            ]
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "是否启用流式输出。为 `true` 时返回 SSE 事件流。"
+          },
+          "stream_options": {
+            "$ref": "#/components/schemas/StreamOptions"
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 2,
+            "default": 1,
+            "description": "采样温度。通常建议与 `top_p` 二选一调优。"
+          },
+          "top_p": {
+            "type": "number",
+            "maximum": 1,
+            "default": 1,
+            "description": "核采样阈值。通常建议与 `temperature` 二选一调优。"
+          },
+          "tools": {
+            "type": "array",
+            "description": "可供模型调用的工具定义列表。当前仅支持 `function` 工具，最多 128 个。",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            },
+            "maxItems": 128
+          },
+          "tool_choice": {
+            "$ref": "#/components/schemas/ToolChoice"
+          },
+          "logprobs": {
+            "type": "boolean",
+            "description": "是否返回输出 token 的对数概率。"
+          },
+          "top_logprobs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 20,
+            "description": "每个 token 位置返回的最高概率候选 token 数。使用时要求 `logprobs=true`。"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "聊天消息对象。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool"
+            ],
+            "description": "消息角色。"
+          },
+          "content": {
+            "type": "string",
+            "description": "消息内容。DeepSeek 官方 chat 页面将该字段描述为文本内容。"
+          },
+          "name": {
+            "type": "string",
+            "description": "可选名称，用于区分相同角色下的不同参与者。"
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "当 `role=tool` 时，对应的工具调用 ID。"
+          }
+        }
+      },
+      "ThinkingConfig": {
+        "type": "object",
+        "description": "控制 thinking 与 non-thinking 模式切换。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "enabled",
+              "disabled"
+            ],
+            "description": "`enabled` 表示启用 thinking 模式，`disabled` 表示非 thinking 模式。"
+          }
+        }
+      },
+      "ResponseFormat": {
+        "type": "object",
+        "description": "输出格式控制。设置为 `{\"type\":\"json_object\"}` 时启用 JSON Output。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "json_object"
+            ],
+            "default": "text",
+            "description": "目标输出格式。"
+          }
+        }
+      },
+      "StreamOptions": {
+        "type": "object",
+        "description": "流式响应附加选项。只有在 `stream=true` 时设置。",
+        "properties": {
+          "include_usage": {
+            "type": "boolean",
+            "description": "若为 `true`，在 `data: [DONE]` 前额外返回一个包含总 usage 的 chunk。"
+          }
+        }
+      },
+      "ToolDefinition": {
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "description": "函数工具定义。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "工具类型。当前仅支持 `function`。"
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionDefinition"
+          }
+        }
+      },
+      "FunctionDefinition": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "description": "函数定义。",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "函数名称。允许字母、数字、下划线和中划线。"
+          },
+          "description": {
+            "type": "string",
+            "description": "函数用途说明。"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "JSON Schema 形式的函数参数定义。"
+          },
+          "strict": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否启用严格模式，保证输出符合函数 JSON Schema。该能力在官方页面标记为 Beta。"
+          }
+        }
+      },
+      "ToolChoice": {
+        "description": "控制模型是否以及如何调用工具。",
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "none",
+              "auto",
+              "required"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ]
+              },
+              "function": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "指定要调用的函数名。"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "description": "非流式对话补全响应。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "响应 ID。"
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion",
+            "description": "对象类型。"
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix 时间戳（秒）。"
+          },
+          "model": {
+            "type": "string",
+            "description": "实际使用的模型名称。"
+          },
+          "choices": {
+            "type": "array",
+            "description": "候选结果列表。",
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "system_fingerprint": {
+            "type": "string",
+            "description": "系统指纹。"
+          }
+        }
+      },
+      "Choice": {
+        "type": "object",
+        "description": "单个候选结果。",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "候选下标。"
+          },
+          "message": {
+            "$ref": "#/components/schemas/ResponseMessage"
+          },
+          "finish_reason": {
+            "type": "string",
+            "description": "生成结束原因，例如 `stop`、`length`、`tool_calls` 或 `content_filter`。"
+          },
+          "logprobs": {
+            "type": "object",
+            "description": "当请求启用 `logprobs` 时，返回该候选的 token 对数概率明细。"
+          }
+        }
+      },
+      "ResponseMessage": {
+        "type": "object",
+        "description": "模型返回的消息对象。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "消息角色，通常为 `assistant`。"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "description": "模型生成的文本内容。"
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "推理内容。DeepSeek 官方响应 schema 中包含该字段。"
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "模型生成的工具调用列表。",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          }
+        }
+      },
+      "ToolCall": {
+        "type": "object",
+        "description": "模型返回的工具调用信息。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "工具调用唯一 ID。"
+          },
+          "type": {
+            "type": "string",
+            "description": "工具调用类型，通常为 `function`。"
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionCall"
+          }
+        }
+      },
+      "FunctionCall": {
+        "type": "object",
+        "description": "模型生成的函数调用。",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "函数名称。"
+          },
+          "arguments": {
+            "type": "string",
+            "description": "JSON 字符串形式的函数参数。"
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "description": "Token 使用统计。",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "输入 token 数。"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "输出 token 数。"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "总 token 数。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "description": "统一错误响应。",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "错误信息。"
+              },
+              "type": {
+                "type": "string",
+                "description": "错误类型。"
+              },
+              "param": {
+                "type": "string",
+                "description": "相关字段。"
+              },
+              "code": {
+                "type": "string",
+                "description": "错误码。"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

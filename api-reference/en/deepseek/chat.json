@@ -1,0 +1,643 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "DeepSeek Chat Completions",
+    "version": "1.0.0",
+    "description": "Customer-facing OpenAPI documentation for DeepSeek `chat/completions`. The public endpoint is `/v1/chat/completions`, following an OpenAI-compatible Chat Completions request shape.\n\nThis document is generated from the official DeepSeek chat page distilled into `docs/channels/deepseek/chat.md`, then narrowed to the subset of fields that both appear on that official page and are currently implemented by this gateway's DeepSeek channel: `model`, `messages`, `thinking`, `frequency_penalty`, `max_tokens`, `presence_penalty`, `response_format`, `stop`, `stream`, `stream_options`, `temperature`, `top_p`, `tools`, `tool_choice`, `logprobs`, and `top_logprobs`.\n\nThe built-in DeepSeek models in this gateway are `deepseek-chat` and `deepseek-reasoner`.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API service endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "DeepSeek Chat",
+      "description": "Text chat, reasoning, and function calling for DeepSeek models"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "DeepSeek Chat Completions",
+        "description": "Invoke DeepSeek chat completions.\n\nThe DeepSeek models built into this gateway are `deepseek-chat` and `deepseek-reasoner`.\n\nPublic fields: `model`, `messages`, `thinking`, `frequency_penalty`, `max_tokens`, `presence_penalty`, `response_format`, `stop`, `stream`, `stream_options`, `temperature`, `top_p`, `tools`, `tool_choice`, `logprobs`, and `top_logprobs`.",
+        "operationId": "deepseekChatCompletions",
+        "tags": [
+          "DeepSeek Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basic_chat": {
+                  "summary": "Basic text chat",
+                  "value": {
+                    "model": "deepseek-chat",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a helpful assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Hi"
+                      }
+                    ],
+                    "stream": false
+                  }
+                },
+                "thinking_json_mode": {
+                  "summary": "Thinking mode with JSON output",
+                  "value": {
+                    "model": "deepseek-reasoner",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Return a JSON object containing summary and action_items."
+                      }
+                    ],
+                    "thinking": {
+                      "type": "enabled"
+                    },
+                    "response_format": {
+                      "type": "json_object"
+                    },
+                    "max_tokens": 1024
+                  }
+                },
+                "tool_calling_stream": {
+                  "summary": "Function calling with streaming",
+                  "value": {
+                    "model": "deepseek-chat",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Check today's weather in Beijing."
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "Get weather by city name",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "City name"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": true,
+                    "stream_options": {
+                      "include_usage": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Non-streaming mode returns JSON, and streaming mode returns an SSE event stream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Non-streaming success response",
+                    "value": {
+                      "id": "930c60df-bf64-41c9-a88e-3ec75f81e00e",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "Hello! How can I help you today?",
+                            "role": "assistant"
+                          }
+                        }
+                      ],
+                      "created": 1705651092,
+                      "model": "deepseek-chat",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 10,
+                        "prompt_tokens": 16,
+                        "total_tokens": 26
+                      }
+                    }
+                  }
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE payload. Each `data:` event can be parsed as a DeepSeek/OpenAI-compatible chat completion chunk. The stream usually ends with `data: [DONE]`."
+                },
+                "examples": {
+                  "stream": {
+                    "summary": "Streaming response snippet",
+                    "value": "data: {\"id\":\"1f633d8bfc032625086f14113c411638\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\",\"role\":\"assistant\"},\"finish_reason\":null,\"logprobs\":null}],\"created\":1718345013,\"model\":\"deepseek-chat\",\"system_fingerprint\":\"fp_a49d71b8a1\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"choices\":[{\"delta\":{\"content\":\"Hello\",\"role\":\"assistant\"},\"finish_reason\":null,\"index\":0,\"logprobs\":null}],\"created\":1718345013,\"id\":\"1f633d8bfc032625086f14113c411638\",\"model\":\"deepseek-chat\",\"object\":\"chat.completion.chunk\",\"system_fingerprint\":\"fp_a49d71b8a1\"}\n\ndata: [DONE]\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Bad request",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "param": "messages",
+                        "code": "bad_request_body"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, for example because the token is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Send `Authorization: Bearer <token>` in the request headers."
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "description": "Request body for DeepSeek chat completions.",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model name. The DeepSeek models built into this gateway are `deepseek-chat` and `deepseek-reasoner`.",
+            "enum": [
+              "deepseek-chat",
+              "deepseek-reasoner"
+            ],
+            "example": "deepseek-chat"
+          },
+          "messages": {
+            "type": "array",
+            "description": "Conversation message list. DeepSeek's official page supports `system`, `user`, `assistant`, and `tool` messages.",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            },
+            "minItems": 1
+          },
+          "thinking": {
+            "$ref": "#/components/schemas/ThinkingConfig"
+          },
+          "frequency_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "default": 0,
+            "description": "Frequency penalty. Positive values reduce verbatim repetition."
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "Maximum number of output tokens. The sum of input and output tokens is still limited by the model context length."
+          },
+          "presence_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "default": 0,
+            "description": "Presence penalty. Positive values increase the model's tendency to talk about new topics."
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
+          },
+          "stop": {
+            "description": "Stop sequences. Up to 16 sequences are supported. This can be a single string or an array of strings.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 16
+              }
+            ]
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "Whether to enable streaming output. When `true`, the response is returned as an SSE event stream."
+          },
+          "stream_options": {
+            "$ref": "#/components/schemas/StreamOptions"
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 2,
+            "default": 1,
+            "description": "Sampling temperature. In most cases, tune either `temperature` or `top_p`, not both."
+          },
+          "top_p": {
+            "type": "number",
+            "maximum": 1,
+            "default": 1,
+            "description": "Nucleus sampling threshold. In most cases, tune either `top_p` or `temperature`, not both."
+          },
+          "tools": {
+            "type": "array",
+            "description": "List of tool definitions available to the model. Only `function` tools are currently supported, with a maximum of 128 entries.",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            },
+            "maxItems": 128
+          },
+          "tool_choice": {
+            "$ref": "#/components/schemas/ToolChoice"
+          },
+          "logprobs": {
+            "type": "boolean",
+            "description": "Whether to return log probabilities for output tokens."
+          },
+          "top_logprobs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 20,
+            "description": "How many top candidate tokens to return at each token position. Requires `logprobs=true`."
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "Chat message object.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool"
+            ],
+            "description": "Message role."
+          },
+          "content": {
+            "type": "string",
+            "description": "Message content. On DeepSeek's official chat page this field is described as text content."
+          },
+          "name": {
+            "type": "string",
+            "description": "Optional participant name used to differentiate senders with the same role."
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "Tool call ID referenced by a `tool` message."
+          }
+        }
+      },
+      "ThinkingConfig": {
+        "type": "object",
+        "description": "Controls switching between thinking and non-thinking modes.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "enabled",
+              "disabled"
+            ],
+            "description": "`enabled` turns on thinking mode and `disabled` turns it off."
+          }
+        }
+      },
+      "ResponseFormat": {
+        "type": "object",
+        "description": "Output format control. Setting `{\"type\":\"json_object\"}` enables JSON Output.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "json_object"
+            ],
+            "default": "text",
+            "description": "Target output format."
+          }
+        }
+      },
+      "StreamOptions": {
+        "type": "object",
+        "description": "Additional streaming options. Set this only when `stream=true`.",
+        "properties": {
+          "include_usage": {
+            "type": "boolean",
+            "description": "If `true`, an additional chunk containing total usage is returned before `data: [DONE]`."
+          }
+        }
+      },
+      "ToolDefinition": {
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "description": "Function tool definition.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "Tool type. Only `function` is currently supported."
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionDefinition"
+          }
+        }
+      },
+      "FunctionDefinition": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "description": "Function definition.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Function name. Letters, numbers, underscores, and dashes are allowed."
+          },
+          "description": {
+            "type": "string",
+            "description": "What the function does."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Function input schema in JSON Schema format."
+          },
+          "strict": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to enable strict mode so tool output always complies with the function JSON Schema. Marked as Beta on the official page."
+          }
+        }
+      },
+      "ToolChoice": {
+        "description": "Controls whether and how the model calls tools.",
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "none",
+              "auto",
+              "required"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ]
+              },
+              "function": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the function that must be called."
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "description": "Non-streaming chat completion response.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Response ID."
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion",
+            "description": "Object type."
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp in seconds."
+          },
+          "model": {
+            "type": "string",
+            "description": "Actual model used."
+          },
+          "choices": {
+            "type": "array",
+            "description": "List of completion candidates.",
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "system_fingerprint": {
+            "type": "string",
+            "description": "System fingerprint."
+          }
+        }
+      },
+      "Choice": {
+        "type": "object",
+        "description": "One completion candidate.",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "Candidate index."
+          },
+          "message": {
+            "$ref": "#/components/schemas/ResponseMessage"
+          },
+          "finish_reason": {
+            "type": "string",
+            "description": "Reason generation stopped, such as `stop`, `length`, `tool_calls`, or `content_filter`."
+          },
+          "logprobs": {
+            "type": "object",
+            "description": "Per-token log probability details when `logprobs` is enabled."
+          }
+        }
+      },
+      "ResponseMessage": {
+        "type": "object",
+        "description": "Message returned by the model.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Message role, usually `assistant`."
+          },
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "description": "Visible model output text."
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "Reasoning content. This field appears in DeepSeek's official response schema."
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "Tool calls generated by the model.",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          }
+        }
+      },
+      "ToolCall": {
+        "type": "object",
+        "description": "Tool call returned by the model.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique tool call ID."
+          },
+          "type": {
+            "type": "string",
+            "description": "Tool type, typically `function`."
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionCall"
+          }
+        }
+      },
+      "FunctionCall": {
+        "type": "object",
+        "description": "Function call emitted by the model.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Function name."
+          },
+          "arguments": {
+            "type": "string",
+            "description": "Function arguments encoded as a JSON string."
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "description": "Token usage statistics.",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens."
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Number of output tokens."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total number of tokens."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "description": "Unified error response.",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error message."
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type."
+              },
+              "param": {
+                "type": "string",
+                "description": "Parameter related to the error."
+              },
+              "code": {
+                "type": "string",
+                "description": "Error code."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
