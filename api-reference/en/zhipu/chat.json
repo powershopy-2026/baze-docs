@@ -3,7 +3,7 @@
   "info": {
     "title": "Zhipu Chat Completions",
     "version": "1.0.0",
-    "description": "Customer-facing OpenAPI documentation for Zhipu `chat/completions` on this gateway. The public endpoint is `/v1/chat/completions`, covering text chat, image understanding, streaming, thinking mode, and function calling.\n\nThis document intentionally describes only the subset of upstream official fields that is currently implemented on the Zhipu V4 channel: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, and `tool_choice`. For multimodal messages, this document only includes the stable content parts currently preserved by the gateway: `text` and `image_url`.",
+    "description": "Zhipu chat completions documentation. The public endpoint is `/v1/chat/completions`, covering text chat, image understanding, streaming, thinking mode, and function calling.\n\nSupported models: `glm-5-turbo`, `glm-5`, `glm-4.7`, `glm-4.7-flash`, and `glm-4.5-air`.\n\nThis document covers the following request fields: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, and `tool_choice`. Multimodal messages are documented here only for `text` and `image_url` content parts.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "Zhipu Chat Completions",
-        "description": "Unified public entry point for Zhipu GLM chat models.\n\nCommon text models include `glm-5-turbo`, `glm-5`, `glm-4.7`, `glm-4.6`, and `glm-4.5`. If your channel is configured with compatible vision-capable models, the same endpoint can also be used for image understanding requests.\n\nCurrently exposed upstream official field subset: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, and `tool_choice`.",
+        "description": "Unified public entry point for Zhipu GLM chat models.\n\nSupported models include `glm-5-turbo`, `glm-5`, `glm-4.7`, `glm-4.7-flash`, and `glm-4.5-air`. The same endpoint supports both text-only chat and image understanding requests that include `image_url` content parts.\n\nThis document exposes the following fields: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, and `tool_choice`.",
         "operationId": "zhipuChatCompletions",
         "tags": [
           "Zhipu Chat"
@@ -98,7 +98,7 @@
                 "vision_chat": {
                   "summary": "Image understanding",
                   "value": {
-                    "model": "glm-5v-turbo",
+                    "model": "glm-5",
                     "messages": [
                       {
                         "role": "user",
@@ -212,7 +212,7 @@
                     "value": {
                       "error": {
                         "message": "Invalid token",
-                        "type": "new_api_error",
+                        "type": "api_error",
                         "param": "",
                         "code": "access_denied"
                       }
@@ -221,6 +221,98 @@
                 }
               }
             }
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient quota for this request",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "error": {
+                        "message": "Internal request processing failed",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Invalid service response",
+                    "value": {
+                      "error": {
+                        "message": "The model service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The model service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the requested model",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The model service is temporarily unavailable, or the requested model is not currently available."
           }
         },
         "security": [
@@ -251,12 +343,19 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Model name, such as `glm-5-turbo`, `glm-5`, or `glm-4.7`. If the channel is configured with compatible vision-capable models, multimodal models such as `glm-5v-turbo` can also be used.",
-            "example": "glm-5-turbo"
+            "description": "Model name. Supported models include `glm-5-turbo`, `glm-5`, `glm-4.7`, `glm-4.7-flash`, and `glm-4.5-air`.",
+            "example": "glm-5-turbo",
+            "enum": [
+              "glm-5-turbo",
+              "glm-5",
+              "glm-4.7",
+              "glm-4.7-flash",
+              "glm-4.5-air"
+            ]
           },
           "messages": {
             "type": "array",
-            "description": "Message list. Supports text messages and the image content parts that are currently preserved reliably by the gateway.",
+            "description": "Message list. Supports plain text messages and image input through `image_url` content parts.",
             "items": {
               "$ref": "#/components/schemas/Message"
             },
@@ -272,14 +371,14 @@
           },
           "temperature": {
             "type": "number",
-            "description": "Sampling temperature. Zhipu's official range is `[0, 1]`.",
+            "description": "Sampling temperature, in the range `[0, 1]`.",
             "minimum": 0,
             "maximum": 1,
             "default": 1
           },
           "top_p": {
             "type": "number",
-            "description": "Nucleus sampling threshold. Zhipu's official range is `[0.01, 1]`.",
+            "description": "Nucleus sampling threshold, in the range `[0.01, 1]`.",
             "minimum": 0.01,
             "maximum": 1,
             "default": 0.95
@@ -291,7 +390,7 @@
           },
           "stop": {
             "type": "array",
-            "description": "List of stop sequences. The official Zhipu API currently supports only a single stop sequence.",
+            "description": "List of stop sequences. Only a single stop sequence is currently supported.",
             "items": {
               "type": "string"
             },
@@ -299,7 +398,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "Tool definitions. On this channel, the gateway currently exposes only the official `function` tool shape.",
+            "description": "Tool definitions. Only the `function` tool shape is currently supported.",
             "items": {
               "$ref": "#/components/schemas/Tool"
             },
@@ -397,7 +496,7 @@
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "Thinking mode configuration. Applies to Zhipu models that officially support the `thinking` parameter.",
+        "description": "Thinking mode configuration. Applies to models that support the `thinking` parameter.",
         "properties": {
           "type": {
             "type": "string",
@@ -569,7 +668,7 @@
             "description": "Function name."
           },
           "arguments": {
-            "description": "Function arguments. This may be a JSON-encoded string or an object returned directly by the upstream service.",
+            "description": "Function arguments. This may be a JSON-encoded string or an object returned directly by the model service.",
             "oneOf": [
               {
                 "type": "string"
@@ -628,7 +727,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "Error type."
+                "description": "Error type, such as `invalid_request_error` or `api_error`."
               },
               "param": {
                 "type": "string",

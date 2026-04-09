@@ -3,7 +3,7 @@
   "info": {
     "title": "智谱对话补全",
     "version": "1.0.0",
-    "description": "智谱 `chat/completions` 能力的 C 端接入文档。公开统一入口为 `/v1/chat/completions`，适用于文本对话、图像理解、流式输出、思考模式与函数工具调用。\n\n本文档仅描述当前网关在 Zhipu V4 通道上已实现且与上游官方能力一致的字段子集：`model`、`messages`、`stream`、`thinking`、`temperature`、`top_p`、`max_tokens`、`stop`、`tools`、`tool_choice`。多模态消息当前文档仅覆盖已稳定透传的 `text` 与 `image_url` 内容分片。",
+    "description": "智谱对话补全文档。公开统一入口为 `/v1/chat/completions`，适用于文本对话、图像理解、流式输出、思考模式与函数工具调用。\n\n支持模型：`glm-5-turbo`、`glm-5`、`glm-4.7`、`glm-4.7-flash`、`glm-4.5-air`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`stream`、`thinking`、`temperature`、`top_p`、`max_tokens`、`stop`、`tools`、`tool_choice`。多模态消息当前仅描述 `text` 与 `image_url` 内容分片。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "智谱对话补全",
-        "description": "面向智谱 GLM 系列聊天模型的统一入口。\n\n常见文本模型包括 `glm-5-turbo`、`glm-5`、`glm-4.7`、`glm-4.6`、`glm-4.5` 等；如果通道已配置兼容的视觉模型，也可使用同一路径提交图像理解请求。\n\n当前已公开的上游官方字段子集：`model`、`messages`、`stream`、`thinking`、`temperature`、`top_p`、`max_tokens`、`stop`、`tools`、`tool_choice`。",
+        "description": "面向智谱 GLM 系列聊天模型的统一入口。\n\n支持模型包括 `glm-5-turbo`、`glm-5`、`glm-4.7`、`glm-4.7-flash`、`glm-4.5-air`。同一路径支持纯文本对话，以及包含 `image_url` 分片的图像理解请求。\n\n本文档公开字段：`model`、`messages`、`stream`、`thinking`、`temperature`、`top_p`、`max_tokens`、`stop`、`tools`、`tool_choice`。",
         "operationId": "zhipuChatCompletions",
         "tags": [
           "Zhipu Chat"
@@ -98,7 +98,7 @@
                 "vision_chat": {
                   "summary": "图像理解",
                   "value": {
-                    "model": "glm-5v-turbo",
+                    "model": "glm-5",
                     "messages": [
                       {
                         "role": "user",
@@ -212,7 +212,7 @@
                     "value": {
                       "error": {
                         "message": "无效的令牌",
-                        "type": "new_api_error",
+                        "type": "api_error",
                         "param": "",
                         "code": "access_denied"
                       }
@@ -221,6 +221,98 @@
                 }
               }
             }
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "服务响应异常",
+                    "value": {
+                      "error": {
+                        "message": "模型服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "模型服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "模型服务暂不可用，或当前模型暂时无可用渠道。"
           }
         },
         "security": [
@@ -251,12 +343,19 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称，例如 `glm-5-turbo`、`glm-5`、`glm-4.7`。若通道配置了兼容视觉模型，也可使用如 `glm-5v-turbo` 的多模态模型。 ",
-            "example": "glm-5-turbo"
+            "description": "模型名称。支持的模型包括 `glm-5-turbo`、`glm-5`、`glm-4.7`、`glm-4.7-flash`、`glm-4.5-air`。",
+            "example": "glm-5-turbo",
+            "enum": [
+              "glm-5-turbo",
+              "glm-5",
+              "glm-4.7",
+              "glm-4.7-flash",
+              "glm-4.5-air"
+            ]
           },
           "messages": {
             "type": "array",
-            "description": "消息列表。支持文本消息，以及当前网关已稳定透传的图像输入分片。",
+            "description": "消息列表。支持纯文本消息，以及包含 `image_url` 分片的图像输入。",
             "items": {
               "$ref": "#/components/schemas/Message"
             },
@@ -272,14 +371,14 @@
           },
           "temperature": {
             "type": "number",
-            "description": "采样温度。智谱官方取值范围为 `[0, 1]`。",
+            "description": "采样温度，取值范围为 `[0, 1]`。",
             "minimum": 0,
             "maximum": 1,
             "default": 1
           },
           "top_p": {
             "type": "number",
-            "description": "核采样概率阈值。智谱官方取值范围为 `[0.01, 1]`。",
+            "description": "核采样概率阈值，取值范围为 `[0.01, 1]`。",
             "minimum": 0.01,
             "maximum": 1,
             "default": 0.95
@@ -291,7 +390,7 @@
           },
           "stop": {
             "type": "array",
-            "description": "停止词列表。当前智谱官方接口仅支持单个停止词。",
+            "description": "停止词列表。当前仅支持单个停止词。",
             "items": {
               "type": "string"
             },
@@ -299,7 +398,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "工具定义列表。当前网关在该通道仅公开官方 `function` 工具形态。",
+            "description": "工具定义列表。当前仅支持 `function` 工具形态。",
             "items": {
               "$ref": "#/components/schemas/Tool"
             },
@@ -397,7 +496,7 @@
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "思考模式配置。适用于智谱官方支持 `thinking` 参数的模型。",
+        "description": "思考模式配置。适用于支持 `thinking` 参数的模型。",
         "properties": {
           "type": {
             "type": "string",
@@ -569,7 +668,7 @@
             "description": "函数名称。"
           },
           "arguments": {
-            "description": "函数参数。兼容字符串形式的 JSON，或上游直接返回的对象结构。",
+            "description": "函数参数。兼容字符串形式的 JSON，或直接返回的对象结构。",
             "oneOf": [
               {
                 "type": "string"
@@ -628,7 +727,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "错误类型。"
+                "description": "错误类型，例如 `invalid_request_error` 或 `api_error`。"
               },
               "param": {
                 "type": "string",

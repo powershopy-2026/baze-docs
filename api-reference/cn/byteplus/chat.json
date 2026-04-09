@@ -3,7 +3,7 @@
   "info": {
     "title": "BytePlus 对话补全",
     "version": "1.0.0",
-    "description": "BytePlus `chat/completions` 的 C 端 OpenAPI 文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 风格请求。\n\n本文档基于 `docs/channels/byteplus/chat.md` 的官方整理稿，并结合当前网关 BytePlus 通道的实际实现裁剪，仅描述官方页面中出现且项目当前已实现的字段子集：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。\n\n当前网关内置的 BytePlus 对话模型为 `seed-2-0-pro-260328`、`seed-2-0-lite-260228`、`seed-2-0-mini-260215`、`seed-1-8-251228`、`seed-1-6-250915`、`seed-1-6-flash-250715`、`deepseek-v3-2-251201`、`gpt-oss-120b-250805`。",
+    "description": "BytePlus 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`seed-2-0-pro-260328`、`seed-2-0-lite-260228`、`seed-2-0-mini-260215`、`seed-1-8-251228`、`seed-1-6-250915`、`seed-1-6-flash-250715`、`deepseek-v3-2-251201`、`gpt-oss-120b-250805`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "BytePlus 对话补全",
-        "description": "调用 BytePlus chat completions 能力。\n\n当前网关内置的 BytePlus 对话模型包括 `seed-2-0-pro-260328`、`seed-2-0-lite-260228`、`seed-2-0-mini-260215`、`seed-1-8-251228`、`seed-1-6-250915`、`seed-1-6-flash-250715`、`deepseek-v3-2-251201`、`gpt-oss-120b-250805`。\n\n公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
+        "description": "调用 BytePlus chat completions 能力。\n\n支持模型包括 `seed-2-0-pro-260328`、`seed-2-0-lite-260228`、`seed-2-0-mini-260215`、`seed-1-8-251228`、`seed-1-6-250915`、`seed-1-6-flash-250715`、`deepseek-v3-2-251201`、`gpt-oss-120b-250805`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
         "operationId": "byteplusChatCompletions",
         "tags": [
           "BytePlus Chat"
@@ -307,7 +307,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称。当前网关内置的 BytePlus 对话模型为 `seed-2-0-pro-260328`、`seed-2-0-lite-260228`、`seed-2-0-mini-260215`、`seed-1-8-251228`、`seed-1-6-250915`、`seed-1-6-flash-250715`、`deepseek-v3-2-251201`、`gpt-oss-120b-250805`。",
+            "description": "模型名称。支持的 BytePlus 对话模型包括 `seed-2-0-pro-260328`、`seed-2-0-lite-260228`、`seed-2-0-mini-260215`、`seed-1-8-251228`、`seed-1-6-250915`、`seed-1-6-flash-250715`、`deepseek-v3-2-251201`、`gpt-oss-120b-250805`。",
             "enum": [
               "seed-2-0-pro-260328",
               "seed-2-0-lite-260228",
@@ -678,7 +678,7 @@
       },
       "ResponseFormat": {
         "type": "object",
-        "description": "控制回答格式。BytePlus 官方文档将该能力标注为 beta。",
+        "description": "控制回答格式（Beta）。",
         "properties": {
           "type": {
             "type": "string",

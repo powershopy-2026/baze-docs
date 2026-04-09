@@ -220,10 +220,10 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "Bad upstream response",
+                    "summary": "Invalid service response",
                     "value": {
                       "error": {
-                        "message": "Upstream service returned an invalid response",
+                        "message": "The model service returned an invalid response",
                         "type": "api_error",
                         "code": "bad_response_status_code",
                         "param": ""
@@ -233,7 +233,7 @@
                 }
               }
             },
-            "description": "The upstream service returned an invalid response."
+            "description": "The model service returned an invalid response."
           },
           "503": {
             "content": {
@@ -256,7 +256,7 @@
                 }
               }
             },
-            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
+            "description": "The model service is temporarily unavailable, or the requested model is not currently available."
           }
         },
         "security": [
@@ -424,7 +424,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
+                "description": "Error type, such as `invalid_request_error` or `api_error`."
               },
               "code": {
                 "type": "string"

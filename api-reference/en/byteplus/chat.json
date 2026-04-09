@@ -3,7 +3,7 @@
   "info": {
     "title": "BytePlus Chat Completions",
     "version": "1.0.0",
-    "description": "Customer-facing OpenAPI documentation for BytePlus `chat/completions`. The public endpoint is `/v1/chat/completions`, following an OpenAI-compatible Chat Completions request shape.\n\nThis document is generated from the official BytePlus chat page distilled into `docs/channels/byteplus/chat.md`, then narrowed to the subset of fields that both appear on that official page and are currently implemented by this gateway's BytePlus channel: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, and `tool_choice`.\n\nThe built-in BytePlus chat models in this gateway are `seed-2-0-pro-260328`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-1-8-251228`, `seed-1-6-250915`, `seed-1-6-flash-250715`, `deepseek-v3-2-251201`, and `gpt-oss-120b-250805`.",
+    "description": "BytePlus chat completions documentation. The public endpoint is `/v1/chat/completions`, following an OpenAI-compatible Chat Completions request shape.\n\nSupported models: `seed-2-0-pro-260328`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-1-8-251228`, `seed-1-6-250915`, `seed-1-6-flash-250715`, `deepseek-v3-2-251201`, and `gpt-oss-120b-250805`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, and `tool_choice`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "BytePlus Chat Completions",
-        "description": "Invoke BytePlus chat completions.\n\nThe BytePlus chat models built into this gateway are `seed-2-0-pro-260328`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-1-8-251228`, `seed-1-6-250915`, `seed-1-6-flash-250715`, `deepseek-v3-2-251201`, and `gpt-oss-120b-250805`.\n\nPublic fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, and `tool_choice`. `messages[].content` supports multimodal `text`, `image_url`, and `video_url` parts, while `assistant` messages may include `reasoning_content` and `tool_calls`.",
+        "description": "Invoke BytePlus chat completions.\n\nSupported models include `seed-2-0-pro-260328`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-1-8-251228`, `seed-1-6-250915`, `seed-1-6-flash-250715`, `deepseek-v3-2-251201`, and `gpt-oss-120b-250805`.\n\nThis document exposes the following fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, and `tool_choice`. `messages[].content` supports multimodal `text`, `image_url`, and `video_url` parts, while `assistant` messages may include `reasoning_content` and `tool_calls`.",
         "operationId": "byteplusChatCompletions",
         "tags": [
           "BytePlus Chat"
@@ -307,7 +307,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Model name. The BytePlus chat models built into this gateway are `seed-2-0-pro-260328`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-1-8-251228`, `seed-1-6-250915`, `seed-1-6-flash-250715`, `deepseek-v3-2-251201`, and `gpt-oss-120b-250805`.",
+            "description": "Model name. Supported BytePlus chat models include `seed-2-0-pro-260328`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-1-8-251228`, `seed-1-6-250915`, `seed-1-6-flash-250715`, `deepseek-v3-2-251201`, and `gpt-oss-120b-250805`.",
             "enum": [
               "seed-2-0-pro-260328",
               "seed-2-0-lite-260228",
@@ -539,7 +539,7 @@
         "required": [
           "url"
         ],
-        "description": "Image content. The upstream accepts either an image URL or Base64-encoded image data.",
+        "description": "Image content. Supports either an image URL or Base64-encoded image data.",
         "properties": {
           "url": {
             "type": "string",
@@ -561,7 +561,7 @@
         "required": [
           "url"
         ],
-        "description": "Video content. The upstream accepts either a video URL or Base64-encoded payload.",
+        "description": "Video content. Supports either a video URL or Base64-encoded payload.",
         "properties": {
           "url": {
             "type": "string",
@@ -678,7 +678,7 @@
       },
       "ResponseFormat": {
         "type": "object",
-        "description": "Controls the answer format. BytePlus labels this capability as beta in the upstream documentation.",
+        "description": "Controls the answer format. Beta.",
         "properties": {
           "type": {
             "type": "string",

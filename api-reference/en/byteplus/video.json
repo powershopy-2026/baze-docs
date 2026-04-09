@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Seedance Video Generation",
-        "description": "For Seedance video models. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nSupports text-to-video, first-frame image-to-video, first-and-last-frame video, and reference-image video workflows. Public fields: `model`, `prompt`, `image`, `seconds`, `size`, `resolution`, `ratio`, `seed`, `camera_fixed`, `watermark`, `generate_audio`, and `draft`.",
+        "description": "For Seedance video models. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nThe currently documented public workflows are text-to-video and first-frame image-to-video. This document covers `model`, `prompt`, `image`, `seconds`, `size`, `resolution`, `ratio`, `seed`, `camera_fixed`, `watermark`, `generate_audio`, `draft`, and `return_last_frame`.",
         "operationId": "byteplusVideoGenerations",
         "tags": [
           "Seedance Video"
@@ -58,16 +58,6 @@
                     "seconds": 5,
                     "resolution": "720p",
                     "ratio": "adaptive"
-                  }
-                },
-                "first_last_frame": {
-                  "summary": "First and last frame to video",
-                  "value": {
-                    "model": "seedance-1-5-pro-251215",
-                    "prompt": "Person transitioning from standing to sitting",
-                    "image": "https://example.com/first.jpg",
-                    "last_frame_url": "https://example.com/last.jpg",
-                    "seconds": 5
                   }
                 },
                 "draft_mode": {
@@ -217,10 +207,10 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "Bad upstream response",
+                    "summary": "Invalid service response",
                     "value": {
                       "error": {
-                        "message": "Upstream service returned an invalid response",
+                        "message": "The model service returned an invalid response",
                         "type": "api_error",
                         "code": "bad_response_status_code",
                         "param": ""
@@ -230,7 +220,7 @@
                 }
               }
             },
-            "description": "The upstream service returned an invalid response."
+            "description": "The model service returned an invalid response."
           },
           "503": {
             "content": {
@@ -253,7 +243,7 @@
                 }
               }
             },
-            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
+            "description": "The model service is temporarily unavailable, or the requested model is not currently available."
           }
         },
         "security": [
@@ -287,31 +277,15 @@
               "seedance-1-0-pro-250528",
               "seedance-1-0-pro-fast-251015"
             ],
-            "description": "Video generation model name. The current BytePlus video whitelist contains only `seedance-1-5-pro-251215`, `seedance-1-0-pro-250528`, and `seedance-1-0-pro-fast-251015`. 1.5-pro supports all documented modes; 1.0-pro supports text-to-video, first-frame, and first-last-frame; 1.0-pro-fast supports text-to-video and first-frame only."
+            "description": "Video generation model name. Supported models include `seedance-1-5-pro-251215`, `seedance-1-0-pro-250528`, and `seedance-1-0-pro-fast-251015`. All three support text-to-video and first-frame image-to-video. `seedance-1-5-pro-251215` additionally supports `generate_audio`, `draft`, and `return_last_frame`."
           },
           "prompt": {
             "type": "string",
             "description": "Text prompt describing desired video content. Recommended max 500 Chinese characters or 1000 English words."
           },
           "image": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "Single image URL (first frame or reference)."
-              },
-              {
-                "type": "array",
-                "description": "Multiple reference images (1-4) for reference-image-to-video.",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "Input images for image-to-video scenarios."
-          },
-          "last_frame_url": {
             "type": "string",
-            "description": "Last frame image URL. For first-and-last-frame-to-video. Supported by 1.5-pro and 1.0-pro."
+            "description": "First-frame image URL or Base64-encoded input for first-frame image-to-video."
           },
           "seconds": {
             "type": "integer",
@@ -344,7 +318,7 @@
               "21:9",
               "adaptive"
             ],
-            "description": "Video aspect ratio. Text-to-video defaults to 16:9 (1.5-pro defaults to adaptive); image-to-video defaults to adaptive. Reference-image scenario doesn't support adaptive.",
+            "description": "Video aspect ratio. Text-to-video defaults to 16:9 (`seedance-1-5-pro-251215` defaults to `adaptive`), while first-frame image-to-video defaults to `adaptive`.",
             "default": "16:9"
           },
           "seed": {
@@ -354,7 +328,7 @@
           },
           "camera_fixed": {
             "type": "boolean",
-            "description": "Whether to fix camera. Reference-image scenario doesn't support this.",
+            "description": "Whether to fix camera.",
             "default": false
           },
           "watermark": {
@@ -428,7 +402,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
+                "description": "Error type, such as `invalid_request_error` or `api_error`."
               },
               "code": {
                 "type": "string"

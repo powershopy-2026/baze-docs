@@ -220,10 +220,10 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "上游响应异常",
+                    "summary": "服务响应异常",
                     "value": {
                       "error": {
-                        "message": "上游服务返回了无效响应",
+                        "message": "模型服务返回了无效响应",
                         "type": "api_error",
                         "code": "bad_response_status_code",
                         "param": ""
@@ -233,7 +233,7 @@
                 }
               }
             },
-            "description": "上游服务返回异常响应。"
+            "description": "模型服务返回异常响应。"
           },
           "503": {
             "content": {
@@ -256,7 +256,7 @@
                 }
               }
             },
-            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
+            "description": "模型服务暂不可用，或当前模型暂时无可用渠道。"
           }
         },
         "security": [
@@ -424,7 +424,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
+                "description": "错误类型，例如 `invalid_request_error` 或 `api_error`。"
               },
               "code": {
                 "type": "string"

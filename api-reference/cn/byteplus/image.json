@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream 图像生成",
-        "description": "适用于 Seedream 系列图像模型。\n\n当前网关支持 `seedream-5-0-260128`、`seedream-4-5-251128`、`seedream-4-0-250828`。公开字段：`model`、`prompt`、`image`、`size`、`seed`、`sequential_image_generation`、`n`、`response_format`、`watermark`。生成结果链接通常为临时地址，请及时下载保存。",
+        "description": "适用于 Seedream 系列图像模型。\n\n支持模型包括 `seedream-5-0-260128`、`seedream-4-5-251128`、`seedream-4-0-250828`。本文档覆盖的请求字段包括 `model`、`prompt`、`image`、`size`、`seed`、`sequential_image_generation`、`n`、`response_format`、`watermark`。生成结果链接通常为临时地址，请及时下载保存。",
         "operationId": "byteplusImageGenerations",
         "tags": [
           "Seedream Image"
@@ -215,10 +215,10 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "上游响应异常",
+                    "summary": "服务响应异常",
                     "value": {
                       "error": {
-                        "message": "上游服务返回了无效响应",
+                        "message": "模型服务返回了无效响应",
                         "type": "api_error",
                         "code": "bad_response_status_code",
                         "param": ""
@@ -228,7 +228,7 @@
                 }
               }
             },
-            "description": "上游服务返回异常响应。"
+            "description": "模型服务返回异常响应。"
           },
           "503": {
             "content": {
@@ -251,7 +251,7 @@
                 }
               }
             },
-            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
+            "description": "模型服务暂不可用，或当前模型暂时无可用渠道。"
           }
         },
         "security": [
@@ -285,7 +285,7 @@
               "seedream-4-5-251128",
               "seedream-4-0-250828"
             ],
-            "description": "图像生成模型名称。当前 BytePlus 图像白名单仅包含 `seedream-5-0-260128`、`seedream-4-5-251128`、`seedream-4-0-250828`。"
+            "description": "图像生成模型名称。支持的模型包括 `seedream-5-0-260128`、`seedream-4-5-251128`、`seedream-4-0-250828`。"
           },
           "prompt": {
             "type": "string",
@@ -341,7 +341,7 @@
               "auto",
               "disabled"
             ],
-            "description": "组图功能开关。auto 为自动判断模式，disabled 为关闭组图（仅生成单图）。当前白名单中的 Seedream 模型支持该能力。",
+            "description": "组图功能开关。`auto` 为自动判断模式，`disabled` 为关闭组图（仅生成单图）。当前支持的 Seedream 模型均可使用该能力。",
             "default": "disabled"
           },
           "watermark": {
@@ -412,7 +412,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
+                "description": "错误类型，例如 `invalid_request_error` 或 `api_error`。"
               },
               "code": {
                 "type": "string"

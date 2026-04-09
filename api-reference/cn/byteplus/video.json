@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Seedance 视频生成",
-        "description": "适用于 Seedance 系列视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n支持文生视频、首帧图生视频、首尾帧图生视频与参考图生视频。公开字段：`model`、`prompt`、`image`、`seconds`、`size`、`resolution`、`ratio`、`seed`、`camera_fixed`、`watermark`、`generate_audio`、`draft`。",
+        "description": "适用于 Seedance 系列视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n当前公开支持文生视频与首帧图生视频。本文档覆盖的请求字段包括 `model`、`prompt`、`image`、`seconds`、`size`、`resolution`、`ratio`、`seed`、`camera_fixed`、`watermark`、`generate_audio`、`draft`、`return_last_frame`。",
         "operationId": "byteplusVideoGenerations",
         "tags": [
           "Seedance Video"
@@ -58,16 +58,6 @@
                     "seconds": 5,
                     "resolution": "720p",
                     "ratio": "adaptive"
-                  }
-                },
-                "first_last_frame": {
-                  "summary": "首尾帧图生视频",
-                  "value": {
-                    "model": "seedance-1-5-pro-251215",
-                    "prompt": "人物从站立姿势坐下",
-                    "image": "https://example.com/first.jpg",
-                    "last_frame_url": "https://example.com/last.jpg",
-                    "seconds": 5
                   }
                 },
                 "draft_mode": {
@@ -217,10 +207,10 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "上游响应异常",
+                    "summary": "服务响应异常",
                     "value": {
                       "error": {
-                        "message": "上游服务返回了无效响应",
+                        "message": "模型服务返回了无效响应",
                         "type": "api_error",
                         "code": "bad_response_status_code",
                         "param": ""
@@ -230,7 +220,7 @@
                 }
               }
             },
-            "description": "上游服务返回异常响应。"
+            "description": "模型服务返回异常响应。"
           },
           "503": {
             "content": {
@@ -253,7 +243,7 @@
                 }
               }
             },
-            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
+            "description": "模型服务暂不可用，或当前模型暂时无可用渠道。"
           }
         },
         "security": [
@@ -287,31 +277,15 @@
               "seedance-1-0-pro-250528",
               "seedance-1-0-pro-fast-251015"
             ],
-            "description": "视频生成模型名称。当前 BytePlus 视频白名单仅包含 `seedance-1-5-pro-251215`、`seedance-1-0-pro-250528`、`seedance-1-0-pro-fast-251015`。1.5-pro 支持文生视频/首帧图生视频/首尾帧图生视频；1.0-pro 支持文生视频/首帧图生视频/首尾帧图生视频；1.0-pro-fast 仅支持文生视频/首帧图生视频。"
+            "description": "视频生成模型名称。支持的模型包括 `seedance-1-5-pro-251215`、`seedance-1-0-pro-250528`、`seedance-1-0-pro-fast-251015`。三者均支持文生视频与首帧图生视频；其中 `seedance-1-5-pro-251215` 额外支持 `generate_audio`、`draft` 与 `return_last_frame`。"
           },
           "prompt": {
             "type": "string",
             "description": "文本提示词，描述期望生成的视频内容。建议中文不超过 500 字，英文不超过 1000 词。"
           },
           "image": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "单张图片 URL（首帧或参考图）。"
-              },
-              {
-                "type": "array",
-                "description": "多张参考图片（1-4 张），用于参考图生视频场景。",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "输入图片。用于图生视频场景。"
-          },
-          "last_frame_url": {
             "type": "string",
-            "description": "尾帧图片 URL。用于首尾帧图生视频场景。1.5-pro 与 1.0-pro 支持。"
+            "description": "首帧图片 URL 或 Base64 编码。用于首帧图生视频场景。"
           },
           "seconds": {
             "type": "integer",
@@ -344,7 +318,7 @@
               "21:9",
               "adaptive"
             ],
-            "description": "视频宽高比。文生视频默认 16:9（1.5-pro 默认 adaptive），图生视频默认 adaptive。参考图场景不支持 adaptive。",
+            "description": "视频宽高比。文生视频默认 16:9（`seedance-1-5-pro-251215` 默认 `adaptive`），首帧图生视频默认 `adaptive`。",
             "default": "16:9"
           },
           "seed": {
@@ -354,7 +328,7 @@
           },
           "camera_fixed": {
             "type": "boolean",
-            "description": "是否固定摄像头。参考图场景不支持。",
+            "description": "是否固定摄像头。",
             "default": false
           },
           "watermark": {
@@ -428,7 +402,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
+                "description": "错误类型，例如 `invalid_request_error` 或 `api_error`。"
               },
               "code": {
                 "type": "string"

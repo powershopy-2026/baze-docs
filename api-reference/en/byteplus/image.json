@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream Image Generation",
-        "description": "For Seedream image models.\n\nThis gateway currently supports `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`. Public fields: `model`, `prompt`, `image`, `size`, `seed`, `sequential_image_generation`, `n`, `response_format`, and `watermark`. Generated file links are typically temporary and should be downloaded promptly.",
+        "description": "For Seedream image models.\n\nSupported models include `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`. This document covers `model`, `prompt`, `image`, `size`, `seed`, `sequential_image_generation`, `n`, `response_format`, and `watermark`. Generated file links are typically temporary and should be downloaded promptly.",
         "operationId": "byteplusImageGenerations",
         "tags": [
           "Seedream Image"
@@ -215,10 +215,10 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "Bad upstream response",
+                    "summary": "Invalid service response",
                     "value": {
                       "error": {
-                        "message": "Upstream service returned an invalid response",
+                        "message": "The model service returned an invalid response",
                         "type": "api_error",
                         "code": "bad_response_status_code",
                         "param": ""
@@ -228,7 +228,7 @@
                 }
               }
             },
-            "description": "The upstream service returned an invalid response."
+            "description": "The model service returned an invalid response."
           },
           "503": {
             "content": {
@@ -251,7 +251,7 @@
                 }
               }
             },
-            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
+            "description": "The model service is temporarily unavailable, or the requested model is not currently available."
           }
         },
         "security": [
@@ -285,7 +285,7 @@
               "seedream-4-5-251128",
               "seedream-4-0-250828"
             ],
-            "description": "Image generation model name. The current BytePlus image whitelist contains only `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`."
+            "description": "Image generation model name. Supported models include `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`."
           },
           "prompt": {
             "type": "string",
@@ -412,7 +412,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
+                "description": "Error type, such as `invalid_request_error` or `api_error`."
               },
               "code": {
                 "type": "string"
