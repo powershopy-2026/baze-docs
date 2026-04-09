@@ -355,7 +355,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "消息列表。支持纯文本消息，以及包含 `image_url` 分片的图像输入。",
+            "description": "消息列表。支持纯文本消息，以及包含 `image_url` 分片的图像输入。请求中至少需要包含一条非 `system`、非 `assistant` 的消息；不能只传 `system` 消息或只传 `assistant` 消息。",
             "items": {
               "$ref": "#/components/schemas/Message"
             },
@@ -414,7 +414,7 @@
         "required": [
           "role"
         ],
-        "description": "聊天消息对象。",
+        "description": "聊天消息对象。单独使用 `system` 或 `assistant` 消息作为整个请求输入会被上游拒绝。",
         "properties": {
           "role": {
             "type": "string",

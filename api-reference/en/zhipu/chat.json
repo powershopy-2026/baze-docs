@@ -355,7 +355,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "Message list. Supports plain text messages and image input through `image_url` content parts.",
+            "description": "Message list. Supports plain text messages and image input through `image_url` content parts. The request must include at least one message that is not `system` or `assistant`; requests made up only of `system` messages or only of `assistant` messages are rejected upstream.",
             "items": {
               "$ref": "#/components/schemas/Message"
             },
@@ -414,7 +414,7 @@
         "required": [
           "role"
         ],
-        "description": "Chat message object.",
+        "description": "Chat message object. A request that consists only of `system` messages or only of `assistant` messages is rejected upstream.",
         "properties": {
           "role": {
             "type": "string",
