@@ -87,9 +87,160 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "请求体格式错误或字段取值非法",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "请求体过大",
+                    "value": {
+                      "error": {
+                        "message": "请求体过大，请缩小输入后重试",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "请求体过大。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
           }
         },
         "security": [
@@ -282,7 +433,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
               },
               "code": {
                 "type": "string"

@@ -41,7 +41,7 @@
                 "text_to_video": {
                   "summary": "Text to video",
                   "value": {
-                    "model": "doubao-seedance-1.5-pro-251215",
+                    "model": "seedance-1-5-pro-251215",
                     "prompt": "A kitten running on grass, sunny day, camera following",
                     "seconds": 5,
                     "resolution": "720p",
@@ -52,7 +52,7 @@
                 "image_to_video": {
                   "summary": "First frame to video",
                   "value": {
-                    "model": "doubao-seedance-1.5-pro-251215",
+                    "model": "seedance-1-5-pro-251215",
                     "prompt": "Camera slowly pushing in, girl smiling",
                     "image": "https://example.com/first-frame.jpg",
                     "seconds": 5,
@@ -63,7 +63,7 @@
                 "first_last_frame": {
                   "summary": "First and last frame to video",
                   "value": {
-                    "model": "doubao-seedance-1.5-pro-251215",
+                    "model": "seedance-1-5-pro-251215",
                     "prompt": "Person transitioning from standing to sitting",
                     "image": "https://example.com/first.jpg",
                     "last_frame_url": "https://example.com/last.jpg",
@@ -73,7 +73,7 @@
                 "draft_mode": {
                   "summary": "Draft mode (fast preview)",
                   "value": {
-                    "model": "doubao-seedance-1.5-pro-251215",
+                    "model": "seedance-1-5-pro-251215",
                     "prompt": "Dog playing with ball",
                     "draft": true,
                     "resolution": "480p"
@@ -100,9 +100,160 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Bad request",
+                    "value": {
+                      "error": {
+                        "message": "Request body is invalid or contains unsupported values",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, for example because the token is missing or invalid."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "Request body too large",
+                    "value": {
+                      "error": {
+                        "message": "Request body is too large; reduce the input and try again",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The request body is too large."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient quota for this request",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "error": {
+                        "message": "Internal request processing failed",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad upstream response",
+                    "value": {
+                      "error": {
+                        "message": "Upstream service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the requested model",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
@@ -132,13 +283,11 @@
           "model": {
             "type": "string",
             "enum": [
-              "doubao-seedance-1.5-pro-251215",
-              "doubao-seedance-1.0-pro-250528",
-              "doubao-seedance-1.0-pro-fast-251015",
-              "doubao-seedance-1.0-lite-t2v-250428",
-              "doubao-seedance-1.0-lite-i2v-250428"
+              "seedance-1-5-pro-251215",
+              "seedance-1-0-pro-250528",
+              "seedance-1-0-pro-fast-251015"
             ],
-            "description": "Video generation model name. 1.5-pro supports all modes; 1.0-pro supports text-to-video/first-frame/first-last-frame; 1.0-pro-fast supports text-to-video/first-frame only; 1.0-lite-t2v is text-to-video only; 1.0-lite-i2v supports all modes."
+            "description": "Video generation model name. The current BytePlus video whitelist contains only `seedance-1-5-pro-251215`, `seedance-1-0-pro-250528`, and `seedance-1-0-pro-fast-251015`. 1.5-pro supports all documented modes; 1.0-pro supports text-to-video, first-frame, and first-last-frame; 1.0-pro-fast supports text-to-video and first-frame only."
           },
           "prompt": {
             "type": "string",
@@ -162,7 +311,7 @@
           },
           "last_frame_url": {
             "type": "string",
-            "description": "Last frame image URL. For first-and-last-frame-to-video. Supported by 1.5-pro, 1.0-pro, 1.0-lite-i2v."
+            "description": "Last frame image URL. For first-and-last-frame-to-video. Supported by 1.5-pro and 1.0-pro."
           },
           "seconds": {
             "type": "integer",
@@ -178,7 +327,7 @@
               "720p",
               "1080p"
             ],
-            "description": "Video resolution. seedance-1.0-lite doesn't support 1080p; draft mode only supports 480p. 1.5-pro/1.0-lite default 720p, 1.0-pro/pro-fast default 1080p."
+            "description": "Video resolution. Draft mode only supports 480p. 1.5-pro defaults to 720p, while 1.0-pro and 1.0-pro-fast default to 1080p."
           },
           "size": {
             "type": "string",
@@ -278,7 +427,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
               },
               "code": {
                 "type": "string"

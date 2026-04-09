@@ -1,30 +1,34 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax Overseas - Subject Reference to Video",
+    "title": "Hailuo 主体参考视频",
     "version": "1.0.0",
-    "description": "MiniMax Overseas 主体参考视频渠道子文档。该文档描述当前项目已经实现、且与 MiniMax 官方 subject-reference-to-video 能力对应的字段子集。\n\n项目入口为 `/v1/videos`，网关最终会调用上游 `POST https://api.minimax.io/v1/video_generation`。`subject_reference` 会按官方结构透传。"
+    "description": "Hailuo 主体参考视频能力文档。公开统一入口为 `/v1/videos`，用于创建异步视频生成任务。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "当前 new-api 网关实例"
+      "description": "Baze API 服务地址"
     }
   ],
   "tags": [
     {
-      "name": "MiniMax Overseas Video",
-      "description": "MiniMax Overseas 主体参考视频能力"
+      "name": "Hailuo Video",
+      "description": "Hailuo 主体参考视频能力"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "MiniMax Overseas 主体参考视频",
-        "description": "该接口仅适用于 MiniMax Overseas 主体参考视频能力。\n\n当前能力边界：\n- 仅支持模型 `S2V-01`\n- 已实现字段：`model`、`subject_reference`、`prompt`\n- `prompt` 在该能力下为可选字段\n- 官方扩展字段 `prompt_optimizer`、`callback_url` 通过 `metadata.*` 透传",
+        "summary": "Hailuo 主体参考视频",
+        "description": "适用于 `S2V-01` 主体参考视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`subject_reference`、`prompt`。该能力可用于保持主体形象或物体特征的一致性。",
         "operationId": "minimaxOverseasSubjectReferenceToVideo",
         "tags": [
-          "MiniMax Overseas Video"
+          "Hailuo Video"
         ],
         "requestBody": {
           "required": true,
@@ -45,10 +49,7 @@
                           "https://example.com/assets/subject-reference.png"
                         ]
                       }
-                    ],
-                    "metadata": {
-                      "prompt_optimizer": false
-                    }
+                    ]
                   }
                 }
               }
@@ -72,9 +73,139 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "请求体格式错误或字段取值非法",
+                      "data": null
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "无效的令牌",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "请求体过大",
+                    "value": {
+                      "code": "read_request_body_failed",
+                      "message": "请求体过大，请缩小输入后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "请求体过大。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "当前账户额度不足，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "code": "gen_relay_info_failed",
+                      "message": "服务内部处理失败，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "code": "bad_response_status_code",
+                      "message": "上游服务返回了无效响应",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "code": "get_channel_failed",
+                      "message": "当前模型暂时无可用渠道，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
           }
         },
         "security": [
@@ -106,7 +237,7 @@
             "enum": [
               "S2V-01"
             ],
-            "description": "MiniMax Overseas 主体参考视频模型。"
+            "description": "当前能力使用的模型名称。"
           },
           "prompt": {
             "type": "string",
@@ -118,12 +249,7 @@
             "items": {
               "$ref": "#/components/schemas/VideoSubjectReference"
             },
-            "description": "MiniMax 官方主体参考字段。"
-          },
-          "metadata": {
-            "type": "object",
-            "description": "MiniMax 官方扩展字段透传区。当前项目支持 `prompt_optimizer`、`callback_url`。",
-            "additionalProperties": true
+            "description": "主体参考信息，用于约束生成结果中的人物或物体一致性。"
           }
         }
       },
@@ -136,7 +262,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "主体类型。当前项目实现与官方文档一致，仅支持 `character`。"
+            "description": "主体类型。当前仅支持 `character`。"
           },
           "image": {
             "type": "array",

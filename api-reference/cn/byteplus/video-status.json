@@ -56,7 +56,7 @@
                       "id": "cgt-20250331175019-68d9t",
                       "task_id": "cgt-20250331175019-68d9t",
                       "object": "video",
-                      "model": "doubao-seedance-1-5-pro-251215",
+                      "model": "seedance-1-5-pro-251215",
                       "status": "queued",
                       "progress": 0,
                       "created_at": 1742515200
@@ -68,7 +68,7 @@
                       "id": "cgt-20250331175019-68d9t",
                       "task_id": "cgt-20250331175019-68d9t",
                       "object": "video",
-                      "model": "doubao-seedance-1-5-pro-251215",
+                      "model": "seedance-1-5-pro-251215",
                       "status": "running",
                       "progress": 45,
                       "created_at": 1742515200
@@ -80,7 +80,7 @@
                       "id": "cgt-20250331175019-68d9t",
                       "task_id": "cgt-20250331175019-68d9t",
                       "object": "video",
-                      "model": "doubao-seedance-1-5-pro-251215",
+                      "model": "seedance-1-5-pro-251215",
                       "status": "succeeded",
                       "progress": 100,
                       "created_at": 1742515200,
@@ -103,7 +103,7 @@
                       "id": "cgt-20250331175019-68d9t",
                       "task_id": "cgt-20250331175019-68d9t",
                       "object": "video",
-                      "model": "doubao-seedance-1-5-pro-251215",
+                      "model": "seedance-1-5-pro-251215",
                       "status": "failed",
                       "progress": 0,
                       "created_at": 1742515200,
@@ -126,9 +126,137 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "任务不存在",
+                    "value": {
+                      "error": {
+                        "message": "任务不存在或已过期",
+                        "type": "api_error",
+                        "code": "task_not_found",
+                        "param": ""
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
           }
         },
         "security": [
@@ -295,7 +423,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
               },
               "code": {
                 "type": "string"

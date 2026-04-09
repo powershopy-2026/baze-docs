@@ -1,30 +1,34 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax Overseas - Download Video File",
+    "title": "Video Content Download",
     "version": "1.0.0",
-    "description": "MiniMax Overseas video file download subdocument. The baze platform entry path is `/v1/videos/{task_id}/content`, which returns the downloadable video content for a completed task."
+    "description": "Documentation for downloading completed video output. The public endpoint is `/v1/videos/{task_id}/content` and streams the final media file after task completion.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Public baze platform API endpoint"
+      "description": "Baze API service endpoint"
     }
   ],
   "tags": [
     {
-      "name": "MiniMax Overseas Video",
-      "description": "MiniMax Overseas video content download"
+      "name": "Hailuo Video",
+      "description": "Video file download for Hailuo workflows"
     }
   ],
   "paths": {
     "/v1/videos/{task_id}/content": {
       "get": {
-        "summary": "Download MiniMax Overseas video content",
-        "description": "Download the completed video content.\n\nCall this endpoint after the task has completed to retrieve the generated video file through the baze platform.",
+        "summary": "Video Content Download",
+        "description": "Download the final video file after an asynchronous video task completes.\n\nUse this endpoint when you want the media content directly instead of handling a temporary result URL.",
         "operationId": "minimaxOverseasDownloadVideoFile",
         "tags": [
-          "MiniMax Overseas Video"
+          "Hailuo Video"
         ],
         "parameters": [
           {
@@ -34,20 +38,14 @@
             "schema": {
               "type": "string"
             },
-            "description": "Public video task ID."
+            "description": "Video task ID."
           }
         ],
         "responses": {
           "200": {
-            "description": "Download succeeded. Returns the video binary stream directly.",
+            "description": "Video file content returned successfully.",
             "content": {
               "video/mp4": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              },
-              "application/octet-stream": {
                 "schema": {
                   "type": "string",
                   "format": "binary"
@@ -55,8 +53,166 @@
               }
             }
           },
+          "400": {
+            "description": "Task not completed yet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "task_not_ready": {
+                    "summary": "Task not ready",
+                    "value": {
+                      "error": {
+                        "message": "Task is not completed yet",
+                        "type": "api_error",
+                        "code": "task_not_ready",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
-            "description": "The task does not exist, or it has not produced downloadable content yet."
+            "description": "Task not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "error": {
+                        "message": "Task not found or expired",
+                        "type": "api_error",
+                        "code": "task_not_found",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, for example because the token is missing or invalid."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient quota for this request",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "error": {
+                        "message": "Internal request processing failed",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad upstream response",
+                    "value": {
+                      "error": {
+                        "message": "Upstream service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the requested model",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
@@ -73,6 +229,28 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
       }
     }
   }

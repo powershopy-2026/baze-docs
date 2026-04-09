@@ -56,7 +56,7 @@
                       "id": "cgt-20250331175019-68d9t",
                       "task_id": "cgt-20250331175019-68d9t",
                       "object": "video",
-                      "model": "doubao-seedance-1-5-pro-251215",
+                      "model": "seedance-1-5-pro-251215",
                       "status": "queued",
                       "progress": 0,
                       "created_at": 1742515200
@@ -68,7 +68,7 @@
                       "id": "cgt-20250331175019-68d9t",
                       "task_id": "cgt-20250331175019-68d9t",
                       "object": "video",
-                      "model": "doubao-seedance-1-5-pro-251215",
+                      "model": "seedance-1-5-pro-251215",
                       "status": "running",
                       "progress": 45,
                       "created_at": 1742515200
@@ -80,7 +80,7 @@
                       "id": "cgt-20250331175019-68d9t",
                       "task_id": "cgt-20250331175019-68d9t",
                       "object": "video",
-                      "model": "doubao-seedance-1-5-pro-251215",
+                      "model": "seedance-1-5-pro-251215",
                       "status": "succeeded",
                       "progress": 100,
                       "created_at": 1742515200,
@@ -103,7 +103,7 @@
                       "id": "cgt-20250331175019-68d9t",
                       "task_id": "cgt-20250331175019-68d9t",
                       "object": "video",
-                      "model": "doubao-seedance-1-5-pro-251215",
+                      "model": "seedance-1-5-pro-251215",
                       "status": "failed",
                       "progress": 0,
                       "created_at": 1742515200,
@@ -126,9 +126,137 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "error": {
+                        "message": "Task not found or expired",
+                        "type": "api_error",
+                        "code": "task_not_found",
+                        "param": ""
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, for example because the token is missing or invalid."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient quota for this request",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "error": {
+                        "message": "Internal request processing failed",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad upstream response",
+                    "value": {
+                      "error": {
+                        "message": "Upstream service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the requested model",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
@@ -295,7 +423,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
               },
               "code": {
                 "type": "string"

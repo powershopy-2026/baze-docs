@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream Image Generation",
-        "description": "For Seedream image models.\n\nSupported models include `doubao-seedream-5.0-lite`, `doubao-seedream-4.5`, `doubao-seedream-4.0`, `doubao-seedream-3.0-t2i`, and `doubao-seededit-3.0-i2i`. Public fields: `model`, `prompt`, `image`, `size`, `seed`, `sequential_image_generation`, `n`, `response_format`, and `watermark`. Generated file links are typically temporary and should be downloaded promptly.",
+        "description": "For Seedream image models.\n\nThis gateway currently supports `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`. Public fields: `model`, `prompt`, `image`, `size`, `seed`, `sequential_image_generation`, `n`, `response_format`, and `watermark`. Generated file links are typically temporary and should be downloaded promptly.",
         "operationId": "byteplusImageGenerations",
         "tags": [
           "Seedream Image"
@@ -41,7 +41,7 @@
                 "text_to_image": {
                   "summary": "Text to image",
                   "value": {
-                    "model": "doubao-seedream-4.5",
+                    "model": "seedream-4-5-251128",
                     "prompt": "A cute corgi running on grass, sunny day, realistic style",
                     "size": "2048x2048",
                     "response_format": "url"
@@ -50,7 +50,7 @@
                 "image_to_image": {
                   "summary": "Image to image",
                   "value": {
-                    "model": "doubao-seedream-4.5",
+                    "model": "seedream-4-5-251128",
                     "prompt": "Transform the image into Studio Ghibli animation style",
                     "image": "https://example.com/input.jpg",
                     "size": "2048x2048"
@@ -59,7 +59,7 @@
                 "sequential_images": {
                   "summary": "Sequential image generation",
                   "value": {
-                    "model": "doubao-seedream-4.5",
+                    "model": "seedream-4-5-251128",
                     "prompt": "A set of four seasons landscape illustrations, spring summer autumn winter",
                     "sequential_image_generation": "auto",
                     "response_format": "url"
@@ -68,7 +68,7 @@
                 "multi_image_reference": {
                   "summary": "Multi-image reference generation",
                   "value": {
-                    "model": "doubao-seedream-4.5",
+                    "model": "seedream-4-5-251128",
                     "prompt": "Combine the styles of these images to generate a new landscape",
                     "image": [
                       "https://example.com/ref1.jpg",
@@ -98,9 +98,160 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Bad request",
+                    "value": {
+                      "error": {
+                        "message": "Request body is invalid or contains unsupported values",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, for example because the token is missing or invalid."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "Request body too large",
+                    "value": {
+                      "error": {
+                        "message": "Request body is too large; reduce the input and try again",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The request body is too large."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient quota for this request",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "error": {
+                        "message": "Internal request processing failed",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad upstream response",
+                    "value": {
+                      "error": {
+                        "message": "Upstream service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the requested model",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
@@ -130,13 +281,11 @@
           "model": {
             "type": "string",
             "enum": [
-              "doubao-seedream-5.0-lite",
-              "doubao-seedream-4.5",
-              "doubao-seedream-4.0",
-              "doubao-seedream-3.0-t2i",
-              "doubao-seededit-3.0-i2i"
+              "seedream-5-0-260128",
+              "seedream-4-5-251128",
+              "seedream-4-0-250828"
             ],
-            "description": "Image generation model name. seedream-5.0-lite/4.5/4.0 support sequential images; seedream-3.0-t2i is text-to-image only; seededit-3.0-i2i supports image-to-image."
+            "description": "Image generation model name. The current BytePlus image whitelist contains only `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`."
           },
           "prompt": {
             "type": "string",
@@ -158,7 +307,7 @@
                 "maxItems": 14
               }
             ],
-            "description": "Reference images. seedream-5.0-lite/4.5/4.0 support 1-14 images; seededit-3.0-i2i supports 1 image; seedream-3.0-t2i does not support."
+            "description": "Reference images. The public Seedream models currently documented here support 1-14 reference images."
           },
           "n": {
             "type": "integer",
@@ -169,7 +318,7 @@
           },
           "size": {
             "type": "string",
-            "description": "Output image size.\n- seedream-5.0-lite: supports 2K/3K or custom (total pixels 3686400-10404496, aspect ratio 1/16-16)\n- seedream-4.5: supports 2K/4K or custom (total pixels 3686400-16777216, aspect ratio 1/16-16)\n- seedream-4.0: supports 1K/2K/4K or custom (total pixels 921600-16777216, aspect ratio 1/16-16)\n- seedream-3.0-t2i/seededit-3.0-i2i: total pixels 512x512 to 2048x2048, aspect ratio 1/3-3",
+            "description": "Output image size.\n- seedream-5-0-260128: supports 2K/3K or custom (total pixels 3686400-10404496, aspect ratio 1/16-16)\n- seedream-4-5-251128: supports 2K/4K or custom (total pixels 3686400-16777216, aspect ratio 1/16-16)\n- seedream-4-0-250828: supports 1K/2K/4K or custom (total pixels 921600-16777216, aspect ratio 1/16-16)",
             "example": "2048x2048"
           },
           "response_format": {
@@ -183,7 +332,7 @@
           },
           "seed": {
             "type": "integer",
-            "description": "Random seed. Only seedream-3.0-t2i and seededit-3.0-i2i support. Range [-1, 2147483647].",
+            "description": "Random seed. Supported by some Seedream models. Range [-1, 2147483647].",
             "default": -1
           },
           "sequential_image_generation": {
@@ -192,7 +341,7 @@
               "auto",
               "disabled"
             ],
-            "description": "Sequential image generation switch. auto for auto mode, disabled for single image. Only seedream-5.0-lite/4.5/4.0 support.",
+            "description": "Sequential image generation switch. auto for auto mode, disabled for single image. Supported by the Seedream models currently documented here.",
             "default": "disabled"
           },
           "watermark": {
@@ -262,7 +411,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
               },
               "code": {
                 "type": "string"

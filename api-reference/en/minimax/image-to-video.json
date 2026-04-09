@@ -1,30 +1,34 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax Overseas - Image to Video",
+    "title": "Hailuo First-Frame to Video",
     "version": "1.0.0",
-    "description": "MiniMax Overseas image-to-video subdocument. This subdocument describes the subset of fields that the baze platform currently implements and maps to the official MiniMax image-to-video capability.\n\nThe baze platform entry path is `/v1/videos`, and the gateway ultimately calls upstream `POST https://api.minimax.io/v1/video_generation`. Public `image` / `input_reference` fields are mapped to upstream `first_frame_image`."
+    "description": "First-frame image-to-video documentation for Hailuo video models. The public endpoint is `/v1/videos` and creates asynchronous generation tasks.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Public baze platform API endpoint"
+      "description": "Baze API service endpoint"
     }
   ],
   "tags": [
     {
-      "name": "MiniMax Overseas Video",
-      "description": "MiniMax Overseas image-to-video capability"
+      "name": "Hailuo Video",
+      "description": "First-frame video generation for Hailuo models"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "MiniMax Overseas image to video",
-        "description": "This endpoint only applies to the MiniMax Overseas image-to-video capability.\n\nCurrent support boundary:\n- Supported models: `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-2.3-Fast`, `MiniMax-Hailuo-02`, `I2V-01-Director`, `I2V-01-live`, `I2V-01`\n- Implemented fields: `model`, `image`, `prompt`, `seconds`, `size`\n- `prompt` can be omitted for this capability; whether it is required depends on the model\n- Official extension fields are passed through under `metadata.*`",
+        "summary": "Hailuo First-Frame to Video",
+        "description": "For first-frame image-to-video models such as `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-2.3-Fast`, `MiniMax-Hailuo-02`, `I2V-01-Director`, `I2V-01-live`, and `I2V-01`. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `image`, `prompt`, `seconds`, and `size`.",
         "operationId": "minimaxOverseasImageToVideo",
         "tags": [
-          "MiniMax Overseas Video"
+          "Hailuo Video"
         ],
         "requestBody": {
           "required": true,
@@ -35,7 +39,7 @@
               },
               "examples": {
                 "basic_request": {
-                  "summary": "Basic image-to-video request",
+                  "summary": "Basic first-frame-to-video request",
                   "value": {
                     "model": "I2V-01",
                     "image": "https://example.com/assets/first-frame.png",
@@ -50,7 +54,7 @@
         },
         "responses": {
           "200": {
-            "description": "Submission succeeded. Returns the unified OpenAI-style video task object.",
+            "description": "Submission successful, returns unified OpenAI-style video task object.",
             "content": {
               "application/json": {
                 "schema": {
@@ -60,14 +64,144 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters, for example missing `image` or sending a model that does not support image to video.",
+            "description": "Invalid request parameters, such as missing `image` or model that doesn't support first-frame-to-video.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Bad request",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "Request body is invalid or contains unsupported values",
+                      "data": null
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, for example because the token is missing or invalid."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "Request body too large",
+                    "value": {
+                      "code": "read_request_body_failed",
+                      "message": "Request body is too large; reduce the input and try again",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The request body is too large."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient quota for this request",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "code": "gen_relay_info_failed",
+                      "message": "Internal request processing failed",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad upstream response",
+                    "value": {
+                      "code": "bad_response_status_code",
+                      "message": "Upstream service returned an invalid response",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "code": "get_channel_failed",
+                      "message": "No available channel for the requested model",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
@@ -104,11 +238,11 @@
               "I2V-01-live",
               "I2V-01"
             ],
-            "description": "MiniMax Overseas image-to-video model."
+            "description": "Model name used for this capability."
           },
           "image": {
             "type": "string",
-            "description": "First-frame image URL or Data URL. The gateway maps it to upstream `first_frame_image`."
+            "description": "First-frame image URL or Data URL."
           },
           "prompt": {
             "type": "string",
@@ -116,16 +250,11 @@
           },
           "seconds": {
             "type": "string",
-            "description": "Requested duration in seconds. The gateway maps it to upstream `duration`."
+            "description": "Target video duration in seconds."
           },
           "size": {
             "type": "string",
-            "description": "Requested resolution. The gateway maps it to upstream `resolution`."
-          },
-          "metadata": {
-            "type": "object",
-            "description": "Pass-through area for official MiniMax extension fields. The baze platform supports `prompt_optimizer`, `fast_pretreatment`, `callback_url`, and `aigc_watermark`.",
-            "additionalProperties": true
+            "description": "Target output size or resolution. Available values depend on the selected model."
           }
         }
       },

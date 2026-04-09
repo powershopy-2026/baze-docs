@@ -1,30 +1,34 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax Overseas - Text to Image",
+    "title": "Image-01 文生图",
     "version": "1.0.0",
-    "description": "MiniMax Overseas 文生图渠道子文档。该文档是项目统一图像接口的 MiniMax Overseas 视图，只描述当前项目已经实现、且与 MiniMax 官方文生图能力对应的字段子集。\n\n项目入口仍为 `/v1/images/generations`，网关会把本请求转换为上游 `POST https://api.minimax.io/v1/image_generation`。"
+    "description": "Image-01 文生图能力文档。公开统一入口为 `/v1/images/generations`，用于根据文本提示词生成图片。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "当前 new-api 网关实例"
+      "description": "Baze API 服务地址"
     }
   ],
   "tags": [
     {
-      "name": "MiniMax Overseas Image",
-      "description": "MiniMax Overseas 文生图能力"
+      "name": "Image Generation",
+      "description": "Image-01 图像生成能力"
     }
   ],
   "paths": {
     "/v1/images/generations": {
       "post": {
-        "summary": "MiniMax Overseas 文生图",
-        "description": "该接口仅适用于 MiniMax Overseas 文生图能力。\n\n当前能力边界：\n- 仅支持模型 `image-01`\n- 已实现字段：`model`、`prompt`、`aspect_ratio`、`width`、`height`、`response_format`、`seed`、`n`、`prompt_optimizer`\n- 统一入口中的 `response_format=b64_json` 会被映射为 MiniMax 官方的 `response_format=base64`",
+        "summary": "Image-01 文生图",
+        "description": "适用于 `image-01` 模型的文生图能力。\n\n公开字段：`model`、`prompt`、`aspect_ratio`、`width`、`height`、`response_format`、`seed`、`n`、`prompt_optimizer`。",
         "operationId": "minimaxOverseasTextToImage",
         "tags": [
-          "MiniMax Overseas Image"
+          "Image Generation"
         ],
         "requestBody": {
           "required": true,
@@ -67,9 +71,160 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "请求体格式错误或字段取值非法",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "请求体过大",
+                    "value": {
+                      "error": {
+                        "message": "请求体过大，请缩小输入后重试",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "请求体过大。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
           }
         },
         "security": [
@@ -101,7 +256,7 @@
             "enum": [
               "image-01"
             ],
-            "description": "MiniMax Overseas 文生图模型。当前项目仅实现 `image-01`。"
+            "description": "当前能力使用的模型名称。"
           },
           "prompt": {
             "type": "string",
@@ -125,7 +280,7 @@
               "url",
               "b64_json"
             ],
-            "description": "统一响应格式。`b64_json` 会被网关映射为 MiniMax 官方的 `base64`。"
+            "description": "返回格式。使用 `url` 获取临时下载地址，使用 `b64_json` 获取 Base64 编码内容。"
           },
           "seed": {
             "type": "integer",
@@ -167,11 +322,11 @@
         "properties": {
           "url": {
             "type": "string",
-            "description": "当上游返回 URL 时使用。对应 MiniMax 官方 `data.image_urls[*]`。"
+            "description": "图片下载地址。通常为临时链接，请尽快保存。"
           },
           "b64_json": {
             "type": "string",
-            "description": "当上游返回 Base64 时使用。对应 MiniMax 官方 `data.image_base64[*]`。"
+            "description": "Base64 编码的图片内容。"
           }
         }
       },
@@ -180,23 +335,23 @@
         "properties": {
           "provider_request_id": {
             "type": "string",
-            "description": "对应 MiniMax 官方 `id`。"
+            "description": "模型服务返回的请求追踪 ID。"
           },
           "provider_status_code": {
             "type": "integer",
-            "description": "对应 MiniMax 官方 `base_resp.status_code`。"
+            "description": "模型服务返回的状态码。"
           },
           "provider_status_msg": {
             "type": "string",
-            "description": "对应 MiniMax 官方 `base_resp.status_msg`。"
+            "description": "模型服务返回的状态说明。"
           },
           "success_count": {
             "type": "integer",
-            "description": "对应 MiniMax 官方 `metadata.success_count`。"
+            "description": "本次成功生成的结果数量。"
           },
           "failed_count": {
             "type": "integer",
-            "description": "对应 MiniMax 官方 `metadata.failed_count`。"
+            "description": "本次未返回结果的数量。"
           }
         }
       },
@@ -210,7 +365,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
               },
               "code": {
                 "type": "string"

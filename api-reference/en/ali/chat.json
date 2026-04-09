@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "Qwen Chat Completions",
-        "description": "For Qwen chat models including `qwen-turbo`, `qwen-plus`, `qwen-max`, `qwen-coder`, `qwen-vl-plus`, and `qwen-vl-max`.\n\nPublic fields: `model`, `messages`, `stream`, `temperature`, `top_p`, `max_tokens`, `stop`, `seed`, `tools`, `tool_choice`, `enable_search`, and `response_format`.",
+        "description": "For Ali chat models that publicly support the OpenAI Chat Completions contract, including `qwen3-max`, `qwen3.6-plus`, `qwen3.5-flash`, `qwen3-coder-plus`, `deepseek-v3.2`, and legacy public Qwen chat models such as `qwen-turbo`, `qwen-plus`, and `qwen-max`.\n\nThis document describes implemented public Ali chat capability, not the internal operations whitelist.\n\nPublic fields: `model`, `messages`, `stream`, `temperature`, `top_p`, `max_tokens`, `stop`, `seed`, `tools`, `tool_choice`, `enable_search`, and `response_format`.",
         "operationId": "aliChatCompletions",
         "tags": [
           "Qwen Chat"
@@ -41,7 +41,7 @@
                 "text_chat": {
                   "summary": "Text-only chat",
                   "value": {
-                    "model": "qwen-max",
+                    "model": "qwen3.6-plus",
                     "messages": [
                       {
                         "role": "system",
@@ -82,7 +82,7 @@
                 "streaming_chat": {
                   "summary": "Streaming output",
                   "value": {
-                    "model": "qwen-max",
+                    "model": "qwen3-max",
                     "messages": [
                       {
                         "role": "user",
@@ -113,9 +113,137 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Bad request",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": "messages"
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, for example because the token is missing or invalid."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient quota for this request",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "error": {
+                        "message": "Internal request processing failed",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad upstream response",
+                    "value": {
+                      "error": {
+                        "message": "Upstream service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the requested model",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
@@ -144,8 +272,8 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Model name. Supported models: qwen-max, qwen-plus, qwen-turbo, qwen-coder, qwen-vl-plus, qwen-vl-max, etc.",
-            "example": "qwen-max"
+            "description": "Model name. Publicly implemented Ali chat models include qwen3-max, qwen3.6-plus, qwen3.5-flash, qwen3-coder-plus, deepseek-v3.2, and other Qwen models that remain compatible with `/v1/chat/completions`.",
+            "example": "qwen3.6-plus"
           },
           "messages": {
             "type": "array",
@@ -389,7 +517,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
               },
               "code": {
                 "type": "string"

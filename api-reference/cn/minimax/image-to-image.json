@@ -1,30 +1,34 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax Overseas - Image to Image",
+    "title": "Image-01 图生图",
     "version": "1.0.0",
-    "description": "MiniMax Overseas 图生图渠道子文档。该文档只保留当前项目已经实现、且与 MiniMax 官方图生图能力对应的字段。\n\n项目入口为 `/v1/images/edits`，网关最终会调用上游 `POST https://api.minimax.io/v1/image_generation`。\n\n说明：项目级统一接口还接受 JSON `image` 和 multipart `image` 作为兼容输入，网关会把这些输入标准化为 MiniMax 官方 `subject_reference[].image_file`。这些兼容输入的公开边界在项目级文档中说明，此处仅展开官方能力字段子集。"
+    "description": "Image-01 图生图能力文档。公开统一入口为 `/v1/images/edits`，用于基于参考图生成或重绘图片。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "当前 new-api 网关实例"
+      "description": "Baze API 服务地址"
     }
   ],
   "tags": [
     {
-      "name": "MiniMax Overseas Image",
-      "description": "MiniMax Overseas 图生图能力"
+      "name": "Image Generation",
+      "description": "Image-01 图生图能力"
     }
   ],
   "paths": {
     "/v1/images/edits": {
       "post": {
-        "summary": "MiniMax Overseas 图生图",
-        "description": "该接口仅适用于 MiniMax Overseas 图生图能力。\n\n当前能力边界：\n- 支持模型 `image-01` 与 `image-01-live`\n- 官方字段子集：`model`、`prompt`、`subject_reference`、`aspect_ratio`、`width`、`height`、`response_format`、`seed`、`n`、`prompt_optimizer`\n- `subject_reference` 只在 `application/json` 下公开支持\n- `mask` 不属于本期实现能力，不能出现在该渠道子文档中",
+        "summary": "Image-01 图生图",
+        "description": "适用于 `image-01` 与 `image-01-live` 模型的图生图能力。\n\n公开字段：`model`、`prompt`、`subject_reference`、`aspect_ratio`、`width`、`height`、`response_format`、`seed`、`n`、`prompt_optimizer`。`subject_reference` 在该文档中按 JSON 请求展开。",
         "operationId": "minimaxOverseasImageToImage",
         "tags": [
-          "MiniMax Overseas Image"
+          "Image Generation"
         ],
         "requestBody": {
           "required": true,
@@ -34,8 +38,8 @@
                 "$ref": "#/components/schemas/MiniMaxOverseasImageToImageRequest"
               },
               "examples": {
-                "official_subject_reference": {
-                  "summary": "使用官方 subject_reference",
+                "subject_reference_example": {
+                  "summary": "使用 subject_reference",
                   "value": {
                     "model": "image-01-live",
                     "prompt": "Turn this portrait into a manga cover",
@@ -70,9 +74,160 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "请求体格式错误或字段取值非法",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "请求体过大",
+                    "value": {
+                      "error": {
+                        "message": "请求体过大，请缩小输入后重试",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "请求体过大。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
           }
         },
         "security": [
@@ -106,7 +261,7 @@
               "image-01",
               "image-01-live"
             ],
-            "description": "MiniMax Overseas 图生图模型。当前项目支持 `image-01` 与 `image-01-live`。"
+            "description": "当前能力使用的模型名称。"
           },
           "prompt": {
             "type": "string",
@@ -118,7 +273,7 @@
             "items": {
               "$ref": "#/components/schemas/SubjectReferenceItem"
             },
-            "description": "MiniMax 官方图生图字段。项目统一入口中的 JSON `image` 或 multipart `image` 最终也会被转换成该结构。"
+            "description": "主体参考信息，用于约束生成结果中的人物或物体一致性。"
           },
           "aspect_ratio": {
             "type": "string",
@@ -138,7 +293,7 @@
               "url",
               "b64_json"
             ],
-            "description": "统一响应格式。`b64_json` 会被网关映射为 MiniMax 官方 `base64`。"
+            "description": "返回格式。使用 `url` 获取临时下载地址，使用 `b64_json` 获取 Base64 编码内容。"
           },
           "seed": {
             "type": "integer",
@@ -166,7 +321,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "主体类型。当前 MiniMax 官方文档只公开 `character`。"
+            "description": "主体类型。当前仅支持 `character`。"
           },
           "image_file": {
             "type": "string",
@@ -207,19 +362,24 @@
         "type": "object",
         "properties": {
           "provider_request_id": {
-            "type": "string"
+            "type": "string",
+            "description": "模型服务返回的请求追踪 ID。"
           },
           "provider_status_code": {
-            "type": "integer"
+            "type": "integer",
+            "description": "模型服务返回的状态码。"
           },
           "provider_status_msg": {
-            "type": "string"
+            "type": "string",
+            "description": "模型服务返回的状态说明。"
           },
           "success_count": {
-            "type": "integer"
+            "type": "integer",
+            "description": "本次成功生成的结果数量。"
           },
           "failed_count": {
-            "type": "integer"
+            "type": "integer",
+            "description": "本次未返回结果的数量。"
           }
         }
       },
@@ -233,7 +393,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
               },
               "code": {
                 "type": "string"

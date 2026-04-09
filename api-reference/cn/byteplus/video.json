@@ -41,7 +41,7 @@
                 "text_to_video": {
                   "summary": "文生视频",
                   "value": {
-                    "model": "doubao-seedance-1.5-pro-251215",
+                    "model": "seedance-1-5-pro-251215",
                     "prompt": "一只小猫在草地上奔跑，阳光明媚，镜头跟随移动",
                     "seconds": 5,
                     "resolution": "720p",
@@ -52,7 +52,7 @@
                 "image_to_video": {
                   "summary": "首帧图生视频",
                   "value": {
-                    "model": "doubao-seedance-1.5-pro-251215",
+                    "model": "seedance-1-5-pro-251215",
                     "prompt": "镜头缓缓推进，女孩微笑",
                     "image": "https://example.com/first-frame.jpg",
                     "seconds": 5,
@@ -63,7 +63,7 @@
                 "first_last_frame": {
                   "summary": "首尾帧图生视频",
                   "value": {
-                    "model": "doubao-seedance-1.5-pro-251215",
+                    "model": "seedance-1-5-pro-251215",
                     "prompt": "人物从站立姿势坐下",
                     "image": "https://example.com/first.jpg",
                     "last_frame_url": "https://example.com/last.jpg",
@@ -73,7 +73,7 @@
                 "draft_mode": {
                   "summary": "样片模式（快速预览）",
                   "value": {
-                    "model": "doubao-seedance-1.5-pro-251215",
+                    "model": "seedance-1-5-pro-251215",
                     "prompt": "小狗玩球",
                     "draft": true,
                     "resolution": "480p"
@@ -100,9 +100,160 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "请求体格式错误或字段取值非法",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "请求体过大",
+                    "value": {
+                      "error": {
+                        "message": "请求体过大，请缩小输入后重试",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "请求体过大。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
           }
         },
         "security": [
@@ -132,13 +283,11 @@
           "model": {
             "type": "string",
             "enum": [
-              "doubao-seedance-1.5-pro-251215",
-              "doubao-seedance-1.0-pro-250528",
-              "doubao-seedance-1.0-pro-fast-251015",
-              "doubao-seedance-1.0-lite-t2v-250428",
-              "doubao-seedance-1.0-lite-i2v-250428"
+              "seedance-1-5-pro-251215",
+              "seedance-1-0-pro-250528",
+              "seedance-1-0-pro-fast-251015"
             ],
-            "description": "视频生成模型名称。1.5-pro 支持文生视频/首帧图生视频/首尾帧图生视频；1.0-pro 支持文生视频/首帧图生视频/首尾帧图生视频；1.0-pro-fast 仅支持文生视频/首帧图生视频；1.0-lite-t2v 仅支持文生视频；1.0-lite-i2v 支持文生视频/首帧图生视频/首尾帧图生视频/参考图生视频。"
+            "description": "视频生成模型名称。当前 BytePlus 视频白名单仅包含 `seedance-1-5-pro-251215`、`seedance-1-0-pro-250528`、`seedance-1-0-pro-fast-251015`。1.5-pro 支持文生视频/首帧图生视频/首尾帧图生视频；1.0-pro 支持文生视频/首帧图生视频/首尾帧图生视频；1.0-pro-fast 仅支持文生视频/首帧图生视频。"
           },
           "prompt": {
             "type": "string",
@@ -162,7 +311,7 @@
           },
           "last_frame_url": {
             "type": "string",
-            "description": "尾帧图片 URL。用于首尾帧图生视频场景。1.5-pro、1.0-pro、1.0-lite-i2v 支持。"
+            "description": "尾帧图片 URL。用于首尾帧图生视频场景。1.5-pro 与 1.0-pro 支持。"
           },
           "seconds": {
             "type": "integer",
@@ -178,7 +327,7 @@
               "720p",
               "1080p"
             ],
-            "description": "视频分辨率。seedance-1.0-lite 不支持 1080p；样片模式（draft=true）仅支持 480p。1.5-pro/1.0-lite 默认 720p，1.0-pro/pro-fast 默认 1080p。"
+            "description": "视频分辨率。样片模式（draft=true）仅支持 480p。1.5-pro 默认 720p，1.0-pro / 1.0-pro-fast 默认 1080p。"
           },
           "size": {
             "type": "string",
@@ -278,7 +427,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
               },
               "code": {
                 "type": "string"

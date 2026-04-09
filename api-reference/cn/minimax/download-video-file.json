@@ -1,30 +1,34 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax Overseas - Download Video File",
+    "title": "视频文件下载",
     "version": "1.0.0",
-    "description": "MiniMax Overseas 视频文件下载子文档。项目入口为 `/v1/videos/{task_id}/content`，网关会在请求时实时调用上游 `GET https://api.minimax.io/v1/files/retrieve` 换取最新 `download_url`，再代理输出视频内容。"
+    "description": "异步视频成品下载文档。公开统一入口为 `/v1/videos/{task_id}/content`，用于在任务完成后直接获取最终视频文件。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "当前 new-api 网关实例"
+      "description": "Baze API 服务地址"
     }
   ],
   "tags": [
     {
-      "name": "MiniMax Overseas Video",
-      "description": "MiniMax Overseas 视频内容下载"
+      "name": "Hailuo Video",
+      "description": "Hailuo 视频文件下载"
     }
   ],
   "paths": {
     "/v1/videos/{task_id}/content": {
       "get": {
-        "summary": "下载 MiniMax Overseas 视频内容",
-        "description": "下载已完成的视频内容。\n\n对 MiniMax Overseas 渠道，网关不会把上游短时效 `download_url` 持久化为稳定结果地址，而是在每次下载时基于内部保存的 `file_id` 实时换取最新下载链接，因此更适合长期稳定访问。",
+        "summary": "视频文件下载",
+        "description": "在异步视频任务完成后下载最终视频文件内容。\n\n当你需要直接获取媒体文件，而不是处理临时结果地址时，应使用此接口。",
         "operationId": "minimaxOverseasDownloadVideoFile",
         "tags": [
-          "MiniMax Overseas Video"
+          "Hailuo Video"
         ],
         "parameters": [
           {
@@ -56,7 +60,123 @@
             }
           },
           "404": {
-            "description": "任务不存在，或任务尚未生成可下载内容。"
+            "description": "任务不存在，或任务尚未生成可下载内容。",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not_found": {
+                    "summary": "任务不存在",
+                    "value": {
+                      "code": "task_not_found",
+                      "message": "任务不存在或已过期",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "task_not_ready": {
+                    "summary": "任务未完成",
+                    "value": {
+                      "code": "task_not_ready",
+                      "message": "任务尚未完成，暂不可下载",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "任务尚未完成，暂不可下载。"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "无效的令牌",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "当前账户额度不足，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "code": "gen_relay_info_failed",
+                      "message": "服务内部处理失败，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "code": "bad_response_status_code",
+                      "message": "上游服务返回了无效响应",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "code": "get_channel_failed",
+                      "message": "当前模型暂时无可用渠道，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
           }
         },
         "security": [

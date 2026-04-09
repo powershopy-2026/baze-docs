@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "千问对话补全",
-        "description": "适用于千问系列对话模型，包括 `qwen-turbo`、`qwen-plus`、`qwen-max`、`qwen-coder`、`qwen-vl-plus`、`qwen-vl-max` 等。\n\n公开字段：`model`、`messages`、`stream`、`temperature`、`top_p`、`max_tokens`、`stop`、`seed`、`tools`、`tool_choice`、`enable_search`、`response_format`。",
+        "description": "适用于阿里通义千问兼容 OpenAI Chat Completions 的公开对话模型，包括 `qwen3-max`、`qwen3.6-plus`、`qwen3.5-flash`、`qwen3-coder-plus`、`deepseek-v3.2` 以及仍保持公开兼容的 `qwen-turbo`、`qwen-plus`、`qwen-max` 等。\n\n本文档描述的是 Ali 通道已实现的官方公开对话能力，不等同于 internal 渠道运营白名单。\n\n公开字段：`model`、`messages`、`stream`、`temperature`、`top_p`、`max_tokens`、`stop`、`seed`、`tools`、`tool_choice`、`enable_search`、`response_format`。",
         "operationId": "aliChatCompletions",
         "tags": [
           "Qwen Chat"
@@ -41,7 +41,7 @@
                 "text_chat": {
                   "summary": "纯文本对话",
                   "value": {
-                    "model": "qwen-max",
+                    "model": "qwen3.6-plus",
                     "messages": [
                       {
                         "role": "system",
@@ -82,7 +82,7 @@
                 "streaming_chat": {
                   "summary": "流式输出",
                   "value": {
-                    "model": "qwen-max",
+                    "model": "qwen3-max",
                     "messages": [
                       {
                         "role": "user",
@@ -113,9 +113,137 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": "messages"
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
           }
         },
         "security": [
@@ -144,8 +272,8 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称。支持的模型：qwen-max、qwen-plus、qwen-turbo、qwen-coder、qwen-vl-plus、qwen-vl-max 等。",
-            "example": "qwen-max"
+            "description": "模型名称。支持的公开 Ali 对话模型包括 qwen3-max、qwen3.6-plus、qwen3.5-flash、qwen3-coder-plus、deepseek-v3.2，以及其他仍兼容 `/v1/chat/completions` 的 Qwen 模型。",
+            "example": "qwen3.6-plus"
           },
           "messages": {
             "type": "array",
@@ -389,7 +517,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
               },
               "code": {
                 "type": "string"

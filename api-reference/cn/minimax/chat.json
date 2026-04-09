@@ -1,0 +1,255 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax 对话补全",
+    "version": "1.0.0",
+    "description": "历史 MiniMax（`type=35`）通道对话能力文档。公开统一入口为 `/v1/chat/completions`，当前网关会将请求转发到上游 `POST /v1/text/chatcompletion_v2`，并沿用 OpenAI Chat Completions 兼容的请求与响应结构。\n\n本文档只描述当前网关已稳定透传且与 MiniMax OpenAI 兼容能力一致的字段子集：`model`、`messages`、`temperature`、`top_p`、`max_tokens`、`stream`、`stop`。"
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "当前 new-api 网关实例"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Chat",
+      "description": "历史 MiniMax OpenAI 兼容对话能力"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "MiniMax 对话补全",
+        "description": "调用历史 MiniMax OpenAI 兼容聊天模型。当前稳定模型为 `MiniMax-M2.7`、`MiniMax-M2.7-highspeed`、`MiniMax-M2.5`、`MiniMax-M2.5-highspeed`。",
+        "operationId": "minimaxChatCompletions",
+        "tags": [
+          "MiniMax Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "非流式对话",
+                  "value": {
+                    "model": "MiniMax-M2.7",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是一个简洁的助手。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "请用一句话介绍巴黎。"
+                      }
+                    ],
+                    "temperature": 0.3
+                  }
+                },
+                "stream": {
+                  "summary": "流式对话",
+                  "value": {
+                    "model": "MiniMax-M2.5-highspeed",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Count from one to five."
+                      }
+                    ],
+                    "stream": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功。非流式返回 OpenAI 兼容 JSON；流式返回 OpenAI 兼容 SSE 事件流。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE 数据流。每个 `data:` 事件都可按 OpenAI Chat Completions Chunk 解析；结束时通常返回 `data: [DONE]`。"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token"
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "MiniMax-M2.7",
+              "MiniMax-M2.7-highspeed",
+              "MiniMax-M2.5",
+              "MiniMax-M2.5-highspeed"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          },
+          "temperature": {
+            "type": "number"
+          },
+          "top_p": {
+            "type": "number"
+          },
+          "max_tokens": {
+            "type": "integer"
+          },
+          "stream": {
+            "type": "boolean"
+          },
+          "stop": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool"
+            ]
+          },
+          "content": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array"
+              }
+            ]
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          },
+          "created": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "usage": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

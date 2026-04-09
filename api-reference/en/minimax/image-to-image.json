@@ -1,30 +1,34 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax Overseas - Image to Image",
+    "title": "Image-01 Image Editing",
     "version": "1.0.0",
-    "description": "MiniMax Overseas image-to-image subdocument. This subdocument keeps only the fields that the baze platform currently implements and maps to the official MiniMax image-to-image capability.\n\nThe baze platform entry path is `/v1/images/edits`, and the gateway ultimately calls upstream `POST https://api.minimax.io/v1/image_generation`.\n\nNote: the platform-level unified API also accepts JSON `image` and multipart `image` as compatibility inputs. The gateway normalizes those inputs to official MiniMax `subject_reference[].image_file`. The public support boundary for those compatibility inputs is documented at the platform level. This subdocument only expands the official capability field subset."
+    "description": "Image-to-image documentation for `image-01` models. The public endpoint is `/v1/images/edits` and supports edits or redraws based on reference images.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Public baze platform API endpoint"
+      "description": "Baze API service endpoint"
     }
   ],
   "tags": [
     {
-      "name": "MiniMax Overseas Image",
-      "description": "MiniMax Overseas image-to-image capability"
+      "name": "Image Generation",
+      "description": "Image-to-image capabilities for `image-01` models"
     }
   ],
   "paths": {
     "/v1/images/edits": {
       "post": {
-        "summary": "MiniMax Overseas image to image",
-        "description": "This endpoint only applies to the MiniMax Overseas image-to-image capability.\n\nCurrent support boundary:\n- Supported models: `image-01` and `image-01-live`\n- Supported official field subset: `model`, `prompt`, `subject_reference`, `aspect_ratio`, `width`, `height`, `response_format`, `seed`, `n`, `prompt_optimizer`\n- `subject_reference` is publicly supported only under `application/json`\n- `mask` is outside the current implementation scope and must not appear in this channel subdocument",
+        "summary": "Image-01 Image Editing",
+        "description": "For image-to-image generation with `image-01` and `image-01-live`.\n\nPublic fields: `model`, `prompt`, `subject_reference`, `aspect_ratio`, `width`, `height`, `response_format`, `seed`, `n`, and `prompt_optimizer`. This document describes the JSON form of `subject_reference`.",
         "operationId": "minimaxOverseasImageToImage",
         "tags": [
-          "MiniMax Overseas Image"
+          "Image Generation"
         ],
         "requestBody": {
           "required": true,
@@ -34,8 +38,8 @@
                 "$ref": "#/components/schemas/MiniMaxOverseasImageToImageRequest"
               },
               "examples": {
-                "official_subject_reference": {
-                  "summary": "Use official subject_reference",
+                "subject_reference_example": {
+                  "summary": "Using subject_reference",
                   "value": {
                     "model": "image-01-live",
                     "prompt": "Turn this portrait into a manga cover",
@@ -55,7 +59,7 @@
         },
         "responses": {
           "200": {
-            "description": "Call succeeded. Returns the unified image response structure.",
+            "description": "Success, returns unified image response structure.",
             "content": {
               "application/json": {
                 "schema": {
@@ -65,14 +69,165 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters, for example missing `subject_reference` or using an invalid compatibility-field combination on the unified endpoint.",
+            "description": "Invalid request parameters, such as missing `subject_reference` or incompatible field combinations.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Bad request",
+                    "value": {
+                      "error": {
+                        "message": "Request body is invalid or contains unsupported values",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, for example because the token is missing or invalid."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "Request body too large",
+                    "value": {
+                      "error": {
+                        "message": "Request body is too large; reduce the input and try again",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The request body is too large."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient quota for this request",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "error": {
+                        "message": "Internal request processing failed",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad upstream response",
+                    "value": {
+                      "error": {
+                        "message": "Upstream service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the requested model",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
@@ -106,7 +261,7 @@
               "image-01",
               "image-01-live"
             ],
-            "description": "MiniMax Overseas image-to-image model. The baze platform supports `image-01` and `image-01-live`."
+            "description": "Model name used for this capability."
           },
           "prompt": {
             "type": "string",
@@ -118,7 +273,7 @@
             "items": {
               "$ref": "#/components/schemas/SubjectReferenceItem"
             },
-            "description": "Official MiniMax image-to-image field. JSON `image` or multipart `image` inputs from the platform unified endpoint are also converted to this structure."
+            "description": "Subject reference data used to preserve character or object consistency in the generated result."
           },
           "aspect_ratio": {
             "type": "string",
@@ -138,7 +293,7 @@
               "url",
               "b64_json"
             ],
-            "description": "Unified response format. `b64_json` is mapped by the gateway to official MiniMax `base64`."
+            "description": "Response format. Use `url` for temporary download links or `b64_json` for Base64-encoded content."
           },
           "seed": {
             "type": "integer",
@@ -149,7 +304,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 9,
-            "description": "Expected number of returned images."
+            "description": "Number of images to generate."
           },
           "prompt_optimizer": {
             "type": "boolean",
@@ -166,7 +321,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "Subject type. The current official MiniMax docs only publish `character`."
+            "description": "Subject type. Currently only `character` is supported."
           },
           "image_file": {
             "type": "string",
@@ -207,19 +362,24 @@
         "type": "object",
         "properties": {
           "provider_request_id": {
-            "type": "string"
+            "type": "string",
+            "description": "Request trace ID returned by the model service."
           },
           "provider_status_code": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Status code returned by the model service."
           },
           "provider_status_msg": {
-            "type": "string"
+            "type": "string",
+            "description": "Status message returned by the model service."
           },
           "success_count": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of successfully generated results."
           },
           "failed_count": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of requested results that were not returned."
           }
         }
       },
@@ -233,7 +393,8 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
               },
               "code": {
                 "type": "string"

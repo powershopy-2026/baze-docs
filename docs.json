@@ -23,6 +23,8 @@
                   {
                     "group": "MiniMax",
                     "pages": [
+                      "cn/minimax/chat",
+                      "cn/minimax/audio",
                       "cn/minimax/text-to-image",
                       "cn/minimax/image-to-image",
                       "cn/minimax/text-to-video",
@@ -37,6 +39,7 @@
                     "group": "阿里巴巴",
                     "pages": [
                       "cn/ali/chat",
+                      "cn/ali/audio",
                       "cn/ali/text-to-image",
                       "cn/ali/image-to-image",
                       "cn/ali/video-first-frame",
@@ -46,21 +49,10 @@
                   {
                     "group": "字节",
                     "pages": [
+                      "cn/byteplus/chat",
                       "cn/byteplus/image",
                       "cn/byteplus/video",
                       "cn/byteplus/video-status"
-                    ]
-                  },
-                  {
-                    "group": "DeepSeek",
-                    "pages": [
-                      "cn/deepseek/chat"
-                    ]
-                  },
-                  {
-                    "group": "月之暗面",
-                    "pages": [
-                      "cn/moonshot/chat"
                     ]
                   },
                   {
@@ -88,6 +80,8 @@
                   {
                     "group": "MiniMax",
                     "pages": [
+                      "en/minimax/chat",
+                      "en/minimax/audio",
                       "en/minimax/text-to-image",
                       "en/minimax/image-to-image",
                       "en/minimax/text-to-video",
@@ -102,6 +96,7 @@
                     "group": "Alibaba",
                     "pages": [
                       "en/ali/chat",
+                      "en/ali/audio",
                       "en/ali/text-to-image",
                       "en/ali/image-to-image",
                       "en/ali/video-first-frame",
@@ -111,21 +106,10 @@
                   {
                     "group": "BytePlus",
                     "pages": [
+                      "en/byteplus/chat",
                       "en/byteplus/image",
                       "en/byteplus/video",
                       "en/byteplus/video-status"
-                    ]
-                  },
-                  {
-                    "group": "DeepSeek",
-                    "pages": [
-                      "en/deepseek/chat"
-                    ]
-                  },
-                  {
-                    "group": "Moonshot",
-                    "pages": [
-                      "en/moonshot/chat"
                     ]
                   },
                   {
