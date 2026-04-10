@@ -25,8 +25,8 @@
     "/v1/videos": {
       "post": {
         "summary": "Hailuo 主体参考视频",
-        "description": "适用于 `S2V-01` 主体参考视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`subject_reference`、`prompt`。该能力可用于保持主体形象或物体特征的一致性。",
-        "operationId": "minimaxOverseasSubjectReferenceToVideo",
+        "description": "适用于 `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-2.3-Fast`、`MiniMax-Hailuo-02` 等主体参考视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`subject_reference`、`prompt`。该能力可用于保持主体形象或物体特征的一致性。",
+        "operationId": "minimaxSubjectReferenceToVideo",
         "tags": [
           "Hailuo Video"
         ],
@@ -41,7 +41,7 @@
                 "basic_request": {
                   "summary": "基础主体参考视频请求",
                   "value": {
-                    "model": "S2V-01",
+                    "model": "MiniMax-Hailuo-2.3",
                     "subject_reference": [
                       {
                         "type": "character",
@@ -235,7 +235,9 @@
           "model": {
             "type": "string",
             "enum": [
-              "S2V-01"
+              "MiniMax-Hailuo-2.3",
+              "MiniMax-Hailuo-2.3-Fast",
+              "MiniMax-Hailuo-02"
             ],
             "description": "当前能力使用的模型名称。"
           },

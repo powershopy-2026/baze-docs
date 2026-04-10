@@ -25,8 +25,8 @@
     "/v1/videos": {
       "post": {
         "summary": "Hailuo 文生视频",
-        "description": "适用于 `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-02`、`T2V-01-Director`、`T2V-01` 等文生视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`prompt`、`seconds`、`size`。",
-        "operationId": "minimaxOverseasTextToVideo",
+        "description": "适用于 `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-02` 等文生视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`prompt`、`seconds`、`size`。",
+        "operationId": "minimaxTextToVideo",
         "tags": [
           "Hailuo Video"
         ],
@@ -231,9 +231,7 @@
             "type": "string",
             "enum": [
               "MiniMax-Hailuo-2.3",
-              "MiniMax-Hailuo-02",
-              "T2V-01-Director",
-              "T2V-01"
+              "MiniMax-Hailuo-02"
             ],
             "description": "当前能力使用的模型名称。"
           },

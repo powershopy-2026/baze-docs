@@ -26,7 +26,7 @@
       "post": {
         "summary": "Image-01 Image Editing",
         "description": "For image-to-image generation with `image-01` and `image-01-live`.\n\nPublic fields: `model`, `prompt`, `subject_reference`, `aspect_ratio`, `width`, `height`, `response_format`, `seed`, `n`, and `prompt_optimizer`. This document describes the JSON form of `subject_reference`.",
-        "operationId": "minimaxOverseasImageToImage",
+        "operationId": "minimaxImageToImage",
         "tags": [
           "Image Generation"
         ],
@@ -35,7 +35,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MiniMaxOverseasImageToImageRequest"
+                "$ref": "#/components/schemas/MiniMaxImageToImageRequest"
               },
               "examples": {
                 "subject_reference_example": {
@@ -63,7 +63,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MiniMaxOverseasImageResponse"
+                  "$ref": "#/components/schemas/MiniMaxImageResponse"
                 }
               }
             }
@@ -247,7 +247,7 @@
       }
     },
     "schemas": {
-      "MiniMaxOverseasImageToImageRequest": {
+      "MiniMaxImageToImageRequest": {
         "type": "object",
         "required": [
           "model",
@@ -329,7 +329,7 @@
           }
         }
       },
-      "MiniMaxOverseasImageResponse": {
+      "MiniMaxImageResponse": {
         "type": "object",
         "properties": {
           "created": {
@@ -339,15 +339,15 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/MiniMaxOverseasImageData"
+              "$ref": "#/components/schemas/MiniMaxImageData"
             }
           },
           "metadata": {
-            "$ref": "#/components/schemas/MiniMaxOverseasImageMetadata"
+            "$ref": "#/components/schemas/MiniMaxImageMetadata"
           }
         }
       },
-      "MiniMaxOverseasImageData": {
+      "MiniMaxImageData": {
         "type": "object",
         "properties": {
           "url": {
@@ -358,7 +358,7 @@
           }
         }
       },
-      "MiniMaxOverseasImageMetadata": {
+      "MiniMaxImageMetadata": {
         "type": "object",
         "properties": {
           "provider_request_id": {

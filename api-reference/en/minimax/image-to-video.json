@@ -25,8 +25,8 @@
     "/v1/videos": {
       "post": {
         "summary": "Hailuo First-Frame to Video",
-        "description": "For first-frame image-to-video models such as `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-2.3-Fast`, `MiniMax-Hailuo-02`, `I2V-01-Director`, `I2V-01-live`, and `I2V-01`. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `image`, `prompt`, `seconds`, and `size`.",
-        "operationId": "minimaxOverseasImageToVideo",
+        "description": "For first-frame image-to-video models such as `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-2.3-Fast`, and `MiniMax-Hailuo-02`. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `image`, `prompt`, `seconds`, and `size`.",
+        "operationId": "minimaxImageToVideo",
         "tags": [
           "Hailuo Video"
         ],
@@ -41,7 +41,7 @@
                 "basic_request": {
                   "summary": "Basic first-frame-to-video request",
                   "value": {
-                    "model": "I2V-01",
+                    "model": "MiniMax-Hailuo-2.3",
                     "image": "https://example.com/assets/first-frame.png",
                     "prompt": "The girl looks at the camera and smiles.",
                     "seconds": "6",
@@ -233,10 +233,7 @@
             "enum": [
               "MiniMax-Hailuo-2.3",
               "MiniMax-Hailuo-2.3-Fast",
-              "MiniMax-Hailuo-02",
-              "I2V-01-Director",
-              "I2V-01-live",
-              "I2V-01"
+              "MiniMax-Hailuo-02"
             ],
             "description": "Model name used for this capability."
           },

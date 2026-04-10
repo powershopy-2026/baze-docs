@@ -25,8 +25,8 @@
     "/v1/videos": {
       "post": {
         "summary": "Hailuo Text to Video",
-        "description": "For text-to-video models such as `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-02`, `T2V-01-Director`, and `T2V-01`. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `prompt`, `seconds`, and `size`.",
-        "operationId": "minimaxOverseasTextToVideo",
+        "description": "For text-to-video models such as `MiniMax-Hailuo-2.3` and `MiniMax-Hailuo-02`. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `prompt`, `seconds`, and `size`.",
+        "operationId": "minimaxTextToVideo",
         "tags": [
           "Hailuo Video"
         ],
@@ -231,9 +231,7 @@
             "type": "string",
             "enum": [
               "MiniMax-Hailuo-2.3",
-              "MiniMax-Hailuo-02",
-              "T2V-01-Director",
-              "T2V-01"
+              "MiniMax-Hailuo-02"
             ],
             "description": "Model name used for this capability."
           },

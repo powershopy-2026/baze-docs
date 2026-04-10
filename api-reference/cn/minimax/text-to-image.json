@@ -26,7 +26,7 @@
       "post": {
         "summary": "Image-01 文生图",
         "description": "适用于 `image-01` 模型的文生图能力。\n\n公开字段：`model`、`prompt`、`aspect_ratio`、`width`、`height`、`response_format`、`seed`、`n`、`prompt_optimizer`。",
-        "operationId": "minimaxOverseasTextToImage",
+        "operationId": "minimaxTextToImage",
         "tags": [
           "Image Generation"
         ],
@@ -35,7 +35,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MiniMaxOverseasTextToImageRequest"
+                "$ref": "#/components/schemas/MiniMaxTextToImageRequest"
               },
               "examples": {
                 "basic_request": {
@@ -60,7 +60,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MiniMaxOverseasImageResponse"
+                  "$ref": "#/components/schemas/MiniMaxImageResponse"
                 }
               }
             }
@@ -244,7 +244,7 @@
       }
     },
     "schemas": {
-      "MiniMaxOverseasTextToImageRequest": {
+      "MiniMaxTextToImageRequest": {
         "type": "object",
         "required": [
           "model",
@@ -299,7 +299,7 @@
           }
         }
       },
-      "MiniMaxOverseasImageResponse": {
+      "MiniMaxImageResponse": {
         "type": "object",
         "properties": {
           "created": {
@@ -309,15 +309,15 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/MiniMaxOverseasImageData"
+              "$ref": "#/components/schemas/MiniMaxImageData"
             }
           },
           "metadata": {
-            "$ref": "#/components/schemas/MiniMaxOverseasImageMetadata"
+            "$ref": "#/components/schemas/MiniMaxImageMetadata"
           }
         }
       },
-      "MiniMaxOverseasImageData": {
+      "MiniMaxImageData": {
         "type": "object",
         "properties": {
           "url": {
@@ -330,7 +330,7 @@
           }
         }
       },
-      "MiniMaxOverseasImageMetadata": {
+      "MiniMaxImageMetadata": {
         "type": "object",
         "properties": {
           "provider_request_id": {

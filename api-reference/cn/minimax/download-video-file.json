@@ -26,7 +26,7 @@
       "get": {
         "summary": "视频文件下载",
         "description": "在异步视频任务完成后下载最终视频文件内容。\n\n当你需要直接获取媒体文件，而不是处理临时结果地址时，应使用此接口。",
-        "operationId": "minimaxOverseasDownloadVideoFile",
+        "operationId": "minimaxDownloadVideoFile",
         "tags": [
           "Hailuo Video"
         ],

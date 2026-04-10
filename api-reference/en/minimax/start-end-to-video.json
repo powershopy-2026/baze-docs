@@ -26,7 +26,7 @@
       "post": {
         "summary": "Hailuo First-and-Last-Frame to Video",
         "description": "For the `MiniMax-Hailuo-02` first-and-last-frame video model. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `images`, `prompt`, `seconds`, and `size`. Pass exactly two images in `[first_frame, last_frame]` order.",
-        "operationId": "minimaxOverseasStartEndToVideo",
+        "operationId": "minimaxStartEndToVideo",
         "tags": [
           "Hailuo Video"
         ],
@@ -41,7 +41,7 @@
                 "basic_request": {
                   "summary": "Basic start-end frame video request",
                   "value": {
-                    "model": "I2V-01",
+                    "model": "MiniMax-Hailuo-02",
                     "image": "https://example.com/assets/start-frame.png",
                     "last_frame_image": "https://example.com/assets/end-frame.png",
                     "prompt": "A person walking from left to right",
@@ -233,12 +233,7 @@
           "model": {
             "type": "string",
             "enum": [
-              "MiniMax-Hailuo-2.3",
-              "MiniMax-Hailuo-2.3-Fast",
-              "MiniMax-Hailuo-02",
-              "I2V-01-Director",
-              "I2V-01-live",
-              "I2V-01"
+              "MiniMax-Hailuo-02"
             ],
             "description": "Model name used for this capability."
           },

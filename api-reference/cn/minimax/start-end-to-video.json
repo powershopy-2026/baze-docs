@@ -26,7 +26,7 @@
       "post": {
         "summary": "Hailuo 首尾帧图生视频",
         "description": "适用于 `MiniMax-Hailuo-02` 首尾帧视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`images`、`prompt`、`seconds`、`size`。`images` 需要按 `[首帧, 尾帧]` 的顺序传入两张图片。",
-        "operationId": "minimaxOverseasStartEndToVideo",
+        "operationId": "minimaxStartEndToVideo",
         "tags": [
           "Hailuo Video"
         ],

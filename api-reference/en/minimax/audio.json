@@ -3,12 +3,12 @@
   "info": {
     "title": "MiniMax Text-to-Speech",
     "version": "1.0.0",
-    "description": "Customer-facing documentation for the historical MiniMax (`type=35`) text-to-speech channel. The public endpoint is `/v1/audio/speech`, backed by upstream `POST /v1/t2a_v2`.\n\nThis document only describes the official field subset that is currently implemented on this gateway for the historical MiniMax channel: `model`, `input`, `voice`, `speed`, `response_format`, `stream_format`, and `metadata.output_format`.\n\nTo keep the unified project-level contract stable, non-streaming requests always return `302 Found + Location`. As a result, the currently exposed non-streaming `metadata.output_format` value is limited to `url`. Streaming is enabled by any non-empty `stream_format` and returns `text/event-stream`."
+    "description": "Customer-facing documentation for the historical MiniMax (`type=35`) text-to-speech channel. The public endpoint is `/v1/audio/speech`, backed by upstream `POST /v1/t2a_v2`.\n\nThis document only describes the official field subset that is currently implemented on this gateway for the historical MiniMax channel: `model`, `input`, `voice`, `speed`, `response_format`, `stream_format`, and `metadata.output_format`.\n\nTo keep the unified project-level contract stable, non-streaming requests always return `302 Found + Location`. As a result, the currently exposed non-streaming `metadata.output_format` value is limited to `url`. Streaming is enabled by any non-empty `stream_format` and returns `text/event-stream`.\n\nProject billing note: the gateway maps upstream `extra_info.usage_characters` to unified `usage.prompt_tokens_details.audio_tokens`, and when Internal Pricing uses `quota_type=3`, `model_price` is interpreted as the price per 1K input characters."
   },
   "servers": [
     {
-      "url": "/",
-      "description": "Current new-api gateway instance"
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API service endpoint"
     }
   ],
   "tags": [
@@ -21,7 +21,7 @@
     "/v1/audio/speech": {
       "post": {
         "summary": "MiniMax text-to-speech",
-        "description": "Call the historical MiniMax `t2a_v2` capability through the unified `/v1/audio/speech` endpoint.\n\nStable models currently exposed by the gateway: `speech-2.8-hd`, `speech-2.8-turbo`, `speech-2.6-hd`, `speech-2.6-turbo`, `speech-02-hd`, `speech-02-turbo`, `speech-01-hd`, and `speech-01-turbo`.",
+        "description": "Call the historical MiniMax `t2a_v2` capability through the unified `/v1/audio/speech` endpoint.\n\nStable models currently exposed by the gateway: `speech-2.8-hd`, `speech-2.8-turbo`, `speech-2.6-hd`, `speech-2.6-turbo`, `speech-02-hd`, and `speech-02-turbo`.",
         "operationId": "minimaxAudioSpeech",
         "tags": [
           "MiniMax Audio"
@@ -63,7 +63,7 @@
         },
         "responses": {
           "200": {
-            "description": "Streaming success. Returns MiniMax SSE payloads.",
+            "description": "Streaming success. Returns MiniMax SSE payloads. For internal settlement, the gateway reads `extra_info.usage_characters` as the unified input audio character count.",
             "content": {
               "text/event-stream": {
                 "schema": {
@@ -74,7 +74,7 @@
             }
           },
           "302": {
-            "description": "Non-streaming success. The `Location` header points to a temporary audio file URL.",
+            "description": "Non-streaming success. The `Location` header points to a temporary audio file URL. For internal settlement, the gateway reads `extra_info.usage_characters` as the unified input audio character count.",
             "headers": {
               "Location": {
                 "schema": {
@@ -128,9 +128,7 @@
               "speech-2.6-hd",
               "speech-2.6-turbo",
               "speech-02-hd",
-              "speech-02-turbo",
-              "speech-01-hd",
-              "speech-01-turbo"
+              "speech-02-turbo"
             ]
           },
           "input": {

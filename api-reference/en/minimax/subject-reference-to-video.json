@@ -25,8 +25,8 @@
     "/v1/videos": {
       "post": {
         "summary": "Hailuo Subject Reference Video",
-        "description": "For the `S2V-01` subject-reference video model. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `subject_reference`, and `prompt`. This capability is intended for maintaining subject consistency across the generated video.",
-        "operationId": "minimaxOverseasSubjectReferenceToVideo",
+        "description": "For subject-reference video models such as `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-2.3-Fast`, and `MiniMax-Hailuo-02`. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `subject_reference`, and `prompt`. This capability is intended for maintaining subject consistency across the generated video.",
+        "operationId": "minimaxSubjectReferenceToVideo",
         "tags": [
           "Hailuo Video"
         ],
@@ -41,7 +41,7 @@
                 "basic_request": {
                   "summary": "Subject reference video request",
                   "value": {
-                    "model": "I2V-01",
+                    "model": "MiniMax-Hailuo-2.3",
                     "subject_reference": [
                       "https://example.com/assets/character.png"
                     ],
@@ -236,10 +236,7 @@
             "enum": [
               "MiniMax-Hailuo-2.3",
               "MiniMax-Hailuo-2.3-Fast",
-              "MiniMax-Hailuo-02",
-              "I2V-01-Director",
-              "I2V-01-live",
-              "I2V-01"
+              "MiniMax-Hailuo-02"
             ],
             "description": "Model name used for this capability."
           },

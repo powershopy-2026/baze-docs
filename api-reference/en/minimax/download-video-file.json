@@ -26,7 +26,7 @@
       "get": {
         "summary": "Video Content Download",
         "description": "Download the final video file after an asynchronous video task completes.\n\nUse this endpoint when you want the media content directly instead of handling a temporary result URL.",
-        "operationId": "minimaxOverseasDownloadVideoFile",
+        "operationId": "minimaxDownloadVideoFile",
         "tags": [
           "Hailuo Video"
         ],

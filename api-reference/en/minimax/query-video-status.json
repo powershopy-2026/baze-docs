@@ -26,7 +26,7 @@
       "get": {
         "summary": "Video Task Status",
         "description": "Query the latest state of an asynchronous video task by task ID.\n\nWhen generation finishes, `metadata.url` can be used to continue accessing the result. If you need the final media content directly, call `/v1/videos/{task_id}/content`.",
-        "operationId": "minimaxOverseasQueryVideoStatus",
+        "operationId": "minimaxQueryVideoStatus",
         "tags": [
           "Hailuo Video"
         ],

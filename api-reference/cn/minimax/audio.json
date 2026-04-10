@@ -3,12 +3,12 @@
   "info": {
     "title": "MiniMax 语音合成",
     "version": "1.0.0",
-    "description": "历史 MiniMax（`type=35`）通道语音合成能力文档。公开统一入口为 `/v1/audio/speech`，当前项目已实现 `POST /v1/t2a_v2` 的稳定字段子集。\n\n本文档只描述当前网关对历史 MiniMax 通道已经实现、且与上游官方能力一致的字段：`model`、`input`、`voice`、`speed`、`response_format`、`stream_format`、`metadata.output_format`。\n\n为保持统一项目级契约，非流式调用固定返回 `302 Found + Location`。因此历史 MiniMax 当前公开的非流式 `metadata.output_format` 仅支持 `url`；流式调用通过 `stream_format` 非空触发，并返回 `text/event-stream`。"
+    "description": "历史 MiniMax（`type=35`）通道语音合成能力文档。公开统一入口为 `/v1/audio/speech`，当前项目已实现 `POST /v1/t2a_v2` 的稳定字段子集。\n\n本文档只描述当前网关对历史 MiniMax 通道已经实现、且与上游官方能力一致的字段：`model`、`input`、`voice`、`speed`、`response_format`、`stream_format`、`metadata.output_format`。\n\n为保持统一项目级契约，非流式调用固定返回 `302 Found + Location`。因此历史 MiniMax 当前公开的非流式 `metadata.output_format` 仅支持 `url`；流式调用通过 `stream_format` 非空触发，并返回 `text/event-stream`。\n\n项目计费说明：网关会把上游 `extra_info.usage_characters` 映射到统一 usage 的 `prompt_tokens_details.audio_tokens`；当 Internal Pricing 配置 `quota_type=3` 时，`model_price` 表示每 1K 输入字符价格。"
   },
   "servers": [
     {
-      "url": "/",
-      "description": "当前 new-api 网关实例"
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
     }
   ],
   "tags": [
@@ -21,7 +21,7 @@
     "/v1/audio/speech": {
       "post": {
         "summary": "MiniMax 语音合成",
-        "description": "调用历史 MiniMax `t2a_v2` 能力生成语音。\n\n当前稳定模型：`speech-2.8-hd`、`speech-2.8-turbo`、`speech-2.6-hd`、`speech-2.6-turbo`、`speech-02-hd`、`speech-02-turbo`、`speech-01-hd`、`speech-01-turbo`。",
+        "description": "调用历史 MiniMax `t2a_v2` 能力生成语音。\n\n当前稳定模型：`speech-2.8-hd`、`speech-2.8-turbo`、`speech-2.6-hd`、`speech-2.6-turbo`、`speech-02-hd`、`speech-02-turbo`。",
         "operationId": "minimaxAudioSpeech",
         "tags": [
           "MiniMax Audio"
@@ -63,7 +63,7 @@
         },
         "responses": {
           "200": {
-            "description": "流式调用成功，返回 MiniMax SSE 数据。",
+            "description": "流式调用成功，返回 MiniMax SSE 数据。项目内部结算会读取 `extra_info.usage_characters` 作为统一输入音频字符数。",
             "content": {
               "text/event-stream": {
                 "schema": {
@@ -74,7 +74,7 @@
             }
           },
           "302": {
-            "description": "非流式调用成功。`Location` 头为音频文件临时地址。",
+            "description": "非流式调用成功。`Location` 头为音频文件临时地址。项目内部结算会读取 `extra_info.usage_characters` 作为统一输入音频字符数。",
             "headers": {
               "Location": {
                 "schema": {
@@ -128,9 +128,7 @@
               "speech-2.6-hd",
               "speech-2.6-turbo",
               "speech-02-hd",
-              "speech-02-turbo",
-              "speech-01-hd",
-              "speech-01-turbo"
+              "speech-02-turbo"
             ]
           },
           "input": {

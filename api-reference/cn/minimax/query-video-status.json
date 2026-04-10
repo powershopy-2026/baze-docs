@@ -26,7 +26,7 @@
       "get": {
         "summary": "视频任务状态查询",
         "description": "根据任务 ID 查询异步视频任务的最新状态。\n\n任务完成后，响应中的 `metadata.url` 可用于继续访问结果地址；如果需要直接下载最终文件，请调用 `/v1/videos/{task_id}/content`。",
-        "operationId": "minimaxOverseasQueryVideoStatus",
+        "operationId": "minimaxQueryVideoStatus",
         "tags": [
           "Hailuo Video"
         ],
