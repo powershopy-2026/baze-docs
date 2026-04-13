@@ -1,0 +1,539 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Qwen Chat Completions",
+    "version": "1.0.0",
+    "description": "Ali chat capability document. The public unified endpoint is `/v1/chat/completions`, limited to the chat models in the current final Ali whitelist.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API service endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Qwen Chat",
+      "description": "Conversation and multimodal capabilities for Qwen models"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "Qwen Chat Completions",
+        "description": "For the public chat models in the final Ali whitelist only: `qwen3-max`, `qwen3.6-plus`, `qwen3.5-flash`, `qwen3-coder-plus`, and `deepseek-v3.2`.\n\nPublic fields: `model`, `messages`, `stream`, `temperature`, `top_p`, `max_tokens`, `stop`, `seed`, `tools`, `tool_choice`, `enable_search`, and `response_format`.",
+        "operationId": "aliChatCompletions",
+        "tags": [
+          "Qwen Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "text_chat": {
+                  "summary": "Text-only chat",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a helpful assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Hello, please introduce yourself."
+                      }
+                    ],
+                    "temperature": 0.7,
+                    "max_tokens": 2000
+                  }
+                },
+                "vision_chat": {
+                  "summary": "Vision understanding (multimodal)",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example.com/image.jpg"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "What's in this image?"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "streaming_chat": {
+                  "summary": "Streaming output",
+                  "value": {
+                    "model": "qwen3-max",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Tell me a short story."
+                      }
+                    ],
+                    "stream": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success, returns chat completion result. Streaming mode returns SSE stream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Bad request",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": "messages"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, for example because the token is missing or invalid."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient quota for this request",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "error": {
+                        "message": "Internal request processing failed",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad upstream response",
+                    "value": {
+                      "error": {
+                        "message": "Upstream service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the requested model",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen3-max",
+              "qwen3.6-plus",
+              "qwen3.5-flash",
+              "qwen3-coder-plus",
+              "deepseek-v3.2"
+            ],
+            "description": "Model name. Only the public chat models in the final Ali whitelist are supported.",
+            "example": "qwen3.6-plus"
+          },
+          "messages": {
+            "type": "array",
+            "description": "List of conversation messages. Supports text content and multimodal content (image+text).",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "Whether to use streaming output. Default is false.",
+            "default": false
+          },
+          "temperature": {
+            "type": "number",
+            "description": "Sampling temperature, controls output randomness. Range [0, 2].",
+            "minimum": 0,
+            "maximum": 2,
+            "default": 0.7
+          },
+          "top_p": {
+            "type": "number",
+            "description": "Nucleus sampling probability threshold.",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "Maximum number of tokens to generate.",
+            "minimum": 1
+          },
+          "stop": {
+            "type": "array",
+            "description": "List of stop sequences.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed for reproducible generation."
+          },
+          "tools": {
+            "type": "array",
+            "description": "List of tools for Function Calling.",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            }
+          },
+          "tool_choice": {
+            "type": "string",
+            "description": "Tool selection strategy. Options: auto, none, required."
+          },
+          "enable_search": {
+            "type": "boolean",
+            "description": "Whether to enable search enhancement. Only some models support this."
+          },
+          "response_format": {
+            "type": "object",
+            "description": "Response format for forcing JSON output.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "json_object"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool"
+            ],
+            "description": "Role of the message sender."
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Text content."
+              },
+              {
+                "type": "array",
+                "description": "Multimodal content list (for vision understanding).",
+                "items": {
+                  "$ref": "#/components/schemas/ContentItem"
+                }
+              }
+            ]
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "Tool call information.",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "ContentItem": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image_url"
+            ],
+            "description": "Content type."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content. Required when type=text."
+          },
+          "image_url": {
+            "type": "object",
+            "description": "Image information. Required when type=image_url.",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "Image URL or Base64 encoded image data."
+              }
+            }
+          }
+        }
+      },
+      "Tool": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ]
+          },
+          "function": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Function name."
+              },
+              "description": {
+                "type": "string",
+                "description": "Function description."
+              },
+              "parameters": {
+                "type": "object",
+                "description": "Function parameter definitions (JSON Schema)."
+              }
+            }
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Response unique identifier."
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion"
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp of creation time (seconds)."
+          },
+          "model": {
+            "type": "string",
+            "description": "Model name used."
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "Choice": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer"
+          },
+          "message": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "finish_reason": {
+            "type": "string",
+            "description": "Reason for generation ending. Possible values: stop, length, tool_calls, content_filter, null."
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens."
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Number of output tokens."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total number of tokens."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

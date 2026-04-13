@@ -1,0 +1,161 @@
+{
+  "$schema": "https://powower.mintlify.app",
+  "theme": "palm",
+  "name": "Mint Starter Kit",
+  "colors": {
+    "primary": "#16A34A",
+    "light": "#07C983",
+    "dark": "#15803D"
+  },
+  "favicon": "/logo/logo.svg",
+  "navigation": {
+    "languages": [
+      {
+        "language": "cn",
+        "tabs": [
+          {
+            "tab": "指南",
+            "pages": [
+              {
+                "group": "模型接口",
+                "expanded": true,
+                "pages": [
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "cn/minimax/chat",
+                      "cn/minimax/audio",
+                      "cn/minimax/text-to-image",
+                      "cn/minimax/image-to-image",
+                      "cn/minimax/text-to-video",
+                      "cn/minimax/image-to-video",
+                      "cn/minimax/start-end-to-video",
+                      "cn/minimax/subject-reference-to-video",
+                      "cn/minimax/query-video-status",
+                      "cn/minimax/download-video-file"
+                    ]
+                  },
+                  {
+                    "group": "阿里巴巴",
+                    "pages": [
+                      "cn/ali/chat",
+                      "cn/ali/audio",
+                      "cn/ali/text-to-image",
+                      "cn/ali/image-to-image",
+                      "cn/ali/text-to-video",
+                      "cn/ali/wan2.7-i2v",
+                      "cn/ali/video-first-frame",
+                      "cn/ali/video-first-last-frame",
+                      "cn/ali/reference-to-video"
+                    ]
+                  },
+                  {
+                    "group": "字节",
+                    "pages": [
+                      "cn/byteplus/chat",
+                      "cn/byteplus/image",
+                      "cn/byteplus/video",
+                      "cn/byteplus/video-status"
+                    ]
+                  },
+                  {
+                    "group": "智谱",
+                    "pages": [
+                      "cn/zhipu/chat"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "language": "en",
+        "tabs": [
+          {
+            "tab": "Guides",
+            "pages": [
+              {
+                "group": "Model APIs",
+                "expanded": true,
+                "pages": [
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "en/minimax/chat",
+                      "en/minimax/audio",
+                      "en/minimax/text-to-image",
+                      "en/minimax/image-to-image",
+                      "en/minimax/text-to-video",
+                      "en/minimax/image-to-video",
+                      "en/minimax/start-end-to-video",
+                      "en/minimax/subject-reference-to-video",
+                      "en/minimax/query-video-status",
+                      "en/minimax/download-video-file"
+                    ]
+                  },
+                  {
+                    "group": "Alibaba",
+                    "pages": [
+                      "en/ali/chat",
+                      "en/ali/audio",
+                      "en/ali/text-to-image",
+                      "en/ali/image-to-image",
+                      "en/ali/text-to-video",
+                      "en/ali/wan2.7-i2v",
+                      "en/ali/video-first-frame",
+                      "en/ali/video-first-last-frame",
+                      "en/ali/reference-to-video"
+                    ]
+                  },
+                  {
+                    "group": "BytePlus",
+                    "pages": [
+                      "en/byteplus/chat",
+                      "en/byteplus/image",
+                      "en/byteplus/video",
+                      "en/byteplus/video-status"
+                    ]
+                  },
+                  {
+                    "group": "Zhipu",
+                    "pages": [
+                      "en/zhipu/chat"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/logo.svg",
+    "dark": "/logo/logo.svg"
+  },
+  "navbar": {
+   
+  },
+  "contextual": {
+    "options": [
+     "copy",
+     "view",
+     "chatgpt",
+     "claude",
+     "perplexity",
+     "mcp",
+     "cursor",
+     "vscode"
+   ]
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/mintlify",
+      "github": "https://github.com/mintlify",
+      "linkedin": "https://linkedin.com/company/mintlify"
+    }
+  }
+}

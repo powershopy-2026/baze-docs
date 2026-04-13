@@ -1,0 +1,309 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Hailuo Subject Reference Video",
+    "version": "1.0.0",
+    "description": "Subject-reference video documentation for Hailuo models. The public endpoint is `/v1/videos` and creates asynchronous generation tasks.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API service endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Hailuo Video",
+      "description": "Subject-reference video generation for Hailuo models"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "Hailuo Subject Reference Video",
+        "description": "For subject-reference video models such as `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-2.3-Fast`, and `MiniMax-Hailuo-02`. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `subject_reference`, and `prompt`. This capability is intended for maintaining subject consistency across the generated video.",
+        "operationId": "minimaxSubjectReferenceToVideo",
+        "tags": [
+          "Hailuo Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubjectReferenceVideoRequest"
+              },
+              "examples": {
+                "basic_request": {
+                  "summary": "Subject reference video request",
+                  "value": {
+                    "model": "MiniMax-Hailuo-2.3",
+                    "subject_reference": [
+                      "https://example.com/assets/character.png"
+                    ],
+                    "prompt": "The character waves and smiles",
+                    "seconds": "6",
+                    "size": "720P"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submission successful, returns unified OpenAI-style video task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAIVideo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Bad request",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "Request body is invalid or contains unsupported values",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, for example because the token is missing or invalid."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "Request body too large",
+                    "value": {
+                      "code": "read_request_body_failed",
+                      "message": "Request body is too large; reduce the input and try again",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The request body is too large."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota exceeded or rate limited",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient quota for this request",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limits were hit or the account ran out of quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing error",
+                    "value": {
+                      "code": "gen_relay_info_failed",
+                      "message": "Internal request processing failed",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The server failed while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad upstream response",
+                    "value": {
+                      "code": "bad_response_status_code",
+                      "message": "Upstream service returned an invalid response",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service returned an invalid response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "code": "get_channel_failed",
+                      "message": "No available channel for the requested model",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "SubjectReferenceVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt",
+          "subject_reference"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "MiniMax-Hailuo-2.3",
+              "MiniMax-Hailuo-2.3-Fast",
+              "MiniMax-Hailuo-02"
+            ],
+            "description": "Model name used for this capability."
+          },
+          "subject_reference": {
+            "type": "array",
+            "description": "Array of subject reference image URLs for maintaining visual consistency.",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Video prompt describing the action or scene."
+          },
+          "seconds": {
+            "type": "string",
+            "description": "Target video duration in seconds."
+          },
+          "size": {
+            "type": "string",
+            "description": "Target output size or resolution. Available values depend on the selected model."
+          }
+        }
+      },
+      "OpenAIVideo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "queued"
+          },
+          "progress": {
+            "type": "integer",
+            "example": 0
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1304 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAI 兼容文字模型调用接口",
+    "version": "1.0.0",
+    "description": "面向第三方开发者的 OpenAI 兼容文字模型调用文档，仅覆盖本网关当前公开支持的文本接口 `/v1/chat/completions`。\n\n所有接口默认使用 `Authorization: Bearer <token>` 鉴权。启用流式返回时，响应内容类型为 `text/event-stream`，事件数据格式与 OpenAI Chat Completions 兼容。\n\n说明：网关会对接多家上游模型服务，因此某些模型可能支持额外透传字段。本文档仅描述跨模型最常用、最稳定的公共字段，适合作为开发者集成入口文档。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.kie.ai",
+      "description": "正式环境"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Text Model",
+      "description": "OpenAI 兼容的文字模型调用接口"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "创建聊天补全",
+        "description": "使用消息数组创建一次聊天补全响应，兼容 OpenAI Chat Completions API。\n\n适用场景：多轮对话、系统提示词控制、函数/工具调用、结构化输出。若将 `stream` 设为 `true`，服务会返回 Server-Sent Events (`text/event-stream`)。",
+        "operationId": "createChatCompletion",
+        "tags": [
+          "Text Model"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basicChat": {
+                  "summary": "基础对话请求",
+                  "value": {
+                    "model": "gpt-4.1",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "用一句话解释什么是向量数据库。"
+                      }
+                    ],
+                    "temperature": 0.3,
+                    "max_completion_tokens": 256
+                  }
+                },
+                "toolCalling": {
+                  "summary": "带工具定义的请求",
+                  "value": {
+                    "model": "gpt-4.1",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "帮我查询北京今天的天气。"
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "根据城市名查询实时天气",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "城市名称"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "请求成功。非流式时返回标准 JSON；流式时返回 SSE 事件流。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "非流式成功响应",
+                    "value": {
+                      "id": "chatcmpl_123",
+                      "object": "chat.completion",
+                      "created": 1742342400,
+                      "model": "gpt-4.1",
+                      "choices": [
+                        {
+                          "index": 0,
+                          "message": {
+                            "role": "assistant",
+                            "content": "向量数据库是一种专门存储和检索向量表示的数据系统，常用于语义搜索和 RAG。"
+                          },
+                          "finish_reason": "stop"
+                        }
+                      ],
+                      "usage": {
+                        "prompt_tokens": 24,
+                        "completion_tokens": 26,
+                        "total_tokens": 50,
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0,
+                          "text_tokens": 24,
+                          "audio_tokens": 0,
+                          "image_tokens": 0
+                        },
+                        "completion_tokens_details": {
+                          "text_tokens": 26,
+                          "audio_tokens": 0,
+                          "reasoning_tokens": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE 数据流。每个事件的 `data:` 部分可反序列化为 `ChatCompletionChunk`；结束时通常返回 `data: [DONE]`。"
+                },
+                "examples": {
+                  "stream": {
+                    "summary": "流式响应片段",
+                    "value": "data: {\"id\":\"chatcmpl_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"gpt-4.1\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"向量数据库\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"gpt-4.1\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"用于语义检索。\"},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法，例如缺少必填字段、JSON 格式错误或字段类型不匹配。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidRequest": {
+                    "summary": "请求参数错误",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "param": "messages",
+                        "code": "bad_request_body"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "new_api_error",
+                        "param": "",
+                        "code": "access_denied"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "rateLimited": {
+                    "summary": "速率限制",
+                    "value": {
+                      "error": {
+                        "message": "请求过于频繁，请稍后再试",
+                        "type": "new_api_error",
+                        "param": "",
+                        "code": "insufficient_user_quota"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        },
+        "description": "统一错误响应格式。"
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "面向调用方的错误描述。"
+          },
+          "type": {
+            "type": "string",
+            "description": "错误类型，例如 `invalid_request_error`、`new_api_error` 或上游兼容错误类型。"
+          },
+          "param": {
+            "type": "string",
+            "nullable": true,
+            "description": "与错误直接相关的参数名；若没有明确参数，可为空字符串或 `null`。"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true,
+            "description": "错误码。为兼容不同上游，文档中按字符串描述；若没有错误码则可能为 `null`。"
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "description": "Token 用量统计。不同兼容格式返回的字段可能略有差异。",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Chat Completions 等接口中的输入 token 数。"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Chat Completions 等接口中的输出 token 数。"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "总 token 数。"
+          },
+          "prompt_cache_hit_tokens": {
+            "type": "integer",
+            "description": "命中缓存的输入 token 数，仅部分模型返回。"
+          },
+          "prompt_tokens_details": {
+            "$ref": "#/components/schemas/InputTokenDetails"
+          },
+          "completion_tokens_details": {
+            "$ref": "#/components/schemas/OutputTokenDetails"
+          },
+          "input_tokens": {
+            "type": "integer",
+            "description": "Responses API 风格中的输入 token 数。"
+          },
+          "output_tokens": {
+            "type": "integer",
+            "description": "Responses API 风格中的输出 token 数。"
+          },
+          "input_tokens_details": {
+            "$ref": "#/components/schemas/InputTokenDetails"
+          }
+        }
+      },
+      "InputTokenDetails": {
+        "type": "object",
+        "description": "输入 token 明细。",
+        "properties": {
+          "cached_tokens": {
+            "type": "integer",
+            "description": "命中缓存的输入 token 数。"
+          },
+          "text_tokens": {
+            "type": "integer",
+            "description": "文本输入 token 数。"
+          },
+          "audio_tokens": {
+            "type": "integer",
+            "description": "音频输入 token 数。"
+          },
+          "image_tokens": {
+            "type": "integer",
+            "description": "图像输入 token 数。"
+          }
+        }
+      },
+      "OutputTokenDetails": {
+        "type": "object",
+        "description": "输出 token 明细。",
+        "properties": {
+          "text_tokens": {
+            "type": "integer",
+            "description": "文本输出 token 数。"
+          },
+          "audio_tokens": {
+            "type": "integer",
+            "description": "音频输出 token 数。"
+          },
+          "reasoning_tokens": {
+            "type": "integer",
+            "description": "推理型模型内部消耗的 reasoning token 数。"
+          }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "聊天消息对象。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "developer",
+              "user",
+              "assistant",
+              "tool"
+            ],
+            "description": "消息角色。`developer` 通常用于 GPT-5 等支持开发者消息的模型。"
+          },
+          "content": {
+            "description": "消息内容。可以直接是字符串，也可以是多模态分片数组。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ChatMessageContentPart"
+                }
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "发送者名称。通常用于区分同角色的不同消息源。"
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "助手消息中声明的工具调用列表。",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "工具响应消息对应的工具调用 ID，仅 `tool` 角色消息使用。"
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "部分兼容模型返回的推理内容。普通调用方通常无需依赖此字段。"
+          }
+        }
+      },
+      "ChatMessageContentPart": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "description": "聊天消息内容分片。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image_url",
+              "input_audio",
+              "file",
+              "video_url"
+            ],
+            "description": "分片类型。文字模型场景最常用的是 `text`。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本内容。当 `type` 为 `text` 时使用。"
+          },
+          "image_url": {
+            "$ref": "#/components/schemas/ImageURLPart"
+          },
+          "input_audio": {
+            "$ref": "#/components/schemas/InputAudioPart"
+          },
+          "file": {
+            "$ref": "#/components/schemas/FilePart"
+          },
+          "video_url": {
+            "$ref": "#/components/schemas/VideoURLPart"
+          }
+        }
+      },
+      "ImageURLPart": {
+        "type": "object",
+        "description": "图像输入分片，可用于支持多模态输入的文字模型。",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "图像 URL 或 base64 数据。"
+          },
+          "detail": {
+            "type": "string",
+            "enum": [
+              "low",
+              "high",
+              "auto"
+            ],
+            "description": "图像解析粒度。"
+          }
+        }
+      },
+      "InputAudioPart": {
+        "type": "object",
+        "description": "音频输入分片。",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "Base64 编码的音频数据。"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "wav",
+              "mp3"
+            ],
+            "description": "音频格式。"
+          }
+        }
+      },
+      "FilePart": {
+        "type": "object",
+        "description": "文件输入分片。",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "文件名。"
+          },
+          "file_data": {
+            "type": "string",
+            "description": "文件内容，通常是 base64 或文本。"
+          },
+          "file_id": {
+            "type": "string",
+            "description": "已上传文件的标识符。"
+          }
+        }
+      },
+      "VideoURLPart": {
+        "type": "object",
+        "description": "视频输入分片。",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "视频 URL。"
+          }
+        }
+      },
+      "ToolDefinition": {
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "description": "请求中可供模型调用的工具定义。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "function",
+            "description": "工具类型。当前最常见的是 `function`。"
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionDefinition"
+          }
+        }
+      },
+      "FunctionDefinition": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "description": "函数工具定义。",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "函数名称。模型调用时会引用该名称。"
+          },
+          "description": {
+            "type": "string",
+            "description": "函数用途描述，帮助模型选择与构造调用。"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "JSON Schema 格式的参数定义。"
+          }
+        }
+      },
+      "ToolCall": {
+        "type": "object",
+        "description": "模型返回的工具调用信息。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "工具调用唯一 ID。"
+          },
+          "type": {
+            "type": "string",
+            "description": "工具调用类型，通常为 `function`。"
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionCall"
+          }
+        }
+      },
+      "FunctionCall": {
+        "type": "object",
+        "description": "模型发起的函数调用。",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "函数名称。"
+          },
+          "arguments": {
+            "type": "string",
+            "description": "以 JSON 字符串形式编码的函数参数。"
+          }
+        }
+      },
+      "ToolChoice": {
+        "description": "控制模型如何选择工具。",
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "none",
+              "auto",
+              "required"
+            ]
+          },
+          {
+            "type": "object",
+            "description": "指定某个工具必须被调用。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "function"
+              },
+              "function": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "指定要调用的函数名。"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ResponseFormat": {
+        "type": "object",
+        "description": "控制响应格式，例如纯文本、JSON 对象或 JSON Schema 约束输出。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "json_object",
+              "json_schema"
+            ],
+            "description": "目标输出格式。"
+          },
+          "json_schema": {
+            "type": "object",
+            "description": "当 `type` 为 `json_schema` 时使用的 JSON Schema 定义。"
+          }
+        }
+      },
+      "StreamOptions": {
+        "type": "object",
+        "description": "流式响应附加选项。",
+        "properties": {
+          "include_usage": {
+            "type": "boolean",
+            "description": "若为 `true`，流结束前会额外返回一次带 `usage` 的事件。"
+          }
+        }
+      },
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "description": "Chat Completions 请求体。",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "要调用的模型 ID，例如 `gpt-4.1`。"
+          },
+          "messages": {
+            "type": "array",
+            "description": "对话历史消息数组，按时间顺序排列。",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "采样温度。越低越稳定，越高越发散。"
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "核采样参数。通常与 `temperature` 二选一调优。"
+          },
+          "top_k": {
+            "type": "integer",
+            "description": "部分兼容模型支持的 Top-K 采样参数。"
+          },
+          "n": {
+            "type": "integer",
+            "description": "要生成的候选响应数量。"
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "是否启用流式输出。为 `true` 时响应内容类型为 `text/event-stream`。"
+          },
+          "stream_options": {
+            "$ref": "#/components/schemas/StreamOptions"
+          },
+          "stop": {
+            "description": "停止序列。可以是单个字符串，也可以是字符串数组。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "兼容旧接口的最大输出 token 数。"
+          },
+          "max_completion_tokens": {
+            "type": "integer",
+            "description": "推荐使用的最大生成 token 数。显式传 `0` 也会按请求透传。"
+          },
+          "presence_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "存在惩罚。值越高，越鼓励模型引入新话题。"
+          },
+          "frequency_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "频率惩罚。值越高，越抑制重复表达。"
+          },
+          "tools": {
+            "type": "array",
+            "description": "可供模型调用的工具定义列表。",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            }
+          },
+          "tool_choice": {
+            "$ref": "#/components/schemas/ToolChoice"
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
+          },
+          "seed": {
+            "type": "number",
+            "description": "部分模型支持的随机种子，用于提升结果可复现性。"
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "推理强度，仅支持推理控制的模型生效。"
+          },
+          "parallel_tool_calls": {
+            "type": "boolean",
+            "description": "是否允许模型并行发起多个工具调用。"
+          },
+          "user": {
+            "description": "调用方用户标识。不同上游可能要求字符串或对象，本网关按原值透传。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "description": "与本次请求关联的自定义元数据。"
+          },
+          "store": {
+            "description": "是否允许上游存储该请求/响应数据。不同兼容目标可能返回布尔值或对象语义。",
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "description": "非流式 Chat Completions 响应。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "响应 ID。"
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion",
+            "description": "对象类型，固定为 `chat.completion`。"
+          },
+          "created": {
+            "type": "integer",
+            "description": "Unix 时间戳（秒）。"
+          },
+          "model": {
+            "type": "string",
+            "description": "实际使用的模型 ID。"
+          },
+          "choices": {
+            "type": "array",
+            "description": "模型生成的候选结果列表。",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionChoice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "system_fingerprint": {
+            "type": "string",
+            "nullable": true,
+            "description": "系统指纹。若上游未返回，该字段可能缺失或为 `null`。"
+          }
+        }
+      },
+      "ChatCompletionChoice": {
+        "type": "object",
+        "description": "单个聊天补全候选结果。",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "候选结果下标。"
+          },
+          "message": {
+            "$ref": "#/components/schemas/ChatMessage"
+          },
+          "finish_reason": {
+            "type": "string",
+            "description": "结束原因，例如 `stop`、`length`、`tool_calls` 或 `content_filter`。"
+          }
+        }
+      },
+      "ResponsesRequest": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "description": "Responses API 请求体。",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "要调用的模型 ID。"
+          },
+          "input": {
+            "description": "输入内容。可以直接提交字符串，也可以提交结构化输入数组。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "最简单的文本输入。"
+              },
+              {
+                "type": "array",
+                "description": "结构化输入数组。",
+                "items": {
+                  "$ref": "#/components/schemas/ResponsesInputItem"
+                }
+              }
+            ]
+          },
+          "instructions": {
+            "description": "高层指令。可以是字符串，也可以是更复杂的兼容对象，由网关按原值透传。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "max_output_tokens": {
+            "type": "integer",
+            "description": "最大输出 token 数。显式传 `0` 也会被保留并透传。"
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "是否启用流式输出。"
+          },
+          "stream_options": {
+            "$ref": "#/components/schemas/StreamOptions"
+          },
+          "temperature": {
+            "type": "number",
+            "description": "采样温度。"
+          },
+          "top_p": {
+            "type": "number",
+            "description": "核采样参数。显式传 `0` 也会被保留并透传。"
+          },
+          "tools": {
+            "description": "工具定义列表。Responses API 支持更复杂的工具对象，因此此处允许任意对象数组。",
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ToolDefinition"
+                }
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            ]
+          },
+          "tool_choice": {
+            "description": "工具选择策略。Responses API 兼容字符串或对象形式。",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ToolChoice"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "parallel_tool_calls": {
+            "description": "是否允许并行工具调用。不同兼容目标可能使用布尔值或对象语义。",
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "previous_response_id": {
+            "type": "string",
+            "description": "上一轮响应 ID，用于继续同一上下文。"
+          },
+          "reasoning": {
+            "$ref": "#/components/schemas/ReasoningOptions"
+          },
+          "truncation": {
+            "description": "长上下文截断策略。常见值包括 `auto` 或 `disabled`。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "text": {
+            "type": "object",
+            "description": "控制文本输出附加行为的兼容对象。"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "与本次请求关联的元数据。"
+          },
+          "user": {
+            "description": "调用方用户标识。为兼容多上游，此字段允许字符串或对象。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "store": {
+            "description": "是否允许上游存储请求/响应数据。",
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "max_tool_calls": {
+            "type": "integer",
+            "description": "限制一次请求中允许的最大工具调用次数。显式传 `0` 也会被保留并透传。"
+          }
+        }
+      },
+      "ResponsesInputItem": {
+        "type": "object",
+        "description": "Responses API 结构化输入项。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant",
+              "system",
+              "developer"
+            ],
+            "description": "输入项所属角色。"
+          },
+          "content": {
+            "description": "输入内容。可以是简单字符串，也可以是输入分片数组。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponsesInputContentItem"
+                }
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "兼容字段，某些客户端可能会携带额外类型标记。"
+          }
+        }
+      },
+      "ResponsesInputContentItem": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "description": "Responses API 输入内容分片。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_text",
+              "input_image",
+              "input_file"
+            ],
+            "description": "输入分片类型。文字模型最常用的是 `input_text`。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本输入内容。"
+          },
+          "image_url": {
+            "description": "图像输入地址，可以直接是字符串，也可以是包含 `url` 的对象。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "图像 URL。"
+                  }
+                }
+              }
+            ]
+          },
+          "file_url": {
+            "description": "文件输入地址，可以直接是字符串，也可以是包含 `url` 的对象。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "文件 URL。"
+                  }
+                }
+              }
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "description": "图像输入细节等级，仅 `input_image` 场景使用。"
+          }
+        }
+      },
+      "ReasoningOptions": {
+        "type": "object",
+        "description": "Responses API 推理选项。",
+        "properties": {
+          "effort": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "推理强度。"
+          },
+          "summary": {
+            "type": "string",
+            "description": "推理摘要策略，例如 `auto`。"
+          }
+        }
+      },
+      "ResponsesResponse": {
+        "type": "object",
+        "description": "非流式 Responses API 响应。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "响应 ID。"
+          },
+          "object": {
+            "type": "string",
+            "example": "response",
+            "description": "对象类型，固定为 `response`。"
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "Unix 时间戳（秒）。"
+          },
+          "status": {
+            "type": "string",
+            "description": "响应状态，例如 `completed`、`failed`、`in_progress` 或 `incomplete`。"
+          },
+          "model": {
+            "type": "string",
+            "description": "实际使用的模型 ID。"
+          },
+          "output": {
+            "type": "array",
+            "description": "模型输出项列表。文本生成最常见的是 `message` 类型输出。",
+            "items": {
+              "$ref": "#/components/schemas/ResponsesOutputItem"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          },
+          "previous_response_id": {
+            "description": "若本次响应是基于上一轮继续生成，该字段可能返回关联的上一次响应 ID。",
+            "type": "string",
+            "nullable": true
+          },
+          "reasoning": {
+            "$ref": "#/components/schemas/ReasoningOptions"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "响应关联元数据。"
+          }
+        }
+      },
+      "ResponsesOutputItem": {
+        "type": "object",
+        "description": "Responses API 输出项。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "输出项类型，例如 `message`、`function_call` 或其他兼容扩展类型。"
+          },
+          "id": {
+            "type": "string",
+            "description": "输出项 ID。"
+          },
+          "status": {
+            "type": "string",
+            "description": "输出项状态。"
+          },
+          "role": {
+            "type": "string",
+            "description": "当输出项是消息时，对应的消息角色，通常为 `assistant`。"
+          },
+          "content": {
+            "type": "array",
+            "description": "输出内容分片列表。",
+            "items": {
+              "$ref": "#/components/schemas/ResponsesOutputContentItem"
+            }
+          },
+          "call_id": {
+            "type": "string",
+            "description": "工具调用 ID。"
+          },
+          "name": {
+            "type": "string",
+            "description": "工具或函数名称。"
+          },
+          "arguments": {
+            "type": "string",
+            "description": "工具调用参数，通常为 JSON 字符串。"
+          },
+          "quality": {
+            "type": "string",
+            "description": "部分输出类型会返回的质量参数。"
+          },
+          "size": {
+            "type": "string",
+            "description": "部分输出类型会返回的尺寸参数。"
+          }
+        }
+      },
+      "ResponsesOutputContentItem": {
+        "type": "object",
+        "description": "Responses API 输出内容分片。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "内容分片类型，例如 `output_text`。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本内容。"
+          },
+          "annotations": {
+            "type": "array",
+            "description": "标注信息数组；若无标注通常为空数组。",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "ResponsesCompactionRequest": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "description": "上下文压缩请求体。",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "要调用的模型 ID。"
+          },
+          "input": {
+            "description": "待压缩输入。可以是字符串，也可以是结构化输入数组。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponsesInputItem"
+                }
+              }
+            ]
+          },
+          "instructions": {
+            "description": "压缩策略说明，例如保留哪些关键信息、删除哪些冗余内容。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "previous_response_id": {
+            "type": "string",
+            "description": "上一轮响应 ID，用于基于历史上下文压缩。"
+          }
+        }
+      },
+      "ResponsesCompactionResponse": {
+        "type": "object",
+        "description": "上下文压缩响应。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "压缩响应 ID。"
+          },
+          "object": {
+            "type": "string",
+            "example": "response.compaction",
+            "description": "对象类型，通常为 `response.compaction`。"
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "Unix 时间戳（秒）。"
+          },
+          "output": {
+            "type": "array",
+            "description": "压缩后的输出内容。",
+            "items": {
+              "$ref": "#/components/schemas/ResponsesOutputItem"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      }
+    }
+  }
+}
