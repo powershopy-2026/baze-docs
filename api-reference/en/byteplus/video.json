@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Seedance Video Generation",
-        "description": "For Seedance video models. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nThe currently documented public workflows are text-to-video and first-frame image-to-video. This document covers `model`, `prompt`, `image`, `seconds`, `size`, `resolution`, `ratio`, `seed`, `camera_fixed`, `watermark`, `generate_audio`, `draft`, and `return_last_frame`.",
+        "description": "For Seedance video models. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nThe currently documented public workflows are text-to-video and first-frame image-to-video. This document covers `model`, `prompt`, `image`, `seconds`, `size`, `ratio`, `seed`, `camera_fixed`, `watermark`, `generate_audio`, `draft`, and `return_last_frame`. `size` is the public output tier and billing field.",
         "operationId": "byteplusVideoGenerations",
         "tags": [
           "Seedance Video"
@@ -43,8 +43,8 @@
                   "value": {
                     "model": "seedance-1-5-pro-251215",
                     "prompt": "A kitten running on grass, sunny day, camera following",
-                    "seconds": 5,
-                    "resolution": "720p",
+                    "seconds": "5",
+                    "size": "720p",
                     "ratio": "16:9",
                     "generate_audio": true
                   }
@@ -55,8 +55,8 @@
                     "model": "seedance-1-5-pro-251215",
                     "prompt": "Camera slowly pushing in, girl smiling",
                     "image": "https://example.com/first-frame.jpg",
-                    "seconds": 5,
-                    "resolution": "720p",
+                    "seconds": "5",
+                    "size": "720p",
                     "ratio": "adaptive"
                   }
                 },
@@ -66,7 +66,7 @@
                     "model": "seedance-1-5-pro-251215",
                     "prompt": "Dog playing with ball",
                     "draft": true,
-                    "resolution": "480p"
+                    "size": "480p"
                   }
                 }
               }
@@ -288,24 +288,19 @@
             "description": "First-frame image URL or Base64-encoded input for first-frame image-to-video."
           },
           "seconds": {
-            "type": "integer",
-            "description": "Video duration in seconds. 1.5-pro supports 4-12 seconds or -1 (auto-select); other models support 2-12 seconds.",
-            "minimum": -1,
-            "maximum": 12,
-            "default": 5
+            "type": "string",
+            "description": "String form of the video duration in seconds. `seedance-1-5-pro-251215` accepts `\"-1\"` (auto-select) or `\"4\"` to `\"12\"`; other models accept `\"2\"` to `\"12\"`.",
+            "default": "5",
+            "example": "5"
           },
-          "resolution": {
+          "size": {
             "type": "string",
             "enum": [
               "480p",
               "720p",
               "1080p"
             ],
-            "description": "Video resolution. Draft mode only supports 480p. 1.5-pro defaults to 720p, while 1.0-pro and 1.0-pro-fast default to 1080p."
-          },
-          "size": {
-            "type": "string",
-            "description": "Same as resolution, for OpenAI compatibility."
+            "description": "Public output size tier and billing field. Draft mode only supports 480p. 1.5-pro defaults to 720p, while 1.0-pro and 1.0-pro-fast default to 1080p."
           },
           "ratio": {
             "type": "string",

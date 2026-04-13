@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Seedance 视频生成",
-        "description": "适用于 Seedance 系列视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n当前公开支持文生视频与首帧图生视频。本文档覆盖的请求字段包括 `model`、`prompt`、`image`、`seconds`、`size`、`resolution`、`ratio`、`seed`、`camera_fixed`、`watermark`、`generate_audio`、`draft`、`return_last_frame`。",
+        "description": "适用于 Seedance 系列视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n当前公开支持文生视频与首帧图生视频。本文档覆盖的请求字段包括 `model`、`prompt`、`image`、`seconds`、`size`、`ratio`、`seed`、`camera_fixed`、`watermark`、`generate_audio`、`draft`、`return_last_frame`。",
         "operationId": "byteplusVideoGenerations",
         "tags": [
           "Seedance Video"
@@ -43,8 +43,8 @@
                   "value": {
                     "model": "seedance-1-5-pro-251215",
                     "prompt": "一只小猫在草地上奔跑，阳光明媚，镜头跟随移动",
-                    "seconds": 5,
-                    "resolution": "720p",
+                    "seconds": "5",
+                    "size": "720p",
                     "ratio": "16:9",
                     "generate_audio": true
                   }
@@ -55,8 +55,8 @@
                     "model": "seedance-1-5-pro-251215",
                     "prompt": "镜头缓缓推进，女孩微笑",
                     "image": "https://example.com/first-frame.jpg",
-                    "seconds": 5,
-                    "resolution": "720p",
+                    "seconds": "5",
+                    "size": "720p",
                     "ratio": "adaptive"
                   }
                 },
@@ -66,7 +66,7 @@
                     "model": "seedance-1-5-pro-251215",
                     "prompt": "小狗玩球",
                     "draft": true,
-                    "resolution": "480p"
+                    "size": "480p"
                   }
                 }
               }
@@ -288,24 +288,19 @@
             "description": "首帧图片 URL 或 Base64 编码。用于首帧图生视频场景。"
           },
           "seconds": {
-            "type": "integer",
-            "description": "视频生成时长（秒）。1.5-pro 支持 4-12 秒整数或 -1（自动选择）；其他模型支持 2-12 秒。",
-            "minimum": -1,
-            "maximum": 12,
-            "default": 5
+            "type": "string",
+            "description": "视频生成时长（秒）的字符串形式。`seedance-1-5-pro-251215` 支持 `\"-1\"`（自动选择）或 `\"4\"` 到 `\"12\"`；其他模型支持 `\"2\"` 到 `\"12\"`。",
+            "default": "5",
+            "example": "5"
           },
-          "resolution": {
+          "size": {
             "type": "string",
             "enum": [
               "480p",
               "720p",
               "1080p"
             ],
-            "description": "视频分辨率。样片模式（draft=true）仅支持 480p。1.5-pro 默认 720p，1.0-pro / 1.0-pro-fast 默认 1080p。"
-          },
-          "size": {
-            "type": "string",
-            "description": "与 resolution 相同，用于 OpenAI 兼容。"
+            "description": "视频输出规格参数。样片模式（draft=true）仅支持 480p。1.5-pro 默认 720p，1.0-pro / 1.0-pro-fast 默认 1080p。"
           },
           "ratio": {
             "type": "string",
