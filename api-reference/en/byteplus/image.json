@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream Image Generation",
-        "description": "For Seedream image models.\n\nSupported models include `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`. This document covers `model`, `prompt`, `image`, `size`, `seed`, `sequential_image_generation`, `n`, `response_format`, and `watermark`. Generated file links are typically temporary and should be downloaded promptly.",
+        "description": "For Seedream image models.\n\nSupported models include `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`. This document covers `model`, `prompt`, `image`, `size`, `seed`, `sequential_image_generation`, `sequential_image_generation_options`, `response_format`, and `watermark`. Generated file links are typically temporary and should be downloaded promptly.",
         "operationId": "byteplusImageGenerations",
         "tags": [
           "Seedream Image"
@@ -73,8 +73,18 @@
                     "image": [
                       "https://example.com/ref1.jpg",
                       "https://example.com/ref2.jpg"
-                    ],
-                    "n": 3
+                    ]
+                  }
+                },
+                "sequential_images_with_limit": {
+                  "summary": "Limit sequential image count",
+                  "value": {
+                    "model": "seedream-4-5-251128",
+                    "prompt": "A set of four seasons landscape illustrations, spring summer autumn winter",
+                    "sequential_image_generation": "auto",
+                    "sequential_image_generation_options": {
+                      "max_images": 3
+                    }
                   }
                 }
               }
@@ -309,13 +319,6 @@
             ],
             "description": "Reference images. The public Seedream models currently documented here support 1-14 reference images."
           },
-          "n": {
-            "type": "integer",
-            "description": "Number of images to generate. With sequential_image_generation=auto, model auto-determines (max 15 including reference images).",
-            "minimum": 1,
-            "maximum": 15,
-            "default": 1
-          },
           "size": {
             "type": "string",
             "description": "Output image size.\n- seedream-5-0-260128: supports 2K/3K or custom (total pixels 3686400-10404496, aspect ratio 1/16-16)\n- seedream-4-5-251128: supports 2K/4K or custom (total pixels 3686400-16777216, aspect ratio 1/16-16)\n- seedream-4-0-250828: supports 1K/2K/4K or custom (total pixels 921600-16777216, aspect ratio 1/16-16)",
@@ -343,6 +346,19 @@
             ],
             "description": "Sequential image generation switch. auto for auto mode, disabled for single image. Supported by the Seedream models currently documented here.",
             "default": "disabled"
+          },
+          "sequential_image_generation_options": {
+            "type": "object",
+            "description": "Sequential image generation options. Effective only when `sequential_image_generation=auto`.",
+            "properties": {
+              "max_images": {
+                "type": "integer",
+                "description": "Maximum number of images allowed for this request. Range 1-15, and the sum of reference images plus generated images must not exceed 15.",
+                "minimum": 1,
+                "maximum": 15,
+                "default": 15
+              }
+            }
           },
           "watermark": {
             "type": "boolean",

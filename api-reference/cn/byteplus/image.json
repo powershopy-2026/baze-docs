@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream 图像生成",
-        "description": "适用于 Seedream 系列图像模型。\n\n支持模型包括 `seedream-5-0-260128`、`seedream-4-5-251128`、`seedream-4-0-250828`。本文档覆盖的请求字段包括 `model`、`prompt`、`image`、`size`、`seed`、`sequential_image_generation`、`n`、`response_format`、`watermark`。生成结果链接通常为临时地址，请及时下载保存。",
+        "description": "适用于 Seedream 系列图像模型。\n\n支持模型包括 `seedream-5-0-260128`、`seedream-4-5-251128`、`seedream-4-0-250828`。本文档覆盖的请求字段包括 `model`、`prompt`、`image`、`size`、`seed`、`sequential_image_generation`、`sequential_image_generation_options`、`response_format`、`watermark`。生成结果链接通常为临时地址，请及时下载保存。",
         "operationId": "byteplusImageGenerations",
         "tags": [
           "Seedream Image"
@@ -73,8 +73,18 @@
                     "image": [
                       "https://example.com/ref1.jpg",
                       "https://example.com/ref2.jpg"
-                    ],
-                    "n": 3
+                    ]
+                  }
+                },
+                "sequential_images_with_limit": {
+                  "summary": "限制组图最多张数",
+                  "value": {
+                    "model": "seedream-4-5-251128",
+                    "prompt": "一套四季风景插画，春夏秋冬",
+                    "sequential_image_generation": "auto",
+                    "sequential_image_generation_options": {
+                      "max_images": 3
+                    }
                   }
                 }
               }
@@ -309,13 +319,6 @@
             ],
             "description": "参考图片。当前公开的 Seedream 模型支持 1-14 张参考图。"
           },
-          "n": {
-            "type": "integer",
-            "description": "生成图像数量。当 sequential_image_generation=auto 时，模型自动决定数量（最多 15 张，含参考图）。",
-            "minimum": 1,
-            "maximum": 15,
-            "default": 1
-          },
           "size": {
             "type": "string",
             "description": "输出图像尺寸。\n- seedream-5-0-260128：支持 2K/3K 或自定义（总像素 3686400-10404496，宽高比 1/16-16）\n- seedream-4-5-251128：支持 2K/4K 或自定义（总像素 3686400-16777216，宽高比 1/16-16）\n- seedream-4-0-250828：支持 1K/2K/4K 或自定义（总像素 921600-16777216，宽高比 1/16-16）",
@@ -343,6 +346,19 @@
             ],
             "description": "组图功能开关。`auto` 为自动判断模式，`disabled` 为关闭组图（仅生成单图）。当前支持的 Seedream 模型均可使用该能力。",
             "default": "disabled"
+          },
+          "sequential_image_generation_options": {
+            "type": "object",
+            "description": "组图功能配置。仅当 `sequential_image_generation=auto` 时生效。",
+            "properties": {
+              "max_images": {
+                "type": "integer",
+                "description": "本次请求最多允许生成的图片数量。取值范围 1-15，且参考图数量与最终生成图数量之和不超过 15。",
+                "minimum": 1,
+                "maximum": 15,
+                "default": 15
+              }
+            }
           },
           "watermark": {
             "type": "boolean",
