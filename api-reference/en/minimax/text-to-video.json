@@ -245,7 +245,11 @@
           },
           "size": {
             "type": "string",
-            "description": "Target output size or resolution. Available values depend on the selected model."
+            "description": "Target output size or resolution. Current text-to-video models support `768P` and `1080P`.",
+            "enum": [
+              "768P",
+              "1080P"
+            ]
           }
         }
       },

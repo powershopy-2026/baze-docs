@@ -251,7 +251,12 @@
           },
           "size": {
             "type": "string",
-            "description": "Target output size or resolution. Available values depend on the selected model."
+            "description": "Target output size or resolution. Current image-to-video models support `512P`, `768P`, and `1080P`.",
+            "enum": [
+              "512P",
+              "768P",
+              "1080P"
+            ]
           }
         }
       },
