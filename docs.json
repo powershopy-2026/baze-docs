@@ -30,7 +30,6 @@
                       "cn/minimax/text-to-video",
                       "cn/minimax/image-to-video",
                       "cn/minimax/start-end-to-video",
-                      "cn/minimax/subject-reference-to-video",
                       "cn/minimax/query-video-status",
                       "cn/minimax/download-video-file"
                     ]
@@ -90,7 +89,6 @@
                       "en/minimax/text-to-video",
                       "en/minimax/image-to-video",
                       "en/minimax/start-end-to-video",
-                      "en/minimax/subject-reference-to-video",
                       "en/minimax/query-video-status",
                       "en/minimax/download-video-file"
                     ]
