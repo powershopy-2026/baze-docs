@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Wan 首帧图生视频",
+    "title": "Wan 首帧图生视频兼容视图",
     "version": "1.0.0",
     "description": "Wan 系列首帧图生视频能力文档。公开统一入口为 `/v1/videos`，用于创建异步视频生成任务。",
     "license": {
@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Wan 首帧图生视频",
-        "description": "适用于 Wan 系列首帧图生视频模型。当前项目已实现 Ali `wan2.7-i2v`。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`image`、`prompt`、`seconds`、`size`、`prompt_extend`、`watermark`、`seed`、`negative_prompt`。生成结果链接通常为临时地址，请及时下载保存。",
+        "description": "Wan 首帧图生视频的兼容视图文档，保留 `/v1/videos` 的历史单图输入形态。\n\n公开字段：`model`、`image`、`prompt`、`seconds`、`size`、`prompt_extend`、`watermark`、`seed`、`negative_prompt`。如需查看渠道最新能力，请使用独立能力文档。",
         "operationId": "aliFirstFrameToVideo",
         "tags": [
           "Wan Video"
@@ -41,7 +41,7 @@
                 "first_frame_video": {
                   "summary": "首帧图生视频",
                   "value": {
-                    "model": "wan2.7-i2v",
+                    "model": "first-frame-video-model",
                     "image": "https://example.com/first-frame.jpg",
                     "prompt": "写实风格，一只黑色小猫好奇地看向天空，镜头从平视逐渐上升，最后俯拍它的好奇的眼神。",
                     "seconds": "5",
@@ -428,10 +428,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "enum": [
-              "wan2.7-i2v"
-            ],
-            "description": "万相首帧图生视频模型。当前项目已实现 `wan2.7-i2v`。"
+            "description": "首帧图生视频兼容视图中的模型标识。"
           },
           "image": {
             "type": "string",
@@ -453,7 +450,7 @@
               "720P",
               "1080P"
             ],
-            "description": "生成视频的分辨率档位。`wan2.7-i2v` 当前项目实现默认使用 1080P。可选值：480P、720P、1080P。",
+            "description": "兼容视图支持的分辨率档位。可选值：480P、720P、1080P。",
             "default": "1080P"
           },
           "prompt_extend": {

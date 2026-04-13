@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Wan First-Frame to Video",
+    "title": "Wan First-Frame to Video Compatibility View",
     "version": "1.0.0",
     "description": "First-frame image-to-video documentation for Wan models. The public endpoint is `/v1/videos` and creates asynchronous generation tasks.",
     "license": {
@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Wan First-Frame to Video",
-        "description": "For Wan first-frame image-to-video models. The project currently implements Ali `wan2.7-i2v`. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `image`, `prompt`, `seconds`, `size`, `prompt_extend`, `watermark`, `seed`, and `negative_prompt`. Generated file links are typically temporary and should be downloaded promptly.",
+        "description": "Compatibility view for Wan first-frame image-to-video requests. This document keeps the legacy single-image public shape under `/v1/videos`.\n\nPublic fields: `model`, `image`, `prompt`, `seconds`, `size`, `prompt_extend`, `watermark`, `seed`, and `negative_prompt`. For channel-specific latest capabilities, use the dedicated capability document.",
         "operationId": "aliFirstFrameToVideo",
         "tags": [
           "Wan Video"
@@ -41,7 +41,7 @@
                 "first_frame_video": {
                   "summary": "First frame to video",
                   "value": {
-                    "model": "wan2.7-i2v",
+                    "model": "first-frame-video-model",
                     "image": "https://example.com/first-frame.jpg",
                     "prompt": "Realistic style, a black kitten curiously looking at the sky, camera moving up from eye level to top-down",
                     "seconds": "5",
@@ -428,10 +428,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "enum": [
-              "wan2.7-i2v"
-            ],
-            "description": "Wan first-frame-to-video model. The current project implementation exposes `wan2.7-i2v`."
+            "description": "First-frame image-to-video model identifier for this compatibility view."
           },
           "image": {
             "type": "string",
@@ -453,7 +450,7 @@
               "720P",
               "1080P"
             ],
-            "description": "Video resolution. The current `wan2.7-i2v` implementation defaults to 1080P. Options: 480P, 720P, 1080P.",
+            "description": "Video resolution for the compatibility view. Options: 480P, 720P, 1080P.",
             "default": "1080P"
           },
           "prompt_extend": {
