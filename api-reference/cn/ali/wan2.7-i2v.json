@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建 Wan 2.7 图生视频任务",
-        "description": "提交一个异步的 Ali `wan2.7-i2v` 生成任务。\n\n项目当前支持两种输入风格：\n- 兼容风格：使用 `image` 表示单首帧输入，或使用 `images` 且长度必须为 2，表示首帧 + 尾帧。\n- 新版风格：使用顶层 `media` 数组，对应上游新版 `input.media` 协议。\n\n当前项目已实现的官方 `media.type` 包括 `first_frame`、`last_frame`、`driving_audio`、`first_clip`。\n\n当前项目支持的 `media` 组合为：\n- `first_frame`\n- `first_frame + driving_audio`\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n- `first_clip`\n- `first_clip + last_frame`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。",
+        "description": "提交一个异步的 Ali `wan2.7-i2v` 生成任务。\n\n本能力使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n当前项目已实现的官方 `media.type` 包括 `first_frame`、`last_frame`、`driving_audio`、`first_clip`。\n\n当前项目支持的 `media` 组合为：\n- `first_frame`\n- `first_frame + driving_audio`\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n- `first_clip`\n- `first_clip + last_frame`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark`、`seed`。",
         "operationId": "aliWan27I2VCreate",
         "tags": [
           "Wan 2.7 Video"
@@ -43,6 +43,10 @@
                   "value": {
                     "model": "wan2.7-i2v",
                     "prompt": "人物从静态肖像逐渐开始自然开口说话。",
+                    "negative_prompt": "模糊，低质量",
+                    "prompt_extend": true,
+                    "watermark": false,
+                    "seed": 42,
                     "media": [
                       {
                         "type": "first_frame",
@@ -57,12 +61,16 @@
                     "size": "720P"
                   }
                 },
-                "wan27_compatibility_image": {
-                  "summary": "使用历史兼容 image 字段",
+                "wan27_continuation": {
+                  "summary": "使用首段视频续写且省略 prompt",
                   "value": {
                     "model": "wan2.7-i2v",
-                    "image": "https://example.com/assets/first-frame.png",
-                    "prompt": "镜头缓慢推进，人物轻轻眨眼。",
+                    "media": [
+                      {
+                        "type": "first_clip",
+                        "url": "https://example.com/assets/opening-clip.mp4"
+                      }
+                    ],
                     "seconds": "5",
                     "size": "1080P"
                   }
@@ -223,24 +231,8 @@
       "Wan27VideoRequest": {
         "type": "object",
         "required": [
-          "model"
-        ],
-        "anyOf": [
-          {
-            "required": [
-              "image"
-            ]
-          },
-          {
-            "required": [
-              "images"
-            ]
-          },
-          {
-            "required": [
-              "media"
-            ]
-          }
+          "model",
+          "media"
         ],
         "properties": {
           "model": {
@@ -254,18 +246,23 @@
             "type": "string",
             "description": "可选文本提示词。未提供时，生成过程将主要依赖输入媒体素材。"
           },
-          "image": {
+          "negative_prompt": {
             "type": "string",
-            "description": "单首帧兼容字段。项目会将其映射为上游 `media: [{type: first_frame, url: ...}]`。"
+            "description": "可选反向提示词，用于描述不希望在视频中出现的内容。"
           },
-          "images": {
-            "type": "array",
-            "description": "首帧 + 尾帧兼容字段。必须恰好包含 2 个元素，顺序为 `[首帧, 尾帧]`。",
-            "items": {
-              "type": "string"
-            },
-            "minItems": 2,
-            "maxItems": 2
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "是否启用提示词智能改写。默认值为 `true`。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印。默认值为 `false`。"
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "随机种子。未提供时由系统自动生成。"
           },
           "media": {
             "type": "array",
