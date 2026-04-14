@@ -43,7 +43,6 @@
                       "cn/ali/image-to-image",
                       "cn/ali/text-to-video",
                       "cn/ali/wan2.7-i2v",
-                      "cn/ali/video-first-frame",
                       "cn/ali/video-first-last-frame",
                       "cn/ali/reference-to-video"
                     ]
@@ -102,7 +101,6 @@
                       "en/ali/image-to-image",
                       "en/ali/text-to-video",
                       "en/ali/wan2.7-i2v",
-                      "en/ali/video-first-frame",
                       "en/ali/video-first-last-frame",
                       "en/ali/reference-to-video"
                     ]
