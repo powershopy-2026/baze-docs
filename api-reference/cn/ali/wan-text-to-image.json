@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Qwen 文生图",
+    "title": "Wan 文生图",
     "version": "1.0.0",
-    "description": "阿里 Qwen 文生图能力文档。公开统一入口为 `/v1/images/generations`，当前文档仅描述 `qwen-image-2.0-pro` 已实现且与官方一致的 JSON 字段。",
+    "description": "阿里 Wan 文生图能力文档。公开统一入口为 `/v1/images/generations`，当前文档仅描述当前 Ali 白名单内已实现的 `wan2.7-image-pro` 官方文生图字段。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -17,31 +17,31 @@
   ],
   "tags": [
     {
-      "name": "Qwen Image",
-      "description": "Qwen 文生图能力"
+      "name": "Wan Image",
+      "description": "Wan 文生图能力"
     }
   ],
   "paths": {
     "/v1/images/generations": {
       "post": {
-        "summary": "Qwen 文生图",
-        "description": "调用 Ali `qwen-image-2.0-pro` 执行文生图。\n\n稳定公开调用方案仅包含官方 JSON 结构：顶层 `model`、`input`、`parameters`、`response_format`。提示词位于 `input.messages[0].content[0].text`。",
-        "operationId": "aliQwenTextToImage",
+        "summary": "Wan 文生图",
+        "description": "调用 Ali `wan2.7-image-pro` 执行文生图。\n\n稳定公开调用方案仅包含官方 JSON 结构：顶层 `model`、`input`、`parameters`、`response_format`。提示词位于 `input.messages[0].content[0].text`。",
+        "operationId": "aliWanTextToImage",
         "tags": [
-          "Qwen Image"
+          "Wan Image"
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TextToImageRequest"
+                "$ref": "#/components/schemas/WanTextToImageRequest"
               },
               "examples": {
                 "basic_generation": {
                   "summary": "基础文生图",
                   "value": {
-                    "model": "qwen-image-2.0-pro",
+                    "model": "wan2.7-image-pro",
                     "response_format": "url",
                     "input": {
                       "messages": [
@@ -49,23 +49,25 @@
                           "role": "user",
                           "content": [
                             {
-                              "text": "一只可爱的橘猫坐在窗台上，阳光洒在身上，写实风格"
+                              "text": "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
                             }
                           ]
                         }
                       ]
                     },
                     "parameters": {
-                      "size": "2048*2048",
+                      "size": "2K",
                       "n": 1,
-                      "watermark": false
+                      "watermark": false,
+                      "thinking_mode": true,
+                      "seed": 0
                     }
                   }
                 },
-                "advanced_generation": {
-                  "summary": "高级参数文生图",
+                "sequential_generation": {
+                  "summary": "组图生成",
                   "value": {
-                    "model": "qwen-image-2.0-pro",
+                    "model": "wan2.7-image-pro",
                     "response_format": "url",
                     "input": {
                       "messages": [
@@ -73,19 +75,30 @@
                           "role": "user",
                           "content": [
                             {
-                              "text": "科幻风格的城市夜景，霓虹灯光，未来感建筑"
+                              "text": "电影感组图，记录同一只流浪橘猫，特征必须前后一致。第一张：春天，橘猫穿梭在盛开的樱花树下；第二张：夏天，橘猫在老街的树荫下乘凉避暑；第三张：秋天，橘猫踩在满地的金色落叶上；第四张：冬天，橘猫在雪地上走留下足迹。"
                             }
                           ]
                         }
                       ]
                     },
                     "parameters": {
-                      "size": "2048*1024",
-                      "n": 2,
-                      "negative_prompt": "低分辨率，低画质，模糊",
-                      "prompt_extend": true,
-                      "watermark": false,
-                      "seed": 0
+                      "enable_sequential": true,
+                      "n": 4,
+                      "size": "2K",
+                      "color_palette": [
+                        {
+                          "hex": "#C2D1E6",
+                          "ratio": "23.51%"
+                        },
+                        {
+                          "hex": "#CDD8E9",
+                          "ratio": "20.13%"
+                        },
+                        {
+                          "hex": "#B5C8DB",
+                          "ratio": "15.88%"
+                        }
+                      ]
                     }
                   }
                 }
@@ -192,7 +205,7 @@
       }
     },
     "schemas": {
-      "TextToImageRequest": {
+      "WanTextToImageRequest": {
         "type": "object",
         "required": [
           "model",
@@ -202,7 +215,7 @@
           "model": {
             "type": "string",
             "enum": [
-              "qwen-image-2.0-pro"
+              "wan2.7-image-pro"
             ],
             "description": "文生图模型名称。"
           },
@@ -216,14 +229,14 @@
             "default": "url"
           },
           "input": {
-            "$ref": "#/components/schemas/QwenTextToImageInput"
+            "$ref": "#/components/schemas/WanTextToImageInput"
           },
           "parameters": {
-            "$ref": "#/components/schemas/QwenTextToImageParameters"
+            "$ref": "#/components/schemas/WanTextToImageParameters"
           }
         }
       },
-      "QwenTextToImageInput": {
+      "WanTextToImageInput": {
         "type": "object",
         "required": [
           "messages"
@@ -235,12 +248,12 @@
             "maxItems": 1,
             "description": "当前仅支持单轮消息。",
             "items": {
-              "$ref": "#/components/schemas/QwenTextToImageMessage"
+              "$ref": "#/components/schemas/WanTextToImageMessage"
             }
           }
         }
       },
-      "QwenTextToImageMessage": {
+      "WanTextToImageMessage": {
         "type": "object",
         "required": [
           "role",
@@ -260,12 +273,12 @@
             "maxItems": 1,
             "description": "仅支持一个文本内容项。",
             "items": {
-              "$ref": "#/components/schemas/QwenTextToImageContentItem"
+              "$ref": "#/components/schemas/WanTextToImageContentItem"
             }
           }
         }
       },
-      "QwenTextToImageContentItem": {
+      "WanTextToImageContentItem": {
         "type": "object",
         "required": [
           "text"
@@ -277,35 +290,59 @@
           }
         }
       },
-      "QwenTextToImageParameters": {
+      "WanTextToImageParameters": {
         "type": "object",
         "properties": {
           "size": {
             "type": "string",
-            "description": "输出图像分辨率，格式为 `宽*高`。"
+            "description": "输出图片分辨率规格，例如 `1K`、`2K`、`4K`，或显式宽高像素值。"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 6,
-            "description": "输出图像数量。"
-          },
-          "negative_prompt": {
-            "type": "string",
-            "description": "反向提示词。"
-          },
-          "prompt_extend": {
-            "type": "boolean",
-            "description": "是否开启提示词智能改写。"
+            "maximum": 12,
+            "description": "输出图片数量。关闭组图模式时范围为 1-4，开启组图模式时范围为 1-12。"
           },
           "watermark": {
             "type": "boolean",
             "description": "是否添加水印。显式传 `false` 会保留并传给上游。"
           },
+          "thinking_mode": {
+            "type": "boolean",
+            "description": "是否开启思考模式。仅在关闭组图模式且无图片输入时生效。"
+          },
+          "enable_sequential": {
+            "type": "boolean",
+            "description": "是否开启组图输出模式。"
+          },
+          "color_palette": {
+            "type": "array",
+            "description": "自定义颜色主题。",
+            "items": {
+              "$ref": "#/components/schemas/WanColorPaletteItem"
+            }
+          },
           "seed": {
             "type": "integer",
             "format": "int64",
             "description": "随机种子。显式传 `0` 会保留并传给上游。"
+          }
+        }
+      },
+      "WanColorPaletteItem": {
+        "type": "object",
+        "required": [
+          "hex",
+          "ratio"
+        ],
+        "properties": {
+          "hex": {
+            "type": "string",
+            "description": "十六进制颜色值。"
+          },
+          "ratio": {
+            "type": "string",
+            "description": "颜色占比，例如 `23.51%`。"
           }
         }
       },
