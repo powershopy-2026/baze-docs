@@ -3,7 +3,7 @@
   "info": {
     "title": "阿里语音合成",
     "version": "1.0.0",
-    "description": "阿里通道语音合成能力文档。公开统一入口为 `/v1/audio/speech`，当前项目已实现 `qwen3-tts-instruct-flash` 的官方字段子集。\n\n本文档只描述项目当前已实现、且与阿里官方能力一致的字段：`model`、`input`、`voice`、`instructions`、`optimize_instructions`、`language_type`、`stream_format`。\n\n在统一入口中，`stream_format` 既承担“开启流式输出”的作用，也会继续作为阿里上游需要的流式编码值透传。也就是说，任何非空 `stream_format` 都会被视为流式请求。\n\n项目计费说明：网关会把上游 `usage.characters` 映射到统一 usage 的 `prompt_tokens_details.audio_tokens`，并保留 `usage.output_tokens -> usage.completion_tokens_details.audio_tokens`；当 Internal Pricing 配置 `quota_type=3` 时，最终按统一输入音频字符数结算。"
+    "description": "阿里通道语音合成能力文档。公开统一入口为 `/v1/audio/speech`，当前项目已实现 `qwen3-tts-instruct-flash` 的官方字段子集。\n\n本文档只描述项目当前已实现、且与阿里官方能力一致的字段：`model`、`input`、`voice`、`instructions`、`optimize_instructions`、`language_type`。\n\n流式输出遵循阿里 HTTP 官方语义：客户端需要在请求头中显式设置 `X-DashScope-SSE: enable`。本通道不公开 `stream_format` 字段。\n\n项目计费说明：网关会把上游 `usage.characters` 映射到统一 usage 的 `prompt_tokens_details.audio_tokens`，并保留 `usage.output_tokens -> usage.completion_tokens_details.audio_tokens`；同时会把阿里原始 usage 与归一化 usage 快照写入 consume_detail，便于计费回溯。"
   },
   "servers": [
     {
@@ -21,10 +21,24 @@
     "/v1/audio/speech": {
       "post": {
         "summary": "阿里语音合成",
-        "description": "调用阿里 `qwen3-tts-instruct-flash` 生成语音。\n\n响应约定：\n- 非流式固定返回 `302 Found + Location`；\n- 流式固定返回 `text/event-stream`，透传阿里 SSE 数据。",
+        "description": "调用阿里 `qwen3-tts-instruct-flash` 生成语音。\n\n响应约定：\n- 非流式返回阿里官方 JSON 响应；\n- 流式返回 `text/event-stream`，透传阿里 SSE 数据。",
         "operationId": "aliAudioSpeech",
         "tags": [
           "Ali Audio"
+        ],
+        "parameters": [
+          {
+            "name": "X-DashScope-SSE",
+            "in": "header",
+            "required": false,
+            "description": "阿里官方 HTTP 流式开关。传 `enable` 时返回 `text/event-stream`。",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "enable"
+              ]
+            }
+          }
         ],
         "requestBody": {
           "required": true,
@@ -51,8 +65,7 @@
                     "model": "qwen3-tts-instruct-flash",
                     "input": "Today is a wonderful day to build something people love.",
                     "voice": "Cherry",
-                    "language_type": "English",
-                    "stream_format": "pcm"
+                    "language_type": "English"
                   }
                 }
               }
@@ -61,22 +74,17 @@
         },
         "responses": {
           "200": {
-            "description": "流式调用成功，返回阿里 SSE 数据。项目内部结算会读取 `usage.characters` 作为统一输入音频字符数。",
+            "description": "调用成功。非流式时返回阿里官方 JSON；流式时返回阿里 SSE 数据。",
             "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AliSpeechResponse"
+                }
+              },
               "text/event-stream": {
                 "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "302": {
-            "description": "非流式调用成功。`Location` 头为音频文件临时下载地址。项目内部结算会读取 `usage.characters` 作为统一输入音频字符数。",
-            "headers": {
-              "Location": {
-                "schema": {
                   "type": "string",
-                  "format": "uri"
+                  "description": "阿里 SSE 事件流。每个事件体可解析为阿里语音响应片段 JSON。"
                 }
               }
             }
@@ -129,7 +137,33 @@
           },
           "voice": {
             "type": "string",
-            "description": "音色名称。"
+            "description": "系统音色名称。当前仅支持本枚举中的音色。",
+            "enum": [
+              "Cherry",
+              "Serena",
+              "Ethan",
+              "Chelsie",
+              "Momo",
+              "Vivian",
+              "Moon",
+              "Maia",
+              "Kai",
+              "Nofish",
+              "Bella",
+              "Eldric Sage",
+              "Mia",
+              "Mochi",
+              "Bellona",
+              "Vincent",
+              "Bunny",
+              "Neil",
+              "Elias",
+              "Arthur",
+              "Nini",
+              "Seren",
+              "Pip",
+              "Stella"
+            ]
           },
           "instructions": {
             "type": "string",
@@ -141,11 +175,95 @@
           },
           "language_type": {
             "type": "string",
-            "description": "语言类型。"
+            "description": "语言类型。",
+            "enum": [
+              "Auto",
+              "Chinese",
+              "English",
+              "German",
+              "Italian",
+              "Portuguese",
+              "Spanish",
+              "Japanese",
+              "Korean",
+              "French",
+              "Russian"
+            ]
+          }
+        }
+      },
+      "AliSpeechResponse": {
+        "type": "object",
+        "properties": {
+          "status_code": {
+            "type": "integer",
+            "description": "HTTP 状态码。"
           },
-          "stream_format": {
+          "request_id": {
             "type": "string",
-            "description": "流式输出格式。任何非空值都会触发统一入口的流式请求；当前阿里能力常用值为 `pcm`。"
+            "description": "阿里请求 ID。"
+          },
+          "code": {
+            "type": "string",
+            "description": "错误码。成功时通常为空字符串。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息。成功时通常为空字符串。"
+          },
+          "output": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "nullable": true
+              },
+              "finish_reason": {
+                "type": "string"
+              },
+              "choices": {
+                "nullable": true
+              },
+              "audio": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "string",
+                    "description": "流式片段中的 Base64 音频数据。非流式通常为空字符串。"
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "完整音频文件下载地址。"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "音频对象 ID。"
+                  },
+                  "expires_at": {
+                    "type": "integer",
+                    "description": "音频 URL 过期时间戳。"
+                  }
+                }
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "properties": {
+              "input_tokens": {
+                "type": "integer"
+              },
+              "output_tokens": {
+                "type": "integer"
+              },
+              "total_tokens": {
+                "type": "integer"
+              },
+              "characters": {
+                "type": "integer",
+                "description": "输入字符数。`qwen3-tts-instruct-flash` 结算时主要关注该字段。"
+              }
+            }
           }
         }
       },
