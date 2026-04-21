@@ -1,0 +1,433 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wan 图像编辑",
+    "version": "1.0.0",
+    "description": "阿里 Wan 图像编辑能力文档。公开统一入口为 `/v1/images/edits`，当前文档描述 `wan2.7-image-pro` 对外公开的网关契约：保留 `input.messages[].content[]` 承载图片与文本指令，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan Image",
+      "description": "Wan 图像编辑能力"
+    }
+  ],
+  "paths": {
+    "/v1/images/edits": {
+      "post": {
+        "summary": "Wan 图像编辑",
+        "description": "调用 Ali `wan2.7-image-pro` 执行图像编辑。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `size`、`n`、`watermark`、`negative_prompt`、`seed`、`bbox_list` 设计为顶层字段。输入图片位于 `input.messages[0].content[].image`，编辑指令位于同一数组中的 `text`。请求体不接受顶层 `parameters`。",
+        "operationId": "aliWanImageEdit",
+        "tags": [
+          "Wan Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WanImageEditRequest"
+              },
+              "examples": {
+                "image_edit": {
+                  "summary": "图像编辑",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/car.webp"
+                            },
+                            {
+                              "image": "https://example.com/paint.webp"
+                            },
+                            {
+                              "text": "把图2的涂鸦喷绘在图1的汽车上"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "size": "2K",
+                    "n": 1,
+                    "watermark": false,
+                    "negative_prompt": "保留原车身颜色",
+                    "seed": 0
+                  }
+                },
+                "interactive_edit": {
+                  "summary": "交互式编辑",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/clock.webp"
+                            },
+                            {
+                              "image": "https://example.com/room.webp"
+                            },
+                            {
+                              "text": "把图1的闹钟放在图2框选的位置"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "bbox_list": [
+                      [],
+                      [
+                        [
+                          989,
+                          515,
+                          1138,
+                          681
+                        ]
+                      ]
+                    ],
+                    "size": "2K",
+                    "n": 1,
+                    "watermark": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功，返回图像编辑结果。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "请求体过大。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游服务返回异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "WanImageEditRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-image-pro"
+            ],
+            "description": "图像编辑模型名称。"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "统一响应格式。",
+            "default": "url"
+          },
+          "input": {
+            "$ref": "#/components/schemas/WanImageInput"
+          },
+          "size": {
+            "type": "string",
+            "description": "输出图像分辨率。图像编辑场景建议使用官方规格如 `1K`、`2K`。网关会映射到上游 `parameters.size`。"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4,
+            "description": "生成图像数量。网关会映射到上游 `parameters.n`。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印。网关会映射到上游 `parameters.watermark`。"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "反向提示词。网关会映射到上游 `parameters.negative_prompt`。"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机数种子，取值范围 [0, 2147483647]。网关会映射到上游 `parameters.seed`。"
+          },
+          "bbox_list": {
+            "type": "array",
+            "description": "交互式编辑框选区域，按输入图片顺序对应。网关会映射到上游 `parameters.bbox_list`。",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "WanImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "当前仅支持单轮消息。",
+            "items": {
+              "$ref": "#/components/schemas/WanImageMessage"
+            }
+          }
+        }
+      },
+      "WanImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "消息角色，固定为 `user`。"
+          },
+          "content": {
+            "type": "array",
+            "description": "内容数组中按顺序放置图片对象和文本指令对象。",
+            "items": {
+              "$ref": "#/components/schemas/WanImageContent"
+            }
+          }
+        }
+      },
+      "WanImageContent": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "输入图片 URL 或 Data URL。"
+          },
+          "text": {
+            "type": "string",
+            "description": "编辑指令。支持中英文。"
+          }
+        }
+      },
+      "WanImageParameters": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "string",
+            "description": "输出图像分辨率。图像编辑场景建议使用官方规格如 `1K`、`2K`。"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4,
+            "description": "生成图像数量。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否添加水印。"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "反向提示词。"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机数种子，取值范围 [0, 2147483647]。"
+          },
+          "bbox_list": {
+            "type": "array",
+            "description": "交互式编辑框选区域，按输入图片顺序对应。",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "创建时间的 Unix 时间戳（秒）。"
+          },
+          "data": {
+            "type": "array",
+            "description": "生成的图像列表。",
+            "items": {
+              "$ref": "#/components/schemas/ImageData"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "附加结果信息。字段内容会随能力不同而变化。"
+          }
+        }
+      },
+      "ImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "图片下载链接。有效期 24 小时。"
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "Base64 编码的图片数据。"
+          },
+          "revised_prompt": {
+            "type": "string",
+            "description": "优化后的提示词。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
+              },
+              "code": {
+                "type": "string"
+              },
+              "param": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

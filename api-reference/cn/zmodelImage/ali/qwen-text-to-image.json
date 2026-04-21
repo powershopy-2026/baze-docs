@@ -1,0 +1,397 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Qwen 文生图",
+    "version": "1.0.0",
+    "description": "阿里 Qwen 文生图能力文档。公开统一入口为 `/v1/images/generations`，当前文档描述 `qwen-image-2.0-pro` 对外公开的网关契约：保留 `input.messages[].content[].text` 承载提示词，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Qwen Image",
+      "description": "Qwen 文生图能力"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "Qwen 文生图",
+        "description": "调用 Ali `qwen-image-2.0-pro` 执行文生图。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `n`、`size`、`negative_prompt`、`prompt_extend`、`watermark`、`seed` 设计为顶层字段。提示词位于 `input.messages[0].content[0].text`。请求体不接受顶层 `parameters`。",
+        "operationId": "aliQwenTextToImage",
+        "tags": [
+          "Qwen Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToImageRequest"
+              },
+              "examples": {
+                "basic_generation": {
+                  "summary": "基础文生图",
+                  "value": {
+                    "model": "qwen-image-2.0-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "一只可爱的橘猫坐在窗台上，阳光洒在身上，写实风格"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "size": "2048*2048",
+                    "n": 1,
+                    "watermark": false
+                  }
+                },
+                "advanced_generation": {
+                  "summary": "高级参数文生图",
+                  "value": {
+                    "model": "qwen-image-2.0-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "科幻风格的城市夜景，霓虹灯光，未来感建筑"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "size": "2048*1024",
+                    "n": 2,
+                    "negative_prompt": "低分辨率，低画质，模糊",
+                    "prompt_extend": true,
+                    "watermark": false,
+                    "seed": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功，返回图像生成结果。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "请求体过大。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游服务返回异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen-image-2.0-pro"
+            ],
+            "description": "文生图模型名称。"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "统一响应格式。",
+            "default": "url"
+          },
+          "input": {
+            "$ref": "#/components/schemas/QwenTextToImageInput"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "description": "输出图像数量。网关会映射到上游 `parameters.n`。"
+          },
+          "size": {
+            "type": "string",
+            "description": "输出图像分辨率，格式为 `宽x高` 或 `宽*高`。网关会转换并映射到上游 `parameters.size`。"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "反向提示词。网关会映射到上游 `parameters.negative_prompt`。"
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "是否开启提示词智能改写。网关会映射到上游 `parameters.prompt_extend`。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印。显式传 `false` 会保留并映射到上游 `parameters.watermark`。"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "随机种子。显式传 `0` 会保留并映射到上游 `parameters.seed`。"
+          }
+        }
+      },
+      "QwenTextToImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "当前仅支持单轮消息。",
+            "items": {
+              "$ref": "#/components/schemas/QwenTextToImageMessage"
+            }
+          }
+        }
+      },
+      "QwenTextToImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "固定为 `user`。"
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "仅支持一个文本内容项。",
+            "items": {
+              "$ref": "#/components/schemas/QwenTextToImageContentItem"
+            }
+          }
+        }
+      },
+      "QwenTextToImageContentItem": {
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "文生图提示词。"
+          }
+        }
+      },
+      "QwenTextToImageParameters": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "string",
+            "description": "输出图像分辨率，格式为 `宽*高`。"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "description": "输出图像数量。"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "反向提示词。"
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "是否开启提示词智能改写。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印。显式传 `false` 会保留并传给上游。"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "随机种子。显式传 `0` 会保留并传给上游。"
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "响应生成时间戳。"
+          },
+          "data": {
+            "type": "array",
+            "description": "生成后的图片结果列表。",
+            "items": {
+              "$ref": "#/components/schemas/ImageData"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "透传的上游原始响应元数据。"
+          }
+        }
+      },
+      "ImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "当结果以 URL 返回时使用。"
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "当结果以 Base64 返回时使用。"
+          },
+          "revised_prompt": {
+            "type": "string",
+            "description": "上游返回的改写提示词。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

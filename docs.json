@@ -63,6 +63,87 @@
                     "pages": [
                       "cn/zhipu/chat"
                     ]
+                  },
+                  {
+                    "group": "图像模型",
+                    "pages": [
+                      {
+                        "group": "MiniMax",
+                        "pages": [
+                          "cn/zmodelImage/minimax/image01-image-to-image",
+                          "cn/zmodelImage/minimax/image01-live-image-to-image",
+                          "cn/zmodelImage/minimax/image01-text-to-image"
+                        ]
+                      },
+                      {
+                        "group": "阿里巴巴",
+                        "pages": [
+                          "cn/zmodelImage/ali/qwen-edit",
+                          "cn/zmodelImage/ali/qwen-text-to-image",
+                          "cn/zmodelImage/ali/wan-edit",
+                          "cn/zmodelImage/ali/wan-text-to-image"
+                        ]
+                      },
+                      {
+                        "group":"字节",
+                        "pages": [
+                          "cn/zmodelImage/byteplus/sendream-4-0",
+                          "cn/zmodelImage/byteplus/sendream-4-5",
+                          "cn/zmodelImage/byteplus/sendream-5-0"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "视频模型",
+                    "pages": [
+                      {
+                        "group": "MiniMax",
+                        "pages": [
+                          "cn/zmodelVideo/minimax/image-to-video",
+                          "cn/zmodelVideo/minimax/start-end-to-video",
+                          "cn/zmodelVideo/minimax/text-to-image"
+                        ]
+                      },
+                      {
+                        "group": "阿里巴巴",
+                        "pages": [
+                          "cn/zmodelVideo/ali/reference-to-video",
+                          "cn/zmodelVideo/ali/text-to-video",
+                          "cn/zmodelVideo/ali/video-first-last-frame",
+                          "cn/zmodelVideo/ali/wan2.7-i2v"
+                        ]
+                      },
+                      {
+                        "group":"字节",
+                        "pages": [
+                          "cn/zmodelVideo/byteplus/seedance-1-0-pro",
+                          "cn/zmodelVideo/byteplus/seedance-1-0-pro-fast",
+                          "cn/zmodelVideo/byteplus/seedance-1-5-pro"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "聊天模型",
+                    "pages": [
+                      {
+                        "group": "MiniMax",
+                        "pages": []
+                      },
+                      {
+                        "group": "阿里巴巴",
+                        "pages": []
+                      },
+                      {
+                        "group":"字节",
+                        "pages": []
+                      },
+                      {
+                        "group":"智谱",
+                        "pages": []
+                      }
+                    ]
                   }
                 ]
               }
@@ -122,6 +203,62 @@
                     "group": "Zhipu",
                     "pages": [
                       "en/zhipu/chat"
+                    ]
+                  },
+
+                  {
+                    "group": "Image Models",
+                    "pages": [
+                      {
+                        "group": "MiniMax",
+                        "pages": []
+                      },
+                      {
+                        "group": "Alibaba",
+                        "pages": []
+                      },
+                      {
+                        "group":"BytePlus",
+                        "pages": []
+                      }
+                    ]
+                  },
+                  {
+                    "group": "Video Models",
+                    "pages": [
+                      {
+                        "group": "MiniMax",
+                        "pages": []
+                      },
+                      {
+                        "group": "Alibaba",
+                        "pages": []
+                      },
+                      {
+                        "group":"BytePlus",
+                        "pages": []
+                      }
+                    ]
+                  },
+                  {
+                    "group": "Chat Models",
+                    "pages": [
+                      {
+                        "group": "MiniMax",
+                        "pages": []
+                      },
+                      {
+                        "group": "Alibaba",
+                        "pages": []
+                      },
+                      {
+                        "group":"BytePlus",
+                        "pages": []
+                      },
+                      {
+                        "group":"ZhiPu",
+                        "pages": []
+                      }
                     ]
                   }
                 ]
