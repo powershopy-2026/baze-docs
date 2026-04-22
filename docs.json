@@ -125,6 +125,28 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "group": "音频模型",
+                    "pages": [
+                      {
+                        "group": "MiniMax",
+                        "pages": [
+                          "cn/zmodelAudio/minimax/speech-2.6-hd",
+                          "cn/zmodelAudio/minimax/speech-2.6-turbo",
+                          "cn/zmodelAudio/minimax/speech-2.8-hd",
+                          "cn/zmodelAudio/minimax/speech-2.8-turbo",
+                          "cn/zmodelAudio/minimax/speech-02-hd",
+                          "cn/zmodelAudio/minimax/speech-02-turbo"
+                        ]
+                      },
+                      {
+                        "group": "阿里巴巴",
+                        "pages": [
+                          "cn/zmodelAudio/ali/qwen3-tts-instruct-flash"
+                        ]
+                      }
+                    ]
                   }
                 ]
               }

@@ -1,0 +1,201 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax 语音合成",
+    "version": "1.0.0",
+    "description": "历史 MiniMax（`type=35`）通道语音合成能力文档。公开统一入口为 `/v1/audio/speech`，当前项目已实现 `POST /v1/t2a_v2` 的稳定字段子集。\n\n本文档只描述当前网关对历史 MiniMax 通道已经实现、且与上游官方能力一致的字段：`model`、`input`、`voice`、`speed`、`response_format`、`stream_format`、`metadata.output_format`。\n\n为保持统一项目级契约，非流式调用固定返回 `302 Found + Location`。因此历史 MiniMax 当前公开的非流式 `metadata.output_format` 仅支持 `url`；流式调用通过 `stream_format` 非空触发，并返回 `text/event-stream`。\n\n项目计费说明：网关会把上游 `extra_info.usage_characters` 映射到统一 usage 的 `prompt_tokens_details.audio_tokens`；当 Internal Pricing 配置 `quota_type=3` 时，`model_price` 表示每 1K 输入字符价格。"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Audio",
+      "description": "历史 MiniMax 文本转语音能力"
+    }
+  ],
+  "paths": {
+    "/v1/audio/speech": {
+      "post": {
+        "summary": "MiniMax 语音合成",
+        "description": "调用历史 MiniMax `t2a_v2` 能力生成语音。\n\n当前稳定模型：`speech-02-turbo`。",
+        "operationId": "minimaxAudioSpeech",
+        "tags": [
+          "MiniMax Audio"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MiniMaxSpeechRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "非流式请求",
+                  "value": {
+                    "model": "speech-02-turbo",
+                    "input": "请用自然语气介绍今天的运行情况。",
+                    "voice": "Chinese (Mandarin)_Lyrical_Voice",
+                    "response_format": "mp3",
+                    "metadata": {
+                      "output_format": "url"
+                    }
+                  }
+                },
+                "stream": {
+                  "summary": "流式请求",
+                  "value": {
+                    "model": "speech-02-turbo",
+                    "input": "Read this sentence in a calm voice.",
+                    "voice": "English_Graceful_Lady",
+                    "speed": 1,
+                    "response_format": "wav",
+                    "stream_format": "pcm"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "流式调用成功，返回 MiniMax SSE 数据。项目内部结算会读取 `extra_info.usage_characters` 作为统一输入音频字符数。",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE 数据流。每个 `data:` 事件都可反序列化为包含 `data.audio`、`trace_id`、`base_resp` 的 MiniMax 响应片段。"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "非流式调用成功。`Location` 头为音频文件临时地址。项目内部结算会读取 `extra_info.usage_characters` 作为统一输入音频字符数。",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误，或扩展字段与统一契约冲突。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token"
+      }
+    },
+    "schemas": {
+      "MiniMaxSpeechRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input",
+          "voice"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "speech-02-turbo"
+            ]
+          },
+          "input": {
+            "type": "string",
+            "description": "待合成文本。"
+          },
+          "voice": {
+            "type": "string",
+            "description": "音色名称，会映射到上游 `voice_setting.voice_id`。"
+          },
+          "speed": {
+            "type": "number",
+            "description": "语速，会映射到上游 `voice_setting.speed`。"
+          },
+          "response_format": {
+            "type": "string",
+            "description": "目标音频编码格式，会映射到上游 `audio_setting.format`。常见值包括 `mp3`、`wav`、`pcm`。"
+          },
+          "stream_format": {
+            "type": "string",
+            "description": "流式触发字段。任何非空值都会启用上游 `stream=true`；当前项目仅使用其“非空”语义，不额外约束具体取值。"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "MiniMax 扩展字段容器。当前公开稳定字段仅包含 `output_format`。",
+            "properties": {
+              "output_format": {
+                "type": "string",
+                "enum": [
+                  "url"
+                ],
+                "description": "非流式输出形式。为保持统一公开契约，当前仅支持 `url`。"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
