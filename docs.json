@@ -129,19 +129,44 @@
                     "pages": [
                       {
                         "group": "MiniMax",
-                        "pages": []
+                        "pages": [
+                          "cn/zmodelChat/minimax/miniMax-M2.5",
+                          "cn/zmodelChat/minimax/miniMax-M2.5-highspeed",
+                          "cn/zmodelChat/minimax/miniMax-M2.7",
+                          "cn/zmodelChat/minimax/miniMax-M2.7-highspeed"
+                        ]
                       },
                       {
                         "group": "阿里巴巴",
-                        "pages": []
+                        "pages": [
+                          "cn/zmodelChat/ali/deepseek-v3.2",
+                          "cn/zmodelChat/ali/qwen3.6-plus",
+                          "cn/zmodelChat/ali/qwen3-coder-plus",
+                          "cn/zmodelChat/ali/qwen3-max"
+                        ]
                       },
                       {
                         "group":"字节",
-                        "pages": []
+                        "pages": [
+                          "cn/zmodelChat/byteplus/deepseek-v3-2-251201",
+                          "cn/zmodelChat/byteplus/gpt-oss-120b-250805",
+                          "cn/zmodelChat/byteplus/seed-1-6-250915",
+                          "cn/zmodelChat/byteplus/seed-1-6-flash-250715",
+                          "cn/zmodelChat/byteplus/seed-1-8-251228",
+                          "cn/zmodelChat/byteplus/seed-2-0-lite-260228",
+                          "cn/zmodelChat/byteplus/seed-2-0-mini-260215",
+                          "cn/zmodelChat/byteplus/seed-2-0-pro-260328"
+                        ]
                       },
                       {
                         "group":"智谱",
-                        "pages": []
+                        "pages": [
+                          "cn/zmodelChat/zhipu/glm-4.5-air",
+                          "cn/zmodelChat/zhipu/glm-4.7",
+                          "cn/zmodelChat/zhipu/glm-4.7-flash",
+                          "cn/zmodelChat/zhipu/glm-5",
+                          "cn/zmodelChat/zhipu/glm-5-turbo"
+                        ]
                       }
                     ]
                   }
