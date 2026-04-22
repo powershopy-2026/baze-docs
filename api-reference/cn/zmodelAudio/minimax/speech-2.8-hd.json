@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax 语音合成",
+    "title": "speech-2.8-hd 语音合成",
     "version": "1.0.0",
     "description": "历史 MiniMax（`type=35`）通道语音合成能力文档。公开统一入口为 `/v1/audio/speech`，当前项目已实现 `POST /v1/t2a_v2` 的稳定字段子集。\n\n本文档只描述当前网关对历史 MiniMax 通道已经实现、且与上游官方能力一致的字段：`model`、`input`、`voice`、`speed`、`response_format`、`stream_format`、`metadata.output_format`。\n\n为保持统一项目级契约，非流式调用固定返回 `302 Found + Location`。因此历史 MiniMax 当前公开的非流式 `metadata.output_format` 仅支持 `url`；流式调用通过 `stream_format` 非空触发，并返回 `text/event-stream`。\n\n项目计费说明：网关会把上游 `extra_info.usage_characters` 映射到统一 usage 的 `prompt_tokens_details.audio_tokens`；当 Internal Pricing 配置 `quota_type=3` 时，`model_price` 表示每 1K 输入字符价格。"
   },
