@@ -21,7 +21,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "MiniMax-M2.7-highspeed",
-        "description": "调用历史 MiniMax OpenAI 兼容聊天模型。当前稳定模型为 `MiniMax-M2.7`、`MiniMax-M2.7-highspeed`、`MiniMax-M2.5`、`MiniMax-M2.5-highspeed`。",
+        "description": "调用历史 MiniMax OpenAI 兼容聊天模型。当前稳定模型为 `MiniMax-M2.7-highspeed`。",
         "operationId": "minimaxChatCompletions",
         "tags": [
           "MiniMax Chat"
@@ -37,7 +37,7 @@
                 "basic": {
                   "summary": "非流式对话",
                   "value": {
-                    "model": "MiniMax-M2.7",
+                    "model": "MiniMax-M2.7-highspeed",
                     "messages": [
                       {
                         "role": "system",
@@ -54,7 +54,7 @@
                 "stream": {
                   "summary": "流式对话",
                   "value": {
-                    "model": "MiniMax-M2.5-highspeed",
+                    "model": "MiniMax-M2.7-highspeed",
                     "messages": [
                       {
                         "role": "user",
@@ -123,7 +123,7 @@
           "model": {
             "type": "string",
             "enum": [
-              "MiniMax-M2.5-highspeed"
+              "MiniMax-M2.7-highspeed"
             ]
           },
           "messages": {
