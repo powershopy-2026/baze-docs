@@ -79,7 +79,9 @@
                           "cn/zmodelVideo/byteplus/seedance-1-0-pro-fast",
                           "cn/zmodelVideo/byteplus/seedance-1-5-pro"
                         ]
-                      }
+                      },
+                      "cn/zmodelVideo/minimax/download-video-file",
+                      "cn/zmodelVideo/minimax/query-video-status"
                     ]
                   },
                   {
