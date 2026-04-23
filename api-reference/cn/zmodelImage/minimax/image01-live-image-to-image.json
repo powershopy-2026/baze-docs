@@ -258,7 +258,6 @@
           "model": {
             "type": "string",
             "enum": [
-              "image-01",
               "image-01-live"
             ],
             "description": "当前能力使用的模型名称。"
