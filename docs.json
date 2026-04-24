@@ -167,64 +167,32 @@
                 "expanded": true,
                 "pages": [
                   {
-                    "group": "MiniMax",
-                    "pages": [
-                      "en/minimax/chat",
-                      "en/minimax/audio",
-                      "en/minimax/text-to-image",
-                      "en/minimax/image-to-image",
-                      "en/minimax/text-to-video",
-                      "en/minimax/image-to-video",
-                      "en/minimax/start-end-to-video",
-                      "en/minimax/query-video-status",
-                      "en/minimax/download-video-file"
-                    ]
-                  },
-                  {
-                    "group": "Alibaba",
-                    "pages": [
-                      "en/ali/chat",
-                      "en/ali/audio",
-                      "en/ali/text-to-image",
-                      "en/ali/wan-text-to-image",
-                      "en/ali/image-to-image",
-                      "en/ali/wan-image-edit",
-                      "en/ali/text-to-video",
-                      "en/ali/wan2.7-i2v",
-                      "en/ali/video-first-last-frame",
-                      "en/ali/reference-to-video"
-                    ]
-                  },
-                  {
-                    "group": "BytePlus",
-                    "pages": [
-                      "en/byteplus/chat",
-                      "en/byteplus/image",
-                      "en/byteplus/video",
-                      "en/byteplus/video-status"
-                    ]
-                  },
-                  {
-                    "group": "Zhipu",
-                    "pages": [
-                      "en/zhipu/chat"
-                    ]
-                  },
-
-                  {
                     "group": "Image Models",
                     "pages": [
                       {
                         "group": "MiniMax",
-                        "pages": []
+                        "pages": [
+                          "en/zmodelImage/minimax/image01-image-to-image",
+                          "en/zmodelImage/minimax/image01-live-image-to-image",
+                          "en/zmodelImage/minimax/image01-text-to-image"
+                        ]
                       },
                       {
                         "group": "Alibaba",
-                        "pages": []
+                        "pages": [
+                          "en/zmodelImage/ali/qwen-edit",
+                          "en/zmodelImage/ali/qwen-text-to-image",
+                          "en/zmodelImage/ali/wan-edit",
+                          "en/zmodelImage/ali/wan-text-to-image"
+                        ]
                       },
                       {
-                        "group":"BytePlus",
-                        "pages": []
+                        "group": "BytePlus",
+                        "pages": [
+                          "en/zmodelImage/byteplus/sendream-4-0",
+                          "en/zmodelImage/byteplus/sendream-4-5",
+                          "en/zmodelImage/byteplus/sendream-5-0"
+                        ]
                       }
                     ]
                   },
@@ -233,16 +201,31 @@
                     "pages": [
                       {
                         "group": "MiniMax",
-                        "pages": []
+                        "pages": [
+                          "en/zmodelVideo/minimax/image-to-video",
+                          "en/zmodelVideo/minimax/start-end-to-video",
+                          "en/zmodelVideo/minimax/text-to-video"
+                        ]
                       },
                       {
                         "group": "Alibaba",
-                        "pages": []
+                        "pages": [
+                          "en/zmodelVideo/ali/reference-to-video",
+                          "en/zmodelVideo/ali/text-to-video",
+                          "en/zmodelVideo/ali/video-first-last-frame",
+                          "en/zmodelVideo/ali/wan2.7-i2v"
+                        ]
                       },
                       {
-                        "group":"BytePlus",
-                        "pages": []
-                      }
+                        "group": "BytePlus",
+                        "pages": [
+                          "en/zmodelVideo/byteplus/seedance-1-0-pro",
+                          "en/zmodelVideo/byteplus/seedance-1-0-pro-fast",
+                          "en/zmodelVideo/byteplus/seedance-1-5-pro"
+                        ]
+                      },
+                      "en/zmodelVideo/minimax/download-video-file",
+                      "en/zmodelVideo/minimax/query-video-status"
                     ]
                   },
                   {
@@ -250,19 +233,66 @@
                     "pages": [
                       {
                         "group": "MiniMax",
-                        "pages": []
+                        "pages": [
+                          "en/zmodelChat/minimax/miniMax-M2.5",
+                          "en/zmodelChat/minimax/miniMax-M2.5-highspeed",
+                          "en/zmodelChat/minimax/miniMax-M2.7",
+                          "en/zmodelChat/minimax/miniMax-M2.7-highspeed"
+                        ]
                       },
                       {
                         "group": "Alibaba",
-                        "pages": []
+                        "pages": [
+                          "en/zmodelChat/ali/deepseek-v3.2",
+                          "en/zmodelChat/ali/qwen3.6-plus",
+                          "en/zmodelChat/ali/qwen3-coder-plus",
+                          "en/zmodelChat/ali/qwen3-max"
+                        ]
                       },
                       {
-                        "group":"BytePlus",
-                        "pages": []
+                        "group": "BytePlus",
+                        "pages": [
+                          "en/zmodelChat/byteplus/deepseek-v3-2-251201",
+                          "en/zmodelChat/byteplus/gpt-oss-120b-250805",
+                          "en/zmodelChat/byteplus/seed-1-6-250915",
+                          "en/zmodelChat/byteplus/seed-1-6-flash-250715",
+                          "en/zmodelChat/byteplus/seed-1-8-251228",
+                          "en/zmodelChat/byteplus/seed-2-0-lite-260228",
+                          "en/zmodelChat/byteplus/seed-2-0-mini-260215",
+                          "en/zmodelChat/byteplus/seed-2-0-pro-260328"
+                        ]
                       },
                       {
-                        "group":"ZhiPu",
-                        "pages": []
+                        "group": "Zhipu",
+                        "pages": [
+                          "en/zmodelChat/zhipu/glm-4.5-air",
+                          "en/zmodelChat/zhipu/glm-4.7",
+                          "en/zmodelChat/zhipu/glm-4.7-flash",
+                          "en/zmodelChat/zhipu/glm-5",
+                          "en/zmodelChat/zhipu/glm-5-turbo"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "group": "Audio Models",
+                    "pages": [
+                      {
+                        "group": "MiniMax",
+                        "pages": [
+                          "en/zmodelAudio/minimax/speech-2.6-hd",
+                          "en/zmodelAudio/minimax/speech-2.6-turbo",
+                          "en/zmodelAudio/minimax/speech-2.8-hd",
+                          "en/zmodelAudio/minimax/speech-2.8-turbo",
+                          "en/zmodelAudio/minimax/speech-02-hd",
+                          "en/zmodelAudio/minimax/speech-02-turbo"
+                        ]
+                      },
+                      {
+                        "group": "Alibaba",
+                        "pages": [
+                          "en/zmodelAudio/ali/qwen3-tts-instruct-flash"
+                        ]
                       }
                     ]
                   }

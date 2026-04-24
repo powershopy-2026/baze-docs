@@ -1,0 +1,441 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wan text-to-image",
+    "version": "1.0.0",
+    "description": "Ali Wan text-to-image capability documentation. The unified API endpoint is `/v1/images/generations`. This document describes the public gateway contract for `wan2.7-image-pro`: `input.messages[].content[].text` carries the prompt, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan Image",
+      "description": "Wan text-to-image capability"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "Wan text-to-image",
+        "description": "Calls Ali `wan2.7-image-pro` to perform text-to-image generation.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `size`, `n`, `watermark`, `thinking_mode`, `enable_sequential`, `color_palette`, `seed` as top-level fields. The prompt is placed in `input.messages[0].content[0].text`. The request body does not accept a top-level `parameters` field.",
+        "operationId": "aliWanTextToImage",
+        "tags": [
+          "Wan Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WanTextToImageRequest"
+              },
+              "examples": {
+                "basic_generation": {
+                  "summary": "Basic text-to-image",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "A flower shop with elegant windows, a beautiful wooden door, displaying flowers"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "size": "2K",
+                    "n": 1,
+                    "watermark": false,
+                    "thinking_mode": true,
+                    "seed": 0
+                  }
+                },
+                "sequential_generation": {
+                  "summary": "Sequential image generation",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "A cinematic image set documenting the same stray orange cat with consistent features. Image 1: Spring, the cat walks under blooming cherry trees; Image 2: Summer, the cat rests in the shade on an old street; Image 3: Autumn, the cat steps on golden fallen leaves; Image 4: Winter, the cat leaves footprints in the snow."
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "enable_sequential": true,
+                    "n": 4,
+                    "size": "2K",
+                    "color_palette": [
+                      {
+                        "hex": "#C2D1E6",
+                        "ratio": "23.51%"
+                      },
+                      {
+                        "hex": "#CDD8E9",
+                        "ratio": "20.13%"
+                      },
+                      {
+                        "hex": "#B5C8DB",
+                        "ratio": "15.88%"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Returns the image generation result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request body too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream provider returned an abnormal response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream provider is temporarily unavailable, or no available channel for the current model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "WanTextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-image-pro"
+            ],
+            "description": "Text-to-image model name."
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "Unified response format.",
+            "default": "url"
+          },
+          "input": {
+            "$ref": "#/components/schemas/WanTextToImageInput"
+          },
+          "size": {
+            "type": "string",
+            "description": "Output image resolution specification, e.g. `1K`, `2K`, `4K`, or explicit width-by-height pixel values. The gateway maps this to upstream `parameters.size`."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "Number of output images. Range is 1-4 when sequential mode is off, 1-12 when sequential mode is on. The gateway maps this to upstream `parameters.n`."
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark. Explicitly passing `false` is preserved and mapped to upstream `parameters.watermark`."
+          },
+          "thinking_mode": {
+            "type": "boolean",
+            "description": "Whether to enable thinking mode. The gateway maps this to upstream `parameters.thinking_mode`."
+          },
+          "enable_sequential": {
+            "type": "boolean",
+            "description": "Whether to enable sequential image generation mode. The gateway maps this to upstream `parameters.enable_sequential`."
+          },
+          "color_palette": {
+            "type": "array",
+            "description": "Custom color theme. The gateway maps this to upstream `parameters.color_palette`.",
+            "items": {
+              "$ref": "#/components/schemas/WanColorPaletteItem"
+            }
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Random seed. Explicitly passing `0` is preserved and mapped to upstream `parameters.seed`."
+          }
+        }
+      },
+      "WanTextToImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Currently only single-turn messages are supported.",
+            "items": {
+              "$ref": "#/components/schemas/WanTextToImageMessage"
+            }
+          }
+        }
+      },
+      "WanTextToImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "Fixed to `user`."
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Only a single text content item is supported.",
+            "items": {
+              "$ref": "#/components/schemas/WanTextToImageContentItem"
+            }
+          }
+        }
+      },
+      "WanTextToImageContentItem": {
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text-to-image prompt."
+          }
+        }
+      },
+      "WanTextToImageParameters": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "string",
+            "description": "Output image resolution specification, e.g. `1K`, `2K`, `4K`, or explicit width-by-height pixel values."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "Number of output images. Range is 1-4 when sequential mode is off, 1-12 when sequential mode is on."
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark. Explicitly passing `false` is preserved and forwarded to the upstream provider."
+          },
+          "thinking_mode": {
+            "type": "boolean",
+            "description": "Whether to enable thinking mode. Only effective when sequential mode is off and no image input is provided."
+          },
+          "enable_sequential": {
+            "type": "boolean",
+            "description": "Whether to enable sequential image generation mode."
+          },
+          "color_palette": {
+            "type": "array",
+            "description": "Custom color theme.",
+            "items": {
+              "$ref": "#/components/schemas/WanColorPaletteItem"
+            }
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Random seed. Explicitly passing `0` is preserved and forwarded to the upstream provider."
+          }
+        }
+      },
+      "WanColorPaletteItem": {
+        "type": "object",
+        "required": [
+          "hex",
+          "ratio"
+        ],
+        "properties": {
+          "hex": {
+            "type": "string",
+            "description": "Hexadecimal color value."
+          },
+          "ratio": {
+            "type": "string",
+            "description": "Color proportion, e.g. `23.51%`."
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Response generation timestamp."
+          },
+          "data": {
+            "type": "array",
+            "description": "List of generated image results.",
+            "items": {
+              "$ref": "#/components/schemas/ImageData"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Pass-through raw response metadata from the upstream provider."
+          }
+        }
+      },
+      "ImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Used when the result is returned as a URL."
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "Used when the result is returned as Base64."
+          },
+          "revised_prompt": {
+            "type": "string",
+            "description": "Revised prompt returned by the upstream provider."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

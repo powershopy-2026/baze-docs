@@ -1,0 +1,742 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Zhipu Chat Completions",
+    "version": "1.0.0",
+    "description": "Zhipu Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, supporting text chat, image understanding, streaming output, thinking mode, and function tool calls.\n\nSupported model: `glm-4.5-air`.\n\nThis document covers the following request fields: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, `tool_choice`. Multimodal messages currently describe only `text` and `image_url` content parts.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Zhipu Chat",
+      "description": "Zhipu GLM chat and vision understanding capabilities"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "Zhipu Chat Completions",
+        "description": "Unified endpoint for Zhipu GLM series chat models exposed through the baze platform.\n\nSupported model: `glm-4.5-air`. The same path supports plain text chat as well as image understanding requests containing `image_url` content parts.\n\nDocumented fields: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, `tool_choice`.",
+        "operationId": "zhipuChatCompletions",
+        "tags": [
+          "Zhipu Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "text_chat": {
+                  "summary": "Plain text chat",
+                  "value": {
+                    "model": "glm-4.5-air",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise and professional assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Describe vector databases in three sentences."
+                      }
+                    ],
+                    "temperature": 0.7,
+                    "max_tokens": 1024
+                  }
+                },
+                "thinking_tool_call": {
+                  "summary": "Thinking mode with function calling",
+                  "value": {
+                    "model": "glm-5",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Look up today's weather in Shanghai and tell me whether it's a good day to go outside."
+                      }
+                    ],
+                    "thinking": {
+                      "type": "enabled",
+                      "clear_thinking": true
+                    },
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "Query real-time weather by city name",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "City name"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": true
+                  }
+                },
+                "vision_chat": {
+                  "summary": "Image understanding",
+                  "value": {
+                    "model": "glm-5",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example.com/invoice.png"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "Identify the main content of this image."
+                          }
+                        ]
+                      }
+                    ],
+                    "stream": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Non-streaming mode returns JSON; streaming mode returns an SSE event stream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Non-streaming success response",
+                    "value": {
+                      "id": "chatcmpl_zhipu_123",
+                      "object": "chat.completion",
+                      "created": 1775174400,
+                      "model": "glm-5",
+                      "choices": [
+                        {
+                          "index": 0,
+                          "message": {
+                            "role": "assistant",
+                            "content": "A vector database is a data system designed to store and retrieve vector representations, commonly used for semantic search, recommendations, and RAG.",
+                            "reasoning_content": "Start with the definition, then add typical use cases."
+                          },
+                          "finish_reason": "stop"
+                        }
+                      ],
+                      "usage": {
+                        "prompt_tokens": 42,
+                        "completion_tokens": 31,
+                        "total_tokens": 73,
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE data stream. Each `data:` event can be parsed as an OpenAI Chat Completions Chunk; the stream typically ends with `data: [DONE]`."
+                },
+                "examples": {
+                  "stream": {
+                    "summary": "Streaming response fragment",
+                    "value": "data: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-5\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Today's weather\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-5\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" is sunny, great for going outside.\"},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Parameter error",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "param": "messages",
+                        "code": "bad_request_body"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "param": "",
+                        "code": "access_denied"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient account quota, please retry later",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limit triggered or insufficient account quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing failure",
+                    "value": {
+                      "error": {
+                        "message": "Internal processing failed, please retry later",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Internal server error while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Abnormal upstream response",
+                    "value": {
+                      "error": {
+                        "message": "The model service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The model service returned an abnormal response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service temporarily unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the current model, please retry later",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Model service temporarily unavailable, or no available channel for the current model."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "description": "Zhipu Chat Completions request body.",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model name. Supported model: `glm-4.5-air`.",
+            "example": "glm-4.5-air",
+            "enum": [
+              "glm-4.5-air"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "description": "Message list. Supports plain text messages and image input via `image_url` content parts. The request must contain at least one message that is not `system` or `assistant`; sending only `system` or only `assistant` messages will be rejected by the upstream provider.",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            },
+            "minItems": 1
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "Whether to enable streaming output. When `true`, the response is returned as `text/event-stream`.",
+            "default": false
+          },
+          "thinking": {
+            "$ref": "#/components/schemas/ThinkingConfig"
+          },
+          "temperature": {
+            "type": "number",
+            "description": "Sampling temperature, range `[0, 1]`.",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 1
+          },
+          "top_p": {
+            "type": "number",
+            "description": "Nucleus sampling probability threshold, range `[0.01, 1]`.",
+            "minimum": 0.01,
+            "maximum": 1,
+            "default": 0.95
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "Maximum number of output tokens.",
+            "minimum": 1
+          },
+          "stop": {
+            "type": "array",
+            "description": "Stop sequence list. Currently only a single stop sequence is supported.",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 1
+          },
+          "tools": {
+            "type": "array",
+            "description": "Tool definition list. Currently only `function` type tools are supported.",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            },
+            "maxItems": 128
+          },
+          "tool_choice": {
+            "$ref": "#/components/schemas/ToolChoice"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "description": "Chat message object. Sending only `system` or `assistant` messages as the entire request input will be rejected by the upstream provider.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool"
+            ],
+            "description": "Message role."
+          },
+          "content": {
+            "description": "Message content. User messages can be a string or a multimodal content-part array; tool messages must be a string.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ContentPart"
+                }
+              }
+            ]
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "Function call list in an assistant message.",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "The tool call ID that this tool message corresponds to."
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "Reasoning content from the previous turn. Only meaningful when preserving the chain of thought and passing back the full message history."
+          }
+        }
+      },
+      "ContentPart": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "description": "Multimodal message content part. This document only covers the stable text and image input types.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image_url"
+            ],
+            "description": "Content part type."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content. Used when `type` is `text`."
+          },
+          "image_url": {
+            "$ref": "#/components/schemas/ImageURLPart"
+          }
+        }
+      },
+      "ImageURLPart": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "description": "Image input object.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Image URL or base64-encoded data."
+          }
+        }
+      },
+      "ThinkingConfig": {
+        "type": "object",
+        "description": "Thinking mode configuration. Applicable to models that support the `thinking` parameter.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "enabled",
+              "disabled"
+            ],
+            "default": "enabled",
+            "description": "Whether to enable thinking mode."
+          },
+          "clear_thinking": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to clear `reasoning_content` from previous turns in the history."
+          }
+        }
+      },
+      "Tool": {
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "description": "Function tool definition.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "Tool type. Currently only `function` is supported."
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionDefinition"
+          }
+        }
+      },
+      "FunctionDefinition": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "description": "Function definition.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Function name. Recommended to use only letters, digits, underscores, and hyphens.",
+            "maxLength": 64
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the function's purpose, used to help the model decide when to call it."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Parameter definition in JSON Schema format."
+          }
+        }
+      },
+      "ToolChoice": {
+        "type": "string",
+        "enum": [
+          "auto"
+        ],
+        "default": "auto",
+        "description": "Tool selection strategy. The Zhipu API currently only exposes `auto`."
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "description": "Non-streaming Chat Completions response.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Response ID."
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion",
+            "description": "Object type."
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp (seconds)."
+          },
+          "model": {
+            "type": "string",
+            "description": "The model name actually used."
+          },
+          "choices": {
+            "type": "array",
+            "description": "Candidate results returned by the model.",
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "Choice": {
+        "type": "object",
+        "description": "A single candidate result.",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "Candidate index."
+          },
+          "message": {
+            "$ref": "#/components/schemas/ResponseMessage"
+          },
+          "finish_reason": {
+            "type": "string",
+            "description": "Finish reason, e.g. `stop`, `tool_calls`, `length`, `sensitive`, `model_context_window_exceeded`, or `network_error`."
+          }
+        }
+      },
+      "ResponseMessage": {
+        "type": "object",
+        "description": "Message object returned by the model.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Message role, typically `assistant`."
+          },
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "description": "Visible output content from the model. May be empty when a function call is triggered."
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "Reasoning content. Only returned by models that support thinking mode."
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "Function call information generated by the model.",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          }
+        }
+      },
+      "ToolCall": {
+        "type": "object",
+        "description": "Tool call information returned by the model.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique tool call ID."
+          },
+          "type": {
+            "type": "string",
+            "description": "Tool type, currently typically `function`."
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionCall"
+          }
+        }
+      },
+      "FunctionCall": {
+        "type": "object",
+        "description": "Function call generated by the model.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Function name."
+          },
+          "arguments": {
+            "description": "Function arguments. Compatible with JSON as a string, or a directly returned object.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "description": "Token usage statistics.",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens."
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Number of output tokens."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total number of tokens."
+          },
+          "prompt_tokens_details": {
+            "$ref": "#/components/schemas/InputTokenDetails"
+          }
+        }
+      },
+      "InputTokenDetails": {
+        "type": "object",
+        "description": "Input token details.",
+        "properties": {
+          "cached_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens served from cache."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "description": "Unified error response.",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error message."
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type, e.g. `invalid_request_error` or `api_error`."
+              },
+              "param": {
+                "type": "string",
+                "description": "The field that caused the error."
+              },
+              "code": {
+                "type": "string",
+                "description": "Error code."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,259 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Query Video Task Status",
+    "version": "1.0.0",
+    "description": "Asynchronous video task status query documentation. The unified API endpoint is `/v1/videos/{task_id}`, used to query task status, progress, and results.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Hailuo Video",
+      "description": "Hailuo video task status query"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "Query Video Task Status",
+        "description": "Query the latest status of an asynchronous video task by task ID.\n\nOnce the task is completed, `metadata.url` in the response can be used to access the result URL. To download the final file directly, call `/v1/videos/{task_id}/content`.",
+        "operationId": "minimaxQueryVideoStatus",
+        "tags": [
+          "Hailuo Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Public video task ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAIVideo"
+                },
+                "examples": {
+                  "completed": {
+                    "summary": "Task completed",
+                    "value": {
+                      "id": "task_abc123",
+                      "object": "video",
+                      "model": "MiniMax-Hailuo-2.3",
+                      "status": "completed",
+                      "progress": 100,
+                      "created_at": 1742515200,
+                      "completed_at": 1742515235,
+                      "metadata": {
+                        "url": "https://api.example.com/v1/videos/task_abc123/content"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task does not exist or is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "code": "task_not_found",
+                      "message": "Task does not exist or has expired",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, e.g. missing or invalid token."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient account quota, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limit triggered or insufficient account quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing failure",
+                    "value": {
+                      "code": "gen_relay_info_failed",
+                      "message": "Internal processing failed, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "An internal error occurred while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Upstream provider response error",
+                    "value": {
+                      "code": "bad_response_status_code",
+                      "message": "The upstream provider returned an invalid response",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream provider returned an abnormal response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service temporarily unavailable",
+                    "value": {
+                      "code": "get_channel_failed",
+                      "message": "No available channel for the current model, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "OpenAIVideo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "completed"
+          },
+          "progress": {
+            "type": "integer",
+            "example": 100
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "completed_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {}
+        }
+      }
+    }
+  }
+}

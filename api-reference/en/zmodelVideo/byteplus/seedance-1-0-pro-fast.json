@@ -1,0 +1,399 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Seedance 1-0 Pro Fast",
+    "version": "1.0.0",
+    "description": "Seedance series video capability documentation. The unified API endpoint is `/v1/videos`, used to create asynchronous video generation tasks.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Seedance Video",
+      "description": "Seedance series video generation capability"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "Seedance 1-0 Pro Fast",
+        "description": "Applies to Seedance series video models. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nCurrently supports Text to Video and first-frame Image to Video. This document covers the request fields: `model`, `prompt`, `image`, `seconds`, `size`, `ratio`, `seed`, `camera_fixed`, `watermark`, `generate_audio`, `draft`, `return_last_frame`.",
+        "operationId": "byteplusVideoGenerations",
+        "tags": [
+          "Seedance Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoGenerationRequest"
+              },
+              "examples": {
+                "text_to_video": {
+                  "summary": "Text to Video",
+                  "value": {
+                    "model": "seedance-1-0-pro-fast-251015",
+                    "prompt": "A kitten running across a sunlit meadow, camera tracking alongside",
+                    "seconds": "5",
+                    "size": "720p",
+                    "ratio": "16:9",
+                    "generate_audio": true
+                  }
+                },
+                "image_to_video": {
+                  "summary": "First-frame Image to Video",
+                  "value": {
+                    "model": "seedance-1-0-pro-fast-251015",
+                    "prompt": "Camera slowly pushes in, the girl smiles",
+                    "image": "https://example.com/first-frame.jpg",
+                    "seconds": "5",
+                    "size": "720p",
+                    "ratio": "adaptive"
+                  }
+                },
+                "draft_mode": {
+                  "summary": "Draft mode (quick preview)",
+                  "value": {
+                    "model": "seedance-1-5-pro-251215",
+                    "prompt": "A puppy playing with a ball",
+                    "draft": true,
+                    "size": "480p"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submitted successfully. Returns a video task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Parameter error",
+                    "value": {
+                      "error": {
+                        "message": "Malformed request body or invalid field value",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, e.g. missing or invalid token."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "Request body too large",
+                    "value": {
+                      "error": {
+                        "message": "Request body too large, please reduce the input and retry",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Request body too large."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient account quota, please try again later",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limit triggered or insufficient account quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing failure",
+                    "value": {
+                      "error": {
+                        "message": "Internal processing failed, please try again later",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "An internal error occurred while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Upstream provider response error",
+                    "value": {
+                      "error": {
+                        "message": "The upstream provider returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream provider returned an abnormal response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service temporarily unavailable",
+                    "value": {
+                      "error": {
+                        "message": "No available channel for the current model, please try again later",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "VideoGenerationRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "seedance-1-0-pro-fast-251015"
+            ],
+            "description": "Video generation model name. Supported models include `seedance-1-0-pro-fast-251015`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt describing the desired video content. Recommended limit: 500 Chinese characters or 1000 English words."
+          },
+          "image": {
+            "type": "string",
+            "description": "First-frame image URL or Base64 encoding. Used for first-frame Image to Video."
+          },
+          "seconds": {
+            "type": "string",
+            "description": "Video duration (seconds) as a string. `seedance-1-5-pro-251215` supports `\"-1\"` (auto) or `\"4\"` to `\"12\"`; other models support `\"2\"` to `\"12\"`.",
+            "default": "5",
+            "example": "5"
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "480p",
+              "720p",
+              "1080p"
+            ],
+            "description": "Video output resolution. Draft mode (draft=true) only supports 480p. 1.5-pro defaults to 720p; 1.0-pro / 1.0-pro-fast default to 1080p."
+          },
+          "ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16",
+              "21:9",
+              "adaptive"
+            ],
+            "description": "Video aspect ratio. Text to Video defaults to 16:9 (`seedance-1-5-pro-251215` defaults to `adaptive`); first-frame Image to Video defaults to `adaptive`.",
+            "default": "16:9"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed, range [-1, 4294967295].",
+            "default": -1
+          },
+          "camera_fixed": {
+            "type": "boolean",
+            "description": "Whether to fix the camera position.",
+            "default": false
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark.",
+            "default": false
+          },
+          "return_last_frame": {
+            "type": "boolean",
+            "description": "Whether to return the last frame image. When enabled, the last frame can be retrieved via the query endpoint.",
+            "default": false
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "expired"
+            ],
+            "description": "Task status."
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type, e.g. `invalid_request_error` or `api_error`."
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

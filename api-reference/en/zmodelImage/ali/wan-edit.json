@@ -1,0 +1,433 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wan image editing",
+    "version": "1.0.0",
+    "description": "Ali Wan image editing capability documentation. The unified API endpoint is `/v1/images/edits`. This document describes the public gateway contract for `wan2.7-image-pro`: `input.messages[].content[]` carries images and text instructions, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan Image",
+      "description": "Wan image editing capability"
+    }
+  ],
+  "paths": {
+    "/v1/images/edits": {
+      "post": {
+        "summary": "Wan image editing",
+        "description": "Calls Ali `wan2.7-image-pro` to perform image editing.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `size`, `n`, `watermark`, `negative_prompt`, `seed`, `bbox_list` as top-level fields. Input images are placed in `input.messages[0].content[].image`, and the editing instruction is in a `text` item within the same array. The request body does not accept a top-level `parameters` field.",
+        "operationId": "aliWanImageEdit",
+        "tags": [
+          "Wan Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WanImageEditRequest"
+              },
+              "examples": {
+                "image_edit": {
+                  "summary": "Image editing",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/car.webp"
+                            },
+                            {
+                              "image": "https://example.com/paint.webp"
+                            },
+                            {
+                              "text": "Spray the graffiti from image 2 onto the car in image 1"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "size": "2K",
+                    "n": 1,
+                    "watermark": false,
+                    "negative_prompt": "Preserve original car body color",
+                    "seed": 0
+                  }
+                },
+                "interactive_edit": {
+                  "summary": "Interactive editing",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/clock.webp"
+                            },
+                            {
+                              "image": "https://example.com/room.webp"
+                            },
+                            {
+                              "text": "Place the alarm clock from image 1 at the selected area in image 2"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "bbox_list": [
+                      [],
+                      [
+                        [
+                          989,
+                          515,
+                          1138,
+                          681
+                        ]
+                      ]
+                    ],
+                    "size": "2K",
+                    "n": 1,
+                    "watermark": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Returns the image editing result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request body too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream provider returned an abnormal response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream provider is temporarily unavailable, or no available channel for the current model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "WanImageEditRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-image-pro"
+            ],
+            "description": "Image editing model name."
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "Unified response format.",
+            "default": "url"
+          },
+          "input": {
+            "$ref": "#/components/schemas/WanImageInput"
+          },
+          "size": {
+            "type": "string",
+            "description": "Output image resolution. For image editing, official specifications such as `1K` or `2K` are recommended. The gateway maps this to upstream `parameters.size`."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4,
+            "description": "Number of images to generate. The gateway maps this to upstream `parameters.n`."
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark. The gateway maps this to upstream `parameters.watermark`."
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Negative prompt. The gateway maps this to upstream `parameters.negative_prompt`."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed, range [0, 2147483647]. The gateway maps this to upstream `parameters.seed`."
+          },
+          "bbox_list": {
+            "type": "array",
+            "description": "Interactive editing bounding box regions, corresponding to input images in order. The gateway maps this to upstream `parameters.bbox_list`.",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "WanImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Currently only single-turn messages are supported.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageMessage"
+            }
+          }
+        }
+      },
+      "WanImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "Message role, fixed to `user`."
+          },
+          "content": {
+            "type": "array",
+            "description": "The content array contains image objects and text instruction objects in order.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageContent"
+            }
+          }
+        }
+      },
+      "WanImageContent": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Input image URL or Data URL."
+          },
+          "text": {
+            "type": "string",
+            "description": "Editing instruction. Supports both Chinese and English."
+          }
+        }
+      },
+      "WanImageParameters": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "string",
+            "description": "Output image resolution. For image editing, official specifications such as `1K` or `2K` are recommended."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4,
+            "description": "Number of images to generate."
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to add a watermark."
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Negative prompt."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed, range [0, 2147483647]."
+          },
+          "bbox_list": {
+            "type": "array",
+            "description": "Interactive editing bounding box regions, corresponding to input images in order.",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Creation time as a Unix timestamp (seconds)."
+          },
+          "data": {
+            "type": "array",
+            "description": "List of generated images.",
+            "items": {
+              "$ref": "#/components/schemas/ImageData"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional result information. Field contents vary by capability."
+          }
+        }
+      },
+      "ImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Image download link. Valid for 24 hours."
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "Base64-encoded image data."
+          },
+          "revised_prompt": {
+            "type": "string",
+            "description": "Optimized prompt."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type, e.g. `invalid_request_error`, `api_error`, or an upstream-compatible error type."
+              },
+              "code": {
+                "type": "string"
+              },
+              "param": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

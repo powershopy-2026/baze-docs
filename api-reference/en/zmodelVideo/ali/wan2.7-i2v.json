@@ -1,0 +1,408 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wan 2.7 Image to Video",
+    "version": "1.0.0",
+    "description": "Ali `wan2.7-i2v` image-to-video capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document describes the officially implemented and publicly available fields: `model`, `prompt`, `image`, `images`, `media`, `seconds`, `size`. For backward compatibility, the platform still accepts `image` / `images` and internally maps them to the upstream provider's new `input.media` protocol.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan 2.7 Video",
+      "description": "Ali wan2.7-i2v multimodal image-to-video capability"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "Create Wan 2.7 Image to Video task",
+        "description": "Submit an asynchronous Ali `wan2.7-i2v` generation task.\n\nThis capability uses the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nCurrently implemented official `media.type` values include `first_frame`, `last_frame`, `driving_audio`, `first_clip`.\n\nSupported `media` combinations:\n- `first_frame`\n- `first_frame + driving_audio`\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
+        "operationId": "aliWan27I2VCreate",
+        "tags": [
+          "Wan 2.7 Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wan27VideoRequest"
+              },
+              "examples": {
+                "wan27_multimodal": {
+                  "summary": "First frame + driving audio",
+                  "value": {
+                    "model": "wan2.7-i2v",
+                    "prompt": "A person gradually begins to speak naturally from a still portrait.",
+                    "negative_prompt": "blurry, low quality",
+                    "prompt_extend": true,
+                    "watermark": false,
+                    "seed": 42,
+                    "media": [
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/portrait.png"
+                      },
+                      {
+                        "type": "driving_audio",
+                        "url": "https://example.com/assets/voice.mp3"
+                      }
+                    ],
+                    "seconds": "8",
+                    "size": "720P"
+                  }
+                },
+                "wan27_continuation": {
+                  "summary": "Video continuation from first clip (prompt omitted)",
+                  "value": {
+                    "model": "wan2.7-i2v",
+                    "media": [
+                      {
+                        "type": "first_clip",
+                        "url": "https://example.com/assets/opening-clip.mp4"
+                      }
+                    ],
+                    "seconds": "5",
+                    "size": "1080P"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submitted successfully. Returns an OpenAI-compatible video task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters, e.g. unsupported `media` combination, or `size` / `seconds` out of supported range.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Invalid request",
+                    "value": {
+                      "error": {
+                        "message": "unsupported wan2.7-i2v media combination",
+                        "type": "invalid_request_error",
+                        "code": "invalid_request"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal error occurred while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "Query Wan 2.7 Image to Video task",
+        "description": "Query the latest status of a `wan2.7-i2v` asynchronous task by its public task ID.",
+        "operationId": "aliWan27I2VQuery",
+        "tags": [
+          "Wan 2.7 Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Public video task ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current task status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskQueryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid task ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task does not exist or has expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key"
+      }
+    },
+    "schemas": {
+      "Wan27VideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "media"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-i2v"
+            ],
+            "description": "Ali wan2.7-i2v model."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Optional text prompt. When omitted, generation relies primarily on the input media assets."
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Optional negative prompt describing content you do not want in the video."
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "Whether to enable intelligent prompt rewriting. Defaults to `true`."
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark. Defaults to `false`."
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed. Automatically generated by the system when not provided."
+          },
+          "media": {
+            "type": "array",
+            "description": "New multimodal input field. Used to carry the `wan2.7-i2v` upstream provider's new protocol, e.g. first frame + audio, video continuation, etc.",
+            "items": {
+              "$ref": "#/components/schemas/Wan27MediaInput"
+            }
+          },
+          "seconds": {
+            "type": "string",
+            "description": "Video duration as a string. Supports integer strings from `2` to `15`.",
+            "default": "5"
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "720P",
+              "1080P"
+            ],
+            "description": "Supported output resolution tiers.",
+            "default": "1080P"
+          }
+        }
+      },
+      "Wan27MediaInput": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "first_frame",
+              "last_frame",
+              "driving_audio",
+              "first_clip"
+            ],
+            "description": "Media asset type."
+          },
+          "url": {
+            "type": "string",
+            "description": "Publicly accessible URL of the media asset."
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Public task ID."
+          },
+          "task_id": {
+            "type": "string",
+            "description": "Backward-compatible alias for the public task ID."
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model name."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "in_progress",
+              "completed",
+              "failed",
+              "unknown"
+            ],
+            "description": "Unified video task status."
+          },
+          "progress": {
+            "type": "integer",
+            "description": "Task progress percentage."
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Creation time as a Unix timestamp (seconds)."
+          }
+        }
+      },
+      "VideoTaskQueryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VideoTaskResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "completed_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Completion timestamp when the task reaches a terminal state."
+              },
+              "metadata": {
+                "type": "object",
+                "description": "Additional unified metadata. On success, `metadata.url` typically contains the result download URL.",
+                "additionalProperties": true
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

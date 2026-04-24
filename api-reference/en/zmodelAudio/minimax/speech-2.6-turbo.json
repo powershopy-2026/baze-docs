@@ -1,0 +1,201 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "speech-2.6-turbo Text-to-Speech",
+    "version": "1.0.0",
+    "description": "Customer-facing documentation for the historical MiniMax (`type=35`) text-to-speech channel. The public endpoint is `/v1/audio/speech`, backed by upstream `POST /v1/t2a_v2`.\n\nThis document only describes the official field subset that is currently implemented on this gateway for the historical MiniMax channel: `model`, `input`, `voice`, `speed`, `response_format`, `stream_format`, and `metadata.output_format`.\n\nTo keep the unified project-level contract stable, non-streaming requests always return `302 Found + Location`. As a result, the currently exposed non-streaming `metadata.output_format` value is limited to `url`. Streaming is enabled by any non-empty `stream_format` and returns `text/event-stream`.\n\nProject billing note: the gateway maps upstream `extra_info.usage_characters` to unified `usage.prompt_tokens_details.audio_tokens`, and when Internal Pricing uses `quota_type=3`, `model_price` is interpreted as the price per 1K input characters."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API service endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Audio",
+      "description": "Historical MiniMax text-to-speech capability"
+    }
+  ],
+  "paths": {
+    "/v1/audio/speech": {
+      "post": {
+        "summary": "MiniMax text-to-speech",
+        "description": "Call the historical MiniMax `t2a_v2` capability through the unified `/v1/audio/speech` endpoint.\n\nStable model: `speech-2.6-turbo`.",
+        "operationId": "minimaxAudioSpeech",
+        "tags": [
+          "MiniMax Audio"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MiniMaxSpeechRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "Non-streaming request",
+                  "value": {
+                    "model": "speech-2.6-turbo",
+                    "input": "Summarize today's system status in a natural tone.",
+                    "voice": "Chinese (Mandarin)_Lyrical_Voice",
+                    "response_format": "mp3",
+                    "metadata": {
+                      "output_format": "url"
+                    }
+                  }
+                },
+                "stream": {
+                  "summary": "Streaming request",
+                  "value": {
+                    "model": "speech-2.6-turbo",
+                    "input": "Read this sentence in a calm voice.",
+                    "voice": "English_Graceful_Lady",
+                    "speed": 1,
+                    "response_format": "wav",
+                    "stream_format": "pcm"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Streaming success. Returns MiniMax SSE payloads. For internal settlement, the gateway reads `extra_info.usage_characters` as the unified input audio character count.",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE payload. Each `data:` event can be parsed as a MiniMax response chunk containing `data.audio`, `trace_id`, and `base_resp`."
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Non-streaming success. The `Location` header points to a temporary audio file URL. For internal settlement, the gateway reads `extra_info.usage_characters` as the unified input audio character count.",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters, or extension fields that conflict with the unified gateway contract.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token"
+      }
+    },
+    "schemas": {
+      "MiniMaxSpeechRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input",
+          "voice"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "speech-2.6-turbo"
+            ]
+          },
+          "input": {
+            "type": "string",
+            "description": "Input text to synthesize."
+          },
+          "voice": {
+            "type": "string",
+            "description": "Voice name. Mapped to upstream `voice_setting.voice_id`."
+          },
+          "speed": {
+            "type": "number",
+            "description": "Speaking rate. Mapped to upstream `voice_setting.speed`."
+          },
+          "response_format": {
+            "type": "string",
+            "description": "Target audio encoding format, mapped to upstream `audio_setting.format`. Common values include `mp3`, `wav`, and `pcm`."
+          },
+          "stream_format": {
+            "type": "string",
+            "description": "Streaming trigger field. Any non-empty value enables upstream `stream=true`; the current gateway only relies on its non-empty semantics."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "MiniMax extension container. The only stable field currently documented here is `output_format`.",
+            "properties": {
+              "output_format": {
+                "type": "string",
+                "enum": [
+                  "url"
+                ],
+                "description": "Non-streaming output mode. To preserve the unified public contract, only `url` is currently exposed."
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
