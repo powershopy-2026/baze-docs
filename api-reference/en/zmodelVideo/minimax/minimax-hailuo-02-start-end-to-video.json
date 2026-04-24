@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Hailuo 文生视频",
+    "title": "Hailuo First-Last Frame to Video",
     "version": "1.0.0",
-    "description": "Hailuo 系列文生视频能力文档。公开统一入口为 `/v1/videos`，用于创建异步视频生成任务。",
+    "description": "Hailuo First-Last Frame to Video capability documentation. The unified API endpoint is `/v1/videos`, used to create asynchronous video generation tasks.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -12,21 +12,21 @@
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Baze API 服务地址"
+      "description": "Baze API server endpoint"
     }
   ],
   "tags": [
     {
       "name": "Hailuo Video",
-      "description": "Hailuo 系列视频生成能力"
+      "description": "Hailuo First-Last Frame to Video capability"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Hailuo 文生视频",
-        "description": "适用于 `MiniMax-Hailuo-2.3`、`MiniMax-Hailuo-02` 等文生视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`prompt`、`seconds`、`size`。",
-        "operationId": "minimaxTextToVideo",
+        "summary": "Hailuo First-Last Frame to Video",
+        "description": "Applies to `MiniMax-Hailuo-02` First-Last Frame to Video model. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `images`, `prompt`, `seconds`, `size`. The `images` array must contain exactly two images in the order `[first frame, last frame]`.",
+        "operationId": "minimaxStartEndToVideo",
         "tags": [
           "Hailuo Video"
         ],
@@ -35,14 +35,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TextToVideoRequest"
+                "$ref": "#/components/schemas/StartEndToVideoRequest"
               },
               "examples": {
                 "basic_request": {
-                  "summary": "基础文生视频请求",
+                  "summary": "Basic First-Last Frame to Video request",
                   "value": {
-                    "model": "MiniMax-Hailuo-2.3",
-                    "prompt": "A woman walks through a neon street in the rain.",
+                    "model": "MiniMax-Hailuo-02",
+                    "images": [
+                      "https://example.com/assets/frame-start.png",
+                      "https://example.com/assets/frame-end.png"
+                    ],
+                    "prompt": "The child grows up naturally.",
                     "seconds": "6",
                     "size": "1080P"
                   }
@@ -53,7 +57,7 @@
         },
         "responses": {
           "200": {
-            "description": "提交成功，返回统一 OpenAI 风格视频任务对象。",
+            "description": "Submitted successfully. Returns an OpenAI-compatible video task object.",
             "content": {
               "application/json": {
                 "schema": {
@@ -63,7 +67,7 @@
             }
           },
           "400": {
-            "description": "请求参数不合法，例如缺少 `prompt`，或传入不支持文生视频的模型。",
+            "description": "Invalid request parameters, e.g. `images` count is not 2.",
             "content": {
               "application/json": {
                 "schema": {
@@ -71,10 +75,10 @@
                 },
                 "examples": {
                   "invalid_request": {
-                    "summary": "参数错误",
+                    "summary": "Parameter error",
                     "value": {
                       "code": "bad_request_body",
-                      "message": "请求体格式错误或字段取值非法",
+                      "message": "Malformed request body or invalid field value",
                       "data": null
                     }
                   }
@@ -90,17 +94,17 @@
                 },
                 "examples": {
                   "unauthorized": {
-                    "summary": "未授权",
+                    "summary": "Unauthorized",
                     "value": {
                       "code": "access_denied",
-                      "message": "无效的令牌",
+                      "message": "Invalid token",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+            "description": "Authentication failed, e.g. missing or invalid token."
           },
           "413": {
             "content": {
@@ -110,17 +114,17 @@
                 },
                 "examples": {
                   "request_too_large": {
-                    "summary": "请求体过大",
+                    "summary": "Request body too large",
                     "value": {
                       "code": "read_request_body_failed",
-                      "message": "请求体过大，请缩小输入后重试",
+                      "message": "Request body too large, please reduce the input and retry",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "请求体过大。"
+            "description": "Request body too large."
           },
           "429": {
             "content": {
@@ -130,17 +134,17 @@
                 },
                 "examples": {
                   "quota_exceeded": {
-                    "summary": "额度不足或速率受限",
+                    "summary": "Insufficient quota or rate limited",
                     "value": {
                       "code": "insufficient_user_quota",
-                      "message": "当前账户额度不足，请稍后重试",
+                      "message": "Insufficient account quota, please try again later",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "触发速率限制或账户额度不足。"
+            "description": "Rate limit triggered or insufficient account quota."
           },
           "500": {
             "content": {
@@ -150,17 +154,17 @@
                 },
                 "examples": {
                   "internal_error": {
-                    "summary": "内部处理失败",
+                    "summary": "Internal processing failure",
                     "value": {
                       "code": "gen_relay_info_failed",
-                      "message": "服务内部处理失败，请稍后重试",
+                      "message": "Internal processing failed, please try again later",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "服务端处理请求时发生内部错误。"
+            "description": "An internal error occurred while processing the request."
           },
           "502": {
             "content": {
@@ -170,17 +174,17 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "上游响应异常",
+                    "summary": "Upstream provider response error",
                     "value": {
                       "code": "bad_response_status_code",
-                      "message": "上游服务返回了无效响应",
+                      "message": "The upstream provider returned an invalid response",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "上游服务返回异常响应。"
+            "description": "The upstream provider returned an abnormal response."
           },
           "503": {
             "content": {
@@ -190,17 +194,17 @@
                 },
                 "examples": {
                   "service_unavailable": {
-                    "summary": "服务暂不可用",
+                    "summary": "Service temporarily unavailable",
                     "value": {
                       "code": "get_channel_failed",
-                      "message": "当前模型暂时无可用渠道，请稍后重试",
+                      "message": "No available channel for the current model, please try again later",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
+            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
@@ -220,32 +224,45 @@
       }
     },
     "schemas": {
-      "TextToVideoRequest": {
+      "StartEndToVideoRequest": {
         "type": "object",
         "required": [
           "model",
-          "prompt"
+          "images"
         ],
         "properties": {
           "model": {
             "type": "string",
             "enum": [
-              "MiniMax-Hailuo-2.3",
               "MiniMax-Hailuo-02"
             ],
-            "description": "当前能力使用的模型名称。"
+            "description": "Model name for this capability."
+          },
+          "images": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "string"
+            },
+            "description": "First and last frame image array, in fixed order `[first frame, last frame]`."
           },
           "prompt": {
             "type": "string",
-            "description": "视频提示词。"
+            "description": "Optional video prompt.",
+            "maxLength": 2000
           },
           "seconds": {
             "type": "string",
-            "description": "目标视频时长，单位秒。"
+            "description": "Target video duration in seconds.",
+            "enum": [
+              "6",
+              "10"
+            ]
           },
           "size": {
             "type": "string",
-            "description": "目标输出规格或分辨率。当前文生视频模型支持 `768P`、`1080P`。",
+            "description": "Target output resolution. First-Last Frame to Video model currently supports `768P` and `1080P`.",
             "enum": [
               "768P",
               "1080P"

@@ -44,7 +44,7 @@
                     "model": "image-01",
                     "prompt": "A cinematic sunrise over a calm harbor",
                     "aspect_ratio": "16:9",
-                    "response_format": "b64_json",
+                    "response_format": "base64",
                     "seed": 0,
                     "n": 1,
                     "prompt_optimizer": false
@@ -79,8 +79,7 @@
                       "error": {
                         "message": "Malformed request body or invalid field values",
                         "type": "invalid_request_error",
-                        "code": "bad_request_body",
-                        "param": ""
+                        "code": "bad_request_body"
                       }
                     }
                   }
@@ -101,8 +100,7 @@
                       "error": {
                         "message": "Invalid token",
                         "type": "api_error",
-                        "code": "access_denied",
-                        "param": ""
+                        "code": "access_denied"
                       }
                     }
                   }
@@ -124,8 +122,7 @@
                       "error": {
                         "message": "Request body too large, please reduce the input and retry",
                         "type": "api_error",
-                        "code": "read_request_body_failed",
-                        "param": ""
+                        "code": "read_request_body_failed"
                       }
                     }
                   }
@@ -147,8 +144,7 @@
                       "error": {
                         "message": "Insufficient account quota, please retry later",
                         "type": "api_error",
-                        "code": "insufficient_user_quota",
-                        "param": ""
+                        "code": "insufficient_user_quota"
                       }
                     }
                   }
@@ -170,8 +166,7 @@
                       "error": {
                         "message": "Internal processing failed, please retry later",
                         "type": "api_error",
-                        "code": "gen_relay_info_failed",
-                        "param": ""
+                        "code": "gen_relay_info_failed"
                       }
                     }
                   }
@@ -193,8 +188,7 @@
                       "error": {
                         "message": "The upstream provider returned an invalid response",
                         "type": "api_error",
-                        "code": "bad_response_status_code",
-                        "param": ""
+                        "code": "bad_response_status_code"
                       }
                     }
                   }
@@ -216,8 +210,7 @@
                       "error": {
                         "message": "No available channel for the current model, please retry later",
                         "type": "api_error",
-                        "code": "get_channel_failed",
-                        "param": ""
+                        "code": "get_channel_failed"
                       }
                     }
                   }
@@ -260,27 +253,42 @@
           },
           "prompt": {
             "type": "string",
-            "description": "Image generation prompt."
+            "description": "Image generation prompt.",
+            "maxLength": 1500
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "Target aspect ratio."
+            "description": "Target aspect ratio.",
+            "enum": [
+              "1:1",
+              "16:9",
+              "4:3",
+              "3:2",
+              "2:3",
+              "3:4",
+              "9:16",
+              "21:9"
+            ]
           },
           "width": {
             "type": "integer",
-            "description": "Target width."
+            "description": "Generated image width (pixels). Only effective when model is image-01. Note: width and height must be set together, range [512, 2048], and must be multiples of 8. If set together with aspect_ratio, aspect_ratio takes priority.",
+            "minimum": 512,
+            "maximum": 2048
           },
           "height": {
             "type": "integer",
-            "description": "Target height."
+            "description": "Generated image height (pixels). Only effective when model is image-01. Note: width and height must be set together, range [512, 2048], and must be multiples of 8. If set together with aspect_ratio, aspect_ratio takes priority.",
+            "minimum": 512,
+            "maximum": 2048
           },
           "response_format": {
             "type": "string",
             "enum": [
               "url",
-              "b64_json"
+              "base64"
             ],
-            "description": "Response format. Use `url` to get a temporary download link, or `b64_json` to get Base64-encoded content."
+            "description": "Response format. Use `url` to get a temporary download link, or `base64` to get Base64-encoded content."
           },
           "seed": {
             "type": "integer",

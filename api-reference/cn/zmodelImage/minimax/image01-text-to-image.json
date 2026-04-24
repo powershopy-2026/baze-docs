@@ -44,7 +44,7 @@
                     "model": "image-01",
                     "prompt": "A cinematic sunrise over a calm harbor",
                     "aspect_ratio": "16:9",
-                    "response_format": "b64_json",
+                    "response_format": "base64",
                     "seed": 0,
                     "n": 1,
                     "prompt_optimizer": false
@@ -79,8 +79,7 @@
                       "error": {
                         "message": "请求体格式错误或字段取值非法",
                         "type": "invalid_request_error",
-                        "code": "bad_request_body",
-                        "param": ""
+                        "code": "bad_request_body"
                       }
                     }
                   }
@@ -101,8 +100,7 @@
                       "error": {
                         "message": "无效的令牌",
                         "type": "api_error",
-                        "code": "access_denied",
-                        "param": ""
+                        "code": "access_denied"
                       }
                     }
                   }
@@ -124,8 +122,7 @@
                       "error": {
                         "message": "请求体过大，请缩小输入后重试",
                         "type": "api_error",
-                        "code": "read_request_body_failed",
-                        "param": ""
+                        "code": "read_request_body_failed"
                       }
                     }
                   }
@@ -147,8 +144,7 @@
                       "error": {
                         "message": "当前账户额度不足，请稍后重试",
                         "type": "api_error",
-                        "code": "insufficient_user_quota",
-                        "param": ""
+                        "code": "insufficient_user_quota"
                       }
                     }
                   }
@@ -170,8 +166,7 @@
                       "error": {
                         "message": "服务内部处理失败，请稍后重试",
                         "type": "api_error",
-                        "code": "gen_relay_info_failed",
-                        "param": ""
+                        "code": "gen_relay_info_failed"
                       }
                     }
                   }
@@ -193,8 +188,7 @@
                       "error": {
                         "message": "上游服务返回了无效响应",
                         "type": "api_error",
-                        "code": "bad_response_status_code",
-                        "param": ""
+                        "code": "bad_response_status_code"
                       }
                     }
                   }
@@ -216,8 +210,7 @@
                       "error": {
                         "message": "当前模型暂时无可用渠道，请稍后重试",
                         "type": "api_error",
-                        "code": "get_channel_failed",
-                        "param": ""
+                        "code": "get_channel_failed"
                       }
                     }
                   }
@@ -260,27 +253,42 @@
           },
           "prompt": {
             "type": "string",
-            "description": "图像生成提示词。"
+            "description": "图像生成提示词。",
+            "maxLength": 1500
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "目标宽高比。"
+            "description": "目标宽高比。",
+            "enum": [
+              "1:1",
+              "16:9",
+              "4:3",
+              "3:2",
+              "2:3",
+              "3:4",
+              "9:16",
+              "21:9"
+            ]
           },
           "width": {
             "type": "integer",
-            "description": "目标宽度。"
+            "description": "生成图片的宽度（像素）。仅当 model 为 image-01 时生效。注意：width 和 height 需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 aspect_ratio 同时设置，则优先使用 aspect_ratio",
+            "minimum": 512,
+            "maximum": 2048
           },
           "height": {
             "type": "integer",
-            "description": "目标高度。"
+            "description": "生成图片的高度（像素）。仅当 model 为 image-01 时生效。注意：width 和 height 需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 aspect_ratio 同时设置，则优先使用 aspect_ratio",
+            "minimum": 512,
+            "maximum": 2048
           },
           "response_format": {
             "type": "string",
             "enum": [
               "url",
-              "b64_json"
+              "base64"
             ],
-            "description": "返回格式。使用 `url` 获取临时下载地址，使用 `b64_json` 获取 Base64 编码内容。"
+            "description": "返回格式。使用 `url` 获取临时下载地址，使用 `base64` 获取 Base64 编码内容。"
           },
           "seed": {
             "type": "integer",

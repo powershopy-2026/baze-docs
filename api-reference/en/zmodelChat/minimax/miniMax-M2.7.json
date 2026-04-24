@@ -54,7 +54,7 @@
                 "stream": {
                   "summary": "Streaming chat",
                   "value": {
-                    "model": "MiniMax-M2.5-highspeed",
+                    "model": "MiniMax-M2.7",
                     "messages": [
                       {
                         "role": "user",
@@ -133,13 +133,17 @@
             }
           },
           "temperature": {
-            "type": "number"
+            "type": "number",
+            "maximum": 1
           },
           "top_p": {
-            "type": "number"
+            "type": "number",
+            "maximum": 1
           },
           "max_tokens": {
-            "type": "integer"
+            "type": "integer",
+            "maximum": 2048,
+            "minimum": 1
           },
           "stream": {
             "type": "boolean"
@@ -172,8 +176,12 @@
               "system",
               "user",
               "assistant",
-              "tool"
-            ]
+              "user_system",
+              "group",
+              "sample_message_user",
+              "sample_message_ai"
+            ],
+            "description":"Role of the message sender\nsystem: Set the model's role and behavior\nuser: User input\nassistant: Model's historical replies\nuser_system: Set the user's role and persona\ngroup: Name of the conversation\nsample_message_user: Example user input\nsample_message_ai: Example model output"
           },
           "content": {
             "oneOf": [
@@ -183,7 +191,8 @@
               {
                 "type": "array"
               }
-            ]
+            ],
+            "description":"Name of the sender. If there are multiple messages with the same role type, a specific name must be provided to distinguish them"
           }
         }
       },

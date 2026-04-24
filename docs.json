@@ -27,7 +27,6 @@
                         "group": "MiniMax",
                         "pages": [
                           "cn/zmodelImage/minimax/image01-image-to-image",
-                          "cn/zmodelImage/minimax/image01-live-image-to-image",
                           "cn/zmodelImage/minimax/image01-text-to-image"
                         ]
                       },
@@ -56,9 +55,13 @@
                       {
                         "group": "MiniMax",
                         "pages": [
-                          "cn/zmodelVideo/minimax/image-to-video",
-                          "cn/zmodelVideo/minimax/start-end-to-video",
-                          "cn/zmodelVideo/minimax/text-to-video"
+                          "cn/zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
+                          "cn/zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
+                          "cn/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
+                          "cn/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
+                          "cn/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
+                          "cn/zmodelVideo/minimax/minimax-hailuo-2.3-fast-text-to-video",
+                          "cn/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
                         ]
                       },
                       {
@@ -173,7 +176,6 @@
                         "group": "MiniMax",
                         "pages": [
                           "en/zmodelImage/minimax/image01-image-to-image",
-                          "en/zmodelImage/minimax/image01-live-image-to-image",
                           "en/zmodelImage/minimax/image01-text-to-image"
                         ]
                       },
@@ -202,9 +204,13 @@
                       {
                         "group": "MiniMax",
                         "pages": [
-                          "en/zmodelVideo/minimax/image-to-video",
-                          "en/zmodelVideo/minimax/start-end-to-video",
-                          "en/zmodelVideo/minimax/text-to-video"
+                          "en/zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
+                          "en/zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
+                          "en/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
+                          "en/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
+                          "en/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
+                          "en/zmodelVideo/minimax/minimax-hailuo-2.3-fast-text-to-video",
+                          "en/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
                         ]
                       },
                       {

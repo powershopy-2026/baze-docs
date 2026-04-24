@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Hailuo Text to Video",
+    "title": "Hailuo Image to Video",
     "version": "1.0.0",
-    "description": "Hailuo series Text to Video capability documentation. The unified API endpoint is `/v1/videos`, used to create asynchronous video generation tasks.",
+    "description": "Hailuo series Image to Video capability documentation. The unified API endpoint is `/v1/videos`, used to create asynchronous video generation tasks.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -18,15 +18,15 @@
   "tags": [
     {
       "name": "Hailuo Video",
-      "description": "Hailuo series video generation capability"
+      "description": "Hailuo Image to Video capability"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Hailuo Text to Video",
-        "description": "Applies to `MiniMax-Hailuo-2.3`, `MiniMax-Hailuo-02` and other Text to Video models. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `prompt`, `seconds`, `size`.",
-        "operationId": "minimaxTextToVideo",
+        "summary": "Hailuo Image to Video",
+        "description": "Applies to `MiniMax-Hailuo-2.3` Image to Video model. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `image`, `prompt`, `seconds`, `size`.",
+        "operationId": "minimaxImageToVideo",
         "tags": [
           "Hailuo Video"
         ],
@@ -35,16 +35,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TextToVideoRequest"
+                "$ref": "#/components/schemas/ImageToVideoRequest"
               },
               "examples": {
                 "basic_request": {
-                  "summary": "Basic Text to Video request",
+                  "summary": "Basic Image to Video request",
                   "value": {
                     "model": "MiniMax-Hailuo-2.3",
-                    "prompt": "A woman walks through a neon street in the rain.",
+                    "image": "https://example.com/assets/first-frame.png",
+                    "prompt": "The girl looks at the camera and smiles.",
                     "seconds": "6",
-                    "size": "1080P"
+                    "size": "768P"
                   }
                 }
               }
@@ -63,7 +64,7 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters, e.g. missing `prompt` or using a model that does not support Text to Video.",
+            "description": "Invalid request parameters, e.g. missing `image` or using a model that does not support Image to Video.",
             "content": {
               "application/json": {
                 "schema": {
@@ -220,32 +221,40 @@
       }
     },
     "schemas": {
-      "TextToVideoRequest": {
+      "ImageToVideoRequest": {
         "type": "object",
         "required": [
           "model",
-          "prompt"
+          "image"
         ],
         "properties": {
           "model": {
             "type": "string",
             "enum": [
-              "MiniMax-Hailuo-2.3",
-              "MiniMax-Hailuo-02"
+              "MiniMax-Hailuo-2.3"
             ],
             "description": "Model name for this capability."
           },
+          "image": {
+            "type": "string",
+            "description": "First-frame image URL or Data URL."
+          },
           "prompt": {
             "type": "string",
-            "description": "Video prompt."
+            "description": "Optional video prompt.",
+            "maxLength": 2000
           },
           "seconds": {
             "type": "string",
-            "description": "Target video duration in seconds."
+            "description": "Target video duration in seconds.",
+            "enum": [
+              "6",
+              "10"
+            ]
           },
           "size": {
             "type": "string",
-            "description": "Target output resolution. Text to Video models currently support `768P` and `1080P`.",
+            "description": "Target output resolution. Image to Video models currently support `768P` and `1080P`.",
             "enum": [
               "768P",
               "1080P"

@@ -133,13 +133,17 @@
             }
           },
           "temperature": {
-            "type": "number"
+            "type": "number",
+            "maximum": 1
           },
           "top_p": {
-            "type": "number"
+            "type": "number",
+            "maximum": 1
           },
           "max_tokens": {
-            "type": "integer"
+            "type": "integer",
+            "maximum": 2048,
+            "minimum": 1
           },
           "stream": {
             "type": "boolean"
@@ -172,8 +176,12 @@
               "system",
               "user",
               "assistant",
-              "tool"
-            ]
+              "user_system",
+              "group",
+              "sample_message_user",
+              "sample_message_ai"
+            ],
+            "description":"消息发送者的角色system: 设定模型的角色和行为\nuser: 用户的输入\nassistant: 模型的历史回复\nuser_system: 设定用户的角色和人设\ngroup: 对话的名称\nsample_message_user: 示例的用户输入\nsample_message_ai: 示例的模型输出"
           },
           "content": {
             "oneOf": [
@@ -183,7 +191,8 @@
               {
                 "type": "array"
               }
-            ]
+            ],
+            "description":"发送者的名称。若同一类型的角色有多个，须提供具体名称以区分"
           }
         }
       },
