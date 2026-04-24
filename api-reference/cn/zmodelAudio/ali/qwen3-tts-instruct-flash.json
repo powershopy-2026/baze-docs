@@ -167,7 +167,7 @@
           },
           "instructions": {
             "type": "string",
-            "description": "风格控制指令。"
+            "description": "风格控制指令。默认值：无默认值，不设置不生效,长度限制：长度不得超过 1600 Token,支持语言：仅支持中文和英文"
           },
           "optimize_instructions": {
             "type": "boolean",
