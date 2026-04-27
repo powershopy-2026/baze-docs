@@ -40,7 +40,7 @@
                         ]
                       },
                       {
-                        "group":"字节",
+                        "group": "字节",
                         "pages": [
                           "cn/zmodelImage/byteplus/sendream-4-0",
                           "cn/zmodelImage/byteplus/sendream-4-5",
@@ -74,7 +74,7 @@
                         ]
                       },
                       {
-                        "group":"字节",
+                        "group": "字节",
                         "pages": [
                           "cn/zmodelVideo/byteplus/seedance-1-0-pro",
                           "cn/zmodelVideo/byteplus/seedance-1-0-pro-fast",
@@ -109,7 +109,7 @@
                         ]
                       },
                       {
-                        "group":"字节",
+                        "group": "字节",
                         "pages": [
                           "cn/zmodelChat/byteplus/deepseek-v3-2-251201",
                           "cn/zmodelChat/byteplus/gpt-oss-120b-250805",
@@ -122,7 +122,7 @@
                         ]
                       },
                       {
-                        "group":"智谱",
+                        "group": "智谱",
                         "pages": [
                           "cn/zmodelChat/zhipu/glm-4.5-air",
                           "cn/zmodelChat/zhipu/glm-4.7",
@@ -229,7 +229,9 @@
                         "pages": [
                           "en/zmodelVideo/byteplus/seedance-1-0-pro",
                           "en/zmodelVideo/byteplus/seedance-1-0-pro-fast",
-                          "en/zmodelVideo/byteplus/seedance-1-5-pro"
+                          "en/zmodelVideo/byteplus/seedance-1-5-pro",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast"
                         ]
                       },
                       "en/zmodelVideo/minimax/download-video-file",
@@ -316,20 +318,18 @@
     "light": "/logo/logo2.svg",
     "dark": "/logo/logo2.svg"
   },
-  "navbar": {
-   
-  },
+  "navbar": {},
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
