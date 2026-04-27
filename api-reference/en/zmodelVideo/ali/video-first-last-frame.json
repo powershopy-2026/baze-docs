@@ -467,6 +467,9 @@
           "seconds": {
             "type": "string",
             "description": "Video duration (seconds) as a string. Currently fixed at `\"5\"`.",
+            "enum": [
+              "5"
+            ],
             "default": "5"
           },
           "size": {

@@ -320,7 +320,12 @@
           "size": {
             "type": "string",
             "description": "Output image size.\n- seedream-5-0-260128: supports 2K/3K or custom (total pixels 3686400-10404496, aspect ratio 1/16-16)\n- seedream-4-5-251128: supports 2K/4K or custom (total pixels 3686400-16777216, aspect ratio 1/16-16)\n- seedream-4-0-250828: supports 1K/2K/4K or custom (total pixels 921600-16777216, aspect ratio 1/16-16)",
-            "example": "2048x2048"
+            "example": "2048x2048",
+            "x-enum": [
+              "2K",
+              "3K"
+            ],
+            "default": "2K"
           },
           "response_format": {
             "type": "string",
