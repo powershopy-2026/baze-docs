@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Wan reference-to-video",
+    "title": "Wan Reference-to-Video",
     "version": "1.0.0",
-    "description": "Wan series reference-to-video capability documentation. The unified API endpoint is `/v1/videos`, used to create asynchronous video generation tasks.",
+    "description": "Customer-facing channel document for Ali `wan2.7-r2v`. The public unified endpoint is `/v1/videos`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -12,23 +12,23 @@
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Baze API server endpoint"
+      "description": "Baze API service endpoint"
     }
   ],
   "tags": [
     {
-      "name": "Wan Video",
-      "description": "Wan reference-to-video capability"
+      "name": "Wan 2.7 Video",
+      "description": "Ali wan2.7-r2v reference-to-video capability"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Wan reference-to-video",
-        "description": "Applies to Wan series reference-to-video models. The platform currently supports Ali `wan2.7-r2v`. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `subject_reference`, `prompt`, `seconds`, `size`, `prompt_extend`, `watermark`, `seed`. `subject_reference` must not be used together with `image` or `images`.",
-        "operationId": "aliReferenceToVideo",
+        "summary": "Create Wan Reference-to-Video Task",
+        "description": "Submit an asynchronous Ali `wan2.7-r2v` generation task.\n\nThis capability uses the top-level `media` array as the public multimodal input. Supported `media.type` values are `reference_image`, `reference_video`, and `first_frame`.\n\nCurrent public rules:\n- `prompt` is required;\n- include at least one `reference_image` or `reference_video` item;\n- you may provide at most five `reference_image` / `reference_video` items in total;\n- `first_frame` is optional and can appear at most once;\n- `size` supports only `720P` and `1080P`;\n- `ratio` supports `16:9`, `9:16`, `1:1`, `4:3`, and `3:4`;\n- `seconds` accepts integer strings from `2` to `15`, but when any `reference_video` is included the allowed range is `2` to `10`.\n\nPrompt referencing follows the submitted `media` order. Refer to image references as `Image 1`, `Image 2`, and to video references as `Video 1`, `Video 2`, counting separately within each media type.",
+        "operationId": "aliReferenceToVideoCreate",
         "tags": [
-          "Wan Video"
+          "Wan 2.7 Video"
         ],
         "requestBody": {
           "required": true,
@@ -39,20 +39,50 @@
               },
               "examples": {
                 "reference_to_video": {
-                  "summary": "Basic reference-to-video request",
+                  "summary": "Single image reference",
                   "value": {
                     "model": "wan2.7-r2v",
-                    "prompt": "The character waves at the camera and walks forward slowly.",
+                    "prompt": "Image 1 walks toward the camera and waves with a relaxed smile.",
+                    "media": [
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/subject-reference.png"
+                      }
+                    ],
                     "seconds": "5",
                     "size": "1080P",
-                    "subject_reference": [
+                    "ratio": "16:9",
+                    "prompt_extend": true,
+                    "watermark": false
+                  }
+                },
+                "reference_to_video_multimodal": {
+                  "summary": "Mixed image, video, voice, and first frame references",
+                  "value": {
+                    "model": "wan2.7-r2v",
+                    "prompt": "Video 1 sits at the table and starts speaking. Image 1 walks into frame from the left, while the first frame keeps the opening composition stable.",
+                    "negative_prompt": "blurry, distorted hands, low quality",
+                    "prompt_extend": false,
+                    "watermark": true,
+                    "seed": 42,
+                    "media": [
                       {
-                        "type": "character",
-                        "image": [
-                          "https://example.com/assets/subject-reference.png"
-                        ]
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/character-a.png",
+                        "reference_voice": "https://example.com/assets/character-a-voice.mp3"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/assets/character-b.mp4"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/opening-frame.png"
                       }
-                    ]
+                    ],
+                    "seconds": "8",
+                    "size": "720P",
+                    "ratio": "9:16"
                   }
                 }
               }
@@ -61,7 +91,7 @@
         },
         "responses": {
           "200": {
-            "description": "Submitted successfully. Returns a video task object.",
+            "description": "Submission successful. Returns the unified OpenAI-style video task object.",
             "content": {
               "application/json": {
                 "schema": {
@@ -71,7 +101,7 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters.",
+            "description": "Invalid request parameters, such as missing reference media, unsupported `media.type`, invalid `size` / `ratio` / `seconds`, or incompatible field combinations.",
             "content": {
               "application/json": {
                 "schema": {
@@ -79,14 +109,11 @@
                 },
                 "examples": {
                   "invalid_request": {
-                    "summary": "Parameter error",
+                    "summary": "Invalid request",
                     "value": {
-                      "error": {
-                        "message": "Malformed request body or invalid field value",
-                        "type": "invalid_request_error",
-                        "code": "bad_request_body",
-                        "param": ""
-                      }
+                      "code": "invalid_request",
+                      "message": "wan2.7-r2v requires at least one reference_image or reference_video",
+                      "data": null
                     }
                   }
                 }
@@ -94,6 +121,7 @@
             }
           },
           "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
             "content": {
               "application/json": {
                 "schema": {
@@ -103,20 +131,17 @@
                   "unauthorized": {
                     "summary": "Unauthorized",
                     "value": {
-                      "error": {
-                        "message": "Invalid token",
-                        "type": "api_error",
-                        "code": "access_denied",
-                        "param": ""
-                      }
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "Authentication failed, e.g. missing or invalid token."
+            }
           },
           "413": {
+            "description": "Request body too large.",
             "content": {
               "application/json": {
                 "schema": {
@@ -126,20 +151,17 @@
                   "request_too_large": {
                     "summary": "Request body too large",
                     "value": {
-                      "error": {
-                        "message": "Request body too large, please reduce the input and retry",
-                        "type": "api_error",
-                        "code": "read_request_body_failed",
-                        "param": ""
-                      }
+                      "code": "read_request_body_failed",
+                      "message": "Request body too large, please reduce the input and retry",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "Request body too large."
+            }
           },
           "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
             "content": {
               "application/json": {
                 "schema": {
@@ -149,20 +171,17 @@
                   "quota_exceeded": {
                     "summary": "Insufficient quota or rate limited",
                     "value": {
-                      "error": {
-                        "message": "Insufficient account quota, please try again later",
-                        "type": "api_error",
-                        "code": "insufficient_user_quota",
-                        "param": ""
-                      }
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient account quota, please try again later",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "Rate limit triggered or insufficient account quota."
+            }
           },
           "500": {
+            "description": "An internal error occurred while processing the request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -172,20 +191,17 @@
                   "internal_error": {
                     "summary": "Internal processing failure",
                     "value": {
-                      "error": {
-                        "message": "Internal processing failed, please try again later",
-                        "type": "api_error",
-                        "code": "gen_relay_info_failed",
-                        "param": ""
-                      }
+                      "code": "gen_relay_info_failed",
+                      "message": "Internal processing failed, please try again later",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "An internal error occurred while processing the request."
+            }
           },
           "502": {
+            "description": "The upstream provider returned an abnormal response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -195,20 +211,17 @@
                   "bad_gateway": {
                     "summary": "Upstream provider response error",
                     "value": {
-                      "error": {
-                        "message": "The upstream provider returned an invalid response",
-                        "type": "api_error",
-                        "code": "bad_response_status_code",
-                        "param": ""
-                      }
+                      "code": "bad_response_status_code",
+                      "message": "The upstream provider returned an invalid response",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "The upstream provider returned an abnormal response."
+            }
           },
           "503": {
+            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model.",
             "content": {
               "application/json": {
                 "schema": {
@@ -218,18 +231,14 @@
                   "service_unavailable": {
                     "summary": "Service temporarily unavailable",
                     "value": {
-                      "error": {
-                        "message": "No available channel for the current model, please try again later",
-                        "type": "api_error",
-                        "code": "get_channel_failed",
-                        "param": ""
-                      }
+                      "code": "get_channel_failed",
+                      "message": "No available channel for the current model, please try again later",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model."
+            }
           }
         },
         "security": [
@@ -241,11 +250,11 @@
     },
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "Query Ali video generation task status",
-        "description": "Query the status and result of a video generation task by task ID.\n\nTask status flow: PENDING (queued) → RUNNING (processing) → SUCCEEDED (success) / FAILED (failure).",
-        "operationId": "aliQueryVideoStatus",
+        "summary": "Query Wan Reference-to-Video Task",
+        "description": "Query the latest status of an asynchronous `wan2.7-r2v` task by public task ID.",
+        "operationId": "aliReferenceToVideoQuery",
         "tags": [
-          "Ali Video"
+          "Wan 2.7 Video"
         ],
         "parameters": [
           {
@@ -255,12 +264,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "Video generation task ID."
+            "description": "Public video task ID."
           }
         ],
         "responses": {
           "200": {
-            "description": "Query successful. Returns the task status.",
+            "description": "Current task state.",
             "content": {
               "application/json": {
                 "schema": {
@@ -269,23 +278,20 @@
               }
             }
           },
-          "404": {
-            "description": "Task does not exist or has expired.",
+          "400": {
+            "description": "Invalid request, such as a nonexistent task or invalid task ID.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "not_found": {
+                  "task_not_exist": {
                     "summary": "Task not found",
                     "value": {
-                      "error": {
-                        "message": "Task does not exist or has expired",
-                        "type": "api_error",
-                        "code": "task_not_found",
-                        "param": ""
-                      }
+                      "code": "task_not_exist",
+                      "message": "task_not_exist",
+                      "data": null
                     }
                   }
                 }
@@ -293,6 +299,7 @@
             }
           },
           "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
             "content": {
               "application/json": {
                 "schema": {
@@ -302,20 +309,37 @@
                   "unauthorized": {
                     "summary": "Unauthorized",
                     "value": {
-                      "error": {
-                        "message": "Invalid token",
-                        "type": "api_error",
-                        "code": "access_denied",
-                        "param": ""
-                      }
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "Authentication failed, e.g. missing or invalid token."
+            }
+          },
+          "404": {
+            "description": "Task not found or expired. Note: the current project implementation usually returns 400 task_not_exist for this case.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "code": "task_not_exist",
+                      "message": "Task does not exist or has expired",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
           },
           "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
             "content": {
               "application/json": {
                 "schema": {
@@ -325,20 +349,17 @@
                   "quota_exceeded": {
                     "summary": "Insufficient quota or rate limited",
                     "value": {
-                      "error": {
-                        "message": "Insufficient account quota, please try again later",
-                        "type": "api_error",
-                        "code": "insufficient_user_quota",
-                        "param": ""
-                      }
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient account quota, please try again later",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "Rate limit triggered or insufficient account quota."
+            }
           },
           "500": {
+            "description": "An internal error occurred while processing the request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -348,20 +369,17 @@
                   "internal_error": {
                     "summary": "Internal processing failure",
                     "value": {
-                      "error": {
-                        "message": "Internal processing failed, please try again later",
-                        "type": "api_error",
-                        "code": "gen_relay_info_failed",
-                        "param": ""
-                      }
+                      "code": "get_task_failed",
+                      "message": "Internal processing failed, please try again later",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "An internal error occurred while processing the request."
+            }
           },
           "502": {
+            "description": "The upstream provider returned an abnormal response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -371,20 +389,17 @@
                   "bad_gateway": {
                     "summary": "Upstream provider response error",
                     "value": {
-                      "error": {
-                        "message": "The upstream provider returned an invalid response",
-                        "type": "api_error",
-                        "code": "bad_response_status_code",
-                        "param": ""
-                      }
+                      "code": "bad_response_status_code",
+                      "message": "The upstream provider returned an invalid response",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "The upstream provider returned an abnormal response."
+            }
           },
           "503": {
+            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model.",
             "content": {
               "application/json": {
                 "schema": {
@@ -394,18 +409,14 @@
                   "service_unavailable": {
                     "summary": "Service temporarily unavailable",
                     "value": {
-                      "error": {
-                        "message": "No available channel for the current model, please try again later",
-                        "type": "api_error",
-                        "code": "get_channel_failed",
-                        "param": ""
-                      }
+                      "code": "get_channel_failed",
+                      "message": "No available channel for the current model, please try again later",
+                      "data": null
                     }
                   }
                 }
               }
-            },
-            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model."
+            }
           }
         },
         "security": [
@@ -421,149 +432,16 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "API Key"
       }
     },
     "schemas": {
-      "VideoTaskResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique task identifier."
-          },
-          "task_id": {
-            "type": "string",
-            "description": "Task ID (same as id)."
-          },
-          "object": {
-            "type": "string",
-            "example": "video"
-          },
-          "model": {
-            "type": "string",
-            "description": "Model name used."
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "pending",
-              "queued",
-              "running",
-              "succeeded",
-              "failed",
-              "cancelled"
-            ],
-            "description": "Task status."
-          },
-          "progress": {
-            "type": "integer",
-            "description": "Task progress (percentage)."
-          },
-          "created_at": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Creation time as a Unix timestamp (seconds)."
-          }
-        }
-      },
-      "VideoTaskQueryResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "task_id": {
-            "type": "string"
-          },
-          "object": {
-            "type": "string",
-            "example": "video"
-          },
-          "model": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "pending",
-              "queued",
-              "running",
-              "succeeded",
-              "failed",
-              "cancelled"
-            ],
-            "description": "Task status."
-          },
-          "progress": {
-            "type": "integer"
-          },
-          "created_at": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "completed_at": {
-            "type": "integer",
-            "format": "int64",
-            "description": "Completion time as a Unix timestamp (seconds), returned only on success."
-          },
-          "video_url": {
-            "type": "string",
-            "description": "Download URL for the generated video. Valid for 24 hours; save it promptly. Returned only when status is succeeded."
-          },
-          "metadata": {
-            "type": "object",
-            "description": "Detailed task metadata.",
-            "properties": {
-              "orig_prompt": {
-                "type": "string",
-                "description": "Original input prompt."
-              },
-              "actual_prompt": {
-                "type": "string",
-                "description": "Optimized prompt (when prompt_extend is enabled)."
-              },
-              "video_duration": {
-                "type": "integer",
-                "description": "Video duration (seconds)."
-              },
-              "SR": {
-                "type": "integer",
-                "description": "Resolution tier (returned by 2.2 models)."
-              },
-              "video_ratio": {
-                "type": "string",
-                "description": "Video aspect ratio (returned by 2.1 models)."
-              }
-            }
-          }
-        }
-      },
-      "ErrorResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              },
-              "type": {
-                "type": "string",
-                "description": "Error type, e.g. `invalid_request_error`, `api_error`, or upstream-compatible error types."
-              },
-              "code": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      },
       "ReferenceToVideoRequest": {
         "type": "object",
         "required": [
           "model",
-          "subject_reference"
+          "prompt",
+          "media"
         ],
         "properties": {
           "model": {
@@ -571,18 +449,36 @@
             "enum": [
               "wan2.7-r2v"
             ],
-            "description": "Wan reference-to-video model. The platform currently supports `wan2.7-r2v`."
-          },
-          "subject_reference": {
-            "type": "array",
-            "description": "Subject reference input. Must not be used together with `image` or `images`.",
-            "items": {
-              "$ref": "#/components/schemas/VideoSubjectReference"
-            }
+            "description": "Ali wan2.7-r2v model."
           },
           "prompt": {
             "type": "string",
-            "description": "Text prompt describing the desired video content. Supports Chinese and English, up to 800 characters."
+            "description": "Text prompt describing the desired video. Use `Image x` and `Video x` references when multiple reference media items are provided."
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Optional negative prompt describing content that should not appear in the generated video."
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "Whether to enable prompt rewriting. The default value is `true`."
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark. The default value is `false`."
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed. If omitted, the system generates one automatically."
+          },
+          "media": {
+            "type": "array",
+            "description": "Public multimodal input for `wan2.7-r2v`. Include one or more `reference_image` or `reference_video` items, optionally plus one `first_frame` item.",
+            "items": {
+              "$ref": "#/components/schemas/ReferenceToVideoMediaInput"
+            }
           },
           "seconds": {
             "type": "string",
@@ -611,42 +507,142 @@
               "720P",
               "1080P"
             ],
-            "description": "Output video resolution tier. `wan2.7-r2v` defaults to 1080P on the platform. Options: 720P, 1080P.",
+            "description": "Output resolution tier for the current public implementation.",
             "default": "1080P"
           },
-          "prompt_extend": {
-            "type": "boolean",
-            "description": "Whether to enable intelligent prompt rewriting. The platform passes this field through to the upstream provider.",
-            "default": false
-          },
-          "watermark": {
-            "type": "boolean",
-            "description": "Whether to add a watermark to the video.",
-            "default": false
-          },
-          "seed": {
-            "type": "integer",
-            "description": "Random seed, range [0, 2147483647]."
+          "ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4"
+            ],
+            "description": "Output aspect ratio.",
+            "default": "16:9"
           }
         }
       },
-      "VideoSubjectReference": {
+      "ReferenceToVideoMediaInput": {
         "type": "object",
         "required": [
           "type",
-          "image"
+          "url"
         ],
         "properties": {
           "type": {
             "type": "string",
-            "description": "Reference subject type, e.g. `character`."
+            "enum": [
+              "reference_image",
+              "reference_video",
+              "first_frame"
+            ],
+            "description": "Reference media type."
           },
-          "image": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "List of subject reference image URLs. At least 1 image is required."
+          "url": {
+            "type": "string",
+            "description": "Publicly accessible media URL."
+          },
+          "reference_voice": {
+            "type": "string",
+            "description": "Optional voice reference URL. Use it with `reference_image` or `reference_video` when the generated speaker voice should follow that reference."
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Public task ID."
+          },
+          "task_id": {
+            "type": "string",
+            "description": "Public task ID alias."
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model name."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "in_progress",
+              "completed",
+              "failed",
+              "unknown"
+            ],
+            "description": "Unified video task status."
+          },
+          "progress": {
+            "type": "integer",
+            "description": "Task progress percentage."
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp in seconds."
+          }
+        }
+      },
+      "VideoTaskQueryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VideoTaskResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "completed_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Completion timestamp when the task reaches a terminal state."
+              },
+              "metadata": {
+                "type": "object",
+                "description": "Additional unified metadata. On success, `metadata.url` usually contains the downloadable result URL.",
+                "additionalProperties": true
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code.",
+            "example": "invalid_request"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "data": {
+            "nullable": true,
+            "description": "Additional error data. Currently usually null."
           }
         }
       }

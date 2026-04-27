@@ -276,7 +276,7 @@
               "deepseek-v3.2"
             ],
             "description": "模型名称。仅支持当前阿里渠道最终白名单中的公开对话模型。",
-            "example": "qwen3.6-plus"
+            "example": "deepseek-v3.2"
           },
           "messages": {
             "type": "array",
