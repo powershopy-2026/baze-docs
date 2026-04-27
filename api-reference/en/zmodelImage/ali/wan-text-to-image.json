@@ -229,7 +229,13 @@
           },
           "size": {
             "type": "string",
-            "description": "Output image resolution specification, e.g. `1K`, `2K`, `4K`, or explicit width-by-height pixel values. The gateway maps this to upstream `parameters.size`."
+            "description": "Output image resolution specification, e.g. `1K`, `2K`, `4K`, or explicit width-by-height pixel values. The gateway maps this to upstream `parameters.size`.",
+            "x-enum": [
+              "1K",
+              "2K",
+              "4K"
+            ],
+            "default": "1K"
           },
           "n": {
             "type": "integer",
@@ -259,7 +265,9 @@
           "seed": {
             "type": "integer",
             "format": "int64",
-            "description": "Random seed. Explicitly passing `0` is preserved and mapped to upstream `parameters.seed`."
+            "description": "Random seed. Explicitly passing `0` is preserved and mapped to upstream `parameters.seed`.",
+            "default": 0,
+            "minimum": 0
           }
         }
       },

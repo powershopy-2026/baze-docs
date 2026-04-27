@@ -238,7 +238,12 @@
           },
           "size": {
             "type": "string",
-            "description": "输出图像分辨率。图像编辑场景建议使用官方规格如 `1K`、`2K`。网关会映射到上游 `parameters.size`。"
+            "description": "输出图像分辨率。图像编辑场景建议使用官方规格如 `1K`、`2K`。网关会映射到上游 `parameters.size`。",
+            "x-enum": [
+              "1K",
+              "2K"
+            ],
+            "default": "1K"
           },
           "n": {
             "type": "integer",
@@ -256,7 +261,10 @@
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子，取值范围 [0, 2147483647]。网关会映射到上游 `parameters.seed`。"
+            "description": "随机数种子，取值范围 [0, 2147483647]。网关会映射到上游 `parameters.seed`。",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 2147483647
           },
           "bbox_list": {
             "type": "array",

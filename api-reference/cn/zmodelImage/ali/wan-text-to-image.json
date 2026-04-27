@@ -229,7 +229,13 @@
           },
           "size": {
             "type": "string",
-            "description": "输出图片分辨率规格，例如 `1K`、`2K`、`4K`，或显式宽高像素值。网关会映射到上游 `parameters.size`。"
+            "description": "输出图片分辨率规格，例如 `1K`、`2K`、`4K`，或显式宽高像素值。网关会映射到上游 `parameters.size`。",
+            "x-enum": [
+              "1K",
+              "2K",
+              "4K"
+            ],
+            "default": "1K"
           },
           "n": {
             "type": "integer",
@@ -259,7 +265,9 @@
           "seed": {
             "type": "integer",
             "format": "int64",
-            "description": "随机种子。显式传 `0` 会保留并映射到上游 `parameters.seed`。"
+            "description": "随机种子。显式传 `0` 会保留并映射到上游 `parameters.seed`。",
+            "default": 0,
+            "minimum": 0
           }
         }
       },
