@@ -467,7 +467,10 @@
           "seconds": {
             "type": "string",
             "description": "视频生成时长（秒）的字符串形式。当前固定为 `\"5\"`。",
-            "default": "5"
+            "default": "5",
+            "enum": [
+              "5"
+            ]
           },
           "size": {
             "type": "string",

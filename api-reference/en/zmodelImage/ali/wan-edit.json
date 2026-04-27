@@ -238,7 +238,12 @@
           },
           "size": {
             "type": "string",
-            "description": "Output image resolution. For image editing, official specifications such as `1K` or `2K` are recommended. The gateway maps this to upstream `parameters.size`."
+            "description": "Output image resolution. For image editing, official specifications such as `1K` or `2K` are recommended. The gateway maps this to upstream `parameters.size`.",
+            "x-enum": [
+              "1K",
+              "2K"
+            ],
+            "default": "1K"
           },
           "n": {
             "type": "integer",
@@ -256,7 +261,10 @@
           },
           "seed": {
             "type": "integer",
-            "description": "Random seed, range [0, 2147483647]. The gateway maps this to upstream `parameters.seed`."
+            "description": "Random seed, range [0, 2147483647]. The gateway maps this to upstream `parameters.seed`.",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 2147483647
           },
           "bbox_list": {
             "type": "array",

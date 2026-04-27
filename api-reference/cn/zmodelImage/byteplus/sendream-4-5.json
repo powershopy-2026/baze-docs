@@ -320,7 +320,12 @@
           "size": {
             "type": "string",
             "description": "输出图像尺寸。\n- seedream-5-0-260128：支持 2K/3K 或自定义（总像素 3686400-10404496，宽高比 1/16-16）\n- seedream-4-5-251128：支持 2K/4K 或自定义（总像素 3686400-16777216，宽高比 1/16-16）\n- seedream-4-0-250828：支持 1K/2K/4K 或自定义（总像素 921600-16777216，宽高比 1/16-16）",
-            "example": "2048x2048"
+            "example": "2048x2048",
+            "x-enum": [
+              "2K",
+              "4K"
+            ],
+            "default": "2K"
           },
           "response_format": {
             "type": "string",
@@ -334,7 +339,9 @@
           "seed": {
             "type": "integer",
             "description": "随机数种子。部分 Seedream 模型支持。取值范围 [-1, 2147483647]。",
-            "default": -1
+            "default": -1,
+            "minimum": -1,
+            "maximum": 2147483647
           },
           "sequential_image_generation": {
             "type": "string",

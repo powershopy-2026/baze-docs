@@ -236,7 +236,22 @@
           },
           "size": {
             "type": "string",
-            "description": "输出图像分辨率，格式为 `宽x高` 或 `宽*高`。网关会转换并映射到上游 `parameters.size`。"
+            "description": "输出图像分辨率，格式为 `宽x高` 或 `宽*高`。网关会转换并映射到上游 `parameters.size`。",
+            "x-options": [
+              {
+                "label": "500*500",
+                "value": "500*500"
+              },
+              {
+                "label": "1K",
+                "value": "1000*1000"
+              },
+              {
+                "label": "2K",
+                "value": "2000*2000"
+              }
+            ],
+            "default": "500*500"
           },
           "watermark": {
             "type": "boolean",
@@ -322,7 +337,22 @@
           },
           "size": {
             "type": "string",
-            "description": "输出图像分辨率，格式为 `宽*高`。"
+            "description": "输出图像分辨率，格式为 `宽*高`。",
+            "x-options": [
+              {
+                "label": "500*500",
+                "value": "500*500"
+              },
+              {
+                "label": "1K",
+                "value": "1000*1000"
+              },
+              {
+                "label": "2K",
+                "value": "2000*2000"
+              }
+            ],
+            "default": "500*500"
           },
           "watermark": {
             "type": "boolean",
@@ -340,7 +370,10 @@
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子，取值范围 [0, 2147483647]。"
+            "description": "随机数种子，取值范围 [0, 2147483647]。",
+            "default": 0,
+            "minimum": 0,
+            "maximum": 2147483647
           }
         }
       },
