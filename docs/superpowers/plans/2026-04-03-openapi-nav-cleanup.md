@@ -1,4 +1,4 @@
-# OpenAPI navigation cleanup Implementation Plan
+﻿# OpenAPI navigation cleanup Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -66,32 +66,32 @@ Edit `docs.json` so the Chinese `模型接口` group contains nested provider gr
     {
       "group": "MiniMax",
       "pages": [
-        "cn/minimax/text-to-image",
-        "cn/minimax/image-to-image",
-        "cn/minimax/text-to-video",
-        "cn/minimax/image-to-video",
-        "cn/minimax/start-end-to-video",
-        "cn/minimax/subject-reference-to-video",
-        "cn/minimax/query-video-status",
-        "cn/minimax/download-video-file"
+        "zh-Hans/minimax/text-to-image",
+        "zh-Hans/minimax/image-to-image",
+        "zh-Hans/minimax/text-to-video",
+        "zh-Hans/minimax/image-to-video",
+        "zh-Hans/minimax/start-end-to-video",
+        "zh-Hans/minimax/subject-reference-to-video",
+        "zh-Hans/minimax/query-video-status",
+        "zh-Hans/minimax/download-video-file"
       ]
     },
     {
       "group": "Ali",
       "pages": [
-        "cn/ali/chat",
-        "cn/ali/text-to-image",
-        "cn/ali/image-to-image",
-        "cn/ali/video-first-frame",
-        "cn/ali/video-first-last-frame"
+        "zh-Hans/ali/chat",
+        "zh-Hans/ali/text-to-image",
+        "zh-Hans/ali/image-to-image",
+        "zh-Hans/ali/video-first-frame",
+        "zh-Hans/ali/video-first-last-frame"
       ]
     },
     {
       "group": "BytePlus",
       "pages": [
-        "cn/byteplus/image",
-        "cn/byteplus/video",
-        "cn/byteplus/video-status"
+        "zh-Hans/byteplus/image",
+        "zh-Hans/byteplus/video",
+        "zh-Hans/byteplus/video-status"
       ]
     }
   ]
@@ -105,11 +105,11 @@ Also update the English `Model APIs` group to remove `en/Google`, remove `en/min
 Inspect `docs.json` and confirm these paths are absent:
 
 ```text
-cn/Google
+zh-Hans/Google
 en/Google
-cn/minimax/overview
-cn/ali/overview
-cn/byteplus/overview
+zh-Hans/minimax/overview
+zh-Hans/ali/overview
+zh-Hans/byteplus/overview
 en/minimax/overview
 ```
 
@@ -126,22 +126,22 @@ Expected: none of those paths remain in navigation.
 - Create: `en/byteplus/image.mdx`
 - Create: `en/byteplus/video.mdx`
 - Create: `en/byteplus/video-status.mdx`
-- Modify: `cn/minimax/text-to-image.mdx`
-- Modify: `cn/minimax/image-to-image.mdx`
-- Modify: `cn/minimax/text-to-video.mdx`
-- Modify: `cn/minimax/image-to-video.mdx`
-- Modify: `cn/minimax/start-end-to-video.mdx`
-- Modify: `cn/minimax/subject-reference-to-video.mdx`
-- Modify: `cn/minimax/query-video-status.mdx`
-- Modify: `cn/minimax/download-video-file.mdx`
-- Modify: `cn/ali/chat.mdx`
-- Modify: `cn/ali/text-to-image.mdx`
-- Modify: `cn/ali/image-to-image.mdx`
-- Modify: `cn/ali/video-first-frame.mdx`
-- Modify: `cn/ali/video-first-last-frame.mdx`
-- Modify: `cn/byteplus/image.mdx`
-- Modify: `cn/byteplus/video.mdx`
-- Modify: `cn/byteplus/video-status.mdx`
+- Modify: `zh-Hans/minimax/text-to-image.mdx`
+- Modify: `zh-Hans/minimax/image-to-image.mdx`
+- Modify: `zh-Hans/minimax/text-to-video.mdx`
+- Modify: `zh-Hans/minimax/image-to-video.mdx`
+- Modify: `zh-Hans/minimax/start-end-to-video.mdx`
+- Modify: `zh-Hans/minimax/subject-reference-to-video.mdx`
+- Modify: `zh-Hans/minimax/query-video-status.mdx`
+- Modify: `zh-Hans/minimax/download-video-file.mdx`
+- Modify: `zh-Hans/ali/chat.mdx`
+- Modify: `zh-Hans/ali/text-to-image.mdx`
+- Modify: `zh-Hans/ali/image-to-image.mdx`
+- Modify: `zh-Hans/ali/video-first-frame.mdx`
+- Modify: `zh-Hans/ali/video-first-last-frame.mdx`
+- Modify: `zh-Hans/byteplus/image.mdx`
+- Modify: `zh-Hans/byteplus/video.mdx`
+- Modify: `zh-Hans/byteplus/video-status.mdx`
 - Modify: `en/minimax/text-to-image.mdx`
 - Modify: `en/minimax/image-to-image.mdx`
 - Modify: `en/minimax/text-to-video.mdx`
@@ -158,7 +158,7 @@ For every existing endpoint wrapper above, keep only the minimal structure:
 ```mdx
 ---
 title: "文生图"
-openapi: "../api-reference/cn/minimax/text-to-image.json POST /v1/images/generations"
+openapi: "../api-reference/zh-Hans/minimax/text-to-image.json POST /v1/images/generations"
 ---
 ```
 
@@ -240,7 +240,7 @@ Run:
 
 ```bash
 git status --short
-rg -n 'description:|^## |^```|^这个接口|^This endpoint|^Use this endpoint' cn en -g '*.mdx'
+rg -n 'description:|^## |^```|^这个接口|^This endpoint|^Use this endpoint' zh-Hans en -g '*.mdx'
 ```
 
 Expected: only the intended docs files are changed, and visible endpoint wrappers no longer contain custom descriptions or body prose.

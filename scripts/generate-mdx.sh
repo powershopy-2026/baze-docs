@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 # 从 api-reference JSON 自动生成对应的 MDX 平台指南文件
 # 用法: bash scripts/generate-mdx.sh
 
@@ -7,9 +7,9 @@ set -euo pipefail
 BASE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 generate_mdx() {
-  local json_path="$1"   # e.g. api-reference/cn/ali/chat.json
+  local json_path="$1"   # e.g. api-reference/zh-Hans/ali/chat.json
   local vendor="$2"       # e.g. ali / byteplus
-  local lang="$3"         # e.g. cn
+  local lang="$3"         # e.g. zh-Hans
 
   local filename
   filename="$(basename "$json_path" .json)"
@@ -49,13 +49,13 @@ EOF
 }
 
 # 对每个 vendor 目录下的 JSON 生成 MDX
-for vendor_dir in "$BASE_DIR"/api-reference/cn/ali "$BASE_DIR"/api-reference/cn/byteplus; do
+for vendor_dir in "$BASE_DIR"/api-reference/zh-Hans/ali "$BASE_DIR"/api-reference/zh-Hans/byteplus; do
   vendor="$(basename "$vendor_dir")"
   echo "=== $vendor ==="
 
   for json_file in "$vendor_dir"/*.json; do
     rel_path="${json_file#$BASE_DIR/}"
-    generate_mdx "$rel_path" "$vendor" "cn"
+    generate_mdx "$rel_path" "$vendor" "zh-Hans"
   done
 done
 

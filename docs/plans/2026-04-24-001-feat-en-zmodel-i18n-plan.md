@@ -1,4 +1,4 @@
----
+﻿---
 title: "feat: Add English zmodel API documentation"
 type: feat
 status: active
@@ -14,14 +14,14 @@ Create 50 English mdx pages and 50 English OpenAPI JSON files for the zmodel API
 
 ## Problem Frame
 
-The site already has a `cn/` + `en/` framework with Mintlify's `navigation.languages` configured. The Chinese side uses the new zmodel structure (Image/Video/Chat/Audio Models) but the English side still references old-style pages. The EN navigation has empty Image Models, Video Models, and Chat Models groups but is missing an Audio Models group entirely. (see origin: docs/brainstorms/2026-04-23-en-i18n-requirements.md)
+The site already has a `zh-Hans/` + `en/` framework with Mintlify's `navigation.languages` configured. The Chinese side uses the new zmodel structure (Image/Video/Chat/Audio Models) but the English side still references old-style pages. The EN navigation has empty Image Models, Video Models, and Chat Models groups but is missing an Audio Models group entirely. (see origin: docs/brainstorms/2026-04-23-en-i18n-requirements.md)
 
 ## Requirements Trace
 
 - R1. Create 50 EN mdx pages mirroring CN zmodel structure (Image 10, Video 12, Chat 21, Audio 7)
 - R2. Create 50 EN OpenAPI JSON files with all Chinese text translated to English
 - R3. Update docs.json EN navigation: remove old-style groups, populate zmodel groups, create Audio Models group
-- R4. Mintlify openapi frontmatter: change `cn/` prefix to `en/`, preserve method+endpoint
+- R4. Mintlify openapi frontmatter: change `zh-Hans/` prefix to `en/`, preserve method+endpoint
 - R5. Use AGENTS.md terminology: "baze platform", "platform API", "unified API", "upstream provider"
 - R6. English mdx titles in descriptive English
 - R7. Canonical provider names: MiniMax, Alibaba, BytePlus, Zhipu
@@ -40,7 +40,7 @@ Each CN mdx file is ~4 lines of frontmatter:
 ```
 ---
 title: "模型名 中文描述"
-openapi: "/api-reference/cn/zmodel*/<provider>/<model>.json <METHOD> <path>"
+openapi: "/api-reference/zh-Hans/zmodel*/<provider>/<model>.json <METHOD> <path>"
 ---
 ```
 
@@ -128,7 +128,7 @@ OpenAPI JSON files are 200-500 lines with Chinese descriptions, summaries, examp
 **Approach:**
 - Each file is ~4 lines: YAML frontmatter with English title and openapi path
 - Title: translate CN title to English using the title translation patterns table
-- openapi path: copy from CN, change `/api-reference/cn/` to `/api-reference/en/`, preserve METHOD and endpoint
+- openapi path: copy from CN, change `/api-reference/zh-Hans/` to `/api-reference/en/`, preserve METHOD and endpoint
 
 **Patterns to follow:**
 - Existing `en/minimax/chat.mdx` for English mdx style
