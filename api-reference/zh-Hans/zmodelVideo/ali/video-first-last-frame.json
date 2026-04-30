@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Wan 首尾帧图生视频",
+    "title": "wan2.2-kf2v-flash 首尾帧图生视频",
     "version": "1.0.0",
     "description": "Wan 系列首尾帧图生视频能力文档。公开统一入口为 `/v1/videos`，用于创建异步视频生成任务。",
     "license": {
