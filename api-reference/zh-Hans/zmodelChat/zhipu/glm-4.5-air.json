@@ -382,7 +382,8 @@
           "max_tokens": {
             "type": "integer",
             "description": "最大输出 token 数。",
-            "minimum": 1
+            "minimum": 1,
+            "maximum": 131072
           },
           "stop": {
             "type": "array",
