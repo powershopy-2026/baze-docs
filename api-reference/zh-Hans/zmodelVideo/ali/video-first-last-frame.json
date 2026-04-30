@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "wan2.2-kf2v-flash 首尾帧图生视频",
-        "description": "适用于 Wan 系列首尾帧图生视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`images`、`prompt`、`seconds`、`size`、`prompt_extend`、`watermark`、`seed`、`negative_prompt`。其中 `images` 必须按顺序传入 2 张图：`images[0]` 为首帧，`images[1]` 为尾帧。首帧决定基础构图，尾帧用于控制收束画面。",
+        "description": "wan2.2-kf2v-flash \n适用于 Wan 系列首尾帧图生视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`images`、`prompt`、`seconds`、`size`、`prompt_extend`、`watermark`、`seed`、`negative_prompt`。其中 `images` 必须按顺序传入 2 张图：`images[0]` 为首帧，`images[1]` 为尾帧。首帧决定基础构图，尾帧用于控制收束画面。",
         "operationId": "aliFirstLastFrameToVideo",
         "tags": [
           "Wan Video"
