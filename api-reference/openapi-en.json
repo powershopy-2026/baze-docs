@@ -1,0 +1,1304 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAI-Compatible Text Model API",
+    "version": "1.0.0",
+    "description": "OpenAI-compatible text model API documentation for third-party developers, covering only the publicly supported text endpoint `/v1/chat/completions` on this gateway.\n\nAll endpoints use `Authorization: Bearer <token>` authentication by default. When streaming is enabled, the response content type is `text/event-stream`, and the event data format is compatible with OpenAI Chat Completions.\n\nNote: The gateway connects to multiple upstream model providers, so some models may support additional pass-through fields. This document only describes the most commonly used and stable public fields across models, serving as the developer integration entry point.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.kie.ai",
+      "description": "Production environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Text Model",
+      "description": "OpenAI-compatible text model API"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "Create chat completion",
+        "description": "Create a chat completion response using a message array, compatible with the OpenAI Chat Completions API.\n\nUse cases: multi-turn conversations, system prompt control, function/tool calling, structured output. If `stream` is set to `true`, the server returns Server-Sent Events (`text/event-stream`).",
+        "operationId": "createChatCompletion",
+        "tags": [
+          "Text Model"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basicChat": {
+                  "summary": "Basic chat request",
+                  "value": {
+                    "model": "gpt-4.1",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Explain what a vector database is in one sentence."
+                      }
+                    ],
+                    "temperature": 0.3,
+                    "max_completion_tokens": 256
+                  }
+                },
+                "toolCalling": {
+                  "summary": "Request with tool definitions",
+                  "value": {
+                    "model": "gpt-4.1",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Help me check the weather in Beijing today."
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "Query real-time weather by city name",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "City name"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Request successful. Returns standard JSON for non-streaming; returns an SSE event stream for streaming.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Non-streaming success response",
+                    "value": {
+                      "id": "chatcmpl_123",
+                      "object": "chat.completion",
+                      "created": 1742342400,
+                      "model": "gpt-4.1",
+                      "choices": [
+                        {
+                          "index": 0,
+                          "message": {
+                            "role": "assistant",
+                            "content": "A vector database is a data system specialized in storing and retrieving vector representations, commonly used for semantic search and RAG."
+                          },
+                          "finish_reason": "stop"
+                        }
+                      ],
+                      "usage": {
+                        "prompt_tokens": 24,
+                        "completion_tokens": 26,
+                        "total_tokens": 50,
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0,
+                          "text_tokens": 24,
+                          "audio_tokens": 0,
+                          "image_tokens": 0
+                        },
+                        "completion_tokens_details": {
+                          "text_tokens": 26,
+                          "audio_tokens": 0,
+                          "reasoning_tokens": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE data stream. The `data:` portion of each event can be deserialized as a `ChatCompletionChunk`; the stream typically ends with `data: [DONE]`."
+                },
+                "examples": {
+                  "stream": {
+                    "summary": "Streaming response fragment",
+                    "value": "data: {\"id\":\"chatcmpl_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"gpt-4.1\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"A vector database\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"gpt-4.1\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"is used for semantic retrieval.\"},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters, e.g. missing required fields, malformed JSON, or type mismatch.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalidRequest": {
+                    "summary": "Request parameter error",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "param": "messages",
+                        "code": "bad_request_body"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "new_api_error",
+                        "param": "",
+                        "code": "access_denied"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "rateLimited": {
+                    "summary": "Rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Too many requests, please try again later",
+                        "type": "new_api_error",
+                        "param": "",
+                        "code": "insufficient_user_quota"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        },
+        "description": "Unified error response format."
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error description for the caller."
+          },
+          "type": {
+            "type": "string",
+            "description": "Error type, e.g. `invalid_request_error`, `new_api_error`, or upstream-compatible error types."
+          },
+          "param": {
+            "type": "string",
+            "nullable": true,
+            "description": "The parameter name directly related to the error; may be an empty string or `null` if no specific parameter applies."
+          },
+          "code": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error code. Described as a string for compatibility with different upstreams; may be `null` if no error code is available."
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "description": "Token usage statistics. Fields may vary slightly depending on the compatibility format.",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens in Chat Completions and similar endpoints."
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Number of output tokens in Chat Completions and similar endpoints."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total number of tokens."
+          },
+          "prompt_cache_hit_tokens": {
+            "type": "integer",
+            "description": "Number of cached input tokens. Only returned by some models."
+          },
+          "prompt_tokens_details": {
+            "$ref": "#/components/schemas/InputTokenDetails"
+          },
+          "completion_tokens_details": {
+            "$ref": "#/components/schemas/OutputTokenDetails"
+          },
+          "input_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens in Responses API style."
+          },
+          "output_tokens": {
+            "type": "integer",
+            "description": "Number of output tokens in Responses API style."
+          },
+          "input_tokens_details": {
+            "$ref": "#/components/schemas/InputTokenDetails"
+          }
+        }
+      },
+      "InputTokenDetails": {
+        "type": "object",
+        "description": "Input token breakdown.",
+        "properties": {
+          "cached_tokens": {
+            "type": "integer",
+            "description": "Number of cached input tokens."
+          },
+          "text_tokens": {
+            "type": "integer",
+            "description": "Number of text input tokens."
+          },
+          "audio_tokens": {
+            "type": "integer",
+            "description": "Number of audio input tokens."
+          },
+          "image_tokens": {
+            "type": "integer",
+            "description": "Number of image input tokens."
+          }
+        }
+      },
+      "OutputTokenDetails": {
+        "type": "object",
+        "description": "Output token breakdown.",
+        "properties": {
+          "text_tokens": {
+            "type": "integer",
+            "description": "Number of text output tokens."
+          },
+          "audio_tokens": {
+            "type": "integer",
+            "description": "Number of audio output tokens."
+          },
+          "reasoning_tokens": {
+            "type": "integer",
+            "description": "Number of reasoning tokens consumed internally by reasoning models."
+          }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "Chat message object.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "developer",
+              "user",
+              "assistant",
+              "tool"
+            ],
+            "description": "Message role. `developer` is typically used for models like GPT-5 that support developer messages."
+          },
+          "content": {
+            "description": "Message content. Can be a plain string or a multimodal content part array.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ChatMessageContentPart"
+                }
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Sender name. Typically used to distinguish different message sources with the same role."
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "List of tool calls declared in assistant messages.",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "The tool call ID corresponding to a tool response message. Only used for `tool` role messages."
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "Reasoning content returned by some compatible models. Regular callers typically do not need to rely on this field."
+          }
+        }
+      },
+      "ChatMessageContentPart": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "description": "Chat message content part.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image_url",
+              "input_audio",
+              "file",
+              "video_url"
+            ],
+            "description": "Content part type. `text` is the most commonly used for text model scenarios."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content. Used when `type` is `text`."
+          },
+          "image_url": {
+            "$ref": "#/components/schemas/ImageURLPart"
+          },
+          "input_audio": {
+            "$ref": "#/components/schemas/InputAudioPart"
+          },
+          "file": {
+            "$ref": "#/components/schemas/FilePart"
+          },
+          "video_url": {
+            "$ref": "#/components/schemas/VideoURLPart"
+          }
+        }
+      },
+      "ImageURLPart": {
+        "type": "object",
+        "description": "Image input part, usable with text models that support multimodal input.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Image URL or base64 data."
+          },
+          "detail": {
+            "type": "string",
+            "enum": [
+              "low",
+              "high",
+              "auto"
+            ],
+            "description": "Image resolution level."
+          }
+        }
+      },
+      "InputAudioPart": {
+        "type": "object",
+        "description": "Audio input part.",
+        "properties": {
+          "data": {
+            "type": "string",
+            "description": "Base64-encoded audio data."
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "wav",
+              "mp3"
+            ],
+            "description": "Audio format."
+          }
+        }
+      },
+      "FilePart": {
+        "type": "object",
+        "description": "File input part.",
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "File name."
+          },
+          "file_data": {
+            "type": "string",
+            "description": "File content, typically base64 or text."
+          },
+          "file_id": {
+            "type": "string",
+            "description": "Identifier of an uploaded file."
+          }
+        }
+      },
+      "VideoURLPart": {
+        "type": "object",
+        "description": "Video input part.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Video URL."
+          }
+        }
+      },
+      "ToolDefinition": {
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "description": "Tool definition available for the model to call in the request.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "function",
+            "description": "Tool type. `function` is currently the most common."
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionDefinition"
+          }
+        }
+      },
+      "FunctionDefinition": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "description": "Function tool definition.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Function name. The model references this name when making calls."
+          },
+          "description": {
+            "type": "string",
+            "description": "Function purpose description, helping the model select and construct calls."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Parameter definitions in JSON Schema format."
+          }
+        }
+      },
+      "ToolCall": {
+        "type": "object",
+        "description": "Tool call information returned by the model.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique tool call ID."
+          },
+          "type": {
+            "type": "string",
+            "description": "Tool call type, typically `function`."
+          },
+          "function": {
+            "$ref": "#/components/schemas/FunctionCall"
+          }
+        }
+      },
+      "FunctionCall": {
+        "type": "object",
+        "description": "Function call initiated by the model.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Function name."
+          },
+          "arguments": {
+            "type": "string",
+            "description": "Function arguments encoded as a JSON string."
+          }
+        }
+      },
+      "ToolChoice": {
+        "description": "Controls how the model selects tools.",
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "none",
+              "auto",
+              "required"
+            ]
+          },
+          {
+            "type": "object",
+            "description": "Specifies that a particular tool must be called.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "example": "function"
+              },
+              "function": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the function to call."
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ResponseFormat": {
+        "type": "object",
+        "description": "Controls the response format, e.g. plain text, JSON object, or JSON Schema constrained output.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "json_object",
+              "json_schema"
+            ],
+            "description": "Target output format."
+          },
+          "json_schema": {
+            "type": "object",
+            "description": "JSON Schema definition used when `type` is `json_schema`."
+          }
+        }
+      },
+      "StreamOptions": {
+        "type": "object",
+        "description": "Additional options for streaming responses.",
+        "properties": {
+          "include_usage": {
+            "type": "boolean",
+            "description": "If `true`, an additional event with `usage` is returned before the stream ends."
+          }
+        }
+      },
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "description": "Chat Completions request body.",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID to call, e.g. `gpt-4.1`."
+          },
+          "messages": {
+            "type": "array",
+            "description": "Conversation history message array, ordered chronologically.",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2,
+            "description": "Sampling temperature. Lower values produce more stable output; higher values produce more diverse output."
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Nucleus sampling parameter. Typically tuned as an alternative to `temperature`."
+          },
+          "top_k": {
+            "type": "integer",
+            "description": "Top-K sampling parameter supported by some compatible models."
+          },
+          "n": {
+            "type": "integer",
+            "description": "Number of candidate responses to generate."
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "Whether to enable streaming output. When `true`, the response content type is `text/event-stream`."
+          },
+          "stream_options": {
+            "$ref": "#/components/schemas/StreamOptions"
+          },
+          "stop": {
+            "description": "Stop sequence(s). Can be a single string or an array of strings.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "Maximum output tokens (legacy interface compatibility)."
+          },
+          "max_completion_tokens": {
+            "type": "integer",
+            "description": "Recommended maximum generation tokens. Explicitly passing `0` is also forwarded as-is."
+          },
+          "presence_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Presence penalty. Higher values encourage the model to introduce new topics."
+          },
+          "frequency_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Frequency penalty. Higher values suppress repetitive expressions."
+          },
+          "tools": {
+            "type": "array",
+            "description": "List of tool definitions available for the model to call.",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            }
+          },
+          "tool_choice": {
+            "$ref": "#/components/schemas/ToolChoice"
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
+          },
+          "seed": {
+            "type": "number",
+            "description": "Random seed supported by some models for improved result reproducibility."
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "Reasoning intensity. Only effective for models that support reasoning control."
+          },
+          "parallel_tool_calls": {
+            "type": "boolean",
+            "description": "Whether to allow the model to initiate multiple tool calls in parallel."
+          },
+          "user": {
+            "description": "Caller user identifier. Different upstreams may require a string or object; this gateway passes the value through as-is.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Custom metadata associated with this request."
+          },
+          "store": {
+            "description": "Whether to allow the upstream to store request/response data. Different compatibility targets may use boolean or object semantics.",
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "description": "Non-streaming Chat Completions response.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Response ID."
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion",
+            "description": "Object type, always `chat.completion`."
+          },
+          "created": {
+            "type": "integer",
+            "description": "Unix timestamp (seconds)."
+          },
+          "model": {
+            "type": "string",
+            "description": "Actual model ID used."
+          },
+          "choices": {
+            "type": "array",
+            "description": "List of candidate results generated by the model.",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionChoice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "system_fingerprint": {
+            "type": "string",
+            "nullable": true,
+            "description": "System fingerprint. May be missing or `null` if the upstream does not return it."
+          }
+        }
+      },
+      "ChatCompletionChoice": {
+        "type": "object",
+        "description": "A single chat completion candidate result.",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "Candidate result index."
+          },
+          "message": {
+            "$ref": "#/components/schemas/ChatMessage"
+          },
+          "finish_reason": {
+            "type": "string",
+            "description": "Finish reason, e.g. `stop`, `length`, `tool_calls`, or `content_filter`."
+          }
+        }
+      },
+      "ResponsesRequest": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "description": "Responses API request body.",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID to call."
+          },
+          "input": {
+            "description": "Input content. Can be a plain string or a structured input array.",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Simple text input."
+              },
+              {
+                "type": "array",
+                "description": "Structured input array.",
+                "items": {
+                  "$ref": "#/components/schemas/ResponsesInputItem"
+                }
+              }
+            ]
+          },
+          "instructions": {
+            "description": "High-level instructions. Can be a string or a more complex compatible object; the gateway passes it through as-is.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "max_output_tokens": {
+            "type": "integer",
+            "description": "Maximum output tokens. Explicitly passing `0` is preserved and forwarded."
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "Whether to enable streaming output."
+          },
+          "stream_options": {
+            "$ref": "#/components/schemas/StreamOptions"
+          },
+          "temperature": {
+            "type": "number",
+            "description": "Sampling temperature."
+          },
+          "top_p": {
+            "type": "number",
+            "description": "Nucleus sampling parameter. Explicitly passing `0` is preserved and forwarded."
+          },
+          "tools": {
+            "description": "Tool definition list. The Responses API supports more complex tool objects, so arbitrary object arrays are allowed here.",
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ToolDefinition"
+                }
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            ]
+          },
+          "tool_choice": {
+            "description": "Tool selection strategy. The Responses API supports both string and object forms.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ToolChoice"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "parallel_tool_calls": {
+            "description": "Whether to allow parallel tool calls. Different compatibility targets may use boolean or object semantics.",
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "previous_response_id": {
+            "type": "string",
+            "description": "Previous response ID, used to continue the same context."
+          },
+          "reasoning": {
+            "$ref": "#/components/schemas/ReasoningOptions"
+          },
+          "truncation": {
+            "description": "Long context truncation strategy. Common values include `auto` or `disabled`.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "text": {
+            "type": "object",
+            "description": "Compatible object controlling additional text output behavior."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Metadata associated with this request."
+          },
+          "user": {
+            "description": "Caller user identifier. Allows string or object for multi-upstream compatibility.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "store": {
+            "description": "Whether to allow the upstream to store request/response data.",
+            "oneOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "max_tool_calls": {
+            "type": "integer",
+            "description": "Maximum number of tool calls allowed in a single request. Explicitly passing `0` is preserved and forwarded."
+          }
+        }
+      },
+      "ResponsesInputItem": {
+        "type": "object",
+        "description": "Responses API structured input item.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant",
+              "system",
+              "developer"
+            ],
+            "description": "Role of the input item."
+          },
+          "content": {
+            "description": "Input content. Can be a simple string or an input content part array.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponsesInputContentItem"
+                }
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Compatibility field; some clients may include an additional type marker."
+          }
+        }
+      },
+      "ResponsesInputContentItem": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "description": "Responses API input content part.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_text",
+              "input_image",
+              "input_file"
+            ],
+            "description": "Input part type. `input_text` is the most commonly used for text models."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text input content."
+          },
+          "image_url": {
+            "description": "Image input URL. Can be a plain string or an object containing `url`.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "Image URL."
+                  }
+                }
+              }
+            ]
+          },
+          "file_url": {
+            "description": "File input URL. Can be a plain string or an object containing `url`.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "File URL."
+                  }
+                }
+              }
+            ]
+          },
+          "detail": {
+            "type": "string",
+            "description": "Image input detail level. Only used for `input_image` scenarios."
+          }
+        }
+      },
+      "ReasoningOptions": {
+        "type": "object",
+        "description": "Responses API reasoning options.",
+        "properties": {
+          "effort": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "Reasoning intensity."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Reasoning summary strategy, e.g. `auto`."
+          }
+        }
+      },
+      "ResponsesResponse": {
+        "type": "object",
+        "description": "Non-streaming Responses API response.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Response ID."
+          },
+          "object": {
+            "type": "string",
+            "example": "response",
+            "description": "Object type, always `response`."
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "Unix timestamp (seconds)."
+          },
+          "status": {
+            "type": "string",
+            "description": "Response status, e.g. `completed`, `failed`, `in_progress`, or `incomplete`."
+          },
+          "model": {
+            "type": "string",
+            "description": "Actual model ID used."
+          },
+          "output": {
+            "type": "array",
+            "description": "List of model output items. `message` type output is the most common for text generation.",
+            "items": {
+              "$ref": "#/components/schemas/ResponsesOutputItem"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          },
+          "previous_response_id": {
+            "description": "If this response continues from a previous round, this field may return the associated previous response ID.",
+            "type": "string",
+            "nullable": true
+          },
+          "reasoning": {
+            "$ref": "#/components/schemas/ReasoningOptions"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Response-associated metadata."
+          }
+        }
+      },
+      "ResponsesOutputItem": {
+        "type": "object",
+        "description": "Responses API output item.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Output item type, e.g. `message`, `function_call`, or other compatible extension types."
+          },
+          "id": {
+            "type": "string",
+            "description": "Output item ID."
+          },
+          "status": {
+            "type": "string",
+            "description": "Output item status."
+          },
+          "role": {
+            "type": "string",
+            "description": "When the output item is a message, the corresponding message role, typically `assistant`."
+          },
+          "content": {
+            "type": "array",
+            "description": "Output content part list.",
+            "items": {
+              "$ref": "#/components/schemas/ResponsesOutputContentItem"
+            }
+          },
+          "call_id": {
+            "type": "string",
+            "description": "Tool call ID."
+          },
+          "name": {
+            "type": "string",
+            "description": "Tool or function name."
+          },
+          "arguments": {
+            "type": "string",
+            "description": "Tool call arguments, typically a JSON string."
+          },
+          "quality": {
+            "type": "string",
+            "description": "Quality parameter returned by some output types."
+          },
+          "size": {
+            "type": "string",
+            "description": "Size parameter returned by some output types."
+          }
+        }
+      },
+      "ResponsesOutputContentItem": {
+        "type": "object",
+        "description": "Responses API output content part.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Content part type, e.g. `output_text`."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content."
+          },
+          "annotations": {
+            "type": "array",
+            "description": "Annotation information array; typically an empty array if no annotations.",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "ResponsesCompactionRequest": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "description": "Context compaction request body.",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID to call."
+          },
+          "input": {
+            "description": "Input to compact. Can be a string or a structured input array.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponsesInputItem"
+                }
+              }
+            ]
+          },
+          "instructions": {
+            "description": "Compaction strategy instructions, e.g. which key information to preserve and which redundant content to remove.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "previous_response_id": {
+            "type": "string",
+            "description": "Previous response ID, used for compaction based on historical context."
+          }
+        }
+      },
+      "ResponsesCompactionResponse": {
+        "type": "object",
+        "description": "Context compaction response.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Compaction response ID."
+          },
+          "object": {
+            "type": "string",
+            "example": "response.compaction",
+            "description": "Object type, typically `response.compaction`."
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "Unix timestamp (seconds)."
+          },
+          "output": {
+            "type": "array",
+            "description": "Compacted output content.",
+            "items": {
+              "$ref": "#/components/schemas/ResponsesOutputItem"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      }
+    }
+  }
+}

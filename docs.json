@@ -103,6 +103,7 @@
                         "group": "阿里巴巴",
                         "pages": [
                           "zh-Hans/zmodelChat/ali/deepseek-v3.2",
+                          "zh-Hans/zmodelChat/ali/qwen3.5-flash",
                           "zh-Hans/zmodelChat/ali/qwen3.6-plus",
                           "zh-Hans/zmodelChat/ali/qwen3-coder-plus",
                           "zh-Hans/zmodelChat/ali/qwen3-max"
@@ -254,6 +255,7 @@
                         "group": "Alibaba",
                         "pages": [
                           "en/zmodelChat/ali/deepseek-v3.2",
+                          "en/zmodelChat/ali/qwen3.5-flash",
                           "en/zmodelChat/ali/qwen3.6-plus",
                           "en/zmodelChat/ali/qwen3-coder-plus",
                           "en/zmodelChat/ali/qwen3-max"
