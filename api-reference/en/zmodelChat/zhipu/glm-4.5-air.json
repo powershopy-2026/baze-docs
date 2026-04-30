@@ -144,7 +144,8 @@
                           "index": 0,
                           "message": {
                             "role": "assistant",
-                            "content": "A vector database is a data system designed to store and retrieve vector representations, commonly used for semantic search, recommendations, and RAG."
+                            "content": "A vector database is a data system designed to store and retrieve vector representations, commonly used for semantic search, recommendations, and RAG.",
+                            "reasoning_content": "Start with the definition, then add typical use cases."
                           },
                           "finish_reason": "stop"
                         }
