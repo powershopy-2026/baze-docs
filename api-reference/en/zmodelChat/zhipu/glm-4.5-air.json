@@ -144,8 +144,7 @@
                           "index": 0,
                           "message": {
                             "role": "assistant",
-                            "content": "A vector database is a data system designed to store and retrieve vector representations, commonly used for semantic search, recommendations, and RAG.",
-                            "reasoning_content": "Start with the definition, then add typical use cases."
+                            "content": "A vector database is a data system designed to store and retrieve vector representations, commonly used for semantic search, recommendations, and RAG."
                           },
                           "finish_reason": "stop"
                         }
@@ -447,10 +446,6 @@
           "tool_call_id": {
             "type": "string",
             "description": "The tool call ID that this tool message corresponds to."
-          },
-          "reasoning_content": {
-            "type": "string",
-            "description": "Reasoning content from the previous turn. Only meaningful when preserving the chain of thought and passing back the full message history."
           }
         }
       },
@@ -625,10 +620,6 @@
             "type": "string",
             "nullable": true,
             "description": "Visible output content from the model. May be empty when a function call is triggered."
-          },
-          "reasoning_content": {
-            "type": "string",
-            "description": "Reasoning content. Only returned by models that support thinking mode."
           },
           "tool_calls": {
             "type": "array",
