@@ -382,7 +382,8 @@
           "max_tokens": {
             "type": "integer",
             "description": "最大输出 token 数。",
-            "minimum": 1
+            "minimum": 1,
+            "maximum": 131072
           },
           "stop": {
             "type": "array",
@@ -446,10 +447,6 @@
           "tool_call_id": {
             "type": "string",
             "description": "工具消息对应的工具调用 ID。"
-          },
-          "reasoning_content": {
-            "type": "string",
-            "description": "上轮思考内容。仅在保留思考链并完整回传历史消息时有意义。"
           }
         }
       },
@@ -625,10 +622,6 @@
             "nullable": true,
             "description": "模型可见输出内容。命中函数调用时该字段可能为空。"
           },
-          "reasoning_content": {
-            "type": "string",
-            "description": "思考内容。仅部分支持 thinking 的模型返回。"
-          },
           "tool_calls": {
             "type": "array",
             "description": "模型生成的函数调用信息。",
@@ -640,6 +633,11 @@
       },
       "ToolCall": {
         "type": "object",
+        "required": [
+          "id",
+          "type",
+          "function"
+        ],
         "description": "模型返回的工具调用信息。",
         "properties": {
           "id": {
@@ -657,6 +655,10 @@
       },
       "FunctionCall": {
         "type": "object",
+        "required": [
+          "name",
+          "arguments"
+        ],
         "description": "模型生成的函数调用。",
         "properties": {
           "name": {
