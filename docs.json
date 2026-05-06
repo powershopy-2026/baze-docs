@@ -42,9 +42,12 @@
                       {
                         "group": "字节",
                         "pages": [
-                          "zh-Hans/zmodelImage/byteplus/sendream-4-0",
-                          "zh-Hans/zmodelImage/byteplus/sendream-4-5",
-                          "zh-Hans/zmodelImage/byteplus/sendream-5-0"
+                          "zh-Hans/zmodelImage/byteplus/seedream-4-0-text-to-image",
+                          "zh-Hans/zmodelImage/byteplus/seedream-4-0-image-to-image",
+                          "zh-Hans/zmodelImage/byteplus/seedream-4-5-text-to-image",
+                          "zh-Hans/zmodelImage/byteplus/seedream-4-5-image-to-image",
+                          "zh-Hans/zmodelImage/byteplus/seedream-5-0-text-to-image",
+                          "zh-Hans/zmodelImage/byteplus/seedream-5-0-image-to-image"
                         ]
                       }
                     ]
@@ -77,11 +80,23 @@
                       {
                         "group": "字节",
                         "pages": [
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro",
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast",
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast"
+                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast-first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video"
                         ]
                       },
                       "zh-Hans/zmodelVideo/minimax/download-video-file",
@@ -195,9 +210,12 @@
                       {
                         "group": "BytePlus",
                         "pages": [
-                          "en/zmodelImage/byteplus/sendream-4-0",
-                          "en/zmodelImage/byteplus/sendream-4-5",
-                          "en/zmodelImage/byteplus/sendream-5-0"
+                          "en/zmodelImage/byteplus/seedream-4-0-text-to-image",
+                          "en/zmodelImage/byteplus/seedream-4-0-image-to-image",
+                          "en/zmodelImage/byteplus/seedream-4-5-text-to-image",
+                          "en/zmodelImage/byteplus/seedream-4-5-image-to-image",
+                          "en/zmodelImage/byteplus/seedream-5-0-text-to-image",
+                          "en/zmodelImage/byteplus/seedream-5-0-image-to-image"
                         ]
                       }
                     ]
@@ -230,11 +248,23 @@
                       {
                         "group": "BytePlus",
                         "pages": [
-                          "en/zmodelVideo/byteplus/seedance-1-0-pro",
-                          "en/zmodelVideo/byteplus/seedance-1-0-pro-fast",
-                          "en/zmodelVideo/byteplus/seedance-1-5-pro",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast"
+                          "en/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
+                          "en/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
+                          "en/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
+                          "en/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
+                          "en/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
+                          "en/zmodelVideo/byteplus/seedance-1-0-pro-fast-first-last-frame-to-video",
+                          "en/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
+                          "en/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
+                          "en/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video"
                         ]
                       },
                       "en/zmodelVideo/minimax/download-video-file",
