@@ -447,10 +447,6 @@
           "tool_call_id": {
             "type": "string",
             "description": "The tool call ID that this tool message corresponds to."
-          },
-          "reasoning_content": {
-            "type": "string",
-            "description": "Reasoning content from the previous turn. Only meaningful when preserving the chain of thought and passing back the full message history."
           }
         }
       },
