@@ -570,10 +570,9 @@
             "type": "string",
             "enum": [
               "enabled",
-              "disabled",
-              "auto"
+              "disabled"
             ],
-            "description": "思考模式。`enabled` 强制思考，`disabled` 直接回答，`auto` 由模型自行判断。"
+            "description": "思考模式。`enabled` 强制思考，`disabled` 直接回答。"
           }
         }
       },

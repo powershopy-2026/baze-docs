@@ -570,10 +570,9 @@
             "type": "string",
             "enum": [
               "enabled",
-              "disabled",
-              "auto"
+              "disabled"
             ],
-            "description": "Thinking mode. `enabled` forces thinking, `disabled` answers directly, `auto` lets the model decide."
+            "description": "Thinking mode. `enabled` forces thinking, `disabled` answers directly."
           }
         }
       },
