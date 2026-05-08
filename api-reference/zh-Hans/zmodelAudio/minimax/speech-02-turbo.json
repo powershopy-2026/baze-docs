@@ -2105,11 +2105,17 @@
             "type": "number",
             "description": "语速，会映射到上游 `voice_setting.speed`。",
             "minimum": 0.5,
-            "maximum": 2
+            "maximum": 2,
+            "default": 1
           },
           "response_format": {
             "type": "string",
-            "description": "目标音频编码格式，会映射到上游 `audio_setting.format`。常见值包括 `mp3`、`wav`、`pcm`。"
+            "description": "目标音频编码格式，会映射到上游 `audio_setting.format`。常见值包括 `mp3`、`wav`、`pcm`。",
+            "enum": [
+              "mp3",
+              "wav",
+              "pcm"
+            ]
           },
           "stream_format": {
             "type": "string",

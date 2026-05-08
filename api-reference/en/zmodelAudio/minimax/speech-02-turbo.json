@@ -2105,11 +2105,17 @@
             "type": "number",
             "description": "Speaking rate. Mapped to upstream `voice_setting.speed`.",
             "minimum": 0.5,
-            "maximum": 2
+            "maximum": 2,
+            "default": 1
           },
           "response_format": {
             "type": "string",
-            "description": "Target audio encoding format, mapped to upstream `audio_setting.format`. Common values include `mp3`, `wav`, and `pcm`."
+            "description": "Target audio encoding format, mapped to upstream `audio_setting.format`. Common values include `mp3`, `wav`, and `pcm`.",
+            "enum": [
+              "mp3",
+              "wav",
+              "pcm"
+            ]
           },
           "stream_format": {
             "type": "string",
