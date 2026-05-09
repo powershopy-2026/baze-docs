@@ -465,7 +465,8 @@
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a watermark. The default value is `false`."
+            "description": "Whether to add a watermark. The default value is `false`.",
+            "default": false
           },
           "seed": {
             "type": "integer",

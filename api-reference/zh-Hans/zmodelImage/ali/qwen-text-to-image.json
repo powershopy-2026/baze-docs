@@ -249,7 +249,8 @@
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。显式传 `false` 会保留并映射到上游 `parameters.watermark`。"
+            "description": "是否添加水印。显式传 `false` 会保留并映射到上游 `parameters.watermark`。",
+            "default": false
           },
           "seed": {
             "type": "integer",
@@ -337,7 +338,8 @@
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。显式传 `false` 会保留并传给上游。"
+            "description": "是否添加水印。显式传 `false` 会保留并传给上游。",
+            "default": false
           },
           "seed": {
             "type": "integer",

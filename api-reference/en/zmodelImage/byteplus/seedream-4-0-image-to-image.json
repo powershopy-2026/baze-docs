@@ -265,14 +265,14 @@
                 "description": "The maximum number of images allowed to be generated in this request. Note: the sum of reference images and finally generated images should not exceed 15.",
                 "minimum": 1,
                 "maximum": 15,
-                "default": 15
+                "default": 3
               }
             }
           },
           "watermark": {
             "type": "boolean",
             "description": "Whether to add a watermark.",
-            "default": true
+            "default": false
           }
         }
       },

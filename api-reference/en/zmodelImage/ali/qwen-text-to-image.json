@@ -249,7 +249,8 @@
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a watermark. Explicitly passing `false` is preserved and mapped to upstream `parameters.watermark`."
+            "description": "Whether to add a watermark. Explicitly passing `false` is preserved and mapped to upstream `parameters.watermark`.",
+            "default": false
           },
           "seed": {
             "type": "integer",
@@ -337,7 +338,8 @@
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a watermark. Explicitly passing `false` is preserved and forwarded to the upstream provider."
+            "description": "Whether to add a watermark. Explicitly passing `false` is preserved and forwarded to the upstream provider.",
+            "default": false
           },
           "seed": {
             "type": "integer",

@@ -254,14 +254,14 @@
                 "description": "本次请求最多允许生成的图片数量。取值范围 1-15。",
                 "minimum": 1,
                 "maximum": 15,
-                "default": 15
+                "default": 3
               }
             }
           },
           "watermark": {
             "type": "boolean",
             "description": "是否添加水印。",
-            "default": true
+            "default": false
           }
         }
       },

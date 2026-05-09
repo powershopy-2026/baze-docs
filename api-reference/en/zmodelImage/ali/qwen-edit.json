@@ -255,7 +255,8 @@
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a watermark. The gateway maps this to upstream `parameters.watermark`."
+            "description": "Whether to add a watermark. The gateway maps this to upstream `parameters.watermark`.",
+            "default": false
           },
           "prompt_extend": {
             "type": "boolean",
@@ -356,8 +357,8 @@
           },
           "watermark": {
             "type": "boolean",
-            "default": false,
-            "description": "Whether to add a watermark."
+            "description": "Whether to add a watermark.",
+            "default": false
           },
           "prompt_extend": {
             "type": "boolean",
