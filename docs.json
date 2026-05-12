@@ -106,6 +106,7 @@
                   {
                     "group": "聊天模型",
                     "pages": [
+                      "zh-Hans/zmodelChat/claude",
                       {
                         "group": "MiniMax",
                         "pages": [
