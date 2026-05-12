@@ -3,7 +3,7 @@
   "info": {
     "title": "Claude 消息接口",
     "version": "1.0.0",
-    "description": "完全兼容 Claude Messages API 格式<br>支持多轮对话和单次查询<br>支持文本、图像等多模态内容"
+    "description": "完全兼容 Claude Messages API 格式<br />支持多轮对话和单次查询<br>支持文本、图像等多模态内容"
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/v1/messages": {
       "post": {
         "summary": "Claude 消息接口",
-        "description": "完全兼容 Claude Messages API 格式<br>支持多轮对话和单次查询<br>支持文本、图像等多模态内容",
+        "description": "完全兼容 Claude Messages API 格式<br />支持多轮对话和单次查询<br />支持文本、图像等多模态内容",
         "operationId": "createClaudeMessage",
         "tags": [
           "Claude 消息"

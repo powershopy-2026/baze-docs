@@ -246,7 +246,7 @@
           },
           "seconds": {
             "type": "string",
-            "description": "目标视频时长，单位秒。",
+            "description": "目标视频时长，单位秒。1080P仅支持10秒",
             "enum": [
               "6",
               "10"
