@@ -239,8 +239,8 @@
             "description": "输出图像分辨率，格式为 `宽x高` 或 `宽*高`。网关会转换并映射到上游 `parameters.size`。",
             "x-options": [
               {
-                "label": "500*500",
-                "value": "500*500"
+                "label": "512*512",
+                "value": "512*512"
               },
               {
                 "label": "1K",
@@ -251,7 +251,7 @@
                 "value": "2000*2000"
               }
             ],
-            "default": "500*500"
+            "default": "512*512"
           },
           "watermark": {
             "type": "boolean",
@@ -341,8 +341,8 @@
             "description": "输出图像分辨率，格式为 `宽*高`。",
             "x-options": [
               {
-                "label": "500*500",
-                "value": "500*500"
+                "label": "512*512",
+                "value": "512*512"
               },
               {
                 "label": "1K",
@@ -353,7 +353,7 @@
                 "value": "2000*2000"
               }
             ],
-            "default": "500*500"
+            "default": "512*512"
           },
           "watermark": {
             "type": "boolean",
