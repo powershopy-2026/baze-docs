@@ -1,30 +1,30 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Claude 消息接口",
+    "title": "Claude Messages API",
     "version": "1.0.0",
-    "description": "完全兼容 Claude Messages API 格式\n支持多轮对话和单次查询\n支持文本、图像等多模态内容"
+    "description": "Fully compatible with Claude Messages API format\nSupports multi-turn conversations and single queries\nSupports text, image, and other multimodal content"
   },
   "servers": [
     {
       "url": "/",
-      "description": "当前网关实例"
+      "description": "Current gateway instance"
     }
   ],
   "tags": [
     {
-      "name": "Claude 消息",
-      "description": "原生 Claude 兼容消息"
+      "name": "Claude Messages",
+      "description": "Native Claude-compatible messages"
     }
   ],
   "paths": {
     "/v1/messages": {
       "post": {
-        "summary": "Claude 消息接口",
-        "description": "完全兼容 Claude Messages API 格式\n支持多轮对话和单次查询\n支持文本、图像等多模态内容",
+        "summary": "Claude Messages API",
+        "description": "Fully compatible with Claude Messages API format\nSupports multi-turn conversations and single queries\nSupports text, image, and other multimodal content",
         "operationId": "createClaudeMessage",
         "tags": [
-          "Claude 消息"
+          "Claude Messages"
         ],
         "parameters": [
           {
@@ -35,7 +35,7 @@
               "type": "string",
               "default": "2023-06-01"
             },
-            "description": "API版本号\n指定要使用的Claude API版本"
+            "description": "API version header\nSpecifies the Claude API version to use"
           },
           {
             "name": "anthropic-beta",
@@ -44,7 +44,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "可选的 Claude beta 功能头，提供时转发。"
+            "description": "Optional Claude beta feature header, forwarded when provided."
           }
         ],
         "requestBody": {
@@ -56,7 +56,7 @@
               },
               "examples": {
                 "glmBasic": {
-                  "summary": "GLM Claude 请求",
+                  "summary": "GLM Claude Request",
                   "value": {
                     "model": "glm-4.7",
                     "messages": [
@@ -74,7 +74,7 @@
         },
         "responses": {
           "200": {
-            "description": "Claude 兼容响应。",
+            "description": "Claude-compatible response.",
             "content": {
               "application/json": {
                 "schema": {
@@ -84,13 +84,13 @@
               "text/event-stream": {
                 "schema": {
                   "type": "string",
-                  "description": "当 `stream` 为 true 时的 Claude 风格 SSE 流。"
+                  "description": "Claude-style SSE stream when `stream` is true."
                 }
               }
             }
           },
           "400": {
-            "description": "无效的请求体或上游验证失败。",
+            "description": "Invalid request body or upstream validation failure.",
             "content": {
               "application/json": {
                 "schema": {
@@ -113,7 +113,7 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "API密钥用于身份验证"
+        "description": "API key for authentication"
       }
     },
     "schemas": {
@@ -138,11 +138,11 @@
               "MiniMax-M2.5-highspeed",
               "MiniMax-M2.7-highspeed"
             ],
-            "description": "模型名称"
+            "description": "Model name"
           },
           "messages": {
             "type": "array",
-            "description": "消息列表\n消息数组，模型会基于这些消息生成下一条回复。每条消息包含 role 和 content 两个字段。",
+            "description": "Message list\nAn array of messages that the model will use to generate the next reply. Each message contains `role` and `content` fields.",
             "items": {
               "$ref": "#/components/schemas/ClaudeMessage"
             }
@@ -150,10 +150,10 @@
           "max_tokens": {
             "type": "integer",
             "minimum": 1,
-            "description": "最大生成token数\n生成停止前的最大token数量。模型可能会在达到此限制前停止。\n不同模型有不同的最大值，请参考模型文档。"
+            "description": "Maximum tokens to generate\nThe maximum number of tokens to generate before stopping. The model may stop before reaching this limit.\nDifferent models have different maximum values; refer to the model documentation."
           },
           "system": {
-            "description": "系统提示词\n系统提示词用于设置Claude的角色、个性、目标和指令。",
+            "description": "System prompt\nUsed to set Claude's role, personality, goals, and instructions.",
             "oneOf": [
               {
                 "type": "string"
@@ -168,22 +168,22 @@
           },
           "temperature": {
             "type": "number",
-            "description": "温度参数，范围 0-1\n控制输出的随机性：\n低值（如0.2）：更确定、更保守\n高值（如0.8）：更随机、更有创意"
+            "description": "Temperature parameter, range 0-1\nControls output randomness:\nLow values (e.g., 0.2): more deterministic, more conservative\nHigh values (e.g., 0.8): more random, more creative"
           },
           "top_p": {
             "type": "number",
-            "description": "核采样参数，范围 0-1\n使用nucleus sampling。建议使用 temperature 或 top_p 其中之一，不要同时使用。"
+            "description": "Nucleus sampling parameter, range 0-1\nUses nucleus sampling. It is recommended to use either temperature or top_p, not both."
           },
           "stop_sequences": {
             "type": "array",
-            "description": "停止序列\n自定义文本序列，遇到这些序列时模型将停止生成。",
+            "description": "Stop sequences\nCustom text sequences that will cause the model to stop generating when encountered.",
             "items": {
               "type": "string"
             }
           },
           "stream": {
             "type": "boolean",
-            "description": "是否启用流式输出"
+            "description": "Whether to enable streaming output"
           }
         },
         "additionalProperties": true
@@ -201,10 +201,10 @@
               "user",
               "assistant"
             ],
-            "description": "输入：user（用户消息）或 assistant（AI回复，用于多轮对话）"
+            "description": "Input: `user` (user message) or `assistant` (AI reply, for multi-turn conversations)"
           },
           "content": {
-            "description": "输入：你想说的话",
+            "description": "Input: the message content to send",
             "oneOf": [
               {
                 "type": "string"
@@ -227,11 +227,11 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "Claude 内容块类型。"
+            "description": "Claude content block type."
           },
           "text": {
             "type": "string",
-            "description": "`text` 块的文本。"
+            "description": "Text content for `text` blocks."
           },
           "cache_control": {
             "$ref": "#/components/schemas/CacheControl"
@@ -251,11 +251,11 @@
             "enum": [
               "text"
             ],
-            "description": "系统文本块类型。"
+            "description": "System text block type."
           },
           "text": {
             "type": "string",
-            "description": "系统指令文本。"
+            "description": "System instruction text."
           },
           "cache_control": {
             "$ref": "#/components/schemas/CacheControl"
@@ -267,14 +267,14 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "提示缓存控制类型。"
+            "description": "Prompt cache control type."
           }
         },
-        "description": "提示缓存元数据"
+        "description": "Prompt cache metadata"
       },
       "ClaudeMessagesResponse": {
         "type": "object",
-        "description": "上游提供商返回的 Claude 兼容消息响应。",
+        "description": "Claude-compatible message response returned by the upstream provider.",
         "additionalProperties": true
       },
       "ClaudeErrorResponse": {
@@ -292,11 +292,11 @@
             "properties": {
               "type": {
                 "type": "string",
-                "description": "Claude 风格的错误类型。"
+                "description": "Claude-style error type."
               },
               "message": {
                 "type": "string",
-                "description": "人类可读的错误消息。"
+                "description": "Human-readable error message."
               }
             }
           }
