@@ -254,7 +254,7 @@
           },
           "seconds": {
             "type": "string",
-            "description": "Target video duration in seconds. 1080P only supports 10 seconds.",
+            "description": "Target video duration in seconds. (1080P only supports 6 seconds.)",
             "enum": [
               "6",
               "10"
