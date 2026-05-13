@@ -246,6 +246,36 @@
             "type": "string",
             "description": "Optional text prompt. When omitted, generation relies primarily on the input media assets."
           },
+          "size": {
+            "type": "string",
+            "enum": [
+              "720P",
+              "1080P"
+            ],
+            "description": "Supported output resolution tiers.",
+            "default": "1080P"
+          },
+          "seconds": {
+            "type": "string",
+            "description": "Video duration as a string. Supports integer strings from `2` to `15`.",
+            "default": "5",
+            "enum": [
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15"
+            ]
+          },
           "negative_prompt": {
             "type": "string",
             "description": "Optional negative prompt describing content you do not want in the video."
@@ -271,36 +301,6 @@
             "items": {
               "$ref": "#/components/schemas/Wan27MediaInput"
             }
-          },
-          "seconds": {
-            "type": "string",
-            "description": "Video duration as a string. Supports integer strings from `2` to `15`.",
-            "default": "5",
-            "enum": [
-              "2",
-              "3",
-              "4",
-              "5",
-              "6",
-              "7",
-              "8",
-              "9",
-              "10",
-              "11",
-              "12",
-              "13",
-              "14",
-              "15"
-            ]
-          },
-          "size": {
-            "type": "string",
-            "enum": [
-              "720P",
-              "1080P"
-            ],
-            "description": "Supported output resolution tiers.",
-            "default": "1080P"
           }
         }
       },
