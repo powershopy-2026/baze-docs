@@ -1,0 +1,311 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Hailuo Text to Video",
+    "version": "1.0.0",
+    "description": "Hailuo series Text to Video capability documentation. The unified API endpoint is `/v1/videos`, used to create asynchronous video generation tasks.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Hailuo Video",
+      "description": "Hailuo series video generation capability"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "Hailuo Text to Video",
+        "description": "Applies to `MiniMax-Hailuo-02` Text to Video model. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `prompt`, `seconds`, `size`.",
+        "operationId": "minimaxTextToVideo",
+        "tags": [
+          "Hailuo Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToVideoRequest"
+              },
+              "examples": {
+                "basic_request": {
+                  "summary": "Basic Text to Video request",
+                  "value": {
+                    "model": "MiniMax-Hailuo-02",
+                    "prompt": "A woman walks through a neon street in the rain.",
+                    "seconds": "6",
+                    "size": "1080P"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submitted successfully. Returns an OpenAI-compatible video task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAIVideo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters, e.g. missing `prompt` or using a model that does not support Text to Video.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Parameter error",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "Malformed request body or invalid field value",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, e.g. missing or invalid token."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "Request body too large",
+                    "value": {
+                      "code": "read_request_body_failed",
+                      "message": "Request body too large, please reduce the input and retry",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Request body too large."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient account quota, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limit triggered or insufficient account quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing failure",
+                    "value": {
+                      "code": "gen_relay_info_failed",
+                      "message": "Internal processing failed, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "An internal error occurred while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Upstream provider response error",
+                    "value": {
+                      "code": "bad_response_status_code",
+                      "message": "The upstream provider returned an invalid response",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream provider returned an abnormal response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service temporarily unavailable",
+                    "value": {
+                      "code": "get_channel_failed",
+                      "message": "No available channel for the current model, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TextToVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "MiniMax-Hailuo-02"
+            ],
+            "description": "Model name for this capability."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Video prompt.",
+            "maxLength": 2000
+          },
+          "seconds": {
+            "type": "string",
+            "description": "Target video duration in seconds. (1080P only supports 6 seconds.)",
+            "enum": [
+              "6",
+              "10"
+            ],
+            "x-linkage": {
+              "size": {
+                "1080P": [
+                  "6"
+                ]
+              }
+            }
+          },
+          "size": {
+            "type": "string",
+            "description": "Target output resolution. Text to Video models currently support `768P` and `1080P`.",
+            "enum": [
+              "768P",
+              "1080P"
+            ]
+          }
+        }
+      },
+      "OpenAIVideo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "example": "queued"
+          },
+          "progress": {
+            "type": "integer",
+            "example": 0
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {}
+        }
+      }
+    }
+  }
+}

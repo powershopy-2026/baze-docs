@@ -1,0 +1,451 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wan 文生图",
+    "version": "1.0.0",
+    "description": "阿里 Wan 文生图能力文档。公开统一入口为 `/v1/images/generations`，当前文档描述 `wan2.7-image-pro` 对外公开的网关契约：保留 `input.messages[].content[].text` 承载提示词，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan Image",
+      "description": "Wan 文生图能力"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "Wan 文生图",
+        "description": "调用 Ali `wan2.7-image-pro` 执行文生图。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `size`、`n`、`watermark`、`thinking_mode`、`enable_sequential`、`color_palette`、`seed` 设计为顶层字段。提示词位于 `input.messages[0].content[0].text`。请求体不接受顶层 `parameters`。",
+        "operationId": "aliWanTextToImage",
+        "tags": [
+          "Wan Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WanTextToImageRequest"
+              },
+              "examples": {
+                "basic_generation": {
+                  "summary": "基础文生图",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "size": "2K",
+                    "n": 1,
+                    "watermark": false,
+                    "thinking_mode": true,
+                    "seed": 0
+                  }
+                },
+                "sequential_generation": {
+                  "summary": "组图生成",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "response_format": "url",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "电影感组图，记录同一只流浪橘猫，特征必须前后一致。第一张：春天，橘猫穿梭在盛开的樱花树下；第二张：夏天，橘猫在老街的树荫下乘凉避暑；第三张：秋天，橘猫踩在满地的金色落叶上；第四张：冬天，橘猫在雪地上走留下足迹。"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "enable_sequential": true,
+                    "n": 4,
+                    "size": "2K",
+                    "color_palette": [
+                      {
+                        "hex": "#C2D1E6",
+                        "ratio": "23.51%"
+                      },
+                      {
+                        "hex": "#CDD8E9",
+                        "ratio": "20.13%"
+                      },
+                      {
+                        "hex": "#B5C8DB",
+                        "ratio": "15.88%"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功，返回图像生成结果。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "请求体过大。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游服务返回异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "WanTextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-image-pro"
+            ],
+            "description": "文生图模型名称。"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "统一响应格式。",
+            "default": "url"
+          },
+          "input": {
+            "$ref": "#/components/schemas/WanTextToImageInput"
+          },
+          "size": {
+            "type": "string",
+            "description": "输出图片分辨率规格，例如 `1K`、`2K`、`4K`，或显式宽高像素值。网关会映射到上游 `parameters.size`。",
+            "x-enum": [
+              "1K",
+              "2K",
+              "4K"
+            ],
+            "default": "1K"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "输出图片数量。关闭组图模式时范围为 1-4，开启组图模式时范围为 1-12。网关会映射到上游 `parameters.n`。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印。显式传 `false` 会保留并映射到上游 `parameters.watermark`。",
+            "default": false
+          },
+          "thinking_mode": {
+            "type": "boolean",
+            "description": "是否开启思考模式。网关会映射到上游 `parameters.thinking_mode`。"
+          },
+          "enable_sequential": {
+            "type": "boolean",
+            "description": "是否开启组图输出模式。网关会映射到上游 `parameters.enable_sequential`。"
+          },
+          "color_palette": {
+            "type": "array",
+            "description": "自定义颜色主题。网关会映射到上游 `parameters.color_palette`。",
+            "items": {
+              "$ref": "#/components/schemas/WanColorPaletteItem"
+            }
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "随机种子。显式传 `0` 会保留并映射到上游 `parameters.seed`。",
+            "default": 0,
+            "minimum": 0
+          }
+        }
+      },
+      "WanTextToImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "当前仅支持单轮消息。",
+            "items": {
+              "$ref": "#/components/schemas/WanTextToImageMessage"
+            }
+          }
+        }
+      },
+      "WanTextToImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "固定为 `user`。"
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "仅支持一个文本内容项。",
+            "items": {
+              "$ref": "#/components/schemas/WanTextToImageContentItem"
+            }
+          }
+        }
+      },
+      "WanTextToImageContentItem": {
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "文生图提示词。"
+          }
+        }
+      },
+      "WanTextToImageParameters": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "string",
+            "description": "输出图片分辨率规格，例如 `1K`、`2K`、`4K`，或显式宽高像素值。"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12,
+            "description": "输出图片数量。关闭组图模式时范围为 1-4，开启组图模式时范围为 1-12。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印。显式传 `false` 会保留并传给上游。",
+            "default": false
+          },
+          "thinking_mode": {
+            "type": "boolean",
+            "description": "是否开启思考模式。仅在关闭组图模式且无图片输入时生效。"
+          },
+          "enable_sequential": {
+            "type": "boolean",
+            "description": "是否开启组图输出模式。"
+          },
+          "color_palette": {
+            "type": "array",
+            "description": "自定义颜色主题。",
+            "items": {
+              "$ref": "#/components/schemas/WanColorPaletteItem"
+            }
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "随机种子。显式传 `0` 会保留并传给上游。"
+          }
+        }
+      },
+      "WanColorPaletteItem": {
+        "type": "object",
+        "required": [
+          "hex",
+          "ratio"
+        ],
+        "properties": {
+          "hex": {
+            "type": "string",
+            "description": "十六进制颜色值。"
+          },
+          "ratio": {
+            "type": "string",
+            "description": "颜色占比，例如 `23.51%`。"
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "响应生成时间戳。"
+          },
+          "data": {
+            "type": "array",
+            "description": "生成后的图片结果列表。",
+            "items": {
+              "$ref": "#/components/schemas/ImageData"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "透传的上游原始响应元数据。"
+          }
+        }
+      },
+      "ImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "当结果以 URL 返回时使用。"
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "当结果以 Base64 返回时使用。"
+          },
+          "revised_prompt": {
+            "type": "string",
+            "description": "上游返回的改写提示词。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

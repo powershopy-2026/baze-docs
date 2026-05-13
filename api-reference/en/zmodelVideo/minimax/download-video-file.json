@@ -1,0 +1,199 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Download Video File",
+    "version": "1.0.0",
+    "description": "Asynchronous video file download documentation. The unified API endpoint is `/v1/videos/{task_id}/content`, used to download the final video file after a task completes.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Hailuo Video",
+      "description": "Hailuo video file download"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}/content": {
+      "get": {
+        "summary": "Download Video File",
+        "description": "Download the final video file after an asynchronous video task completes.\n\nUse this endpoint when you need to obtain the media file directly, rather than handling a temporary result URL.",
+        "operationId": "minimaxDownloadVideoFile",
+        "tags": [
+          "Hailuo Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Public video task ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download successful. Returns the video binary stream directly.",
+            "content": {
+              "video/mp4": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task does not exist, or the task has not yet produced downloadable content.",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "code": "task_not_found",
+                      "message": "Task does not exist or has expired",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "task_not_ready": {
+                    "summary": "Task not completed",
+                    "value": {
+                      "code": "task_not_ready",
+                      "message": "Task has not completed yet and cannot be downloaded",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Task has not completed yet and cannot be downloaded."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Authentication failed, e.g. missing or invalid token."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient account quota, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Rate limit triggered or insufficient account quota."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing failure",
+                    "value": {
+                      "code": "gen_relay_info_failed",
+                      "message": "Internal processing failed, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "An internal error occurred while processing the request."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Upstream provider response error",
+                    "value": {
+                      "code": "bad_response_status_code",
+                      "message": "The upstream provider returned an invalid response",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream provider returned an abnormal response."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service temporarily unavailable",
+                    "value": {
+                      "code": "get_channel_failed",
+                      "message": "No available channel for the current model, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            },
+            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

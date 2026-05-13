@@ -1,0 +1,2177 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "speech-02-hd Text-to-Speech",
+    "version": "1.0.0",
+    "description": "Customer-facing documentation for the historical MiniMax (`type=35`) text-to-speech channel. The public endpoint is `/v1/audio/speech`, backed by upstream `POST /v1/t2a_v2`.\n\nThis document only describes the official field subset that is currently implemented on this gateway for the historical MiniMax channel: `model`, `input`, `voice`, `speed`, `response_format`, `stream_format`, and `metadata.output_format`.\n\nTo keep the unified project-level contract stable, non-streaming requests always return `302 Found + Location`. As a result, the currently exposed non-streaming `metadata.output_format` value is limited to `url`. Streaming is enabled by any non-empty `stream_format` and returns `text/event-stream`.\n\nProject billing note: the gateway maps upstream `extra_info.usage_characters` to unified `usage.prompt_tokens_details.audio_tokens`, and when Internal Pricing uses `quota_type=3`, `model_price` is interpreted as the price per 1K input characters."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API service endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Audio",
+      "description": "Historical MiniMax text-to-speech capability"
+    }
+  ],
+  "paths": {
+    "/v1/audio/speech": {
+      "post": {
+        "summary": "MiniMax text-to-speech",
+        "description": "Call the historical MiniMax `t2a_v2` capability through the unified `/v1/audio/speech` endpoint.\n\nStable model: `speech-02-hd`.",
+        "operationId": "minimaxAudioSpeech",
+        "tags": [
+          "MiniMax Audio"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MiniMaxSpeechRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "Non-streaming request",
+                  "value": {
+                    "model": "speech-02-hd",
+                    "input": "Summarize today's system status in a natural tone.",
+                    "voice": "Chinese (Mandarin)_Lyrical_Voice",
+                    "response_format": "mp3",
+                    "metadata": {
+                      "output_format": "url"
+                    }
+                  }
+                },
+                "stream": {
+                  "summary": "Streaming request",
+                  "value": {
+                    "model": "speech-02-hd",
+                    "input": "Read this sentence in a calm voice.",
+                    "voice": "English_Graceful_Lady",
+                    "speed": 1,
+                    "response_format": "wav",
+                    "stream_format": "pcm"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Streaming success. Returns MiniMax SSE payloads. For internal settlement, the gateway reads `extra_info.usage_characters` as the unified input audio character count.",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE payload. Each `data:` event can be parsed as a MiniMax response chunk containing `data.audio`, `trace_id`, and `base_resp`."
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Non-streaming success. The `Location` header points to a temporary audio file URL. For internal settlement, the gateway reads `extra_info.usage_characters` as the unified input audio character count.",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters, or extension fields that conflict with the unified gateway contract.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token"
+      }
+    },
+    "schemas": {
+      "MiniMaxSpeechRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input",
+          "voice"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "speech-02-hd"
+            ]
+          },
+          "input": {
+            "type": "string",
+            "description": "Input text to synthesize.",
+            "maxLength": 10000
+          },
+          "voice": {
+            "type": "string",
+            "description": "Voice name. Mapped to upstream `voice_setting.voice_id`.",
+            "enum": [
+              "male-qn-qingse",
+              "male-qn-jingying",
+              "male-qn-badao",
+              "male-qn-daxuesheng",
+              "female-shaonv",
+              "female-yujie",
+              "female-chengshu",
+              "female-tianmei",
+              "male-qn-qingse-jingpin",
+              "male-qn-jingying-jingpin",
+              "male-qn-badao-jingpin",
+              "male-qn-daxuesheng-jingpin",
+              "female-shaonv-jingpin",
+              "female-yujie-jingpin",
+              "female-chengshu-jingpin",
+              "female-tianmei-jingpin",
+              "clever_boy",
+              "cute_boy",
+              "lovely_girl",
+              "cartoon_pig",
+              "bingjiao_didi",
+              "junlang_nanyou",
+              "chunzhen_xuedi",
+              "lengdan_xiongzhang",
+              "badao_shaoye",
+              "tianxin_xiaoling",
+              "qiaopi_mengmei",
+              "wumei_yujie",
+              "diadia_xuemei",
+              "danya_xuejie",
+              "Chinese (Mandarin)_Reliable_Executive",
+              "Chinese (Mandarin)_News_Anchor",
+              "Chinese (Mandarin)_Mature_Woman",
+              "Chinese (Mandarin)_Unrestrained_Young_Man",
+              "Arrogant_Miss",
+              "Robot_Armor",
+              "Chinese (Mandarin)_Kind-hearted_Antie",
+              "Chinese (Mandarin)_HK_Flight_Attendant",
+              "Chinese (Mandarin)_Humorous_Elder",
+              "Chinese (Mandarin)_Gentleman",
+              "Chinese (Mandarin)_Warm_Bestie",
+              "Chinese (Mandarin)_Male_Announcer",
+              "Chinese (Mandarin)_Sweet_Lady",
+              "Chinese (Mandarin)_Southern_Young_Man",
+              "Chinese (Mandarin)_Wise_Women",
+              "Chinese (Mandarin)_Gentle_Youth",
+              "Chinese (Mandarin)_Warm_Girl",
+              "Chinese (Mandarin)_Kind-hearted_Elder",
+              "Chinese (Mandarin)_Cute_Spirit",
+              "Chinese (Mandarin)_Radio_Host",
+              "Chinese (Mandarin)_Lyrical_Voice",
+              "Chinese (Mandarin)_Straightforward_Boy",
+              "Chinese (Mandarin)_Sincere_Adult",
+              "Chinese (Mandarin)_Gentle_Senior",
+              "Chinese (Mandarin)_Stubborn_Friend",
+              "Chinese (Mandarin)_Crisp_Girl",
+              "Chinese (Mandarin)_Pure-hearted_Boy",
+              "Chinese (Mandarin)_Soft_Girl",
+              "Cantonese_ProfessionalHost（F)",
+              "Cantonese_GentleLady",
+              "Cantonese_ProfessionalHost（M)",
+              "Cantonese_PlayfulMan",
+              "Cantonese_CuteGirl",
+              "Cantonese_KindWoman",
+              "Santa_Claus",
+              "Grinch",
+              "Rudolph",
+              "Arnold",
+              "Charming_Santa",
+              "Charming_Lady",
+              "Sweet_Girl",
+              "Cute_Elf",
+              "Attractive_Girl",
+              "Serene_Woman",
+              "English_Trustworthy_Man",
+              "English_Graceful_Lady",
+              "English_Aussie_Bloke",
+              "English_Whispering_girl",
+              "English_Diligent_Man",
+              "English_Gentle-voiced_man",
+              "Japanese_IntellectualSenior",
+              "Japanese_DecisivePrincess",
+              "Japanese_LoyalKnight",
+              "Japanese_DominantMan",
+              "Japanese_SeriousCommander",
+              "Japanese_ColdQueen",
+              "Japanese_DependableWoman",
+              "Japanese_GentleButler",
+              "Japanese_KindLady",
+              "Japanese_CalmLady",
+              "Japanese_OptimisticYouth",
+              "Japanese_GenerousIzakayaOwner",
+              "Japanese_SportyStudent",
+              "Japanese_InnocentBoy",
+              "Japanese_GracefulMaiden",
+              "Korean_SweetGirl",
+              "Korean_CheerfulBoyfriend",
+              "Korean_EnchantingSister",
+              "Korean_ShyGirl",
+              "Korean_ReliableSister",
+              "Korean_StrictBoss",
+              "Korean_SassyGirl",
+              "Korean_ChildhoodFriendGirl",
+              "Korean_PlayboyCharmer",
+              "Korean_ElegantPrincess",
+              "Korean_BraveFemaleWarrior",
+              "Korean_BraveYouth",
+              "Korean_CalmLady",
+              "Korean_EnthusiasticTeen",
+              "Korean_SoothingLady",
+              "Korean_IntellectualSenior",
+              "Korean_LonelyWarrior",
+              "Korean_MatureLady",
+              "Korean_InnocentBoy",
+              "Korean_CharmingSister",
+              "Korean_AthleticStudent",
+              "Korean_BraveAdventurer",
+              "Korean_CalmGentleman",
+              "Korean_WiseElf",
+              "Korean_CheerfulCoolJunior",
+              "Korean_DecisiveQueen",
+              "Korean_ColdYoungMan",
+              "Korean_MysteriousGirl",
+              "Korean_QuirkyGirl",
+              "Korean_ConsiderateSenior",
+              "Korean_CheerfulLittleSister",
+              "Korean_DominantMan",
+              "Korean_AirheadedGirl",
+              "Korean_ReliableYouth",
+              "Korean_FriendlyBigSister",
+              "Korean_GentleBoss",
+              "Korean_ColdGirl",
+              "Korean_HaughtyLady",
+              "Korean_CharmingElderSister",
+              "Korean_IntellectualMan",
+              "Korean_CaringWoman",
+              "Korean_WiseTeacher",
+              "Korean_ConfidentBoss",
+              "Korean_AthleticGirl",
+              "Korean_PossessiveMan",
+              "Korean_GentleWoman",
+              "Korean_CockyGuy",
+              "Korean_ThoughtfulWoman",
+              "Korean_OptimisticYouth",
+              "Spanish_SereneWoman",
+              "Spanish_MaturePartner",
+              "Spanish_CaptivatingStoryteller",
+              "Spanish_Narrator",
+              "Spanish_WiseScholar",
+              "Spanish_Kind-heartedGirl",
+              "Spanish_DeterminedManager",
+              "Spanish_BossyLeader",
+              "Spanish_ReservedYoungMan",
+              "Spanish_ConfidentWoman",
+              "Spanish_ThoughtfulMan",
+              "Spanish_Strong-WilledBoy",
+              "Spanish_SophisticatedLady",
+              "Spanish_RationalMan",
+              "Spanish_AnimeCharacter",
+              "Spanish_Deep-tonedMan",
+              "Spanish_Fussyhostess",
+              "Spanish_SincereTeen",
+              "Spanish_FrankLady",
+              "Spanish_Comedian",
+              "Spanish_Debator",
+              "Spanish_ToughBoss",
+              "Spanish_Wiselady",
+              "Spanish_Steadymentor",
+              "Spanish_Jovialman",
+              "Spanish_SantaClaus",
+              "Spanish_Rudolph",
+              "Spanish_Intonategirl",
+              "Spanish_Arnold",
+              "Spanish_Ghost",
+              "Spanish_HumorousElder",
+              "Spanish_EnergeticBoy",
+              "Spanish_WhimsicalGirl",
+              "Spanish_StrictBoss",
+              "Spanish_ReliableMan",
+              "Spanish_SereneElder",
+              "Spanish_AngryMan",
+              "Spanish_AssertiveQueen",
+              "Spanish_CaringGirlfriend",
+              "Spanish_PowerfulSoldier",
+              "Spanish_PassionateWarrior",
+              "Spanish_ChattyGirl",
+              "Spanish_RomanticHusband",
+              "Spanish_CompellingGirl",
+              "Spanish_PowerfulVeteran",
+              "Spanish_SensibleManager",
+              "Spanish_ThoughtfulLady",
+              "Portuguese_SentimentalLady",
+              "Portuguese_BossyLeader",
+              "Portuguese_Wiselady",
+              "Portuguese_Strong-WilledBoy",
+              "Portuguese_Deep-VoicedGentleman",
+              "Portuguese_UpsetGirl",
+              "Portuguese_PassionateWarrior",
+              "Portuguese_AnimeCharacter",
+              "Portuguese_ConfidentWoman",
+              "Portuguese_AngryMan",
+              "Portuguese_CaptivatingStoryteller",
+              "Portuguese_Godfather",
+              "Portuguese_ReservedYoungMan",
+              "Portuguese_SmartYoungGirl",
+              "Portuguese_Kind-heartedGirl",
+              "Portuguese_Pompouslady",
+              "Portuguese_Grinch",
+              "Portuguese_Debator",
+              "Portuguese_SweetGirl",
+              "Portuguese_AttractiveGirl",
+              "Portuguese_ThoughtfulMan",
+              "Portuguese_PlayfulGirl",
+              "Portuguese_GorgeousLady",
+              "Portuguese_LovelyLady",
+              "Portuguese_SereneWoman",
+              "Portuguese_SadTeen",
+              "Portuguese_MaturePartner",
+              "Portuguese_Comedian",
+              "Portuguese_NaughtySchoolgirl",
+              "Portuguese_Narrator",
+              "Portuguese_ToughBoss",
+              "Portuguese_Fussyhostess",
+              "Portuguese_Dramatist",
+              "Portuguese_Steadymentor",
+              "Portuguese_Jovialman",
+              "Portuguese_CharmingQueen",
+              "Portuguese_SantaClaus",
+              "Portuguese_Rudolph",
+              "Portuguese_Arnold",
+              "Portuguese_CharmingSanta",
+              "Portuguese_CharmingLady",
+              "Portuguese_Ghost",
+              "Portuguese_HumorousElder",
+              "Portuguese_CalmLeader",
+              "Portuguese_GentleTeacher",
+              "Portuguese_EnergeticBoy",
+              "Portuguese_ReliableMan",
+              "Portuguese_SereneElder",
+              "Portuguese_GrimReaper",
+              "Portuguese_AssertiveQueen",
+              "Portuguese_WhimsicalGirl",
+              "Portuguese_StressedLady",
+              "Portuguese_FriendlyNeighbor",
+              "Portuguese_CaringGirlfriend",
+              "Portuguese_PowerfulSoldier",
+              "Portuguese_FascinatingBoy",
+              "Portuguese_RomanticHusband",
+              "Portuguese_StrictBoss",
+              "Portuguese_InspiringLady",
+              "Portuguese_PlayfulSpirit",
+              "Portuguese_ElegantGirl",
+              "Portuguese_CompellingGirl",
+              "Portuguese_PowerfulVeteran",
+              "Portuguese_SensibleManager",
+              "Portuguese_ThoughtfulLady",
+              "Portuguese_TheatricalActor",
+              "Portuguese_FragileBoy",
+              "Portuguese_ChattyGirl",
+              "Portuguese_Conscientiousinstructor",
+              "Portuguese_RationalMan",
+              "Portuguese_WiseScholar",
+              "Portuguese_FrankLady",
+              "Portuguese_DeterminedManager",
+              "French_Male_Speech_New",
+              "French_Female_News Anchor",
+              "French_CasualMan",
+              "French_MovieLeadFemale",
+              "French_FemaleAnchor",
+              "French_MaleNarrator",
+              "Indonesian_SweetGirl",
+              "Indonesian_ReservedYoungMan",
+              "Indonesian_CharmingGirl",
+              "Indonesian_CalmWoman",
+              "Indonesian_ConfidentWoman",
+              "Indonesian_CaringMan",
+              "Indonesian_BossyLeader",
+              "Indonesian_DeterminedBoy",
+              "Indonesian_GentleGirl",
+              "German_FriendlyMan",
+              "German_SweetLady",
+              "German_PlayfulMan",
+              "Russian_HandsomeChildhoodFriend",
+              "Russian_BrightHeroine",
+              "Russian_AmbitiousWoman",
+              "Russian_ReliableMan",
+              "Russian_CrazyQueen",
+              "Russian_PessimisticGirl",
+              "Russian_AttractiveGuy",
+              "Russian_Bad-temperedBoy",
+              "Italian_BraveHeroine",
+              "Italian_Narrator",
+              "Italian_WanderingSorcerer",
+              "Italian_DiligentLeader",
+              "Arabic_CalmWoman",
+              "Arabic_FriendlyGuy",
+              "Turkish_CalmWoman",
+              "Turkish_Trustworthyman",
+              "Ukrainian_CalmWoman",
+              "Ukrainian_WiseScholar",
+              "Dutch_kindhearted_girl",
+              "Dutch_bossy_leader",
+              "Vietnamese_kindhearted_girl",
+              "Thai_male_1_sample8",
+              "Thai_male_2_sample2",
+              "Thai_female_1_sample1",
+              "Thai_female_2_sample2",
+              "Polish_male_1_sample4",
+              "Polish_male_2_sample3",
+              "Polish_female_1_sample1",
+              "Polish_female_2_sample3",
+              "Romanian_male_1_sample2",
+              "Romanian_male_2_sample1",
+              "Romanian_female_1_sample4",
+              "Romanian_female_2_sample1",
+              "greek_male_1a_v1",
+              "Greek_female_1_sample1",
+              "Greek_female_2_sample3",
+              "czech_male_1_v1",
+              "czech_female_5_v7",
+              "czech_female_2_v2",
+              "finnish_male_3_v1",
+              "finnish_male_1_v2",
+              "finnish_female_4_v1",
+              "hindi_male_1_v2",
+              "hindi_female_2_v1",
+              "hindi_female_1_v2"
+            ],
+            "x-options": [
+              {
+                "label": "Green Youth",
+                "value": "male-qn-qingse",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Elite Youth",
+                "value": "male-qn-jingying",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Authoritative Youth",
+                "value": "male-qn-badao",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "College Student",
+                "value": "male-qn-daxuesheng",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Young Girl",
+                "value": "female-shaonv",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Mature Lady",
+                "value": "female-yujie",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Mature Woman",
+                "value": "female-chengshu",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Sweet Female",
+                "value": "female-tianmei",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Green Youth (Beta)",
+                "value": "male-qn-qingse-jingpin",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Elite Youth (Beta)",
+                "value": "male-qn-jingying-jingpin",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Authoritative Youth (Beta)",
+                "value": "male-qn-badao-jingpin",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "College Student (Beta)",
+                "value": "male-qn-daxuesheng-jingpin",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Young Girl (Beta)",
+                "value": "female-shaonv-jingpin",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Mature Lady (Beta)",
+                "value": "female-yujie-jingpin",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Mature Woman (Beta)",
+                "value": "female-chengshu-jingpin",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Sweet Female (Beta)",
+                "value": "female-tianmei-jingpin",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Clever Boy",
+                "value": "clever_boy",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Cute Boy",
+                "value": "cute_boy",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Lovely Girl",
+                "value": "lovely_girl",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Cartoon Pig",
+                "value": "cartoon_pig",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Yandere Brother",
+                "value": "bingjiao_didi",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Handsome Boyfriend",
+                "value": "junlang_nanyou",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Innocent Junior",
+                "value": "chunzhen_xuedi",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Aloof Senior",
+                "value": "lengdan_xiongzhang",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Dominant Master",
+                "value": "badao_shaoye",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Sweetheart Xiaoling",
+                "value": "tianxin_xiaoling",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Playful Cutie",
+                "value": "qiaopi_mengmei",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Charming Lady",
+                "value": "wumei_yujie",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Coquettish Junior",
+                "value": "diadia_xuemei",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Elegant Senior",
+                "value": "danya_xuejie",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Reliable Executive",
+                "value": "Chinese (Mandarin)_Reliable_Executive",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "News Anchor",
+                "value": "Chinese (Mandarin)_News_Anchor",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Tsundere Lady",
+                "value": "Chinese (Mandarin)_Mature_Woman",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Unrestrained Youth",
+                "value": "Chinese (Mandarin)_Unrestrained_Young_Man",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Arrogant Miss",
+                "value": "Arrogant_Miss",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Robot Armor",
+                "value": "Robot_Armor",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Kind-hearted Auntie",
+                "value": "Chinese (Mandarin)_Kind-hearted_Antie",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "HK Flight Attendant",
+                "value": "Chinese (Mandarin)_HK_Flight_Attendant",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Humorous Elder",
+                "value": "Chinese (Mandarin)_Humorous_Elder",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Gentleman",
+                "value": "Chinese (Mandarin)_Gentleman",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Warm Bestie",
+                "value": "Chinese (Mandarin)_Warm_Bestie",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Male Announcer",
+                "value": "Chinese (Mandarin)_Male_Announcer",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Sweet Lady",
+                "value": "Chinese (Mandarin)_Sweet_Lady",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Southern Young Man",
+                "value": "Chinese (Mandarin)_Southern_Young_Man",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Wise Woman",
+                "value": "Chinese (Mandarin)_Wise_Women",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Gentle Youth",
+                "value": "Chinese (Mandarin)_Gentle_Youth",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Warm Girl",
+                "value": "Chinese (Mandarin)_Warm_Girl",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Kind-hearted Elder",
+                "value": "Chinese (Mandarin)_Kind-hearted_Elder",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Cute Spirit",
+                "value": "Chinese (Mandarin)_Cute_Spirit",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Radio Host",
+                "value": "Chinese (Mandarin)_Radio_Host",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Lyrical Voice",
+                "value": "Chinese (Mandarin)_Lyrical_Voice",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Straightforward Boy",
+                "value": "Chinese (Mandarin)_Straightforward_Boy",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Sincere Adult",
+                "value": "Chinese (Mandarin)_Sincere_Adult",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Gentle Senior",
+                "value": "Chinese (Mandarin)_Gentle_Senior",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Stubborn Friend",
+                "value": "Chinese (Mandarin)_Stubborn_Friend",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Crisp Girl",
+                "value": "Chinese (Mandarin)_Crisp_Girl",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Pure-hearted Boy",
+                "value": "Chinese (Mandarin)_Pure-hearted_Boy",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Soft Girl",
+                "value": "Chinese (Mandarin)_Soft_Girl",
+                "group": "Chinese (Mandarin)"
+              },
+              {
+                "label": "Professional Host (F)",
+                "value": "Cantonese_ProfessionalHost（F)",
+                "group": "Chinese (Cantonese)"
+              },
+              {
+                "label": "Gentle Lady",
+                "value": "Cantonese_GentleLady",
+                "group": "Chinese (Cantonese)"
+              },
+              {
+                "label": "Professional Host (M)",
+                "value": "Cantonese_ProfessionalHost（M)",
+                "group": "Chinese (Cantonese)"
+              },
+              {
+                "label": "Playful Man",
+                "value": "Cantonese_PlayfulMan",
+                "group": "Chinese (Cantonese)"
+              },
+              {
+                "label": "Cute Girl",
+                "value": "Cantonese_CuteGirl",
+                "group": "Chinese (Cantonese)"
+              },
+              {
+                "label": "Kind Woman",
+                "value": "Cantonese_KindWoman",
+                "group": "Chinese (Cantonese)"
+              },
+              {
+                "label": "Santa Claus",
+                "value": "Santa_Claus",
+                "group": "English"
+              },
+              {
+                "label": "Grinch",
+                "value": "Grinch",
+                "group": "English"
+              },
+              {
+                "label": "Rudolph",
+                "value": "Rudolph",
+                "group": "English"
+              },
+              {
+                "label": "Arnold",
+                "value": "Arnold",
+                "group": "English"
+              },
+              {
+                "label": "Charming Santa",
+                "value": "Charming_Santa",
+                "group": "English"
+              },
+              {
+                "label": "Charming Lady",
+                "value": "Charming_Lady",
+                "group": "English"
+              },
+              {
+                "label": "Sweet Girl",
+                "value": "Sweet_Girl",
+                "group": "English"
+              },
+              {
+                "label": "Cute Elf",
+                "value": "Cute_Elf",
+                "group": "English"
+              },
+              {
+                "label": "Attractive Girl",
+                "value": "Attractive_Girl",
+                "group": "English"
+              },
+              {
+                "label": "Serene Woman",
+                "value": "Serene_Woman",
+                "group": "English"
+              },
+              {
+                "label": "Trustworthy Man",
+                "value": "English_Trustworthy_Man",
+                "group": "English"
+              },
+              {
+                "label": "Graceful Lady",
+                "value": "English_Graceful_Lady",
+                "group": "English"
+              },
+              {
+                "label": "Aussie Bloke",
+                "value": "English_Aussie_Bloke",
+                "group": "English"
+              },
+              {
+                "label": "Whispering girl",
+                "value": "English_Whispering_girl",
+                "group": "English"
+              },
+              {
+                "label": "Diligent Man",
+                "value": "English_Diligent_Man",
+                "group": "English"
+              },
+              {
+                "label": "Gentle-voiced man",
+                "value": "English_Gentle-voiced_man",
+                "group": "English"
+              },
+              {
+                "label": "Intellectual Senior",
+                "value": "Japanese_IntellectualSenior",
+                "group": "Japanese"
+              },
+              {
+                "label": "Decisive Princess",
+                "value": "Japanese_DecisivePrincess",
+                "group": "Japanese"
+              },
+              {
+                "label": "Loyal Knight",
+                "value": "Japanese_LoyalKnight",
+                "group": "Japanese"
+              },
+              {
+                "label": "Dominant Man",
+                "value": "Japanese_DominantMan",
+                "group": "Japanese"
+              },
+              {
+                "label": "Serious Commander",
+                "value": "Japanese_SeriousCommander",
+                "group": "Japanese"
+              },
+              {
+                "label": "Cold Queen",
+                "value": "Japanese_ColdQueen",
+                "group": "Japanese"
+              },
+              {
+                "label": "Dependable Woman",
+                "value": "Japanese_DependableWoman",
+                "group": "Japanese"
+              },
+              {
+                "label": "Gentle Butler",
+                "value": "Japanese_GentleButler",
+                "group": "Japanese"
+              },
+              {
+                "label": "Kind Lady",
+                "value": "Japanese_KindLady",
+                "group": "Japanese"
+              },
+              {
+                "label": "Calm Lady",
+                "value": "Japanese_CalmLady",
+                "group": "Japanese"
+              },
+              {
+                "label": "Optimistic Youth",
+                "value": "Japanese_OptimisticYouth",
+                "group": "Japanese"
+              },
+              {
+                "label": "Generous Izakaya Owner",
+                "value": "Japanese_GenerousIzakayaOwner",
+                "group": "Japanese"
+              },
+              {
+                "label": "Sporty Student",
+                "value": "Japanese_SportyStudent",
+                "group": "Japanese"
+              },
+              {
+                "label": "Innocent Boy",
+                "value": "Japanese_InnocentBoy",
+                "group": "Japanese"
+              },
+              {
+                "label": "Graceful Maiden",
+                "value": "Japanese_GracefulMaiden",
+                "group": "Japanese"
+              },
+              {
+                "label": "Sweet Girl",
+                "value": "Korean_SweetGirl",
+                "group": "Korean"
+              },
+              {
+                "label": "Cheerful Boyfriend",
+                "value": "Korean_CheerfulBoyfriend",
+                "group": "Korean"
+              },
+              {
+                "label": "Enchanting Sister",
+                "value": "Korean_EnchantingSister",
+                "group": "Korean"
+              },
+              {
+                "label": "Shy Girl",
+                "value": "Korean_ShyGirl",
+                "group": "Korean"
+              },
+              {
+                "label": "Reliable Sister",
+                "value": "Korean_ReliableSister",
+                "group": "Korean"
+              },
+              {
+                "label": "Strict Boss",
+                "value": "Korean_StrictBoss",
+                "group": "Korean"
+              },
+              {
+                "label": "Sassy Girl",
+                "value": "Korean_SassyGirl",
+                "group": "Korean"
+              },
+              {
+                "label": "Childhood Friend Girl",
+                "value": "Korean_ChildhoodFriendGirl",
+                "group": "Korean"
+              },
+              {
+                "label": "Playboy Charmer",
+                "value": "Korean_PlayboyCharmer",
+                "group": "Korean"
+              },
+              {
+                "label": "Elegant Princess",
+                "value": "Korean_ElegantPrincess",
+                "group": "Korean"
+              },
+              {
+                "label": "Brave Female Warrior",
+                "value": "Korean_BraveFemaleWarrior",
+                "group": "Korean"
+              },
+              {
+                "label": "Brave Youth",
+                "value": "Korean_BraveYouth",
+                "group": "Korean"
+              },
+              {
+                "label": "Calm Lady",
+                "value": "Korean_CalmLady",
+                "group": "Korean"
+              },
+              {
+                "label": "Enthusiastic Teen",
+                "value": "Korean_EnthusiasticTeen",
+                "group": "Korean"
+              },
+              {
+                "label": "Soothing Lady",
+                "value": "Korean_SoothingLady",
+                "group": "Korean"
+              },
+              {
+                "label": "Intellectual Senior",
+                "value": "Korean_IntellectualSenior",
+                "group": "Korean"
+              },
+              {
+                "label": "Lonely Warrior",
+                "value": "Korean_LonelyWarrior",
+                "group": "Korean"
+              },
+              {
+                "label": "Mature Lady",
+                "value": "Korean_MatureLady",
+                "group": "Korean"
+              },
+              {
+                "label": "Innocent Boy",
+                "value": "Korean_InnocentBoy",
+                "group": "Korean"
+              },
+              {
+                "label": "Charming Sister",
+                "value": "Korean_CharmingSister",
+                "group": "Korean"
+              },
+              {
+                "label": "Athletic Student",
+                "value": "Korean_AthleticStudent",
+                "group": "Korean"
+              },
+              {
+                "label": "Brave Adventurer",
+                "value": "Korean_BraveAdventurer",
+                "group": "Korean"
+              },
+              {
+                "label": "Calm Gentleman",
+                "value": "Korean_CalmGentleman",
+                "group": "Korean"
+              },
+              {
+                "label": "Wise Elf",
+                "value": "Korean_WiseElf",
+                "group": "Korean"
+              },
+              {
+                "label": "Cheerful Cool Junior",
+                "value": "Korean_CheerfulCoolJunior",
+                "group": "Korean"
+              },
+              {
+                "label": "Decisive Queen",
+                "value": "Korean_DecisiveQueen",
+                "group": "Korean"
+              },
+              {
+                "label": "Cold Young Man",
+                "value": "Korean_ColdYoungMan",
+                "group": "Korean"
+              },
+              {
+                "label": "Mysterious Girl",
+                "value": "Korean_MysteriousGirl",
+                "group": "Korean"
+              },
+              {
+                "label": "Quirky Girl",
+                "value": "Korean_QuirkyGirl",
+                "group": "Korean"
+              },
+              {
+                "label": "Considerate Senior",
+                "value": "Korean_ConsiderateSenior",
+                "group": "Korean"
+              },
+              {
+                "label": "Cheerful Little Sister",
+                "value": "Korean_CheerfulLittleSister",
+                "group": "Korean"
+              },
+              {
+                "label": "Dominant Man",
+                "value": "Korean_DominantMan",
+                "group": "Korean"
+              },
+              {
+                "label": "Airheaded Girl",
+                "value": "Korean_AirheadedGirl",
+                "group": "Korean"
+              },
+              {
+                "label": "Reliable Youth",
+                "value": "Korean_ReliableYouth",
+                "group": "Korean"
+              },
+              {
+                "label": "Friendly Big Sister",
+                "value": "Korean_FriendlyBigSister",
+                "group": "Korean"
+              },
+              {
+                "label": "Gentle Boss",
+                "value": "Korean_GentleBoss",
+                "group": "Korean"
+              },
+              {
+                "label": "Cold Girl",
+                "value": "Korean_ColdGirl",
+                "group": "Korean"
+              },
+              {
+                "label": "Haughty Lady",
+                "value": "Korean_HaughtyLady",
+                "group": "Korean"
+              },
+              {
+                "label": "Charming Elder Sister",
+                "value": "Korean_CharmingElderSister",
+                "group": "Korean"
+              },
+              {
+                "label": "Intellectual Man",
+                "value": "Korean_IntellectualMan",
+                "group": "Korean"
+              },
+              {
+                "label": "Caring Woman",
+                "value": "Korean_CaringWoman",
+                "group": "Korean"
+              },
+              {
+                "label": "Wise Teacher",
+                "value": "Korean_WiseTeacher",
+                "group": "Korean"
+              },
+              {
+                "label": "Confident Boss",
+                "value": "Korean_ConfidentBoss",
+                "group": "Korean"
+              },
+              {
+                "label": "Athletic Girl",
+                "value": "Korean_AthleticGirl",
+                "group": "Korean"
+              },
+              {
+                "label": "Possessive Man",
+                "value": "Korean_PossessiveMan",
+                "group": "Korean"
+              },
+              {
+                "label": "Gentle Woman",
+                "value": "Korean_GentleWoman",
+                "group": "Korean"
+              },
+              {
+                "label": "Cocky Guy",
+                "value": "Korean_CockyGuy",
+                "group": "Korean"
+              },
+              {
+                "label": "Thoughtful Woman",
+                "value": "Korean_ThoughtfulWoman",
+                "group": "Korean"
+              },
+              {
+                "label": "Optimistic Youth",
+                "value": "Korean_OptimisticYouth",
+                "group": "Korean"
+              },
+              {
+                "label": "Serene Woman",
+                "value": "Spanish_SereneWoman",
+                "group": "Spanish"
+              },
+              {
+                "label": "Mature Partner",
+                "value": "Spanish_MaturePartner",
+                "group": "Spanish"
+              },
+              {
+                "label": "Captivating Storyteller",
+                "value": "Spanish_CaptivatingStoryteller",
+                "group": "Spanish"
+              },
+              {
+                "label": "Narrator",
+                "value": "Spanish_Narrator",
+                "group": "Spanish"
+              },
+              {
+                "label": "Wise Scholar",
+                "value": "Spanish_WiseScholar",
+                "group": "Spanish"
+              },
+              {
+                "label": "Kind-hearted Girl",
+                "value": "Spanish_Kind-heartedGirl",
+                "group": "Spanish"
+              },
+              {
+                "label": "Determined Manager",
+                "value": "Spanish_DeterminedManager",
+                "group": "Spanish"
+              },
+              {
+                "label": "Bossy Leader",
+                "value": "Spanish_BossyLeader",
+                "group": "Spanish"
+              },
+              {
+                "label": "Reserved Young Man",
+                "value": "Spanish_ReservedYoungMan",
+                "group": "Spanish"
+              },
+              {
+                "label": "Confident Woman",
+                "value": "Spanish_ConfidentWoman",
+                "group": "Spanish"
+              },
+              {
+                "label": "Thoughtful Man",
+                "value": "Spanish_ThoughtfulMan",
+                "group": "Spanish"
+              },
+              {
+                "label": "Strong-willed Boy",
+                "value": "Spanish_Strong-WilledBoy",
+                "group": "Spanish"
+              },
+              {
+                "label": "Sophisticated Lady",
+                "value": "Spanish_SophisticatedLady",
+                "group": "Spanish"
+              },
+              {
+                "label": "Rational Man",
+                "value": "Spanish_RationalMan",
+                "group": "Spanish"
+              },
+              {
+                "label": "Anime Character",
+                "value": "Spanish_AnimeCharacter",
+                "group": "Spanish"
+              },
+              {
+                "label": "Deep-toned Man",
+                "value": "Spanish_Deep-tonedMan",
+                "group": "Spanish"
+              },
+              {
+                "label": "Fussy hostess",
+                "value": "Spanish_Fussyhostess",
+                "group": "Spanish"
+              },
+              {
+                "label": "Sincere Teen",
+                "value": "Spanish_SincereTeen",
+                "group": "Spanish"
+              },
+              {
+                "label": "Frank Lady",
+                "value": "Spanish_FrankLady",
+                "group": "Spanish"
+              },
+              {
+                "label": "Comedian",
+                "value": "Spanish_Comedian",
+                "group": "Spanish"
+              },
+              {
+                "label": "Debater",
+                "value": "Spanish_Debator",
+                "group": "Spanish"
+              },
+              {
+                "label": "Tough Boss",
+                "value": "Spanish_ToughBoss",
+                "group": "Spanish"
+              },
+              {
+                "label": "Wise Lady",
+                "value": "Spanish_Wiselady",
+                "group": "Spanish"
+              },
+              {
+                "label": "Steady Mentor",
+                "value": "Spanish_Steadymentor",
+                "group": "Spanish"
+              },
+              {
+                "label": "Jovial Man",
+                "value": "Spanish_Jovialman",
+                "group": "Spanish"
+              },
+              {
+                "label": "Santa Claus",
+                "value": "Spanish_SantaClaus",
+                "group": "Spanish"
+              },
+              {
+                "label": "Rudolph",
+                "value": "Spanish_Rudolph",
+                "group": "Spanish"
+              },
+              {
+                "label": "Intonate Girl",
+                "value": "Spanish_Intonategirl",
+                "group": "Spanish"
+              },
+              {
+                "label": "Arnold",
+                "value": "Spanish_Arnold",
+                "group": "Spanish"
+              },
+              {
+                "label": "Ghost",
+                "value": "Spanish_Ghost",
+                "group": "Spanish"
+              },
+              {
+                "label": "Humorous Elder",
+                "value": "Spanish_HumorousElder",
+                "group": "Spanish"
+              },
+              {
+                "label": "Energetic Boy",
+                "value": "Spanish_EnergeticBoy",
+                "group": "Spanish"
+              },
+              {
+                "label": "Whimsical Girl",
+                "value": "Spanish_WhimsicalGirl",
+                "group": "Spanish"
+              },
+              {
+                "label": "Strict Boss",
+                "value": "Spanish_StrictBoss",
+                "group": "Spanish"
+              },
+              {
+                "label": "Reliable Man",
+                "value": "Spanish_ReliableMan",
+                "group": "Spanish"
+              },
+              {
+                "label": "Serene Elder",
+                "value": "Spanish_SereneElder",
+                "group": "Spanish"
+              },
+              {
+                "label": "Angry Man",
+                "value": "Spanish_AngryMan",
+                "group": "Spanish"
+              },
+              {
+                "label": "Assertive Queen",
+                "value": "Spanish_AssertiveQueen",
+                "group": "Spanish"
+              },
+              {
+                "label": "Caring Girlfriend",
+                "value": "Spanish_CaringGirlfriend",
+                "group": "Spanish"
+              },
+              {
+                "label": "Powerful Soldier",
+                "value": "Spanish_PowerfulSoldier",
+                "group": "Spanish"
+              },
+              {
+                "label": "Passionate Warrior",
+                "value": "Spanish_PassionateWarrior",
+                "group": "Spanish"
+              },
+              {
+                "label": "Chatty Girl",
+                "value": "Spanish_ChattyGirl",
+                "group": "Spanish"
+              },
+              {
+                "label": "Romantic Husband",
+                "value": "Spanish_RomanticHusband",
+                "group": "Spanish"
+              },
+              {
+                "label": "Compelling Girl",
+                "value": "Spanish_CompellingGirl",
+                "group": "Spanish"
+              },
+              {
+                "label": "Powerful Veteran",
+                "value": "Spanish_PowerfulVeteran",
+                "group": "Spanish"
+              },
+              {
+                "label": "Sensible Manager",
+                "value": "Spanish_SensibleManager",
+                "group": "Spanish"
+              },
+              {
+                "label": "Thoughtful Lady",
+                "value": "Spanish_ThoughtfulLady",
+                "group": "Spanish"
+              },
+              {
+                "label": "Sentimental Lady",
+                "value": "Portuguese_SentimentalLady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Bossy Leader",
+                "value": "Portuguese_BossyLeader",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Wise Lady",
+                "value": "Portuguese_Wiselady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Strong-willed Boy",
+                "value": "Portuguese_Strong-WilledBoy",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Deep-voiced Gentleman",
+                "value": "Portuguese_Deep-VoicedGentleman",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Upset Girl",
+                "value": "Portuguese_UpsetGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Passionate Warrior",
+                "value": "Portuguese_PassionateWarrior",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Anime Character",
+                "value": "Portuguese_AnimeCharacter",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Confident Woman",
+                "value": "Portuguese_ConfidentWoman",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Angry Man",
+                "value": "Portuguese_AngryMan",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Captivating Storyteller",
+                "value": "Portuguese_CaptivatingStoryteller",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Godfather",
+                "value": "Portuguese_Godfather",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Reserved Young Man",
+                "value": "Portuguese_ReservedYoungMan",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Smart Young Girl",
+                "value": "Portuguese_SmartYoungGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Kind-hearted Girl",
+                "value": "Portuguese_Kind-heartedGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Pompous Lady",
+                "value": "Portuguese_Pompouslady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Grinch",
+                "value": "Portuguese_Grinch",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Debater",
+                "value": "Portuguese_Debator",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Sweet Girl",
+                "value": "Portuguese_SweetGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Attractive Girl",
+                "value": "Portuguese_AttractiveGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Thoughtful Man",
+                "value": "Portuguese_ThoughtfulMan",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Playful Girl",
+                "value": "Portuguese_PlayfulGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Gorgeous Lady",
+                "value": "Portuguese_GorgeousLady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Lovely Lady",
+                "value": "Portuguese_LovelyLady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Serene Woman",
+                "value": "Portuguese_SereneWoman",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Sad Teen",
+                "value": "Portuguese_SadTeen",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Mature Partner",
+                "value": "Portuguese_MaturePartner",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Comedian",
+                "value": "Portuguese_Comedian",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Naughty Schoolgirl",
+                "value": "Portuguese_NaughtySchoolgirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Narrator",
+                "value": "Portuguese_Narrator",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Tough Boss",
+                "value": "Portuguese_ToughBoss",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Fussy hostess",
+                "value": "Portuguese_Fussyhostess",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Dramatist",
+                "value": "Portuguese_Dramatist",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Steady Mentor",
+                "value": "Portuguese_Steadymentor",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Jovial Man",
+                "value": "Portuguese_Jovialman",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Charming Queen",
+                "value": "Portuguese_CharmingQueen",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Santa Claus",
+                "value": "Portuguese_SantaClaus",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Rudolph",
+                "value": "Portuguese_Rudolph",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Arnold",
+                "value": "Portuguese_Arnold",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Charming Santa",
+                "value": "Portuguese_CharmingSanta",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Charming Lady",
+                "value": "Portuguese_CharmingLady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Ghost",
+                "value": "Portuguese_Ghost",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Humorous Elder",
+                "value": "Portuguese_HumorousElder",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Calm Leader",
+                "value": "Portuguese_CalmLeader",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Gentle Teacher",
+                "value": "Portuguese_GentleTeacher",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Energetic Boy",
+                "value": "Portuguese_EnergeticBoy",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Reliable Man",
+                "value": "Portuguese_ReliableMan",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Serene Elder",
+                "value": "Portuguese_SereneElder",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Grim Reaper",
+                "value": "Portuguese_GrimReaper",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Assertive Queen",
+                "value": "Portuguese_AssertiveQueen",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Whimsical Girl",
+                "value": "Portuguese_WhimsicalGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Stressed Lady",
+                "value": "Portuguese_StressedLady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Friendly Neighbor",
+                "value": "Portuguese_FriendlyNeighbor",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Caring Girlfriend",
+                "value": "Portuguese_CaringGirlfriend",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Powerful Soldier",
+                "value": "Portuguese_PowerfulSoldier",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Fascinating Boy",
+                "value": "Portuguese_FascinatingBoy",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Romantic Husband",
+                "value": "Portuguese_RomanticHusband",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Strict Boss",
+                "value": "Portuguese_StrictBoss",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Inspiring Lady",
+                "value": "Portuguese_InspiringLady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Playful Spirit",
+                "value": "Portuguese_PlayfulSpirit",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Elegant Girl",
+                "value": "Portuguese_ElegantGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Compelling Girl",
+                "value": "Portuguese_CompellingGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Powerful Veteran",
+                "value": "Portuguese_PowerfulVeteran",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Sensible Manager",
+                "value": "Portuguese_SensibleManager",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Thoughtful Lady",
+                "value": "Portuguese_ThoughtfulLady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Theatrical Actor",
+                "value": "Portuguese_TheatricalActor",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Fragile Boy",
+                "value": "Portuguese_FragileBoy",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Chatty Girl",
+                "value": "Portuguese_ChattyGirl",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Conscientious Instructor",
+                "value": "Portuguese_Conscientiousinstructor",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Rational Man",
+                "value": "Portuguese_RationalMan",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Wise Scholar",
+                "value": "Portuguese_WiseScholar",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Frank Lady",
+                "value": "Portuguese_FrankLady",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Determined Manager",
+                "value": "Portuguese_DeterminedManager",
+                "group": "Portuguese"
+              },
+              {
+                "label": "Level-Headed Man",
+                "value": "French_Male_Speech_New",
+                "group": "French"
+              },
+              {
+                "label": "Patient Female Presenter",
+                "value": "French_Female_News Anchor",
+                "group": "French"
+              },
+              {
+                "label": "Casual Man",
+                "value": "French_CasualMan",
+                "group": "French"
+              },
+              {
+                "label": "Movie Lead Female",
+                "value": "French_MovieLeadFemale",
+                "group": "French"
+              },
+              {
+                "label": "Female Anchor",
+                "value": "French_FemaleAnchor",
+                "group": "French"
+              },
+              {
+                "label": "Male Narrator",
+                "value": "French_MaleNarrator",
+                "group": "French"
+              },
+              {
+                "label": "Sweet Girl",
+                "value": "Indonesian_SweetGirl",
+                "group": "Indonesian"
+              },
+              {
+                "label": "Reserved Young Man",
+                "value": "Indonesian_ReservedYoungMan",
+                "group": "Indonesian"
+              },
+              {
+                "label": "Charming Girl",
+                "value": "Indonesian_CharmingGirl",
+                "group": "Indonesian"
+              },
+              {
+                "label": "Calm Woman",
+                "value": "Indonesian_CalmWoman",
+                "group": "Indonesian"
+              },
+              {
+                "label": "Confident Woman",
+                "value": "Indonesian_ConfidentWoman",
+                "group": "Indonesian"
+              },
+              {
+                "label": "Caring Man",
+                "value": "Indonesian_CaringMan",
+                "group": "Indonesian"
+              },
+              {
+                "label": "Bossy Leader",
+                "value": "Indonesian_BossyLeader",
+                "group": "Indonesian"
+              },
+              {
+                "label": "Determined Boy",
+                "value": "Indonesian_DeterminedBoy",
+                "group": "Indonesian"
+              },
+              {
+                "label": "Gentle Girl",
+                "value": "Indonesian_GentleGirl",
+                "group": "Indonesian"
+              },
+              {
+                "label": "Friendly Man",
+                "value": "German_FriendlyMan",
+                "group": "German"
+              },
+              {
+                "label": "Sweet Lady",
+                "value": "German_SweetLady",
+                "group": "German"
+              },
+              {
+                "label": "Playful Man",
+                "value": "German_PlayfulMan",
+                "group": "German"
+              },
+              {
+                "label": "Handsome Childhood Friend",
+                "value": "Russian_HandsomeChildhoodFriend",
+                "group": "Russian"
+              },
+              {
+                "label": "Bright Queen",
+                "value": "Russian_BrightHeroine",
+                "group": "Russian"
+              },
+              {
+                "label": "Ambitious Woman",
+                "value": "Russian_AmbitiousWoman",
+                "group": "Russian"
+              },
+              {
+                "label": "Reliable Man",
+                "value": "Russian_ReliableMan",
+                "group": "Russian"
+              },
+              {
+                "label": "Crazy Girl",
+                "value": "Russian_CrazyQueen",
+                "group": "Russian"
+              },
+              {
+                "label": "Pessimistic Girl",
+                "value": "Russian_PessimisticGirl",
+                "group": "Russian"
+              },
+              {
+                "label": "Attractive Guy",
+                "value": "Russian_AttractiveGuy",
+                "group": "Russian"
+              },
+              {
+                "label": "Bad-tempered Boy",
+                "value": "Russian_Bad-temperedBoy",
+                "group": "Russian"
+              },
+              {
+                "label": "Brave Heroine",
+                "value": "Italian_BraveHeroine",
+                "group": "Italian"
+              },
+              {
+                "label": "Narrator",
+                "value": "Italian_Narrator",
+                "group": "Italian"
+              },
+              {
+                "label": "Wandering Sorcerer",
+                "value": "Italian_WanderingSorcerer",
+                "group": "Italian"
+              },
+              {
+                "label": "Diligent Leader",
+                "value": "Italian_DiligentLeader",
+                "group": "Italian"
+              },
+              {
+                "label": "Calm Woman",
+                "value": "Arabic_CalmWoman",
+                "group": "Arabic"
+              },
+              {
+                "label": "Friendly Guy",
+                "value": "Arabic_FriendlyGuy",
+                "group": "Arabic"
+              },
+              {
+                "label": "Calm Woman",
+                "value": "Turkish_CalmWoman",
+                "group": "Turkish"
+              },
+              {
+                "label": "Trustworthy man",
+                "value": "Turkish_Trustworthyman",
+                "group": "Turkish"
+              },
+              {
+                "label": "Calm Woman",
+                "value": "Ukrainian_CalmWoman",
+                "group": "Ukrainian"
+              },
+              {
+                "label": "Wise Scholar",
+                "value": "Ukrainian_WiseScholar",
+                "group": "Ukrainian"
+              },
+              {
+                "label": "Kind-hearted girl",
+                "value": "Dutch_kindhearted_girl",
+                "group": "Dutch"
+              },
+              {
+                "label": "Bossy leader",
+                "value": "Dutch_bossy_leader",
+                "group": "Dutch"
+              },
+              {
+                "label": "Kind-hearted girl",
+                "value": "Vietnamese_kindhearted_girl",
+                "group": "Vietnamese"
+              },
+              {
+                "label": "Serene Man",
+                "value": "Thai_male_1_sample8",
+                "group": "Thai"
+              },
+              {
+                "label": "Friendly Man",
+                "value": "Thai_male_2_sample2",
+                "group": "Thai"
+              },
+              {
+                "label": "Confident Woman",
+                "value": "Thai_female_1_sample1",
+                "group": "Thai"
+              },
+              {
+                "label": "Energetic Woman",
+                "value": "Thai_female_2_sample2",
+                "group": "Thai"
+              },
+              {
+                "label": "Male Narrator",
+                "value": "Polish_male_1_sample4",
+                "group": "Polish"
+              },
+              {
+                "label": "Male Anchor",
+                "value": "Polish_male_2_sample3",
+                "group": "Polish"
+              },
+              {
+                "label": "Calm Woman",
+                "value": "Polish_female_1_sample1",
+                "group": "Polish"
+              },
+              {
+                "label": "Casual Woman",
+                "value": "Polish_female_2_sample3",
+                "group": "Polish"
+              },
+              {
+                "label": "Reliable Man",
+                "value": "Romanian_male_1_sample2",
+                "group": "Romanian"
+              },
+              {
+                "label": "Energetic Youth",
+                "value": "Romanian_male_2_sample1",
+                "group": "Romanian"
+              },
+              {
+                "label": "Optimistic Youth",
+                "value": "Romanian_female_1_sample4",
+                "group": "Romanian"
+              },
+              {
+                "label": "Gentle Woman",
+                "value": "Romanian_female_2_sample1",
+                "group": "Romanian"
+              },
+              {
+                "label": "Thoughtful Mentor",
+                "value": "greek_male_1a_v1",
+                "group": "Greek"
+              },
+              {
+                "label": "Gentle Lady",
+                "value": "Greek_female_1_sample1",
+                "group": "Greek"
+              },
+              {
+                "label": "Girl Next Door",
+                "value": "Greek_female_2_sample3",
+                "group": "Greek"
+              },
+              {
+                "label": "Assured Presenter",
+                "value": "czech_male_1_v1",
+                "group": "Czech"
+              },
+              {
+                "label": "Steadfast Narrator",
+                "value": "czech_female_5_v7",
+                "group": "Czech"
+              },
+              {
+                "label": "Elegant Lady",
+                "value": "czech_female_2_v2",
+                "group": "Czech"
+              },
+              {
+                "label": "Upbeat Man",
+                "value": "finnish_male_3_v1",
+                "group": "Finnish"
+              },
+              {
+                "label": "Friendly Boy",
+                "value": "finnish_male_1_v2",
+                "group": "Finnish"
+              },
+              {
+                "label": "Assertive Woman",
+                "value": "finnish_female_4_v1",
+                "group": "Finnish"
+              },
+              {
+                "label": "Trustworthy Advisor",
+                "value": "hindi_male_1_v2",
+                "group": "Hindi"
+              },
+              {
+                "label": "Tranquil Woman",
+                "value": "hindi_female_2_v1",
+                "group": "Hindi"
+              },
+              {
+                "label": "News Anchor",
+                "value": "hindi_female_1_v2",
+                "group": "Hindi"
+              }
+            ]
+          },
+          "speed": {
+            "type": "number",
+            "description": "Speaking rate. Mapped to upstream `voice_setting.speed`.",
+            "minimum": 0.5,
+            "maximum": 2,
+            "default": 1
+          },
+          "response_format": {
+            "type": "string",
+            "description": "Target audio encoding format, mapped to upstream `audio_setting.format`. Common values include `mp3`, `wav`, and `pcm`.",
+            "enum": [
+              "mp3",
+              "wav",
+              "pcm"
+            ]
+          },
+          "stream_format": {
+            "type": "string",
+            "description": "Streaming trigger field. Any non-empty value enables upstream `stream=true`; the current gateway only relies on its non-empty semantics."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "MiniMax extension container. The only stable field currently documented here is `output_format`.",
+            "properties": {
+              "output_format": {
+                "type": "string",
+                "enum": [
+                  "url",
+                  "hex"
+                ],
+                "description": "Controls the output mode. Allowed values: [url, hex], default is hex. This parameter only applies to non-streaming requests; streaming always returns hex."
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -25,9 +25,9 @@ Add one endpoint page per provider per language.
 
 ### Chinese pages
 
-- `cn/deepseek/chat.mdx`
-- `cn/moonshot/chat.mdx`
-- `cn/zhipu/chat.mdx`
+- `zh-Hans/deepseek/chat.mdx`
+- `zh-Hans/moonshot/chat.mdx`
+- `zh-Hans/zhipu/chat.mdx`
 
 ### English pages
 

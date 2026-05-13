@@ -1,0 +1,652 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wan 参考生视频",
+    "version": "1.0.0",
+    "description": "Ali `wan2.7-r2v` 的客户公开能力文档，统一入口为 `/v1/videos`。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan 2.7 视频",
+      "description": "Ali wan2.7-r2v 参考生视频能力"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "创建 wan2.7-r2v 参考生视频任务",
+        "description": "提交一个异步 Ali `wan2.7-r2v` 视频生成任务。\n\n该能力使用顶层 `media` 数组作为公开多模态输入。当前支持的 `media.type` 包括 `reference_image`、`reference_video` 和 `first_frame`。\n\n当前公开规则：\n- `prompt` 为必填；\n- 至少提供一个 `reference_image` 或 `reference_video`；\n- `reference_image` 与 `reference_video` 合计最多 5 个；\n- `first_frame` 为可选，最多 1 个；\n- `size` 仅支持 `720P` 和 `1080P`；\n- `ratio` 仅支持 `16:9`、`9:16`、`1:1`、`4:3`、`3:4`；\n- `seconds` 仅接受 `2` 到 `15` 的整数字符串；若包含任意 `reference_video`，则允许范围收窄为 `2` 到 `10`。\n\n当提供多个参考素材时，请在提示词中按提交顺序引用：图片参考写作 `图1`、`图2`，视频参考写作 `视频1`、`视频2`，图像和视频分别计数。",
+        "operationId": "aliReferenceToVideoCreate",
+        "tags": [
+          "Wan 2.7 视频"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferenceToVideoRequest"
+              },
+              "examples": {
+                "reference_to_video": {
+                  "summary": "单图参考",
+                  "value": {
+                    "model": "wan2.7-r2v",
+                    "prompt": "图1朝镜头走来，轻松挥手并微笑。",
+                    "media": [
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/subject-reference.png"
+                      }
+                    ],
+                    "seconds": "5",
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "prompt_extend": true,
+                    "watermark": false
+                  }
+                },
+                "reference_to_video_multimodal": {
+                  "summary": "图像、视频、音色与首帧混合参考",
+                  "value": {
+                    "model": "wan2.7-r2v",
+                    "prompt": "视频1坐在桌边开始说话。图1从画面左侧走入，首帧用于固定开场构图。",
+                    "negative_prompt": "模糊、手部畸形、低质量",
+                    "prompt_extend": false,
+                    "watermark": true,
+                    "seed": 42,
+                    "media": [
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/character-a.png",
+                        "reference_voice": "https://example.com/assets/character-a-voice.mp3"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/assets/character-b.mp4"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/opening-frame.png"
+                      }
+                    ],
+                    "seconds": "8",
+                    "size": "720P",
+                    "ratio": "9:16"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回统一的 OpenAI 风格视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法，例如缺少参考素材、`media.type` 不支持、`size` / `ratio` / `seconds` 非法，或字段组合冲突。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "code": "invalid_request",
+                      "message": "wan2.7-r2v requires at least one reference_image or reference_video",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "无效的令牌",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "请求体过大。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "请求体过大",
+                    "value": {
+                      "code": "read_request_body_failed",
+                      "message": "请求体过大，请缩小输入后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "当前账户额度不足，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "code": "gen_relay_info_failed",
+                      "message": "服务内部处理失败，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游服务返回异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "code": "bad_response_status_code",
+                      "message": "上游服务返回了无效响应",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "code": "get_channel_failed",
+                      "message": "当前模型暂时无可用渠道，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "查询 Wan 参考生视频任务",
+        "description": "根据公开任务 ID 查询 `wan2.7-r2v` 异步任务的最新状态。",
+        "operationId": "aliReferenceToVideoQuery",
+        "tags": [
+          "Wan 2.7 视频"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "公开视频任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前任务状态。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskQueryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误，例如任务不存在或任务 ID 非法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "task_not_exist": {
+                    "summary": "任务不存在",
+                    "value": {
+                      "code": "task_not_exist",
+                      "message": "task_not_exist",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "无效的令牌",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在或已过期。注意：当前项目实现中该场景通常返回 400 task_not_exist。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "任务不存在",
+                    "value": {
+                      "code": "task_not_exist",
+                      "message": "任务不存在或已过期",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "当前账户额度不足，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "code": "get_task_failed",
+                      "message": "服务内部处理失败，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游服务返回异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "code": "bad_response_status_code",
+                      "message": "上游服务返回了无效响应",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "code": "get_channel_failed",
+                      "message": "当前模型暂时无可用渠道，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key"
+      }
+    },
+    "schemas": {
+      "ReferenceToVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt",
+          "media"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-r2v"
+            ],
+            "description": "Ali wan2.7-r2v 模型。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "描述目标视频内容的提示词。当提供多个参考素材时，请在提示词中使用 `图x` 与 `视频x` 的方式引用。"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "可选的反向提示词，用于描述不希望出现在结果中的内容。"
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "是否启用提示词改写，默认值为 `true`。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印，默认值为 `false`。",
+            "default": false
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "随机种子。省略时系统自动生成。"
+          },
+          "media": {
+            "type": "array",
+            "description": "`wan2.7-r2v` 的公开多模态输入。至少包含一个 `reference_image` 或 `reference_video`，可选额外提供一个 `first_frame`。",
+            "items": {
+              "$ref": "#/components/schemas/ReferenceToVideoMediaInput"
+            }
+          },
+          "seconds": {
+            "type": "string",
+            "description": "视频生成时长（秒）的字符串形式。当前默认值为 `\"5\"`。当参考素材中包含视频时：取值为[2, 10]之间的整数。当参考素材中不包含视频时：取值为[2, 15]之间的整数。",
+            "default": "5",
+            "enum": [
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15"
+            ]
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "720P",
+              "1080P"
+            ],
+            "description": "当前公开实现支持的输出分辨率档位。",
+            "default": "1080P"
+          },
+          "ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4"
+            ],
+            "description": "输出宽高比。",
+            "default": "16:9"
+          }
+        }
+      },
+      "ReferenceToVideoMediaInput": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "reference_image",
+              "reference_video",
+              "first_frame"
+            ],
+            "description": "参考素材类型。"
+          },
+          "url": {
+            "type": "string",
+            "description": "可公开访问的素材 URL。"
+          },
+          "reference_voice": {
+            "type": "string",
+            "description": "可选的音色参考 URL。用于 `reference_image` 或 `reference_video`，让生成结果参考该主体的声音特征。"
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "公开任务 ID。"
+          },
+          "task_id": {
+            "type": "string",
+            "description": "公开任务 ID 别名。"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string",
+            "description": "模型名称。"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "in_progress",
+              "completed",
+              "failed",
+              "unknown"
+            ],
+            "description": "统一视频任务状态。"
+          },
+          "progress": {
+            "type": "integer",
+            "description": "任务进度百分比。"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "秒级 Unix 时间戳。"
+          }
+        }
+      },
+      "VideoTaskQueryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VideoTaskResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "completed_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "任务进入终态后的完成时间戳。"
+              },
+              "metadata": {
+                "type": "object",
+                "description": "额外统一元数据。成功时通常可在 `metadata.url` 中获取下载地址。",
+                "additionalProperties": true
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误代码。",
+            "example": "invalid_request"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误说明。"
+          },
+          "data": {
+            "nullable": true,
+            "description": "附加错误数据。当前通常为 null。"
+          }
+        }
+      }
+    }
+  }
+}

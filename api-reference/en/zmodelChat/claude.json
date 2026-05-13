@@ -1,0 +1,307 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Claude Messages API",
+    "version": "1.0.0",
+    "description": "Fully compatible with Claude Messages API format\nSupports multi-turn conversations and single queries\nSupports text, image, and other multimodal content"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Current gateway instance"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Claude Messages",
+      "description": "Native Claude-compatible messages"
+    }
+  ],
+  "paths": {
+    "/v1/messages": {
+      "post": {
+        "summary": "Claude Messages API",
+        "description": "Fully compatible with Claude Messages API format\nSupports multi-turn conversations and single queries\nSupports text, image, and other multimodal content",
+        "operationId": "createClaudeMessage",
+        "tags": [
+          "Claude Messages"
+        ],
+        "parameters": [
+          {
+            "name": "anthropic-version",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2023-06-01"
+            },
+            "description": "API version header\nSpecifies the Claude API version to use"
+          },
+          {
+            "name": "anthropic-beta",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional Claude beta feature header, forwarded when provided."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaudeMessagesRequest"
+              },
+              "examples": {
+                "glmBasic": {
+                  "summary": "GLM Claude Request",
+                  "value": {
+                    "model": "glm-4.7",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Hello"
+                      }
+                    ],
+                    "max_tokens": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Claude-compatible response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaudeMessagesResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "Claude-style SSE stream when `stream` is true."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or upstream validation failure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaudeErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key for authentication"
+      }
+    },
+    "schemas": {
+      "ClaudeMessagesRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages",
+          "max_tokens"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "glm-5-turbo",
+              "glm-5",
+              "glm-4.7",
+              "glm-4.7-flash",
+              "glm-4.5-air",
+              "MiniMax-M2.5",
+              "MiniMax-M2.7",
+              "MiniMax-M2.5-highspeed",
+              "MiniMax-M2.7-highspeed"
+            ],
+            "description": "Model name"
+          },
+          "messages": {
+            "type": "array",
+            "description": "Message list\nAn array of messages that the model will use to generate the next reply. Each message contains `role` and `content` fields.",
+            "items": {
+              "$ref": "#/components/schemas/ClaudeMessage"
+            }
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Maximum tokens to generate\nThe maximum number of tokens to generate before stopping. The model may stop before reaching this limit.\nDifferent models have different maximum values; refer to the model documentation."
+          },
+          "system": {
+            "description": "System prompt\nUsed to set Claude's role, personality, goals, and instructions.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TextBlock"
+                }
+              }
+            ]
+          },
+          "temperature": {
+            "type": "number",
+            "description": "Temperature parameter, range 0-1\nControls output randomness:\nLow values (e.g., 0.2): more deterministic, more conservative\nHigh values (e.g., 0.8): more random, more creative"
+          },
+          "top_p": {
+            "type": "number",
+            "description": "Nucleus sampling parameter, range 0-1\nUses nucleus sampling. It is recommended to use either temperature or top_p, not both."
+          },
+          "stop_sequences": {
+            "type": "array",
+            "description": "Stop sequences\nCustom text sequences that will cause the model to stop generating when encountered.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "Whether to enable streaming output"
+          }
+        },
+        "additionalProperties": true
+      },
+      "ClaudeMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "description": "Input: `user` (user message) or `assistant` (AI reply, for multi-turn conversations)"
+          },
+          "content": {
+            "description": "Input: the message content to send",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ContentBlock"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "ContentBlock": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Claude content block type."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content for `text` blocks."
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        },
+        "additionalProperties": true
+      },
+      "TextBlock": {
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "System text block type."
+          },
+          "text": {
+            "type": "string",
+            "description": "System instruction text."
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        }
+      },
+      "CacheControl": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Prompt cache control type."
+          }
+        },
+        "description": "Prompt cache metadata"
+      },
+      "ClaudeMessagesResponse": {
+        "type": "object",
+        "description": "Claude-compatible message response returned by the upstream provider.",
+        "additionalProperties": true
+      },
+      "ClaudeErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "type",
+              "message"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Claude-style error type."
+              },
+              "message": {
+                "type": "string",
+                "description": "Human-readable error message."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,328 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Seedream 4.5 Text-to-Image",
+    "version": "1.0.0",
+    "description": "Seedream series text-to-image capability documentation. The unified API endpoint is `/v1/images/generations`.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Seedream Image",
+      "description": "Seedream series image generation capability"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "Seedream 4.5 Text-to-Image",
+        "description": "Supports models including `seedream-4-5-251128`. This document covers text-to-image and sequential image generation scenarios. Supported fields include `model`, `prompt`, `size`, `seed`, `sequential_image_generation`, `sequential_image_generation_options`, `response_format`, and `watermark`.",
+        "operationId": "byteplusTextToImage45En",
+        "tags": [
+          "Seedream Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToImageRequest"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "Basic text-to-image",
+                  "value": {
+                    "model": "seedream-4-5-251128",
+                    "prompt": "A cute corgi running on the grass, sunny day, realistic style",
+                    "size": "2048x2048",
+                    "response_format": "url"
+                  }
+                },
+                "sequential_images": {
+                  "summary": "Sequential image generation",
+                  "value": {
+                    "model": "seedream-4-5-251128",
+                    "prompt": "A set of four seasons landscape illustrations, spring, summer, autumn, winter",
+                    "sequential_image_generation": "auto",
+                    "response_format": "url"
+                  }
+                },
+                "sequential_images_with_limit": {
+                  "summary": "Sequential images with max count limit",
+                  "value": {
+                    "model": "seedream-4-5-251128",
+                    "prompt": "A set of four seasons landscape illustrations, spring, summer, autumn, winter",
+                    "sequential_image_generation": "auto",
+                    "sequential_image_generation_options": {
+                      "max_images": 3
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Call successful, returns image generation results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageGenerationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Parameter error",
+                    "value": {
+                      "error": {
+                        "message": "Malformed request body or invalid field values",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient account quota, please retry later",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing failure",
+                    "value": {
+                      "error": {
+                        "message": "Internal processing failed, please retry later",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "seedream-4-5-251128"
+            ],
+            "description": "Image generation model name. Supported models include `seedream-4-5-251128`."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Image generation prompt. Recommended to be no more than 300 Chinese characters or 600 English words."
+          },
+          "size": {
+            "type": "string",
+            "x-enum": [
+              "2K",
+              "4K"
+            ],
+            "description": "Output image size.\n- seedream-5-0-260128: supports 2K/3K or custom (total pixels 3686400-10404496, aspect ratio 1/16-16)\n- seedream-4-5-251128: supports 2K/4K or custom (total pixels 3686400-16777216, aspect ratio 1/16-16)\n- seedream-4-5-251128: supports 1K/2K/4K or custom (total pixels 921600-16777216, aspect ratio 1/16-16)",
+            "default": "2K",
+            "example": "2048x2048"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "Response format.",
+            "default": "url"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed. Supported by some Seedream models. Range [-1, 2147483647].",
+            "default": -1,
+            "minimum": -1,
+            "maximum": 2147483647
+          },
+          "sequential_image_generation": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "disabled"
+            ],
+            "description": "Sequential image generation toggle. `auto` enables automatic detection mode, `disabled` turns off sequential generation (single image only). All currently supported Seedream models can use this capability.",
+            "default": "disabled"
+          },
+          "sequential_image_generation_options": {
+            "type": "object",
+            "description": "Sequential image generation options. Only effective when `sequential_image_generation=auto`.",
+            "x-show-when": {
+              "sequential_image_generation": [
+                "auto"
+              ]
+            },
+            "properties": {
+              "max_images": {
+                "type": "integer",
+                "description": "The maximum number of images allowed to be generated in this request. Range: 1-15.",
+                "minimum": 1,
+                "maximum": 15,
+                "default": 3
+              }
+            }
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark.",
+            "default": false
+          }
+        }
+      },
+      "ImageGenerationResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Creation time as a Unix timestamp (seconds)."
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImageData"
+            },
+            "description": "List of generated images. May contain multiple images in sequential generation scenarios."
+          }
+        }
+      },
+      "ImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Image download link. Valid for 24 hours; please save promptly."
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "Base64-encoded image data."
+          },
+          "size": {
+            "type": "string",
+            "description": "Image dimensions (widthxheight). Only returned by seedream-5.0-lite/4.5/4.0."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

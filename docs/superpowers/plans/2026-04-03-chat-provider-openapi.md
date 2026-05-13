@@ -1,4 +1,4 @@
-# Chat provider OpenAPI integration Implementation Plan
+﻿# Chat provider OpenAPI integration Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -13,9 +13,9 @@
 ### Task 1: Review the source OpenAPI files and working constraints
 
 **Files:**
-- Verify: `api-reference/cn/deepseek/chat.json`
-- Verify: `api-reference/cn/moonshot/chat.json`
-- Verify: `api-reference/cn/zhipu/chat.json`
+- Verify: `api-reference/zh-Hans/deepseek/chat.json`
+- Verify: `api-reference/zh-Hans/moonshot/chat.json`
+- Verify: `api-reference/zh-Hans/zhipu/chat.json`
 - Verify: `api-reference/en/deepseek/chat.json`
 - Verify: `api-reference/en/moonshot/chat.json`
 - Verify: `api-reference/en/zhipu/chat.json`
@@ -26,9 +26,9 @@ Run:
 
 ```bash
 jq -r '.info.title, (.paths | keys[0]), (.paths[(.paths | keys[0])] | keys[0])' \
-  api-reference/cn/deepseek/chat.json \
-  api-reference/cn/moonshot/chat.json \
-  api-reference/cn/zhipu/chat.json \
+  api-reference/zh-Hans/deepseek/chat.json \
+  api-reference/zh-Hans/moonshot/chat.json \
+  api-reference/zh-Hans/zhipu/chat.json \
   api-reference/en/deepseek/chat.json \
   api-reference/en/moonshot/chat.json \
   api-reference/en/zhipu/chat.json
@@ -50,9 +50,9 @@ Expected: the new provider JSON directories appear as untracked source files in 
 ### Task 2: Add the new MDX wrapper pages
 
 **Files:**
-- Create: `cn/deepseek/chat.mdx`
-- Create: `cn/moonshot/chat.mdx`
-- Create: `cn/zhipu/chat.mdx`
+- Create: `zh-Hans/deepseek/chat.mdx`
+- Create: `zh-Hans/moonshot/chat.mdx`
+- Create: `zh-Hans/zhipu/chat.mdx`
 - Create: `en/deepseek/chat.mdx`
 - Create: `en/moonshot/chat.mdx`
 - Create: `en/zhipu/chat.mdx`
@@ -64,21 +64,21 @@ Add these files:
 ```mdx
 ---
 title: "DeepSeek 对话补全"
-openapi: "/api-reference/cn/deepseek/chat.json POST /v1/chat/completions"
+openapi: "/api-reference/zh-Hans/deepseek/chat.json POST /v1/chat/completions"
 ---
 ```
 
 ```mdx
 ---
 title: "Moonshot 对话补全"
-openapi: "/api-reference/cn/moonshot/chat.json POST /v1/chat/completions"
+openapi: "/api-reference/zh-Hans/moonshot/chat.json POST /v1/chat/completions"
 ---
 ```
 
 ```mdx
 ---
 title: "智谱对话补全"
-openapi: "/api-reference/cn/zhipu/chat.json POST /v1/chat/completions"
+openapi: "/api-reference/zh-Hans/zhipu/chat.json POST /v1/chat/completions"
 ---
 ```
 
@@ -120,19 +120,19 @@ Edit the Chinese `指南` -> `模型接口` section in `docs.json` to add these 
 {
   "group": "DeepSeek",
   "pages": [
-    "cn/deepseek/chat"
+    "zh-Hans/deepseek/chat"
   ]
 },
 {
   "group": "Moonshot",
   "pages": [
-    "cn/moonshot/chat"
+    "zh-Hans/moonshot/chat"
   ]
 },
 {
   "group": "Zhipu",
   "pages": [
-    "cn/zhipu/chat"
+    "zh-Hans/zhipu/chat"
   ]
 }
 ```
@@ -168,9 +168,9 @@ Expected: the Chinese and English navigation trees stay structurally mirrored.
 
 **Files:**
 - Verify: `docs.json`
-- Verify: `cn/deepseek/chat.mdx`
-- Verify: `cn/moonshot/chat.mdx`
-- Verify: `cn/zhipu/chat.mdx`
+- Verify: `zh-Hans/deepseek/chat.mdx`
+- Verify: `zh-Hans/moonshot/chat.mdx`
+- Verify: `zh-Hans/zhipu/chat.mdx`
 - Verify: `en/deepseek/chat.mdx`
 - Verify: `en/moonshot/chat.mdx`
 - Verify: `en/zhipu/chat.mdx`
@@ -180,9 +180,9 @@ Expected: the Chinese and English navigation trees stay structurally mirrored.
 Run:
 
 ```bash
-sed -n '1,20p' cn/deepseek/chat.mdx cn/moonshot/chat.mdx cn/zhipu/chat.mdx \
+sed -n '1,20p' zh-Hans/deepseek/chat.mdx zh-Hans/moonshot/chat.mdx zh-Hans/zhipu/chat.mdx \
   en/deepseek/chat.mdx en/moonshot/chat.mdx en/zhipu/chat.mdx
-rg -n '"(cn|en)/(deepseek|moonshot|zhipu)/chat"' docs.json
+rg -n '"(zh-Hans|en)/(deepseek|moonshot|zhipu)/chat"' docs.json
 ```
 
 Expected: each wrapper contains only frontmatter with `title` and `openapi`, and `docs.json` includes all six routes.
@@ -202,7 +202,7 @@ Expected: exit `0` with no broken links reported.
 Run:
 
 ```bash
-git diff -- docs.json cn/deepseek/chat.mdx cn/moonshot/chat.mdx cn/zhipu/chat.mdx \
+git diff -- docs.json zh-Hans/deepseek/chat.mdx zh-Hans/moonshot/chat.mdx zh-Hans/zhipu/chat.mdx \
   en/deepseek/chat.mdx en/moonshot/chat.mdx en/zhipu/chat.mdx
 ```
 

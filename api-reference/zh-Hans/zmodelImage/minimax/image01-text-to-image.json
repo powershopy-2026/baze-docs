@@ -1,0 +1,388 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Image-01 文生图",
+    "version": "1.0.0",
+    "description": "Image-01 文生图能力文档。公开统一入口为 `/v1/images/generations`，用于根据文本提示词生成图片。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Image Generation",
+      "description": "Image-01 图像生成能力"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "Image-01 文生图",
+        "description": "适用于 `image-01` 模型的文生图能力。\n\n公开字段：`model`、`prompt`、`aspect_ratio`、`width`、`height`、`response_format`、`seed`、`n`、`prompt_optimizer`。",
+        "operationId": "minimaxTextToImage",
+        "tags": [
+          "Image Generation"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MiniMaxTextToImageRequest"
+              },
+              "examples": {
+                "basic_request": {
+                  "summary": "基础请求",
+                  "value": {
+                    "model": "image-01",
+                    "prompt": "A cinematic sunrise over a calm harbor",
+                    "aspect_ratio": "16:9",
+                    "response_format": "base64",
+                    "seed": 0,
+                    "n": 1,
+                    "prompt_optimizer": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功，返回统一图像响应结构。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MiniMaxImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "请求体格式错误或字段取值非法",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "请求体过大",
+                    "value": {
+                      "error": {
+                        "message": "请求体过大，请缩小输入后重试",
+                        "type": "api_error",
+                        "code": "read_request_body_failed"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "请求体过大。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "MiniMaxTextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "image-01"
+            ],
+            "description": "当前能力使用的模型名称。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "图像生成提示词。",
+            "maxLength": 1500
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "目标宽高比。",
+            "enum": [
+              "1:1",
+              "16:9",
+              "4:3",
+              "3:2",
+              "2:3",
+              "3:4",
+              "9:16",
+              "21:9"
+            ]
+          },
+          "width": {
+            "type": "integer",
+            "description": "生成图片的宽度（像素）。仅当 model 为 image-01 时生效。注意：width 和 height 需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 aspect_ratio 同时设置，则优先使用 aspect_ratio",
+            "minimum": 512,
+            "maximum": 2048
+          },
+          "height": {
+            "type": "integer",
+            "description": "生成图片的高度（像素）。仅当 model 为 image-01 时生效。注意：width 和 height 需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 aspect_ratio 同时设置，则优先使用 aspect_ratio",
+            "minimum": 512,
+            "maximum": 2048
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "base64"
+            ],
+            "description": "返回格式。使用 `url` 获取临时下载地址，使用 `base64` 获取 Base64 编码内容。"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "description": "随机种子。显式传 `0` 会被保留。"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9,
+            "description": "期望返回的图片数量。"
+          },
+          "prompt_optimizer": {
+            "type": "boolean",
+            "description": "是否启用提示词优化。显式传 `false` 会被保留。"
+          }
+        }
+      },
+      "MiniMaxImageResponse": {
+        "type": "object",
+        "properties": {
+          "created": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MiniMaxImageData"
+            }
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MiniMaxImageMetadata"
+          }
+        }
+      },
+      "MiniMaxImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "图片下载地址。通常为临时链接，请尽快保存。"
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "Base64 编码的图片内容。"
+          }
+        }
+      },
+      "MiniMaxImageMetadata": {
+        "type": "object",
+        "properties": {
+          "provider_request_id": {
+            "type": "string",
+            "description": "模型服务返回的请求追踪 ID。"
+          },
+          "provider_status_code": {
+            "type": "integer",
+            "description": "模型服务返回的状态码。"
+          },
+          "provider_status_msg": {
+            "type": "string",
+            "description": "模型服务返回的状态说明。"
+          },
+          "success_count": {
+            "type": "integer",
+            "description": "本次成功生成的结果数量。"
+          },
+          "failed_count": {
+            "type": "integer",
+            "description": "本次未返回结果的数量。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-# MiniMax developer docs design
+﻿# MiniMax developer docs design
 
 ## Summary
 
@@ -13,7 +13,7 @@ The documentation will present MiniMax as a capability exposed by `baze平台`, 
 - navigation updates in `docs.json`
 - project-specific writing guidance in `AGENTS.md`
 
-The existing OpenAPI JSON files in `api-reference/cn/minimax` remain the source of truth for endpoint structure and schemas.
+The existing OpenAPI JSON files in `api-reference/zh-Hans/minimax` remain the source of truth for endpoint structure and schemas.
 
 ## Goals
 
@@ -49,15 +49,15 @@ All MiniMax pages will follow these framing rules:
 
 ### Chinese pages
 
-- `cn/minimax/overview.mdx`
-- `cn/minimax/text-to-image.mdx`
-- `cn/minimax/image-to-image.mdx`
-- `cn/minimax/text-to-video.mdx`
-- `cn/minimax/image-to-video.mdx`
-- `cn/minimax/start-end-to-video.mdx`
-- `cn/minimax/subject-reference-to-video.mdx`
-- `cn/minimax/query-video-status.mdx`
-- `cn/minimax/download-video-file.mdx`
+- `zh-Hans/minimax/overview.mdx`
+- `zh-Hans/minimax/text-to-image.mdx`
+- `zh-Hans/minimax/image-to-image.mdx`
+- `zh-Hans/minimax/text-to-video.mdx`
+- `zh-Hans/minimax/image-to-video.mdx`
+- `zh-Hans/minimax/start-end-to-video.mdx`
+- `zh-Hans/minimax/subject-reference-to-video.mdx`
+- `zh-Hans/minimax/query-video-status.mdx`
+- `zh-Hans/minimax/download-video-file.mdx`
 
 ### English pages
 
@@ -208,7 +208,7 @@ Replace the current placeholder template with project-specific rules.
 
 ## Implementation notes
 
-- Reuse the repository's existing Mintlify page pattern shown in `cn/Google.mdx` and `en/Google.mdx`
+- Reuse the repository's existing Mintlify page pattern shown in `zh-Hans/Google.mdx` and `en/Google.mdx`
 - Keep file naming lowercase and path names stable
 - Prefer simple Mintlify-compatible MDX over custom components unless needed
 - Update navigation only after all linked pages exist

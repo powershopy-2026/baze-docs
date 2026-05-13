@@ -8,7 +8,7 @@ Adjust the Mintlify docs navigation so provider names act as menu groups instead
 
 This change covers both Chinese and English docs where applicable.
 
-- Remove the `cn/Google` and `en/Google` chat completions pages from navigation so `api-reference/openapi.json` no longer appears as a visible docs page.
+- Remove the `zh-Hans/Google` and `en/Google` chat completions pages from navigation so `api-reference/openapi.json` no longer appears as a visible docs page.
 - Change `MiniMax`, `Ali`, and `BytePlus` from overview pages in navigation to menu-only provider groups.
 - Keep the existing provider overview files in the repository for now, but do not link to them from navigation.
 - Keep endpoint MDX files, but reduce them to minimal frontmatter so the rendered page content comes from the referenced OpenAPI JSON.
@@ -21,7 +21,7 @@ Update `docs.json` so the language tabs stay aligned and the provider structure 
 - Under `Model APIs`, create matching provider groups for `MiniMax`, `Ali`, and `BytePlus`.
 - Each provider group contains only endpoint pages.
 - Do not include `overview` pages in any provider group.
-- Do not include `cn/Google` or `en/Google` anywhere in navigation.
+- Do not include `zh-Hans/Google` or `en/Google` anywhere in navigation.
 
 ## Page rendering design
 

@@ -1,0 +1,307 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Claude 消息接口",
+    "version": "1.0.0",
+    "description": "完全兼容 Claude Messages API 格式<br />支持多轮对话和单次查询<br>支持文本、图像等多模态内容"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "当前网关实例"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Claude 消息",
+      "description": "原生 Claude 兼容消息"
+    }
+  ],
+  "paths": {
+    "/v1/messages": {
+      "post": {
+        "summary": "Claude 消息接口",
+        "description": "完全兼容 Claude Messages API 格式<br />支持多轮对话和单次查询<br />支持文本、图像等多模态内容",
+        "operationId": "createClaudeMessage",
+        "tags": [
+          "Claude 消息"
+        ],
+        "parameters": [
+          {
+            "name": "anthropic-version",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "2023-06-01"
+            },
+            "description": "API版本号\n指定要使用的Claude API版本"
+          },
+          {
+            "name": "anthropic-beta",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "可选的 Claude beta 功能头，提供时转发。"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaudeMessagesRequest"
+              },
+              "examples": {
+                "glmBasic": {
+                  "summary": "GLM Claude 请求",
+                  "value": {
+                    "model": "glm-4.7",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Hello"
+                      }
+                    ],
+                    "max_tokens": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Claude 兼容响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaudeMessagesResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "当 `stream` 为 true 时的 Claude 风格 SSE 流。"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "无效的请求体或上游验证失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaudeErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API密钥用于身份验证"
+      }
+    },
+    "schemas": {
+      "ClaudeMessagesRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages",
+          "max_tokens"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "glm-5-turbo",
+              "glm-5",
+              "glm-4.7",
+              "glm-4.7-flash",
+              "glm-4.5-air",
+              "MiniMax-M2.5",
+              "MiniMax-M2.7",
+              "MiniMax-M2.5-highspeed",
+              "MiniMax-M2.7-highspeed"
+            ],
+            "description": "模型名称"
+          },
+          "messages": {
+            "type": "array",
+            "description": "消息列表\n消息数组，模型会基于这些消息生成下一条回复。每条消息包含 role 和 content 两个字段。",
+            "items": {
+              "$ref": "#/components/schemas/ClaudeMessage"
+            }
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "最大生成token数\n生成停止前的最大token数量。模型可能会在达到此限制前停止。\n不同模型有不同的最大值，请参考模型文档。"
+          },
+          "system": {
+            "description": "系统提示词\n系统提示词用于设置Claude的角色、个性、目标和指令。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TextBlock"
+                }
+              }
+            ]
+          },
+          "temperature": {
+            "type": "number",
+            "description": "温度参数，范围 0-1\n控制输出的随机性：\n低值（如0.2）：更确定、更保守\n高值（如0.8）：更随机、更有创意"
+          },
+          "top_p": {
+            "type": "number",
+            "description": "核采样参数，范围 0-1\n使用nucleus sampling。建议使用 temperature 或 top_p 其中之一，不要同时使用。"
+          },
+          "stop_sequences": {
+            "type": "array",
+            "description": "停止序列\n自定义文本序列，遇到这些序列时模型将停止生成。",
+            "items": {
+              "type": "string"
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "是否启用流式输出"
+          }
+        },
+        "additionalProperties": true
+      },
+      "ClaudeMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "description": "输入：user（用户消息）或 assistant（AI回复，用于多轮对话）"
+          },
+          "content": {
+            "description": "输入：你想说的话",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ContentBlock"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "ContentBlock": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Claude 内容块类型。"
+          },
+          "text": {
+            "type": "string",
+            "description": "`text` 块的文本。"
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        },
+        "additionalProperties": true
+      },
+      "TextBlock": {
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "系统文本块类型。"
+          },
+          "text": {
+            "type": "string",
+            "description": "系统指令文本。"
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        }
+      },
+      "CacheControl": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "提示缓存控制类型。"
+          }
+        },
+        "description": "提示缓存元数据"
+      },
+      "ClaudeMessagesResponse": {
+        "type": "object",
+        "description": "上游提供商返回的 Claude 兼容消息响应。",
+        "additionalProperties": true
+      },
+      "ClaudeErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "type",
+              "message"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Claude 风格的错误类型。"
+              },
+              "message": {
+                "type": "string",
+                "description": "人类可读的错误消息。"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
