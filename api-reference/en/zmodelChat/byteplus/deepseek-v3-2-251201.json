@@ -371,12 +371,14 @@
             "type": "number",
             "minimum": -2,
             "maximum": 2,
+            "default": 0,
             "description": "Frequency penalty. Higher values suppress repetitive expressions."
           },
           "presence_penalty": {
             "type": "number",
             "minimum": -2,
             "maximum": 2,
+            "default": 0,
             "description": "Presence penalty. Higher values encourage the model to introduce new topics."
           },
           "temperature": {

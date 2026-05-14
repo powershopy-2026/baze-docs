@@ -371,12 +371,14 @@
             "type": "number",
             "minimum": -2,
             "maximum": 2,
+            "default": 0,
             "description": "频率惩罚。值越高，越抑制重复表达。"
           },
           "presence_penalty": {
             "type": "number",
             "minimum": -2,
             "maximum": 2,
+            "default": 0,
             "description": "存在惩罚。值越高，越鼓励模型引入新话题。"
           },
           "temperature": {
