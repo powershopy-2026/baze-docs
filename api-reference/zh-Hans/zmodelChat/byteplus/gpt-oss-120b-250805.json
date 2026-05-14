@@ -357,12 +357,11 @@
           "reasoning_effort": {
             "type": "string",
             "enum": [
-              "minimal",
               "low",
               "medium",
               "high"
             ],
-            "description": "限制思考工作量。`minimal` 最快，`high` 最深。"
+            "description": "限制思考工作量。`low` 最快，`high` 最深。"
           },
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
