@@ -401,7 +401,12 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 20,
-            "description": "当 `logprobs=true` 时，指定每个位置返回多少个候选 token 的对数概率。"
+            "description": "当 `logprobs=true` 时，指定每个位置返回多少个候选 token 的对数概率。",
+            "x-valid-when": {
+              "logprobs": [
+                true
+              ]
+            }
           },
           "tools": {
             "type": "array",
