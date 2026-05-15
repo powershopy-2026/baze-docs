@@ -455,6 +455,48 @@
             "type": "string",
             "description": "Text prompt describing the desired video. Use `Image x` and `Video x` references when multiple reference media items are provided."
           },
+          "size": {
+            "type": "string",
+            "enum": [
+              "720P",
+              "1080P"
+            ],
+            "description": "Output resolution tier for the current public implementation.",
+            "default": "1080P"
+          },
+          "seconds": {
+            "type": "string",
+            "description": "Video duration (seconds) as a string. Default is `\"5\"`.Range: [2, 15] for reference videos containing video, [2, 10] for reference videos without video.",
+            "default": "5",
+            "enum": [
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15"
+            ]
+          },
+          "ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4"
+            ],
+            "description": "Output aspect ratio.",
+            "default": "16:9"
+          },
           "negative_prompt": {
             "type": "string",
             "description": "Optional negative prompt describing content that should not appear in the generated video."
@@ -480,48 +522,6 @@
             "items": {
               "$ref": "#/components/schemas/ReferenceToVideoMediaInput"
             }
-          },
-          "seconds": {
-            "type": "string",
-            "description": "Video duration (seconds) as a string. Default is `\"5\"`.Range: [2, 15] for reference videos containing video, [2, 10] for reference videos without video.",
-            "default": "5",
-            "enum": [
-              "2",
-              "3",
-              "4",
-              "5",
-              "6",
-              "7",
-              "8",
-              "9",
-              "10",
-              "11",
-              "12",
-              "13",
-              "14",
-              "15"
-            ]
-          },
-          "size": {
-            "type": "string",
-            "enum": [
-              "720P",
-              "1080P"
-            ],
-            "description": "Output resolution tier for the current public implementation.",
-            "default": "1080P"
-          },
-          "ratio": {
-            "type": "string",
-            "enum": [
-              "16:9",
-              "9:16",
-              "1:1",
-              "4:3",
-              "3:4"
-            ],
-            "description": "Output aspect ratio.",
-            "default": "16:9"
           }
         }
       },

@@ -3,7 +3,7 @@
   "info": {
     "title": "gpt-oss-120b-250805",
     "version": "1.0.0",
-    "description": "BytePlus 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`gpt-oss-120b-250805`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。",
+    "description": "BytePlus 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`gpt-oss-120b-250805`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`tools`、`parallel_tool_calls`、`tool_choice`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "gpt-oss-120b-250805",
-        "description": "调用 BytePlus chat completions 能力。\n\n支持模型包括 `gpt-oss-120b-250805`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
+        "description": "调用 BytePlus chat completions 能力。\n\n支持模型包括 `gpt-oss-120b-250805`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`tools`、`parallel_tool_calls`、`tool_choice`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
         "operationId": "byteplusChatCompletions",
         "tags": [
           "BytePlus Chat"
@@ -357,12 +357,11 @@
           "reasoning_effort": {
             "type": "string",
             "enum": [
-              "minimal",
               "low",
               "medium",
               "high"
             ],
-            "description": "限制思考工作量。`minimal` 最快，`high` 最深。"
+            "description": "限制思考工作量。`low` 最快，`high` 最深。"
           },
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
@@ -371,12 +370,14 @@
             "type": "number",
             "minimum": -2,
             "maximum": 2,
+            "default": 0,
             "description": "频率惩罚。值越高，越抑制重复表达。"
           },
           "presence_penalty": {
             "type": "number",
             "minimum": -2,
             "maximum": 2,
+            "default": 0,
             "description": "存在惩罚。值越高，越鼓励模型引入新话题。"
           },
           "temperature": {
@@ -390,16 +391,6 @@
             "minimum": 0,
             "maximum": 1,
             "description": "核采样参数。通常与 `temperature` 二选一调优。"
-          },
-          "logprobs": {
-            "type": "boolean",
-            "description": "是否返回输出 token 的对数概率信息。"
-          },
-          "top_logprobs": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 20,
-            "description": "当 `logprobs=true` 时，指定每个位置返回多少个候选 token 的对数概率。"
           },
           "tools": {
             "type": "array",

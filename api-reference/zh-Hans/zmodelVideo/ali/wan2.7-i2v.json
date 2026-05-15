@@ -246,6 +246,36 @@
             "type": "string",
             "description": "可选文本提示词。未提供时，生成过程将主要依赖输入媒体素材。"
           },
+          "size": {
+            "type": "string",
+            "enum": [
+              "720P",
+              "1080P"
+            ],
+            "description": "当前项目实现支持的输出分辨率档位。",
+            "default": "1080P"
+          },
+          "seconds": {
+            "type": "string",
+            "description": "视频时长的字符串形式。当前支持 `2` 到 `15` 的整数字符串。",
+            "default": "5",
+            "enum": [
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15"
+            ]
+          },
           "negative_prompt": {
             "type": "string",
             "description": "可选反向提示词，用于描述不希望在视频中出现的内容。"
@@ -271,36 +301,6 @@
             "items": {
               "$ref": "#/components/schemas/Wan27MediaInput"
             }
-          },
-          "seconds": {
-            "type": "string",
-            "description": "视频时长的字符串形式。当前支持 `2` 到 `15` 的整数字符串。",
-            "default": "5",
-            "enum": [
-              "2",
-              "3",
-              "4",
-              "5",
-              "6",
-              "7",
-              "8",
-              "9",
-              "10",
-              "11",
-              "12",
-              "13",
-              "14",
-              "15"
-            ]
-          },
-          "size": {
-            "type": "string",
-            "enum": [
-              "720P",
-              "1080P"
-            ],
-            "description": "当前项目实现支持的输出分辨率档位。",
-            "default": "1080P"
           }
         }
       },

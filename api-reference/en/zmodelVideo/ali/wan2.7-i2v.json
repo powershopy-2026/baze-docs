@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Wan 2.7 Image-to-Video",
+    "title": "Wan 2.7 Image to Video",
     "version": "1.0.0",
-    "description": "Customer-facing channel document for Ali `wan2.7-i2v`. The public unified endpoint is `/v1/videos`.\n\nThis document covers only the fields currently implemented by the project for the official `wan2.7-i2v` capability: `model`, `prompt`, `image`, `images`, `media`, `seconds`, and `size`. The project accepts legacy `image` / `images` inputs for compatibility and maps them to the upstream `input.media` protocol.",
+    "description": "Ali `wan2.7-i2v` image-to-video capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document describes the officially implemented and publicly available fields: `model`, `prompt`, `image`, `images`, `media`, `seconds`, `size`. For backward compatibility, the platform still accepts `image` / `images` and internally maps them to the upstream provider's new `input.media` protocol.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -11,8 +11,8 @@
   },
   "servers": [
     {
-      "url": "https://api.powertokens.ai",
-      "description": "Baze API service endpoint"
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
     }
   ],
   "tags": [
@@ -24,8 +24,8 @@
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Create Wan 2.7 Image-to-Video Task",
-        "description": "Submit an asynchronous Ali `wan2.7-i2v` generation task.\n\nThe project supports two input styles:\n- Compatibility style: use `image` for first-frame generation, or `images` with exactly 2 items for first-frame plus last-frame generation.\n- Latest style: use top-level `media`, which maps to the upstream `input.media` protocol.\n\nImplemented official `media.type` values are `first_frame`, `last_frame`, `driving_audio`, and `first_clip`.\n\nSupported `media` combinations in the current project implementation:\n- `first_frame`\n- `first_frame + driving_audio`\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n- `first_clip`\n- `first_clip + last_frame`\n\n`prompt` is optional for this channel capability. `size` supports only `720P` and `1080P`. `seconds` supports integer strings from `2` to `15`.",
+        "summary": "Create Wan 2.7 Image to Video task",
+        "description": "Submit an asynchronous Ali `wan2.7-i2v` generation task.\n\nThis capability uses the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nCurrently implemented official `media.type` values include `first_frame`, `last_frame`, `driving_audio`, `first_clip`.\n\nSupported `media` combinations:\n- `first_frame`\n- `first_frame + driving_audio`\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
         "operationId": "aliWan27I2VCreate",
         "tags": [
           "Wan 2.7 Video"
@@ -39,10 +39,14 @@
               },
               "examples": {
                 "wan27_multimodal": {
-                  "summary": "Use media with first frame and driving audio",
+                  "summary": "First frame + driving audio",
                   "value": {
                     "model": "wan2.7-i2v",
-                    "prompt": "The portrait gradually starts speaking with subtle head motion.",
+                    "prompt": "A person gradually begins to speak naturally from a still portrait.",
+                    "negative_prompt": "blurry, low quality",
+                    "prompt_extend": true,
+                    "watermark": false,
+                    "seed": 42,
                     "media": [
                       {
                         "type": "first_frame",
@@ -57,12 +61,16 @@
                     "size": "720P"
                   }
                 },
-                "wan27_compatibility_image": {
-                  "summary": "Use legacy single image compatibility field",
+                "wan27_continuation": {
+                  "summary": "Video continuation from first clip (prompt omitted)",
                   "value": {
                     "model": "wan2.7-i2v",
-                    "image": "https://example.com/assets/first-frame.png",
-                    "prompt": "The camera slowly pushes in and the character blinks.",
+                    "media": [
+                      {
+                        "type": "first_clip",
+                        "url": "https://example.com/assets/opening-clip.mp4"
+                      }
+                    ],
                     "seconds": "5",
                     "size": "1080P"
                   }
@@ -73,7 +81,7 @@
         },
         "responses": {
           "200": {
-            "description": "Submission successful. Returns the unified OpenAI-style video task object.",
+            "description": "Submitted successfully. Returns an OpenAI-compatible video task object.",
             "content": {
               "application/json": {
                 "schema": {
@@ -83,7 +91,7 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters, such as unsupported `media` combinations or invalid `size` / `seconds` values.",
+            "description": "Invalid request parameters, e.g. unsupported `media` combination, or `size` / `seconds` out of supported range.",
             "content": {
               "application/json": {
                 "schema": {
@@ -115,7 +123,7 @@
             }
           },
           "429": {
-            "description": "Rate limited or insufficient quota.",
+            "description": "Rate limit triggered or insufficient account quota.",
             "content": {
               "application/json": {
                 "schema": {
@@ -125,7 +133,7 @@
             }
           },
           "500": {
-            "description": "Internal processing error.",
+            "description": "An internal error occurred while processing the request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -144,8 +152,8 @@
     },
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "Query Wan 2.7 Image-to-Video Task",
-        "description": "Query the latest status of an asynchronous `wan2.7-i2v` task by public task ID.",
+        "summary": "Query Wan 2.7 Image to Video task",
+        "description": "Query the latest status of a `wan2.7-i2v` asynchronous task by its public task ID.",
         "operationId": "aliWan27I2VQuery",
         "tags": [
           "Wan 2.7 Video"
@@ -163,7 +171,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Current task state.",
+            "description": "Current task status.",
             "content": {
               "application/json": {
                 "schema": {
@@ -193,7 +201,7 @@
             }
           },
           "404": {
-            "description": "Task not found or expired.",
+            "description": "Task does not exist or has expired.",
             "content": {
               "application/json": {
                 "schema": {
@@ -223,24 +231,8 @@
       "Wan27VideoRequest": {
         "type": "object",
         "required": [
-          "model"
-        ],
-        "anyOf": [
-          {
-            "required": [
-              "image"
-            ]
-          },
-          {
-            "required": [
-              "images"
-            ]
-          },
-          {
-            "required": [
-              "media"
-            ]
-          }
+          "model",
+          "media"
         ],
         "properties": {
           "model": {
@@ -252,32 +244,7 @@
           },
           "prompt": {
             "type": "string",
-            "description": "Optional text prompt. When omitted, generation relies entirely on the provided media inputs."
-          },
-          "image": {
-            "type": "string",
-            "description": "Compatibility field for single first-frame input. The project maps it to upstream `media: [{type: first_frame, url: ...}]`."
-          },
-          "images": {
-            "type": "array",
-            "description": "Compatibility field for first-frame plus last-frame input. Must contain exactly 2 items in order: `[first_frame, last_frame]`.",
-            "items": {
-              "type": "string"
-            },
-            "minItems": 2,
-            "maxItems": 2
-          },
-          "media": {
-            "type": "array",
-            "description": "Latest multimodal input style for `wan2.7-i2v`. Use this field for official upstream combinations such as first frame + driving audio or first clip continuation.",
-            "items": {
-              "$ref": "#/components/schemas/Wan27MediaInput"
-            }
-          },
-          "seconds": {
-            "type": "string",
-            "description": "Video duration in string form. Supported values are integer strings from `2` to `15`.",
-            "default": "5"
+            "description": "Optional text prompt. When omitted, generation relies primarily on the input media assets."
           },
           "size": {
             "type": "string",
@@ -285,8 +252,55 @@
               "720P",
               "1080P"
             ],
-            "description": "Output resolution tier for the current project implementation.",
+            "description": "Supported output resolution tiers.",
             "default": "1080P"
+          },
+          "seconds": {
+            "type": "string",
+            "description": "Video duration as a string. Supports integer strings from `2` to `15`.",
+            "default": "5",
+            "enum": [
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15"
+            ]
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Optional negative prompt describing content you do not want in the video."
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "Whether to enable intelligent prompt rewriting. Defaults to `true`."
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark. Defaults to `false`.",
+            "default": false
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed. Automatically generated by the system when not provided."
+          },
+          "media": {
+            "type": "array",
+            "description": "New multimodal input field. Used to carry the `wan2.7-i2v` upstream provider's new protocol, e.g. first frame + audio, video continuation, etc.",
+            "items": {
+              "$ref": "#/components/schemas/Wan27MediaInput"
+            }
           }
         }
       },
@@ -305,11 +319,11 @@
               "driving_audio",
               "first_clip"
             ],
-            "description": "Media input type."
+            "description": "Media asset type."
           },
           "url": {
             "type": "string",
-            "description": "Publicly accessible media URL."
+            "description": "Publicly accessible URL of the media asset."
           }
         }
       },
@@ -322,7 +336,7 @@
           },
           "task_id": {
             "type": "string",
-            "description": "Public task ID alias."
+            "description": "Backward-compatible alias for the public task ID."
           },
           "object": {
             "type": "string",
@@ -350,7 +364,7 @@
           "created_at": {
             "type": "integer",
             "format": "int64",
-            "description": "Unix timestamp in seconds."
+            "description": "Creation time as a Unix timestamp (seconds)."
           }
         }
       },
@@ -369,7 +383,7 @@
               },
               "metadata": {
                 "type": "object",
-                "description": "Additional unified metadata. On success, `metadata.url` usually contains the downloadable result URL.",
+                "description": "Additional unified metadata. On success, `metadata.url` typically contains the result download URL.",
                 "additionalProperties": true
               },
               "error": {

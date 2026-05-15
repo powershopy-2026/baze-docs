@@ -258,7 +258,7 @@
           "sequential_image_generation_options": {
             "type": "object",
             "description": "组图功能配置。仅当 `sequential_image_generation=auto` 时生效。",
-            "x-show-when": {
+            "x-valid-when": {
               "sequential_image_generation": [
                 "auto"
               ]
