@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://baze-api.powerbuyin.top",
+      "url": "https://api.powertokens.ai",
       "description": "当前网关实例"
     }
   ],
