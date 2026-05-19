@@ -1,5 +1,5 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.1",
   "info": {
     "title": "默认模块",
     "description": "",
@@ -20,6 +20,35 @@
           "interface"
         ],
         "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "format": "binary",
+                    "type": "string",
+                    "description": "文件",
+                    "example": ""
+                  },
+                  "email": {
+                    "description": "邮箱",
+                    "example": "",
+                    "type": "string"
+                  },
+                  "login_type": {
+                    "description": "google,github",
+                    "example": "",
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "",
@@ -27,29 +56,57 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": {},
-                  "x-apifox-ignore-properties": [],
-                  "x-apifox-orders": []
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "task_id": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "task_id"
+                      ]
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data",
+                    "msg"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "data": {
+                    "task_id": "task_2605191840200001"
+                  },
+                  "msg": ""
                 }
               }
             },
-            "x-apifox-name": "成功",
-            "x-apifox-ordering": 0
+            "headers": {}
           }
         },
-        "security": [],
-        "x-apifox-folder": "interface",
-        "x-apifox-status": "developing",
-        "x-run-in-apifox": "https://app.apifox.com/web/project/7926181/apis/api-459943909-run"
+        "security": []
       }
     }
   },
-  "webhooks": {},
   "components": {
     "schemas": {},
     "responses": {},
     "securitySchemes": {}
   },
-  "servers": [],
+  "servers": [
+    {
+      "url": "https://powertokens.ai/api",
+      "description": "正式环境"
+    }
+  ],
   "security": []
 }
