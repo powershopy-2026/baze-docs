@@ -37,7 +37,7 @@
                     "example": "",
                     "type": "string"
                   },
-                  "login_type": {
+                  "login_style": {
                     "description": "登录方式 google与github",
                     "example": "google",
                     "type": "string"
