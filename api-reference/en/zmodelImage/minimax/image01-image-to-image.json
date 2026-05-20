@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Image-01 Image Editing",
+    "title": "Image-01 image-to-image",
     "version": "1.0.0",
-    "description": "Image-to-image documentation for `image-01` models. The public endpoint is `/v1/images/edits` and supports edits or redraws based on reference images.",
+    "description": "Image-01 image-to-image capability documentation. The unified API endpoint is `/v1/images/edits`, used for generating or redrawing images based on a reference image.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -12,20 +12,20 @@
   "servers": [
     {
       "url": "https://api.powertokens.ai",
-      "description": "Baze API service endpoint"
+      "description": "Baze API server endpoint"
     }
   ],
   "tags": [
     {
       "name": "Image Generation",
-      "description": "Image-to-image capabilities for `image-01` models"
+      "description": "Image-01 image-to-image capability"
     }
   ],
   "paths": {
     "/v1/images/edits": {
       "post": {
-        "summary": "Image-01 Image Editing",
-        "description": "For image-to-image generation with `image-01` and `image-01-live`.\n\nPublic fields: `model`, `prompt`, `subject_reference`, `aspect_ratio`, `width`, `height`, `response_format`, `seed`, `n`, and `prompt_optimizer`. This document describes the JSON form of `subject_reference`.",
+        "summary": "Image-01 image-to-image",
+        "description": "Image-to-image capability for the `Image-01` model.\n\nExposed fields: `model`, `prompt`, `subject_reference`, `aspect_ratio`, `width`, `height`, `response_format`, `seed`, `n`, `prompt_optimizer`. `subject_reference` is expanded as a JSON request in this document.",
         "operationId": "minimaxImageToImage",
         "tags": [
           "Image Generation"
@@ -41,12 +41,12 @@
                 "subject_reference_example": {
                   "summary": "Using subject_reference",
                   "value": {
-                    "model": "image-01-live",
+                    "model": "image-01",
                     "prompt": "Turn this portrait into a manga cover",
                     "subject_reference": [
                       {
                         "type": "character",
-                        "image_file": "https://example.com/reference.png"
+                        "url": "https://example.com/reference.png"
                       }
                     ],
                     "response_format": "url",
@@ -59,7 +59,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success, returns unified image response structure.",
+            "description": "Success. Returns the unified image response structure.",
             "content": {
               "application/json": {
                 "schema": {
@@ -69,7 +69,7 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters, such as missing `subject_reference` or incompatible field combinations.",
+            "description": "Invalid request parameters, e.g. missing `subject_reference` or invalid field combination for the unified API endpoint.",
             "content": {
               "application/json": {
                 "schema": {
@@ -77,13 +77,12 @@
                 },
                 "examples": {
                   "invalid_request": {
-                    "summary": "Bad request",
+                    "summary": "Parameter error",
                     "value": {
                       "error": {
-                        "message": "Request body is invalid or contains unsupported values",
+                        "message": "Malformed request body or invalid field values",
                         "type": "invalid_request_error",
-                        "code": "bad_request_body",
-                        "param": ""
+                        "code": "bad_request_body"
                       }
                     }
                   }
@@ -104,15 +103,14 @@
                       "error": {
                         "message": "Invalid token",
                         "type": "api_error",
-                        "code": "access_denied",
-                        "param": ""
+                        "code": "access_denied"
                       }
                     }
                   }
                 }
               }
             },
-            "description": "Authentication failed, for example because the token is missing or invalid."
+            "description": "Authentication failed, e.g. missing or invalid token."
           },
           "413": {
             "content": {
@@ -125,17 +123,16 @@
                     "summary": "Request body too large",
                     "value": {
                       "error": {
-                        "message": "Request body is too large; reduce the input and try again",
+                        "message": "Request body too large, please reduce the input and retry",
                         "type": "api_error",
-                        "code": "read_request_body_failed",
-                        "param": ""
+                        "code": "read_request_body_failed"
                       }
                     }
                   }
                 }
               }
             },
-            "description": "The request body is too large."
+            "description": "Request body too large."
           },
           "429": {
             "content": {
@@ -145,20 +142,19 @@
                 },
                 "examples": {
                   "quota_exceeded": {
-                    "summary": "Quota exceeded or rate limited",
+                    "summary": "Insufficient quota or rate limited",
                     "value": {
                       "error": {
-                        "message": "Insufficient quota for this request",
+                        "message": "Insufficient account quota, please retry later",
                         "type": "api_error",
-                        "code": "insufficient_user_quota",
-                        "param": ""
+                        "code": "insufficient_user_quota"
                       }
                     }
                   }
                 }
               }
             },
-            "description": "Rate limits were hit or the account ran out of quota."
+            "description": "Rate limit triggered or insufficient account quota."
           },
           "500": {
             "content": {
@@ -168,20 +164,19 @@
                 },
                 "examples": {
                   "internal_error": {
-                    "summary": "Internal processing error",
+                    "summary": "Internal processing failure",
                     "value": {
                       "error": {
-                        "message": "Internal request processing failed",
+                        "message": "Internal processing failed, please retry later",
                         "type": "api_error",
-                        "code": "gen_relay_info_failed",
-                        "param": ""
+                        "code": "gen_relay_info_failed"
                       }
                     }
                   }
                 }
               }
             },
-            "description": "The server failed while processing the request."
+            "description": "Internal server error while processing the request."
           },
           "502": {
             "content": {
@@ -191,20 +186,19 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "Bad upstream response",
+                    "summary": "Abnormal upstream response",
                     "value": {
                       "error": {
-                        "message": "Upstream service returned an invalid response",
+                        "message": "The upstream provider returned an invalid response",
                         "type": "api_error",
-                        "code": "bad_response_status_code",
-                        "param": ""
+                        "code": "bad_response_status_code"
                       }
                     }
                   }
                 }
               }
             },
-            "description": "The upstream service returned an invalid response."
+            "description": "The upstream provider returned an abnormal response."
           },
           "503": {
             "content": {
@@ -214,20 +208,19 @@
                 },
                 "examples": {
                   "service_unavailable": {
-                    "summary": "Service unavailable",
+                    "summary": "Service temporarily unavailable",
                     "value": {
                       "error": {
-                        "message": "No available channel for the requested model",
+                        "message": "No available channel for the current model, please retry later",
                         "type": "api_error",
-                        "code": "get_channel_failed",
-                        "param": ""
+                        "code": "get_channel_failed"
                       }
                     }
                   }
                 }
               }
             },
-            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
+            "description": "Upstream provider temporarily unavailable, or no available channel for the current model."
           }
         },
         "security": [
@@ -258,14 +251,14 @@
           "model": {
             "type": "string",
             "enum": [
-              "image-01",
-              "image-01-live"
+              "image-01"
             ],
-            "description": "Model name used for this capability."
+            "description": "Model name for this capability."
           },
           "prompt": {
             "type": "string",
-            "description": "Image editing prompt."
+            "description": "Image editing prompt.",
+            "maxLength": 1500
           },
           "subject_reference": {
             "type": "array",
@@ -273,27 +266,41 @@
             "items": {
               "$ref": "#/components/schemas/SubjectReferenceItem"
             },
-            "description": "Subject reference data used to preserve character or object consistency in the generated result."
+            "description": "Subject reference information, used to enforce character or object consistency in the generated result."
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "Target aspect ratio."
+            "description": "Target aspect ratio.",
+            "enum": [
+              "1:1",
+              "16:9",
+              "4:3",
+              "3:2",
+              "2:3",
+              "3:4",
+              "9:16",
+              "21:9"
+            ]
           },
           "width": {
             "type": "integer",
-            "description": "Target width."
+            "description": "Generated image width (pixels). Only effective when model is image-01. Note: width and height must be set together, range [512, 2048], and must be multiples of 8. If set together with aspect_ratio, aspect_ratio takes priority.",
+            "minimum": 512,
+            "maximum": 2048
           },
           "height": {
             "type": "integer",
-            "description": "Target height."
+            "description": "Generated image height (pixels). Only effective when model is image-01. Note: width and height must be set together, range [512, 2048], and must be multiples of 8. If set together with aspect_ratio, aspect_ratio takes priority.",
+            "minimum": 512,
+            "maximum": 2048
           },
           "response_format": {
             "type": "string",
             "enum": [
               "url",
-              "b64_json"
+              "base64"
             ],
-            "description": "Response format. Use `url` for temporary download links or `b64_json` for Base64-encoded content."
+            "description": "Response format. Use `url` to get a temporary download link, or `base64` to get Base64-encoded content."
           },
           "seed": {
             "type": "integer",
@@ -316,14 +323,14 @@
         "type": "object",
         "required": [
           "type",
-          "image_file"
+          "url"
         ],
         "properties": {
           "type": {
             "type": "string",
             "description": "Subject type. Currently only `character` is supported."
           },
-          "image_file": {
+          "url": {
             "type": "string",
             "description": "Reference image URL or Data URL."
           }
@@ -363,23 +370,23 @@
         "properties": {
           "provider_request_id": {
             "type": "string",
-            "description": "Request trace ID returned by the model service."
+            "description": "Request tracking ID returned by the upstream provider."
           },
           "provider_status_code": {
             "type": "integer",
-            "description": "Status code returned by the model service."
+            "description": "Status code returned by the upstream provider."
           },
           "provider_status_msg": {
             "type": "string",
-            "description": "Status message returned by the model service."
+            "description": "Status message returned by the upstream provider."
           },
           "success_count": {
             "type": "integer",
-            "description": "Number of successfully generated results."
+            "description": "Number of successfully generated results in this request."
           },
           "failed_count": {
             "type": "integer",
-            "description": "Number of requested results that were not returned."
+            "description": "Number of results not returned in this request."
           }
         }
       },
@@ -394,7 +401,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "Error type, such as `invalid_request_error`, `api_error`, or another upstream-compatible error type."
+                "description": "Error type, e.g. `invalid_request_error`, `api_error`, or upstream-compatible error types."
               },
               "code": {
                 "type": "string"

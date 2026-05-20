@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Hailuo First-and-Last-Frame to Video",
+    "title": "Hailuo Image to Video",
     "version": "1.0.0",
-    "description": "First-and-last-frame video documentation for Hailuo models. The public endpoint is `/v1/videos` and creates asynchronous generation tasks.",
+    "description": "Hailuo series Image to Video capability documentation. The unified API endpoint is `/v1/videos`, used to create asynchronous video generation tasks.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -12,21 +12,21 @@
   "servers": [
     {
       "url": "https://api.powertokens.ai",
-      "description": "Baze API service endpoint"
+      "description": "Baze API server endpoint"
     }
   ],
   "tags": [
     {
       "name": "Hailuo Video",
-      "description": "First-and-last-frame video generation for Hailuo models"
+      "description": "Hailuo Image to Video capability"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Hailuo First-and-Last-Frame to Video",
-        "description": "For the `MiniMax-Hailuo-02` first-and-last-frame video model. After submission, query task status with `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `images`, `prompt`, `seconds`, and `size`. Pass exactly two images in `[first_frame, last_frame]` order.",
-        "operationId": "minimaxStartEndToVideo",
+        "summary": "Hailuo Image to Video",
+        "description": "Applies to `MiniMax-Hailuo-02` Image to Video model. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `image`, `prompt`, `seconds`, `size`.",
+        "operationId": "minimaxImageToVideo",
         "tags": [
           "Hailuo Video"
         ],
@@ -35,18 +35,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StartEndVideoRequest"
+                "$ref": "#/components/schemas/ImageToVideoRequest"
               },
               "examples": {
                 "basic_request": {
-                  "summary": "Basic start-end frame video request",
+                  "summary": "Basic Image to Video request",
                   "value": {
                     "model": "MiniMax-Hailuo-02",
-                    "image": "https://example.com/assets/start-frame.png",
-                    "last_frame_image": "https://example.com/assets/end-frame.png",
-                    "prompt": "A person walking from left to right",
+                    "image": "https://example.com/assets/first-frame.png",
+                    "prompt": "The girl looks at the camera and smiles.",
                     "seconds": "6",
-                    "size": "720P"
+                    "size": "768P"
                   }
                 }
               }
@@ -55,7 +54,7 @@
         },
         "responses": {
           "200": {
-            "description": "Submission successful, returns unified OpenAI-style video task object.",
+            "description": "Submitted successfully. Returns an OpenAI-compatible video task object.",
             "content": {
               "application/json": {
                 "schema": {
@@ -65,7 +64,7 @@
             }
           },
           "400": {
-            "description": "Invalid request parameters, such as missing `image` or `last_frame_image`, or unsupported model.",
+            "description": "Invalid request parameters, e.g. missing `image` or using a model that does not support Image to Video.",
             "content": {
               "application/json": {
                 "schema": {
@@ -73,10 +72,10 @@
                 },
                 "examples": {
                   "invalid_request": {
-                    "summary": "Bad request",
+                    "summary": "Parameter error",
                     "value": {
                       "code": "bad_request_body",
-                      "message": "Request body is invalid or contains unsupported values",
+                      "message": "Malformed request body or invalid field value",
                       "data": null
                     }
                   }
@@ -102,7 +101,7 @@
                 }
               }
             },
-            "description": "Authentication failed, for example because the token is missing or invalid."
+            "description": "Authentication failed, e.g. missing or invalid token."
           },
           "413": {
             "content": {
@@ -115,14 +114,14 @@
                     "summary": "Request body too large",
                     "value": {
                       "code": "read_request_body_failed",
-                      "message": "Request body is too large; reduce the input and try again",
+                      "message": "Request body too large, please reduce the input and retry",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "The request body is too large."
+            "description": "Request body too large."
           },
           "429": {
             "content": {
@@ -132,17 +131,17 @@
                 },
                 "examples": {
                   "quota_exceeded": {
-                    "summary": "Quota exceeded or rate limited",
+                    "summary": "Insufficient quota or rate limited",
                     "value": {
                       "code": "insufficient_user_quota",
-                      "message": "Insufficient quota for this request",
+                      "message": "Insufficient account quota, please try again later",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "Rate limits were hit or the account ran out of quota."
+            "description": "Rate limit triggered or insufficient account quota."
           },
           "500": {
             "content": {
@@ -152,17 +151,17 @@
                 },
                 "examples": {
                   "internal_error": {
-                    "summary": "Internal processing error",
+                    "summary": "Internal processing failure",
                     "value": {
                       "code": "gen_relay_info_failed",
-                      "message": "Internal request processing failed",
+                      "message": "Internal processing failed, please try again later",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "The server failed while processing the request."
+            "description": "An internal error occurred while processing the request."
           },
           "502": {
             "content": {
@@ -172,17 +171,17 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "Bad upstream response",
+                    "summary": "Upstream provider response error",
                     "value": {
                       "code": "bad_response_status_code",
-                      "message": "Upstream service returned an invalid response",
+                      "message": "The upstream provider returned an invalid response",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "The upstream service returned an invalid response."
+            "description": "The upstream provider returned an abnormal response."
           },
           "503": {
             "content": {
@@ -192,17 +191,17 @@
                 },
                 "examples": {
                   "service_unavailable": {
-                    "summary": "Service unavailable",
+                    "summary": "Service temporarily unavailable",
                     "value": {
                       "code": "get_channel_failed",
-                      "message": "No available channel for the requested model",
+                      "message": "No available channel for the current model, please try again later",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
+            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
@@ -222,12 +221,11 @@
       }
     },
     "schemas": {
-      "StartEndVideoRequest": {
+      "ImageToVideoRequest": {
         "type": "object",
         "required": [
           "model",
-          "image",
-          "last_frame_image"
+          "image"
         ],
         "properties": {
           "model": {
@@ -235,27 +233,39 @@
             "enum": [
               "MiniMax-Hailuo-02"
             ],
-            "description": "Model name used for this capability."
+            "description": "Model name for this capability."
           },
           "image": {
             "type": "string",
-            "description": "First frame image URL or Data URL."
-          },
-          "last_frame_image": {
-            "type": "string",
-            "description": "Last frame image URL or Data URL."
+            "description": "First-frame image URL or Data URL."
           },
           "prompt": {
             "type": "string",
-            "description": "Optional video prompt describing transition from first to last frame."
+            "description": "Optional video prompt.",
+            "maxLength": 2000
           },
           "seconds": {
             "type": "string",
-            "description": "Target video duration in seconds."
+            "description": "Target video duration in seconds. (1080P only supports 6 seconds.)",
+            "enum": [
+              "6",
+              "10"
+            ],
+            "x-linkage": {
+              "size": {
+                "1080P": [
+                  "6"
+                ]
+              }
+            }
           },
           "size": {
             "type": "string",
-            "description": "Target output size or resolution. Available values depend on the selected model."
+            "description": "Target output resolution. Image to Video models currently support `768P` and `1080P`.",
+            "enum": [
+              "768P",
+              "1080P"
+            ]
           }
         }
       },

@@ -170,6 +170,12 @@
                         ]
                       }
                     ]
+                  },
+                  {
+                    "group": "工具栏",
+                    "pages": [
+                      "zh-Hans/tools/upload-file"
+                    ]
                   }
                 ]
               }

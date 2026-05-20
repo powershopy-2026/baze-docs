@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Video Task Status",
+    "title": "Query Video Task Status",
     "version": "1.0.0",
-    "description": "Documentation for querying asynchronous video tasks. The public endpoint is `/v1/videos/{task_id}` and returns task status, progress, and result data.",
+    "description": "Asynchronous video task status query documentation. The unified API endpoint is `/v1/videos/{task_id}`, used to query task status, progress, and results.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -12,20 +12,20 @@
   "servers": [
     {
       "url": "https://api.powertokens.ai",
-      "description": "Baze API service endpoint"
+      "description": "Baze API server endpoint"
     }
   ],
   "tags": [
     {
       "name": "Hailuo Video",
-      "description": "Video task status for Hailuo workflows"
+      "description": "Hailuo video task status query"
     }
   ],
   "paths": {
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "Video Task Status",
-        "description": "Query the latest state of an asynchronous video task by task ID.\n\nWhen generation finishes, `metadata.url` can be used to continue accessing the result. If you need the final media content directly, call `/v1/videos/{task_id}/content`.",
+        "summary": "Query Video Task Status",
+        "description": "Query the latest status of an asynchronous video task by task ID.\n\nOnce the task is completed, `metadata.url` in the response can be used to access the result URL. To download the final file directly, call `/v1/videos/{task_id}/content`.",
         "operationId": "minimaxQueryVideoStatus",
         "tags": [
           "Hailuo Video"
@@ -70,7 +70,7 @@
             }
           },
           "404": {
-            "description": "Task not found or unavailable.",
+            "description": "Task does not exist or is temporarily unavailable.",
             "content": {
               "application/json": {
                 "schema": {
@@ -81,7 +81,7 @@
                     "summary": "Task not found",
                     "value": {
                       "code": "task_not_found",
-                      "message": "Task not found or expired",
+                      "message": "Task does not exist or has expired",
                       "data": null
                     }
                   }
@@ -107,7 +107,7 @@
                 }
               }
             },
-            "description": "Authentication failed, for example because the token is missing or invalid."
+            "description": "Authentication failed, e.g. missing or invalid token."
           },
           "429": {
             "content": {
@@ -117,17 +117,17 @@
                 },
                 "examples": {
                   "quota_exceeded": {
-                    "summary": "Quota exceeded or rate limited",
+                    "summary": "Insufficient quota or rate limited",
                     "value": {
                       "code": "insufficient_user_quota",
-                      "message": "Insufficient quota for this request",
+                      "message": "Insufficient account quota, please try again later",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "Rate limits were hit or the account ran out of quota."
+            "description": "Rate limit triggered or insufficient account quota."
           },
           "500": {
             "content": {
@@ -137,17 +137,17 @@
                 },
                 "examples": {
                   "internal_error": {
-                    "summary": "Internal processing error",
+                    "summary": "Internal processing failure",
                     "value": {
                       "code": "gen_relay_info_failed",
-                      "message": "Internal request processing failed",
+                      "message": "Internal processing failed, please try again later",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "The server failed while processing the request."
+            "description": "An internal error occurred while processing the request."
           },
           "502": {
             "content": {
@@ -157,17 +157,17 @@
                 },
                 "examples": {
                   "bad_gateway": {
-                    "summary": "Bad upstream response",
+                    "summary": "Upstream provider response error",
                     "value": {
                       "code": "bad_response_status_code",
-                      "message": "Upstream service returned an invalid response",
+                      "message": "The upstream provider returned an invalid response",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "The upstream service returned an invalid response."
+            "description": "The upstream provider returned an abnormal response."
           },
           "503": {
             "content": {
@@ -177,17 +177,17 @@
                 },
                 "examples": {
                   "service_unavailable": {
-                    "summary": "Service unavailable",
+                    "summary": "Service temporarily unavailable",
                     "value": {
                       "code": "get_channel_failed",
-                      "message": "No available channel for the requested model",
+                      "message": "No available channel for the current model, please try again later",
                       "data": null
                     }
                   }
                 }
               }
             },
-            "description": "The upstream service is temporarily unavailable, or no channel is currently available for this model."
+            "description": "The upstream provider is temporarily unavailable, or no channel is currently available for this model."
           }
         },
         "security": [
