@@ -11,44 +11,26 @@
     }
   ],
   "paths": {
-    "/interface/upload": {
-      "post": {
-        "summary": "批量上传文件",
+    "/interface/get-asset-id": {
+      "get": {
+        "summary": "Obtain asset ID",
         "deprecated": false,
-        "description": "异步上传资产文件，先获取到task_id，然后用task_id查询asset_id",
+        "description": "",
         "tags": [
           "interface"
         ],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "format": "binary",
-                    "type": "string",
-                    "description": "文件",
-                    "example": ""
-                  },
-                  "email": {
-                    "description": "邮箱",
-                    "example": "",
-                    "type": "string"
-                  },
-                  "login_type": {
-                    "description": "登录方式 google与github",
-                    "example": "google",
-                    "type": "string"
-                  }
-                }
-              },
-              "examples": {}
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "task_2605191608220001",
+            "schema": {
+              "type": "string"
             }
-          },
-          "required": true
-        },
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -63,12 +45,12 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "task_id": {
+                        "asset_id": {
                           "type": "string"
                         }
                       },
                       "required": [
-                        "task_id"
+                        "asset_id"
                       ]
                     },
                     "msg": {
@@ -84,7 +66,7 @@
                 "example": {
                   "code": 200,
                   "data": {
-                    "task_id": "task_2605191840200001"
+                    "asset_id": "asset-20260519160823-7gcnx"
                   },
                   "msg": ""
                 }
@@ -102,11 +84,6 @@
     "responses": {},
     "securitySchemes": {}
   },
-  "servers": [
-    {
-      "url": "https://powertokens.ai/api",
-      "description": "正式环境"
-    }
-  ],
+  "servers": [],
   "security": []
 }

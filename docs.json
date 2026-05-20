@@ -174,7 +174,8 @@
                   {
                     "group": "工具栏",
                     "pages": [
-                      "zh-Hans/tools/upload-file"
+                      "zh-Hans/tools/upload-file",
+                      "zh-Hans/tools/get-asset-id"
                     ]
                   }
                 ]
@@ -341,6 +342,13 @@
                           "en/zmodelAudio/ali/qwen3-tts-instruct-flash"
                         ]
                       }
+                    ]
+                  },
+                  {
+                    "group": "tools",
+                    "pages": [
+                      "en/tools/upload-file",
+                      "en/tools/get-asset-id"
                     ]
                   }
                 ]

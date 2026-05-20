@@ -13,9 +13,9 @@
   "paths": {
     "/interface/upload": {
       "post": {
-        "summary": "批量上传文件",
+        "summary": "Upload file",
         "deprecated": false,
-        "description": "异步上传资产文件，先获取到task_id，然后用task_id查询asset_id",
+        "description": "Asynchronously upload the asset file, first obtain the task_id, then use the task_id to query the asset_id",
         "tags": [
           "interface"
         ],
@@ -29,16 +29,16 @@
                   "file": {
                     "format": "binary",
                     "type": "string",
-                    "description": "文件",
+                    "description": "file",
                     "example": ""
                   },
                   "email": {
-                    "description": "邮箱",
+                    "description": "email",
                     "example": "",
                     "type": "string"
                   },
                   "login_type": {
-                    "description": "登录方式 google与github",
+                    "description": "Login methods: Google and GitHub",
                     "example": "google",
                     "type": "string"
                   }
