@@ -19,7 +19,18 @@
         "tags": [
           "interface"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Internal-Asset-Key",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {

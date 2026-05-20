@@ -1,0 +1,60 @@
+name: Sync fat-test to main
+
+on:
+  push:
+    branches: [fat-test]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          # PAT allows pushing to protected branches and triggering downstream workflows
+          token: ${{ secrets.SYNC_TOKEN }}
+
+      - name: Skip if only workflow files changed
+        id: check
+        run: |
+          if git diff --quiet origin/main..HEAD -- \
+            ':(exclude).github/'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Sync content with production URLs
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          # Sync content directories and root config files from fat-test
+          git checkout main
+          git checkout fat-test -- \
+            api-reference/ \
+            docs/ \
+            zh-Hans/ \
+            en/ \
+            AGENTS.md \
+            docs.json \
+            .mintignore 2>/dev/null || true
+
+          # Replace test URLs with production URLs in OpenAPI specs
+          find api-reference -name '*.json' -exec \
+            sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' {} +
+
+          # Replace in markdown docs
+          sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' AGENTS.md 2>/dev/null || true
+          find docs -name '*.md' -exec \
+            sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' {} + 2>/dev/null || true
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "sync: update from fat-test with production URLs"
+            git push origin main
+          fi
