@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Seedance 1.0 Pro First Frame Image-to-Video",
+    "title": "Seedance 1.0 Pro Image-to-Video",
     "version": "1.0.0"
   },
   "servers": [
@@ -12,7 +12,7 @@
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Seedance 1.0 Pro First Frame Image-to-Video",
+        "summary": "Seedance 1.0 Pro Image-to-Video",
         "description": "Applicable to the `seedance-1-0-pro-250528` model.",
         "operationId": "seedance10ProImageToVideoEn",
         "requestBody": {
@@ -24,7 +24,7 @@
               },
               "examples": {
                 "image_to_video": {
-                  "summary": "Basic first frame image-to-video",
+                  "summary": "Basic image-to-video",
                   "value": {
                     "model": "seedance-1-0-pro-250528",
                     "media": [
@@ -80,7 +80,7 @@
           },
           "media": {
             "type": "array",
-            "description": "Multimodal input array. First frame image-to-video must contain `first_frame` and `text`.",
+            "description": "Multimodal input array. Image-to-video must contain `first_frame` and `text`.",
             "items": {
               "$ref": "#/components/schemas/VideoMediaInput"
             }
@@ -125,7 +125,7 @@
               "21:9",
               "adaptive"
             ],
-            "description": "Video aspect ratio. Text-to-video defaults to 16:9, first frame image-to-video defaults to adaptive.",
+            "description": "Video aspect ratio. Text-to-video defaults to 16:9, image-to-video defaults to adaptive.",
             "default": "adaptive"
           },
           "seed": {
