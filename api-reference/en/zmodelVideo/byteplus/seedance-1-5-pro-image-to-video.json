@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Seedance 1.5 Pro First Frame Image-to-Video",
+    "title": "Seedance 1.5 Pro Image-to-Video",
     "version": "1.0.0"
   },
   "servers": [
@@ -12,7 +12,7 @@
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Seedance 1.5 Pro First Frame Image-to-Video",
+        "summary": "Seedance 1.5 Pro Image-to-Video",
         "operationId": "seedance15ProImageToVideoEn",
         "description": "Applicable to the `seedance-1-5-pro-251215` model.",
         "requestBody": {
@@ -24,7 +24,7 @@
               },
               "examples": {
                 "image_to_video": {
-                  "summary": "Basic first frame image-to-video",
+                  "summary": "Basic image-to-video",
                   "value": {
                     "model": "seedance-1-5-pro-251215",
                     "media": [

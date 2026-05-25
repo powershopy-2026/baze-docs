@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Seedance 2.0 Fast First Frame Image-to-Video",
+    "title": "Seedance 2.0 Fast Image-to-Video",
     "version": "1.0.0",
-    "description": "Dreamina Seedance 2.0 Fast first frame image-to-video capability. Rapidly generates videos from starting frame images and text prompts.",
+    "description": "Dreamina Seedance 2.0 Fast image-to-video capability. Rapidly generates videos from starting frame images and text prompts.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -24,7 +24,7 @@
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Seedance 2.0 Fast First Frame Image-to-Video",
+        "summary": "Seedance 2.0 Fast Image-to-Video",
         "description": "Applicable to the `dreamina-seedance-2-0-fast-260128` model.",
         "operationId": "seedance20FastImageToVideoEn",
         "tags": [
@@ -39,7 +39,7 @@
               },
               "examples": {
                 "image_to_video": {
-                  "summary": "Basic first frame image-to-video",
+                  "summary": "Basic image-to-video",
                   "value": {
                     "model": "dreamina-seedance-2-0-fast-260128",
                     "media": [

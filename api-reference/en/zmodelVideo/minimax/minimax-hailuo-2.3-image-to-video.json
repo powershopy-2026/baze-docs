@@ -237,7 +237,7 @@
           },
           "image": {
             "type": "string",
-            "description": "First-frame image URL or Data URL."
+            "description": "Image URL or Data URL."
           },
           "prompt": {
             "type": "string",

@@ -130,7 +130,7 @@
               "21:9",
               "adaptive"
             ],
-            "description": "Video aspect ratio. Text-to-Video defaults to 16:9, first-frame Image-to-Video defaults to `adaptive`.",
+            "description": "Video aspect ratio. Text-to-Video defaults to 16:9, Image-to-Video defaults to `adaptive`.",
             "default": "adaptive"
           },
           "seed": {

@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Seedance 2.0 First Frame Image-to-Video",
+    "title": "Seedance 2.0 Image-to-Video",
     "version": "1.0.0",
-    "description": "dreamina-seedance-2-0-260128\n\n Dreamina Seedance 2.0 first frame image-to-video capability. Generates video by providing a starting frame image and a text prompt.",
+    "description": "dreamina-seedance-2-0-260128\n\n Dreamina Seedance 2.0 image-to-video capability. Generates video by providing a starting frame image and a text prompt.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -24,7 +24,7 @@
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Seedance 2.0 First Frame Image-to-Video",
+        "summary": "Seedance 2.0 Image-to-Video",
         "description": "Applicable to the `dreamina-seedance-2-0-260128` model. After submitting a task, please query the status via `GET /v1/videos/{task_id}`.",
         "operationId": "seedance20ImageToVideoEn",
         "tags": [
@@ -39,7 +39,7 @@
               },
               "examples": {
                 "image_to_video": {
-                  "summary": "Basic first frame image-to-video",
+                  "summary": "Basic image-to-video",
                   "value": {
                     "model": "dreamina-seedance-2-0-260128",
                     "media": [
