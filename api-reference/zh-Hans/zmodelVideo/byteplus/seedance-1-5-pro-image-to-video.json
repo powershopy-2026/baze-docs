@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Seedance 1.5 Pro 首帧图生视频",
+    "title": "Seedance 1.5 Pro 图生视频",
     "version": "1.0.0"
   },
   "servers": [
@@ -12,7 +12,7 @@
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Seedance 1.5 Pro 首帧图生视频",
+        "summary": "Seedance 1.5 Pro 图生视频",
         "operationId": "seedance15ProImageToVideo",
         "description": "适用于 `seedance-1-5-pro-251215` 模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。",
         "requestBody": {
@@ -24,7 +24,7 @@
               },
               "examples": {
                 "image_to_video": {
-                  "summary": "基础首帧图生视频",
+                  "summary": "基础图生视频",
                   "value": {
                     "model": "seedance-1-5-pro-251215",
                     "media": [

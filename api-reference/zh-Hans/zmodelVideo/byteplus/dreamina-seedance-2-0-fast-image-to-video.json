@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Seedance 2.0 Fast 首帧图生视频",
+    "title": "Seedance 2.0 Fast 图生视频",
     "version": "1.0.0",
-    "description": "Dreamina Seedance 2.0 Fast 首帧图生视频能力。",
+    "description": "Dreamina Seedance 2.0 Fast 图生视频能力。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -24,7 +24,7 @@
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Seedance 2.0 Fast 首帧图生视频",
+        "summary": "Seedance 2.0 Fast 图生视频",
         "operationId": "seedance20FastImageToVideo",
         "description": "适用于 `dreamina-seedance-2-0-fast-260128` 模型。",
         "tags": [
@@ -39,7 +39,7 @@
               },
               "examples": {
                 "image_to_video": {
-                  "summary": "基础首帧图生视频",
+                  "summary": "基础图生视频",
                   "value": {
                     "model": "dreamina-seedance-2-0-fast-260128",
                     "media": [
@@ -126,8 +126,7 @@
             "type": "string",
             "enum": [
               "480p",
-              "720p",
-              "1080p"
+              "720p"
             ],
             "description": "视频输出规格参数。默认 720p。",
             "default": "720p"
@@ -143,7 +142,7 @@
               "21:9",
               "adaptive"
             ],
-            "description": "视频宽高比。文生视频默认 16:9，首帧图生视频默认 adaptive。",
+            "description": "视频宽高比。文生视频默认 16:9，图生视频默认 adaptive。",
             "default": "adaptive"
           },
           "seed": {
