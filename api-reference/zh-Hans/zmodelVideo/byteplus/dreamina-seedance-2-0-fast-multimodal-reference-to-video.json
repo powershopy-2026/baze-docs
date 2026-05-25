@@ -139,8 +139,7 @@
             "type": "string",
             "enum": [
               "480p",
-              "720p",
-              "1080p"
+              "720p"
             ],
             "description": "视频输出规格参数。默认 720p。",
             "default": "720p"
@@ -156,7 +155,7 @@
               "21:9",
               "adaptive"
             ],
-            "description": "视频宽高比。文生视频默认 16:9，首帧图生视频默认 `adaptive`。",
+            "description": "视频宽高比。文生视频默认 16:9，图生视频默认 `adaptive`。",
             "default": "16:9"
           },
           "seed": {

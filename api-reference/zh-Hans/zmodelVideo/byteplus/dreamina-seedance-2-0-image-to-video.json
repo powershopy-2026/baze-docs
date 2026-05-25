@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Seedance 2.0 首帧图生视频",
+    "title": "Seedance 2.0 图生视频",
     "version": "1.0.0",
-    "description": "Dreamina Seedance 2.0 首帧图生视频能力。通过提供起始帧图像和提示词生成视频。",
+    "description": "Dreamina Seedance 2.0 图生视频能力。通过提供起始帧图像和提示词生成视频。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -24,7 +24,7 @@
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Seedance 2.0 首帧图生视频",
+        "summary": "Seedance 2.0 图生视频",
         "description": "适用于 `dreamina-seedance-2-0-260128` 模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。",
         "operationId": "seedance20ImageToVideo",
         "tags": [
@@ -39,7 +39,7 @@
               },
               "examples": {
                 "image_to_video": {
-                  "summary": "基础首帧图生视频",
+                  "summary": "基础图生视频",
                   "value": {
                     "model": "dreamina-seedance-2-0-260128",
                     "media": [
@@ -100,7 +100,7 @@
           "media": {
             "type": "array",
             "minItems": 2,
-            "description": "多模态输入数组。首帧图生视频需包含 `type: \"first_frame\"` 和 `type: \"text\"`。",
+            "description": "多模态输入数组。图生视频需包含 `type: \"first_frame\"` 和 `type: \"text\"`。",
             "items": {
               "$ref": "#/components/schemas/VideoMediaInput"
             }
@@ -145,7 +145,7 @@
               "21:9",
               "adaptive"
             ],
-            "description": "视频宽高比。首帧图生视频默认 adaptive。",
+            "description": "视频宽高比。图生视频默认 adaptive。",
             "default": "adaptive"
           },
           "seed": {

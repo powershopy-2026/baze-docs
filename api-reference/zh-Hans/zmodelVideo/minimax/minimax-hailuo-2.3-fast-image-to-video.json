@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Hailuo 首帧图生视频",
+    "title": "Hailuo 图生视频",
     "version": "1.0.0",
-    "description": "Hailuo 系列首帧图生视频能力文档。公开统一入口为 `/v1/videos`，用于创建异步视频生成任务。",
+    "description": "Hailuo 系列图生视频能力文档。公开统一入口为 `/v1/videos`，用于创建异步视频生成任务。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "Hailuo Video",
-      "description": "Hailuo 首帧图生视频能力"
+      "description": "Hailuo 图生视频能力"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Hailuo 首帧图生视频",
-        "description": "适用于 `MiniMax-Hailuo-2.3-Fast` 首帧图生视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`image`、`prompt`、`seconds`、`size`。",
+        "summary": "Hailuo 图生视频",
+        "description": "适用于 `MiniMax-Hailuo-2.3-Fast` 图生视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`image`、`prompt`、`seconds`、`size`。",
         "operationId": "minimaxImageToVideo",
         "tags": [
           "Hailuo Video"
@@ -39,7 +39,7 @@
               },
               "examples": {
                 "basic_request": {
-                  "summary": "基础首帧图生视频请求",
+                  "summary": "基础图生视频请求",
                   "value": {
                     "model": "MiniMax-Hailuo-2.3-Fast",
                     "image": "https://example.com/assets/first-frame.png",
@@ -64,7 +64,7 @@
             }
           },
           "400": {
-            "description": "请求参数不合法，例如缺少 `image`，或传入不支持首帧图生视频的模型。",
+            "description": "请求参数不合法，例如缺少 `image`，或传入不支持图生视频的模型。",
             "content": {
               "application/json": {
                 "schema": {

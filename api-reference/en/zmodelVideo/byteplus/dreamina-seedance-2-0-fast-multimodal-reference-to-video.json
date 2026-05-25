@@ -139,8 +139,7 @@
             "type": "string",
             "enum": [
               "480p",
-              "720p",
-              "1080p"
+              "720p"
             ],
             "description": "Video output resolution specification. Defaults to 720p.",
             "default": "720p"

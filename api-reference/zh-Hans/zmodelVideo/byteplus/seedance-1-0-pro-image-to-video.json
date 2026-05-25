@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Seedance 1.0 Pro 首帧图生视频",
+    "title": "Seedance 1.0 Pro 图生视频",
     "version": "1.0.0"
   },
   "servers": [
@@ -12,7 +12,7 @@
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Seedance 1.0 Pro 首帧图生视频",
+        "summary": "Seedance 1.0 Pro 图生视频",
         "operationId": "seedance10ProImageToVideo",
         "description": "适用于 `seedance-1-0-pro-250528` 模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。",
         "requestBody": {
@@ -24,7 +24,7 @@
               },
               "examples": {
                 "image_to_video": {
-                  "summary": "基础首帧图生视频",
+                  "summary": "基础图生视频",
                   "value": {
                     "model": "seedance-1-0-pro-250528",
                     "media": [
@@ -80,7 +80,7 @@
           },
           "media": {
             "type": "array",
-            "description": "多模态输入数组。首帧图生视频需包含 `first_frame` 和 `text`。",
+            "description": "多模态输入数组。图生视频需包含 `first_frame` 和 `text`。",
             "items": {
               "$ref": "#/components/schemas/VideoMediaInput"
             }
@@ -125,7 +125,7 @@
               "21:9",
               "adaptive"
             ],
-            "description": "视频宽高比。文生视频默认 16:9，首帧图生视频默认 adaptive。",
+            "description": "视频宽高比。文生视频默认 16:9，图生视频默认 adaptive。",
             "default": "adaptive"
           },
           "seed": {
