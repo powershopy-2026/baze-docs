@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "wan2.7-i2v 图生视频",
+    "title": "Wan 2.7 Video Continuation",
     "version": "1.0.0",
-    "description": "面向客户的 Ali `wan2.7-i2v` 渠道文档，统一公开入口为 `/v1/videos`。\n\n本文档只描述项目当前已经实现并对外开放的官方能力字段：`model`、`prompt`、`image`、`images`、`media`、`seconds`、`size`。为了兼容历史调用方式，项目仍接受 `image` / `images`，并在内部映射为上游新版 `input.media` 协议。",
+    "description": "Ali `wan2.7-i2v` video continuation capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the video continuation scenario, using the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_clip` and `last_frame`.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -12,21 +12,21 @@
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Baze API 服务地址"
+      "description": "Baze API server endpoint"
     }
   ],
   "tags": [
     {
       "name": "Wan 2.7 Video",
-      "description": "Ali wan2.7-i2v 多模态图生视频能力"
+      "description": "Ali wan2.7-i2v video continuation capability"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "创建 wan2.7-i2v 图生视频任务",
-        "description": "提交一个异步的 Ali `wan2.7-i2v` 生成任务。\n\n本能力使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n当前项目已实现的官方 `media.type` 包括 `first_frame`、`last_frame`、`driving_audio`、`first_clip`。\n\n当前项目支持的 `media` 组合为：\n- `first_frame`\n- `first_frame + driving_audio`\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n- `first_clip`\n- `first_clip + last_frame`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark`、`seed`。",
-        "operationId": "aliWan27I2VCreate",
+        "summary": "Create Wan 2.7 Video Continuation task",
+        "description": "Submit an asynchronous Ali `wan2.7-i2v` video continuation task.\n\nUse `first_clip` to specify the initial video clip to continue from, optionally paired with `last_frame` to guide the continuation toward a target ending frame.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
+        "operationId": "aliWan27I2VVideoContinuation",
         "tags": [
           "Wan 2.7 Video"
         ],
@@ -35,34 +35,11 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Wan27VideoRequest"
+                "$ref": "#/components/schemas/Wan27VideoContinuationRequest"
               },
               "examples": {
-                "wan27_multimodal": {
-                  "summary": "使用首帧 + 驱动音频",
-                  "value": {
-                    "model": "wan2.7-i2v",
-                    "prompt": "人物从静态肖像逐渐开始自然开口说话。",
-                    "negative_prompt": "模糊，低质量",
-                    "prompt_extend": true,
-                    "watermark": false,
-                    "seed": 42,
-                    "media": [
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/assets/portrait.png"
-                      },
-                      {
-                        "type": "driving_audio",
-                        "url": "https://example.com/assets/voice.mp3"
-                      }
-                    ],
-                    "seconds": "8",
-                    "size": "720P"
-                  }
-                },
-                "wan27_continuation": {
-                  "summary": "使用首段视频续写且省略 prompt",
+                "first_clip_only": {
+                  "summary": "Video continuation from first clip only",
                   "value": {
                     "model": "wan2.7-i2v",
                     "media": [
@@ -74,6 +51,29 @@
                     "seconds": "5",
                     "size": "1080P"
                   }
+                },
+                "first_clip_with_last_frame": {
+                  "summary": "First clip + target last frame",
+                  "value": {
+                    "model": "wan2.7-i2v",
+                    "prompt": "The camera gradually pushes toward distant mountains.",
+                    "negative_prompt": "blurry, low quality",
+                    "prompt_extend": true,
+                    "watermark": false,
+                    "seed": 42,
+                    "media": [
+                      {
+                        "type": "first_clip",
+                        "url": "https://example.com/assets/opening-clip.mp4"
+                      },
+                      {
+                        "type": "last_frame",
+                        "url": "https://example.com/assets/target-end.png"
+                      }
+                    ],
+                    "seconds": "8",
+                    "size": "720P"
+                  }
                 }
               }
             }
@@ -81,7 +81,7 @@
         },
         "responses": {
           "200": {
-            "description": "提交成功，返回统一的 OpenAI 风格视频任务对象。",
+            "description": "Submitted successfully. Returns an OpenAI-compatible video task object.",
             "content": {
               "application/json": {
                 "schema": {
@@ -91,7 +91,7 @@
             }
           },
           "400": {
-            "description": "请求参数非法，例如 `media` 组合不受支持，或 `size` / `seconds` 超出项目当前支持范围。",
+            "description": "Invalid request parameters, e.g. unsupported `media` combination, or `size` / `seconds` out of supported range.",
             "content": {
               "application/json": {
                 "schema": {
@@ -99,7 +99,7 @@
                 },
                 "examples": {
                   "invalid_request": {
-                    "summary": "非法请求",
+                    "summary": "Invalid request",
                     "value": {
                       "error": {
                         "message": "unsupported wan2.7-i2v media combination",
@@ -113,7 +113,7 @@
             }
           },
           "401": {
-            "description": "鉴权失败。",
+            "description": "Authentication failed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -123,7 +123,7 @@
             }
           },
           "429": {
-            "description": "请求频率过高或额度不足。",
+            "description": "Rate limit triggered or insufficient account quota.",
             "content": {
               "application/json": {
                 "schema": {
@@ -133,7 +133,7 @@
             }
           },
           "500": {
-            "description": "服务端处理失败。",
+            "description": "An internal error occurred while processing the request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -152,9 +152,9 @@
     },
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "查询 Wan 2.7 图生视频任务",
-        "description": "根据公开任务 ID 查询 `wan2.7-i2v` 异步任务的最新状态。",
-        "operationId": "aliWan27I2VQuery",
+        "summary": "Query Wan 2.7 Video Continuation task",
+        "description": "Query the latest status of a `wan2.7-i2v` video continuation asynchronous task by its public task ID.",
+        "operationId": "aliWan27I2VVideoContinuationQuery",
         "tags": [
           "Wan 2.7 Video"
         ],
@@ -166,12 +166,12 @@
             "schema": {
               "type": "string"
             },
-            "description": "公开视频任务 ID。"
+            "description": "Public video task ID."
           }
         ],
         "responses": {
           "200": {
-            "description": "当前任务状态。",
+            "description": "Current task status.",
             "content": {
               "application/json": {
                 "schema": {
@@ -181,7 +181,7 @@
             }
           },
           "400": {
-            "description": "任务 ID 非法。",
+            "description": "Invalid task ID.",
             "content": {
               "application/json": {
                 "schema": {
@@ -191,7 +191,7 @@
             }
           },
           "401": {
-            "description": "鉴权失败。",
+            "description": "Authentication failed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -201,7 +201,7 @@
             }
           },
           "404": {
-            "description": "任务不存在或已过期。",
+            "description": "Task does not exist or has expired.",
             "content": {
               "application/json": {
                 "schema": {
@@ -228,7 +228,7 @@
       }
     },
     "schemas": {
-      "Wan27VideoRequest": {
+      "Wan27VideoContinuationRequest": {
         "type": "object",
         "required": [
           "model",
@@ -240,11 +240,11 @@
             "enum": [
               "wan2.7-i2v"
             ],
-            "description": "Ali wan2.7-i2v 模型。"
+            "description": "Ali wan2.7-i2v model."
           },
           "prompt": {
             "type": "string",
-            "description": "可选文本提示词。未提供时，生成过程将主要依赖输入媒体素材。"
+            "description": "Optional text prompt. When omitted, generation relies primarily on the input media assets."
           },
           "size": {
             "type": "string",
@@ -252,12 +252,12 @@
               "720P",
               "1080P"
             ],
-            "description": "当前项目实现支持的输出分辨率档位。",
+            "description": "Supported output resolution tiers.",
             "default": "1080P"
           },
           "seconds": {
             "type": "string",
-            "description": "视频时长的字符串形式。当前支持 `2` 到 `15` 的整数字符串。",
+            "description": "Video duration as a string. Supports integer strings from `2` to `15`.",
             "default": "5",
             "enum": [
               "2",
@@ -278,26 +278,26 @@
           },
           "negative_prompt": {
             "type": "string",
-            "description": "可选反向提示词，用于描述不希望在视频中出现的内容。"
+            "description": "Optional negative prompt describing content you do not want in the video."
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "是否启用提示词智能改写。默认值为 `true`。"
+            "description": "Whether to enable intelligent prompt rewriting. Defaults to `true`."
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。默认值为 `false`。",
+            "description": "Whether to add a watermark. Defaults to `false`.",
             "default": false
           },
           "seed": {
             "type": "integer",
             "minimum": 0,
             "maximum": 2147483647,
-            "description": "随机种子。未提供时由系统自动生成。"
+            "description": "Random seed. Automatically generated by the system when not provided."
           },
           "media": {
             "type": "array",
-            "description": "新版多模态输入字段。当前用于承接 `wan2.7-i2v` 官方新版协议，例如首帧 + 音频、首段视频续写等。",
+            "description": "Multimodal input field. This scenario allows `first_clip` and `last_frame` types. `first_clip` is required; `last_frame` is optional.",
             "items": {
               "$ref": "#/components/schemas/Wan27MediaInput"
             }
@@ -314,16 +314,14 @@
           "type": {
             "type": "string",
             "enum": [
-              "first_frame",
-              "last_frame",
-              "driving_audio",
-              "first_clip"
+              "first_clip",
+              "last_frame"
             ],
-            "description": "媒体素材类型。"
+            "description": "Media asset type. `first_clip` is the initial video clip to continue from (required), `last_frame` is the target ending frame image (optional)."
           },
           "url": {
             "type": "string",
-            "description": "公网可访问的媒体素材地址。"
+            "description": "Publicly accessible URL of the media asset."
           }
         }
       },
@@ -332,11 +330,11 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "公开任务 ID。"
+            "description": "Public task ID."
           },
           "task_id": {
             "type": "string",
-            "description": "公开任务 ID 的兼容别名。"
+            "description": "Backward-compatible alias for the public task ID."
           },
           "object": {
             "type": "string",
@@ -344,7 +342,7 @@
           },
           "model": {
             "type": "string",
-            "description": "模型名称。"
+            "description": "Model name."
           },
           "status": {
             "type": "string",
@@ -355,16 +353,16 @@
               "failed",
               "unknown"
             ],
-            "description": "统一的视频任务状态。"
+            "description": "Unified video task status."
           },
           "progress": {
             "type": "integer",
-            "description": "任务进度百分比。"
+            "description": "Task progress percentage."
           },
           "created_at": {
             "type": "integer",
             "format": "int64",
-            "description": "Unix 秒级时间戳。"
+            "description": "Creation time as a Unix timestamp (seconds)."
           }
         }
       },
@@ -379,11 +377,11 @@
               "completed_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "任务进入终态后的完成时间戳。"
+                "description": "Completion timestamp when the task reaches a terminal state."
               },
               "metadata": {
                 "type": "object",
-                "description": "额外的统一元数据。成功时通常会在 `metadata.url` 中返回结果下载地址。",
+                "description": "Additional unified metadata. On success, `metadata.url` typically contains the result download URL.",
                 "additionalProperties": true
               },
               "error": {

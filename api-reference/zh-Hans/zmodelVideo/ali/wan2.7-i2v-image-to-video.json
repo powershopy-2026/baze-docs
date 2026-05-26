@@ -1,0 +1,424 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "wan2.7-i2v 图生视频",
+    "version": "1.0.0",
+    "description": "面向客户的 Ali `wan2.7-i2v` 图生视频渠道文档，统一公开入口为 `/v1/videos`。\n\n本文档描述图生视频场景，使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n本场景支持的 `media.type` 为 `first_frame`、`driving_audio`。\n\n支持的 `media` 组合为：\n- `first_frame`\n- `first_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark`、`seed`。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan 2.7 Video",
+      "description": "Ali wan2.7-i2v 图生视频能力"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "创建 wan2.7-i2v 图生视频任务",
+        "description": "提交一个异步的 Ali `wan2.7-i2v` 图生视频任务。\n\n使用 `first_frame` 指定首帧图像，可选搭配 `driving_audio` 驱动音频实现音频驱动视频生成。\n\n支持的 `media` 组合为：\n- `first_frame`\n- `first_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark`、`seed`。",
+        "operationId": "aliWan27I2VImageToVideo",
+        "tags": [
+          "Wan 2.7 Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wan27I2VRequest"
+              },
+              "examples": {
+                "first_frame_only": {
+                  "summary": "仅使用首帧图像",
+                  "value": {
+                    "model": "wan2.7-i2v",
+                    "prompt": "一只猫从静止逐渐开始走动，画面充满活力。",
+                    "media": [
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/cat.png"
+                      }
+                    ],
+                    "seconds": "5",
+                    "size": "1080P"
+                  }
+                },
+                "first_frame_with_audio": {
+                  "summary": "使用首帧 + 驱动音频",
+                  "value": {
+                    "model": "wan2.7-i2v",
+                    "prompt": "人物从静态肖像逐渐开始自然开口说话。",
+                    "negative_prompt": "模糊，低质量",
+                    "prompt_extend": true,
+                    "watermark": false,
+                    "seed": 42,
+                    "media": [
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/portrait.png"
+                      },
+                      {
+                        "type": "driving_audio",
+                        "url": "https://example.com/assets/voice.mp3"
+                      }
+                    ],
+                    "seconds": "8",
+                    "size": "720P"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回统一的 OpenAI 风格视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数非法，例如 `media` 组合不受支持，或 `size` / `seconds` 超出项目当前支持范围。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "非法请求",
+                    "value": {
+                      "error": {
+                        "message": "unsupported wan2.7-i2v media combination",
+                        "type": "invalid_request_error",
+                        "code": "invalid_request"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "请求频率过高或额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "查询 wan2.7-i2v 图生视频任务",
+        "description": "根据公开任务 ID 查询 `wan2.7-i2v` 图生视频异步任务的最新状态。",
+        "operationId": "aliWan27I2VImageToVideoQuery",
+        "tags": [
+          "Wan 2.7 Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "公开视频任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前任务状态。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskQueryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "任务 ID 非法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在或已过期。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key"
+      }
+    },
+    "schemas": {
+      "Wan27I2VRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "media"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-i2v"
+            ],
+            "description": "Ali wan2.7-i2v 模型。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "可选文本提示词。未提供时，生成过程将主要依赖输入媒体素材。"
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "720P",
+              "1080P"
+            ],
+            "description": "当前项目实现支持的输出分辨率档位。",
+            "default": "1080P"
+          },
+          "seconds": {
+            "type": "string",
+            "description": "视频时长的字符串形式。当前支持 `2` 到 `15` 的整数字符串。",
+            "default": "5",
+            "enum": [
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15"
+            ]
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "可选反向提示词，用于描述不希望在视频中出现的内容。"
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "是否启用提示词智能改写。默认值为 `true`。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印。默认值为 `false`。",
+            "default": false
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "随机种子。未提供时由系统自动生成。"
+          },
+          "media": {
+            "type": "array",
+            "description": "多模态输入字段。本场景仅允许 `first_frame` 和 `driving_audio` 类型。",
+            "items": {
+              "$ref": "#/components/schemas/Wan27MediaInput"
+            }
+          }
+        }
+      },
+      "Wan27MediaInput": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "first_frame",
+              "driving_audio"
+            ],
+            "description": "媒体素材类型。`first_frame` 为首帧图像（必填），`driving_audio` 为驱动音频（可选）。"
+          },
+          "url": {
+            "type": "string",
+            "description": "公网可访问的媒体素材地址。"
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "公开任务 ID。"
+          },
+          "task_id": {
+            "type": "string",
+            "description": "公开任务 ID 的兼容别名。"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string",
+            "description": "模型名称。"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "in_progress",
+              "completed",
+              "failed",
+              "unknown"
+            ],
+            "description": "统一的视频任务状态。"
+          },
+          "progress": {
+            "type": "integer",
+            "description": "任务进度百分比。"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix 秒级时间戳。"
+          }
+        }
+      },
+      "VideoTaskQueryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VideoTaskResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "completed_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "任务进入终态后的完成时间戳。"
+              },
+              "metadata": {
+                "type": "object",
+                "description": "额外的统一元数据。成功时通常会在 `metadata.url` 中返回结果下载地址。",
+                "additionalProperties": true
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

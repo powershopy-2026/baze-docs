@@ -93,7 +93,9 @@
                           "zh-Hans/zmodelVideo/ali/text-to-video",
                           "zh-Hans/zmodelVideo/ali/video-first-last-frame",
                           "zh-Hans/zmodelVideo/ali/video-first-last-frame2",
-                          "zh-Hans/zmodelVideo/ali/wan2.7-i2v"
+                          "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
+                          "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
+                          "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation"
                         ]
                       },
                       {
@@ -304,7 +306,9 @@
                           "en/zmodelVideo/ali/text-to-video",
                           "en/zmodelVideo/ali/video-first-last-frame",
                           "en/zmodelVideo/ali/video-first-last-frame2",
-                          "en/zmodelVideo/ali/wan2.7-i2v"
+                          "en/zmodelVideo/ali/wan2.7-i2v-image-to-video",
+                          "en/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
+                          "en/zmodelVideo/ali/wan2.7-i2v-video-continuation"
                         ]
                       },
                       {

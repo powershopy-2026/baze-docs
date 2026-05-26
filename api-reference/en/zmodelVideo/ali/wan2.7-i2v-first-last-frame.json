@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Wan 2.7 Image to Video",
+    "title": "Wan 2.7 First-Last Frame to Video",
     "version": "1.0.0",
-    "description": "Ali `wan2.7-i2v` image-to-video capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document describes the officially implemented and publicly available fields: `model`, `prompt`, `image`, `images`, `media`, `seconds`, `size`. For backward compatibility, the platform still accepts `image` / `images` and internally maps them to the upstream provider's new `input.media` protocol.",
+    "description": "Ali `wan2.7-i2v` first-last frame to video capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the first-last frame to video scenario, using the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_frame`, `last_frame`, and `driving_audio`.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -18,15 +18,15 @@
   "tags": [
     {
       "name": "Wan 2.7 Video",
-      "description": "Ali wan2.7-i2v multimodal image-to-video capability"
+      "description": "Ali wan2.7-i2v first-last frame to video capability"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Create Wan 2.7 Image to Video task",
-        "description": "Submit an asynchronous Ali `wan2.7-i2v` generation task.\n\nThis capability uses the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nCurrently implemented official `media.type` values include `first_frame`, `last_frame`, `driving_audio`, `first_clip`.\n\nSupported `media` combinations:\n- `first_frame`\n- `first_frame + driving_audio`\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
-        "operationId": "aliWan27I2VCreate",
+        "summary": "Create Wan 2.7 First-Last Frame to Video task",
+        "description": "Submit an asynchronous Ali `wan2.7-i2v` first-last frame to video task.\n\nUse `first_frame` to specify the initial frame image and `last_frame` to specify the target ending frame image, optionally paired with `driving_audio`.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
+        "operationId": "aliWan27I2VFirstLastFrame",
         "tags": [
           "Wan 2.7 Video"
         ],
@@ -35,14 +35,33 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Wan27VideoRequest"
+                "$ref": "#/components/schemas/Wan27FirstLastFrameRequest"
               },
               "examples": {
-                "wan27_multimodal": {
-                  "summary": "First frame + driving audio",
+                "first_last_frame": {
+                  "summary": "First frame + last frame",
                   "value": {
                     "model": "wan2.7-i2v",
-                    "prompt": "A person gradually begins to speak naturally from a still portrait.",
+                    "prompt": "A cat walks from one end of the hallway to the other.",
+                    "media": [
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/start.png"
+                      },
+                      {
+                        "type": "last_frame",
+                        "url": "https://example.com/assets/end.png"
+                      }
+                    ],
+                    "seconds": "5",
+                    "size": "1080P"
+                  }
+                },
+                "first_last_frame_with_audio": {
+                  "summary": "First frame + last frame + driving audio",
+                  "value": {
+                    "model": "wan2.7-i2v",
+                    "prompt": "A person gradually looks up and smiles, accompanied by narration.",
                     "negative_prompt": "blurry, low quality",
                     "prompt_extend": true,
                     "watermark": false,
@@ -50,29 +69,19 @@
                     "media": [
                       {
                         "type": "first_frame",
-                        "url": "https://example.com/assets/portrait.png"
+                        "url": "https://example.com/assets/portrait-start.png"
+                      },
+                      {
+                        "type": "last_frame",
+                        "url": "https://example.com/assets/portrait-end.png"
                       },
                       {
                         "type": "driving_audio",
-                        "url": "https://example.com/assets/voice.mp3"
+                        "url": "https://example.com/assets/narration.mp3"
                       }
                     ],
                     "seconds": "8",
                     "size": "720P"
-                  }
-                },
-                "wan27_continuation": {
-                  "summary": "Video continuation from first clip (prompt omitted)",
-                  "value": {
-                    "model": "wan2.7-i2v",
-                    "media": [
-                      {
-                        "type": "first_clip",
-                        "url": "https://example.com/assets/opening-clip.mp4"
-                      }
-                    ],
-                    "seconds": "5",
-                    "size": "1080P"
                   }
                 }
               }
@@ -152,9 +161,9 @@
     },
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "Query Wan 2.7 Image to Video task",
-        "description": "Query the latest status of a `wan2.7-i2v` asynchronous task by its public task ID.",
-        "operationId": "aliWan27I2VQuery",
+        "summary": "Query Wan 2.7 First-Last Frame to Video task",
+        "description": "Query the latest status of a `wan2.7-i2v` first-last frame to video asynchronous task by its public task ID.",
+        "operationId": "aliWan27I2VFirstLastFrameQuery",
         "tags": [
           "Wan 2.7 Video"
         ],
@@ -228,7 +237,7 @@
       }
     },
     "schemas": {
-      "Wan27VideoRequest": {
+      "Wan27FirstLastFrameRequest": {
         "type": "object",
         "required": [
           "model",
@@ -297,7 +306,7 @@
           },
           "media": {
             "type": "array",
-            "description": "New multimodal input field. Used to carry the `wan2.7-i2v` upstream provider's new protocol, e.g. first frame + audio, video continuation, etc.",
+            "description": "Multimodal input field. This scenario allows `first_frame`, `last_frame`, and `driving_audio` types. `first_frame` and `last_frame` are required; `driving_audio` is optional.",
             "items": {
               "$ref": "#/components/schemas/Wan27MediaInput"
             }
@@ -316,10 +325,9 @@
             "enum": [
               "first_frame",
               "last_frame",
-              "driving_audio",
-              "first_clip"
+              "driving_audio"
             ],
-            "description": "Media asset type."
+            "description": "Media asset type. `first_frame` is the initial frame image (required), `last_frame` is the target ending frame image (required), `driving_audio` is the driving audio (optional)."
           },
           "url": {
             "type": "string",
