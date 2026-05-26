@@ -328,6 +328,16 @@
                           "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video"
                         ]
                       },
+                      {
+                        "group": "Vidu",
+                        "pages": [
+                          "en/zmodelVideo/vidu/vidu-text-to-video",
+                          "en/zmodelVideo/vidu/vidu-image-to-video",
+                          "en/zmodelVideo/vidu/vidu-reference-to-video",
+                          "en/zmodelVideo/vidu/vidu-start-end-to-video",
+                          "en/zmodelVideo/vidu/vidu-query-task-status"
+                        ]
+                      },
                       "en/zmodelVideo/minimax/download-video-file",
                       "en/zmodelVideo/minimax/query-video-status"
                     ]
@@ -397,6 +407,13 @@
                         "group": "Alibaba",
                         "pages": [
                           "en/zmodelAudio/ali/qwen3-tts-instruct-flash"
+                        ]
+                      },
+                      {
+                        "group": "Vidu",
+                        "pages": [
+                          "en/zmodelAudio/vidu/vidu-text-to-audio",
+                          "en/zmodelAudio/vidu/vidu-timing-to-audio"
                         ]
                       }
                     ]
