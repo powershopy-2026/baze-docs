@@ -1,0 +1,113 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu 文生音频",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/audio/text2audio": {
+      "post": {
+        "summary": "Vidu 文生音频",
+        "operationId": "viduTextToAudio",
+        "description": "适用于通过输入提示词，生成一段音频（支持生成音效和背景音乐 BGM）。提交任务后，请通过 `GET /vidu/v1/{task_id}` 查询状态。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToAudioRequest"
+              },
+              "examples": {
+                "basic_audio_generation": {
+                  "summary": "基础文生音频",
+                  "value": {
+                    "model": "audio1.0",
+                    "prompt": "雨滴落在窗户上的声音，伴随着远处的雷声",
+                    "duration": 10,
+                    "seed": 42
+                  }
+                },
+                "short_sound_effect": {
+                  "summary": "短音效生成",
+                  "value": {
+                    "model": "audio1.0",
+                    "prompt": "手机通知铃声",
+                    "duration": 3
+                  }
+                },
+                "ambient_background": {
+                  "summary": "环境背景音",
+                  "value": {
+                    "model": "audio1.0",
+                    "prompt": "森林中的鸟鸣声，微风拂过树叶",
+                    "duration": 8,
+                    "seed": 123456
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回音频任务对象。"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TextToAudioRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "audio1.0"
+            ],
+            "description": "音频生成模型名称。\n- **audio1.0**: 支持基于文本提示词生成音频"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 1500,
+            "description": "文本提示词，用于描述要生成的音频内容，最大长度 1500 字符。"
+          },
+          "duration": {
+            "type": "number",
+            "format": "float",
+            "default": 10,
+            "minimum": 2,
+            "maximum": 10,
+            "description": "音频时长（秒）。\n- 默认值：10 秒\n- 取值范围：2-10 秒"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机种子。\n- 如果未提供或设置为 0，将使用随机值\n- 固定值可确保结果可复现"
+          }
+        }
+      }
+    }
+  }
+}

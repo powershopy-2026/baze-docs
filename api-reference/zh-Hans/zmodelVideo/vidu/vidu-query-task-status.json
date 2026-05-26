@@ -1,0 +1,259 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu 任务状态查询",
+    "version": "1.0.0",
+    "description": "Vidu 统一任务状态查询接口。适用于视频、音频、图片等所有类型的任务查询。"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/tasks/{task_id}": {
+      "get": {
+        "summary": "任务状态查询",
+        "operationId": "viduQueryTaskStatus",
+        "description": "根据任务 ID 查询 Vidu 任务的最新状态。\n\n**支持的任务类型：**\n- 视频任务（文生视频、图生视频、参考生视频、首尾帧生视频）\n- 音频任务（文生音频、可控文生音效）\n- 图片任务（参考生图）\n\n**任务状态说明：**\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败\n\n任务完成后，可根据任务类型调用相应的下载接口获取结果文件。",
+        "tags": [
+          "Vidu Tasks"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "任务 ID，由创建任务接口返回。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功，返回任务状态信息。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskStatusResponse"
+                },
+                "examples": {
+                  "video_task_processing": {
+                    "summary": "视频任务处理中",
+                    "value": {
+                      "task_id": "vid_abc123def456",
+                      "state": "processing",
+                      "model": "viduq3-pro",
+                      "prompt": "一只小猫在草地上奔跑，阳光明媚",
+                      "duration": 5,
+                      "resolution": "720p",
+                      "progress": 45,
+                      "credits": 10,
+                      "created_at": "2025-01-01T15:41:31.968916Z"
+                    }
+                  },
+                  "audio_task_completed": {
+                    "summary": "音频任务已完成",
+                    "value": {
+                      "task_id": "aud_xyz789",
+                      "state": "success",
+                      "model": "audio1.0",
+                      "prompt": "雨滴落在窗户上的声音",
+                      "duration": 10,
+                      "credits": 5,
+                      "created_at": "2025-01-01T15:40:00.000000Z",
+                      "completed_at": "2025-01-01T15:41:30.000000Z"
+                    }
+                  },
+                  "image_task_failed": {
+                    "summary": "图片任务失败",
+                    "value": {
+                      "task_id": "img_def456ghi789",
+                      "state": "failed",
+                      "model": "viduq2",
+                      "prompt": "一个美丽的日落场景",
+                      "error_message": "生成过程中出现错误",
+                      "credits": 0,
+                      "created_at": "2025-01-01T15:30:00.000000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在或已过期。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "任务不存在",
+                    "value": {
+                      "code": "task_not_found",
+                      "message": "任务不存在或已过期",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "无效的令牌",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "server_error": {
+                    "summary": "服务器错误",
+                    "value": {
+                      "code": "internal_server_error",
+                      "message": "服务器内部错误，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TaskStatusResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "任务 ID。"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "任务处理状态：\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败"
+          },
+          "model": {
+            "type": "string",
+            "description": "使用的模型名称。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "文本提示词（如果适用）。"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "输入的图片列表（如果适用）。"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "时长参数（秒），用于视频和音频任务。"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机种子（如果适用）。"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "分辨率参数（如果适用）。"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "宽高比参数（如果适用）。"
+          },
+          "progress": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "任务进度百分比（0-100），仅在 processing 状态时返回。"
+          },
+          "credits": {
+            "type": "integer",
+            "description": "消耗的积分数量。"
+          },
+          "error_message": {
+            "type": "string",
+            "description": "错误信息，仅在 failed 状态时返回。"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "任务创建时间（ISO 8601 格式）。"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "任务完成时间（ISO 8601 格式），仅在 success 或 failed 状态时返回。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误代码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误描述信息。"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "附加的错误数据（可选）。"
+          }
+        }
+      }
+    }
+  }
+}

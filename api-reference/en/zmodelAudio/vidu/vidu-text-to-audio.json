@@ -1,0 +1,113 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu Text-to-Audio",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/audio/text2audio": {
+      "post": {
+        "summary": "Vidu Text-to-Audio",
+        "operationId": "viduTextToAudioEn",
+        "description": "Generate an audio clip (supports sound effects & BGM) by inputting a text prompt. After submission, query status via `GET /vidu/v1/{task_id}`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToAudioRequest"
+              },
+              "examples": {
+                "basic_audio_generation": {
+                  "summary": "Basic text-to-audio",
+                  "value": {
+                    "model": "audio1.0",
+                    "prompt": "Sound of raindrops falling on windows, accompanied by distant thunder",
+                    "duration": 10,
+                    "seed": 42
+                  }
+                },
+                "short_sound_effect": {
+                  "summary": "Short sound effect generation",
+                  "value": {
+                    "model": "audio1.0",
+                    "prompt": "Mobile phone notification ringtone",
+                    "duration": 3
+                  }
+                },
+                "ambient_background": {
+                  "summary": "Ambient background sound",
+                  "value": {
+                    "model": "audio1.0",
+                    "prompt": "Birdsong in the forest with gentle breeze rustling through leaves",
+                    "duration": 8,
+                    "seed": 123456
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submission successful, returns an audio task object."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TextToAudioRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "audio1.0"
+            ],
+            "description": "Audio generation model name.\n- **audio1.0**: Supports generating audio based on text prompts"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 1500,
+            "description": "Text prompt describing the audio to be generated, with a maximum length of 1500 characters."
+          },
+          "duration": {
+            "type": "number",
+            "format": "float",
+            "default": 10,
+            "minimum": 2,
+            "maximum": 10,
+            "description": "Audio duration in seconds.\n- Default: 10 seconds\n- Range: 2-10 seconds"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed.\n- If not provided or set to 0, a random value will be used\n- Fixed value ensures reproducibility"
+          }
+        }
+      }
+    }
+  }
+}

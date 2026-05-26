@@ -1,0 +1,154 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu Reference-to-Image",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/images/reference2image": {
+      "post": {
+        "summary": "Vidu Reference-to-Image",
+        "operationId": "viduReferenceToImageEn",
+        "description": "Generate images using the Vidu model based on reference images. After submission, query status via `GET /vidu/v1/{task_id}`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferenceToImageRequest"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "Pure text-to-image (viduq2)",
+                  "value": {
+                    "model": "viduq2",
+                    "prompt": "A cute kitten playing on grass under sunny weather",
+                    "aspect_ratio": "16:9",
+                    "resolution": "4K",
+                    "seed": 42
+                  }
+                },
+                "reference_to_image": {
+                  "summary": "Reference-to-image",
+                  "value": {
+                    "model": "viduq2",
+                    "images": [
+                      "https://example.com/reference1.png",
+                      "https://example.com/reference2.png"
+                    ],
+                    "prompt": "Maintain character style and generate a new scene image",
+                    "aspect_ratio": "1:1",
+                    "resolution": "2K"
+                  }
+                },
+                "image_editing": {
+                  "summary": "Image editing",
+                  "value": {
+                    "model": "viduq2",
+                    "images": [
+                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAE..."
+                    ],
+                    "prompt": "Change the background to night sky with stars and add a moon",
+                    "aspect_ratio": "auto",
+                    "resolution": "1080p"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submission successful, returns an image task object."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ReferenceToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "viduq2"
+            ],
+            "description": "Image generation model name.\n- **viduq2**: Supports text-to-image, image editing, and reference-to-image with better results"
+          },
+          "images": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 7,
+            "items": {
+              "type": "string"
+            },
+            "description": "Reference image list.\n- **viduq2**: Supports input of 0 to 7 images\n- **viduq1**: Supports input of 1 to 7 images\nThe model will generate an image with consistent subjects based on the input images.\nNotes:\n- Supports Base64 or URL format (URL must be accessible)\n- Supported formats: png, jpeg, jpg, webp\n- Image resolution must be no smaller than 128×128\n- Aspect ratio must be between 1:4 and 4:1\n- Single image size must not exceed 50MB\n- The post body of the HTTP request should not exceed 20MB, and encoding must include proper content type string\n- Base64 format example: `data:image/png;base64,{base64_encode}`"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "Text prompt for describing image generation content, with a maximum length of 2000 characters.\nNote: viduq2 supports generating images using only prompt (without reference images)."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed.\n- Defaults to a random seed number\n- Manually set values will override the default random seed"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "3:4",
+              "4:3",
+              "21:9",
+              "2:3",
+              "3:2",
+              "auto"
+            ],
+            "default": "16:9",
+            "description": "Image aspect ratio.\n- **viduq1**: Default 16:9, optional values: 16:9, 9:16, 1:1, 3:4, 4:3\n- **viduq2**: Default 16:9, optional values: 16:9, 9:16, 1:1, 3:4, 4:3, 21:9, 2:3, 3:2\n- **auto**: Generated image aspect ratio is consistent with the first input image"
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "1080p",
+              "2K",
+              "4K"
+            ],
+            "default": "1080p",
+            "description": "Image resolution.\n- **viduq1**: Default 1080p, optional values: 1080p\n- **viduq2**: Default 1080p, optional values: 1080p, 2K, 4K"
+          },
+          "payload": {
+            "type": "string",
+            "maxLength": 1048576,
+            "description": "Transparent transmission parameters.\nNo processing, only data transmission, with a maximum length of 1048576 characters."
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu 可控文生音效",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/audio/timing2audio": {
+      "post": {
+        "summary": "Vidu 可控文生音效",
+        "operationId": "viduTimingToAudio",
+        "description": "使用 Vidu 模型基于时间轴生成可控音效片段。创作者可以通过时间轴自由控制音频中多个声音事件的时机。（不支持背景音乐）提交任务后，请通过 `GET /vidu/v1/audio/{task_id}` 查询状态。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimingToAudioRequest"
+              },
+              "examples": {
+                "basic_timing_audio": {
+                  "summary": "基础时间轴音效",
+                  "value": {
+                    "model": "audio1.0",
+                    "duration": 10,
+                    "timing_prompts": [
+                      {
+                        "from": 0,
+                        "to": 3,
+                        "prompt": "雨声"
+                      },
+                      {
+                        "from": 2,
+                        "to": 5,
+                        "prompt": "雷声"
+                      },
+                      {
+                        "from": 6,
+                        "to": 9,
+                        "prompt": "鸟鸣声"
+                      }
+                    ],
+                    "seed": 42
+                  }
+                },
+                "overlapping_events": {
+                  "summary": "重叠声音事件",
+                  "value": {
+                    "model": "audio1.0",
+                    "duration": 8,
+                    "timing_prompts": [
+                      {
+                        "from": 0,
+                        "to": 8,
+                        "prompt": "环境背景音"
+                      },
+                      {
+                        "from": 1,
+                        "to": 3,
+                        "prompt": "脚步声"
+                      },
+                      {
+                        "from": 4,
+                        "to": 6,
+                        "prompt": "开门声"
+                      },
+                      {
+                        "from": 7,
+                        "to": 8,
+                        "prompt": "关门声"
+                      }
+                    ]
+                  }
+                },
+                "precise_control": {
+                  "summary": "精确时序控制",
+                  "value": {
+                    "model": "audio1.0",
+                    "duration": 5,
+                    "timing_prompts": [
+                      {
+                        "from": 0.0,
+                        "to": 0.5,
+                        "prompt": "手机解锁声"
+                      },
+                      {
+                        "from": 1.0,
+                        "to": 1.5,
+                        "prompt": "键盘敲击声"
+                      },
+                      {
+                        "from": 2.5,
+                        "to": 3.0,
+                        "prompt": "消息提示音"
+                      },
+                      {
+                        "from": 4.0,
+                        "to": 4.5,
+                        "prompt": "通知铃声"
+                      }
+                    ],
+                    "seed": 123456
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回音频任务对象。"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TimingToAudioRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "timing_prompts"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "audio1.0"
+            ],
+            "description": "音频生成模型名称。\n- **audio1.0**: 支持基于时间轴生成可控音效"
+          },
+          "duration": {
+            "type": "number",
+            "format": "float",
+            "default": 10,
+            "minimum": 2,
+            "maximum": 10,
+            "description": "音频时长（秒）。\n- 默认值：10 秒\n- 取值范围：2-10 秒"
+          },
+          "timing_prompts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/TimingPrompt"
+            },
+            "description": "基于时间轴的声音事件提示词列表。\n每个项目定义一个声音事件，包含 from 和 to 时间戳以及 prompt 描述。\n注意事项：\n- 每个事件的 prompt 最大长度 1500 字符\n- 事件可以重叠\n- from 和 to 必须在 [0, duration] 范围内"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机种子。\n- 如果未提供或设置为 0，将使用随机值\n- 固定值可确保结果可复现"
+          }
+        }
+      },
+      "TimingPrompt": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "prompt"
+        ],
+        "properties": {
+          "from": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "description": "声音事件开始时间（秒）。\n必须在 [0, duration] 范围内。"
+          },
+          "to": {
+            "type": "number",
+            "format": "float",
+            "description": "声音事件结束时间（秒）。\n必须在 [0, duration] 范围内，且大于 from。"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 1500,
+            "description": "声音事件的文本描述，最大长度 1500 字符。"
+          }
+        }
+      }
+    }
+  }
+}

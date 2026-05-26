@@ -63,6 +63,12 @@
                           "zh-Hans/zmodelImage/kling/multi-image2image",
                           "zh-Hans/zmodelImage/kling/multi-image2image-status"
                         ]
+                      },
+                      {
+                        "group": "Vidu",
+                        "pages": [
+                          "zh-Hans/zmodelImage/vidu/vidu-reference-to-image"
+                        ]
                       }
                     ]
                   },
@@ -109,6 +115,16 @@
                           "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
                           "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
                           "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video"
+                        ]
+                      },
+                      {
+                        "group": "Vidu",
+                        "pages": [
+                          "zh-Hans/zmodelVideo/vidu/vidu-text-to-video",
+                          "zh-Hans/zmodelVideo/vidu/vidu-image-to-video",
+                          "zh-Hans/zmodelVideo/vidu/vidu-reference-to-video",
+                          "zh-Hans/zmodelVideo/vidu/vidu-start-end-to-video",
+                          "zh-Hans/zmodelVideo/vidu/vidu-query-task-status"
                         ]
                       },
                       "zh-Hans/zmodelVideo/minimax/download-video-file",
@@ -182,6 +198,13 @@
                         "pages": [
                           "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash"
                         ]
+                      },
+                      {
+                        "group": "Vidu",
+                        "pages": [
+                          "zh-Hans/zmodelAudio/vidu/vidu-text-to-audio",
+                          "zh-Hans/zmodelAudio/vidu/vidu-timing-to-audio"
+                        ]
                       }
                     ]
                   },
@@ -250,6 +273,12 @@
                           "en/zmodelImage/kling/omni-image-status",
                           "en/zmodelImage/kling/multi-image2image",
                           "en/zmodelImage/kling/multi-image2image-status"
+                        ]
+                      },
+                      {
+                        "group": "Vidu",
+                        "pages": [
+                          "en/zmodelImage/vidu/vidu-reference-to-image"
                         ]
                       }
                     ]

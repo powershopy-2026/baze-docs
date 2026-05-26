@@ -1,0 +1,200 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu Timing-to-Audio",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/audio/timing2audio": {
+      "post": {
+        "summary": "Vidu Timing-to-Audio",
+        "operationId": "viduTimingToAudioEn",
+        "description": "Generate controllable sound effect clips using the Vidu model based on timeline. Creators can freely control the timing of multiple sound events within the audio through a timeline. (BGM not supported) After submission, query status via `GET /vidu/v1/audio/{task_id}`.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimingToAudioRequest"
+              },
+              "examples": {
+                "basic_timing_audio": {
+                  "summary": "Basic timing audio",
+                  "value": {
+                    "model": "audio1.0",
+                    "duration": 10,
+                    "timing_prompts": [
+                      {
+                        "from": 0,
+                        "to": 3,
+                        "prompt": "Rain sound"
+                      },
+                      {
+                        "from": 2,
+                        "to": 5,
+                        "prompt": "Thunder"
+                      },
+                      {
+                        "from": 6,
+                        "to": 9,
+                        "prompt": "Birdsong"
+                      }
+                    ],
+                    "seed": 42
+                  }
+                },
+                "overlapping_events": {
+                  "summary": "Overlapping sound events",
+                  "value": {
+                    "model": "audio1.0",
+                    "duration": 8,
+                    "timing_prompts": [
+                      {
+                        "from": 0,
+                        "to": 8,
+                        "prompt": "Ambient background sound"
+                      },
+                      {
+                        "from": 1,
+                        "to": 3,
+                        "prompt": "Footsteps"
+                      },
+                      {
+                        "from": 4,
+                        "to": 6,
+                        "prompt": "Door opening sound"
+                      },
+                      {
+                        "from": 7,
+                        "to": 8,
+                        "prompt": "Door closing sound"
+                      }
+                    ]
+                  }
+                },
+                "precise_control": {
+                  "summary": "Precise timing control",
+                  "value": {
+                    "model": "audio1.0",
+                    "duration": 5,
+                    "timing_prompts": [
+                      {
+                        "from": 0.0,
+                        "to": 0.5,
+                        "prompt": "Phone unlock sound"
+                      },
+                      {
+                        "from": 1.0,
+                        "to": 1.5,
+                        "prompt": "Keyboard typing sound"
+                      },
+                      {
+                        "from": 2.5,
+                        "to": 3.0,
+                        "prompt": "Message notification sound"
+                      },
+                      {
+                        "from": 4.0,
+                        "to": 4.5,
+                        "prompt": "Notification ringtone"
+                      }
+                    ],
+                    "seed": 123456
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submission successful, returns an audio task object."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TimingToAudioRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "timing_prompts"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "audio1.0"
+            ],
+            "description": "Audio generation model name.\n- **audio1.0**: Supports generating controllable sound effects based on timeline"
+          },
+          "duration": {
+            "type": "number",
+            "format": "float",
+            "default": 10,
+            "minimum": 2,
+            "maximum": 10,
+            "description": "Audio duration in seconds.\n- Default: 10 seconds\n- Range: 2-10 seconds"
+          },
+          "timing_prompts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/TimingPrompt"
+            },
+            "description": "Timeline-based sound event prompts list.\nEach item defines a sound event with from and to timestamps and a prompt description.\nNotes:\n- Max 1500 characters per event prompt\n- Events can overlap\n- from and to must be within [0, duration] range"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed.\n- If not provided or set to 0, a random value will be used\n- Fixed value ensures reproducibility"
+          }
+        }
+      },
+      "TimingPrompt": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "prompt"
+        ],
+        "properties": {
+          "from": {
+            "type": "number",
+            "format": "float",
+            "minimum": 0,
+            "description": "Sound event start time in seconds.\nMust be within [0, duration] range."
+          },
+          "to": {
+            "type": "number",
+            "format": "float",
+            "description": "Sound event end time in seconds.\nMust be within [0, duration] range and greater than from."
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 1500,
+            "description": "Text description of the sound event, with a maximum length of 1500 characters."
+          }
+        }
+      }
+    }
+  }
+}

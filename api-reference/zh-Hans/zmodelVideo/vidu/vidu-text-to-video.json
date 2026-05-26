@@ -1,0 +1,401 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu 文生视频",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/videos/text2video": {
+      "post": {
+        "summary": "Vidu 文生视频",
+        "operationId": "viduTextToVideo",
+        "description": "使用 Vidu 模型将文本提示词转换为视频。支持 viduq3-turbo、viduq3-pro模型。\n\n**模型特性：**\n- **viduq3-turbo**: 相比 viduq3-pro，生成速度更快\n- **viduq3-pro**: 支持音画同步，支持视频分镜\n\n提交任务后，请通过相应的查询接口获取视频状态和结果。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToVideoRequest"
+              },
+              "examples": {
+                "basic_example": {
+                  "summary": "基础文生视频示例",
+                  "value": {
+                    "model": "viduq3-pro",
+                    "prompt": "一只小猫在草地上奔跑，阳光明媚",
+                    "duration": 5,
+                    "aspect_ratio": "16:9",
+                    "resolution": "720p"
+                  }
+                },
+                "audio_video_sync_example": {
+                  "summary": "音画同步示例（仅 q3 模型）",
+                  "value": {
+                    "model": "viduq3-pro",
+                    "prompt": "一个人在说话：你好，世界",
+                    "duration": 5,
+                    "audio": true,
+                    "aspect_ratio": "16:9",
+                    "resolution": "720p"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextToVideoResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "提交成功",
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "viduq3-pro",
+                      "prompt": "In an ultra-realistic fashion photography style featuring light blue and pale amber tones, an astronaut in a spacesuit walks through the fog. The background consists of enchanting white and golden lights, creating a minimalist still life and an impressive panoramic scene.",
+                      "duration": 5,
+                      "seed": 123456789,
+                      "aspect_ratio": "16:9",
+                      "resolution": "720p",
+                      "movement_amplitude": "auto",
+                      "payload": "",
+                      "credits": 10,
+                      "off_peak": false,
+                      "created_at": "2025-01-01T15:41:31.968916Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "请求体格式错误或字段取值非法",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "无效的令牌",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "当前账户额度不足，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "server_error": {
+                    "summary": "服务器错误",
+                    "value": {
+                      "code": "internal_server_error",
+                      "message": "服务器内部错误，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "TextToVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "viduq3-turbo",
+              "viduq3-pro"
+            ],
+            "description": "模型名称。\n- **viduq3-turbo**: 相比 viduq3-pro，生成速度更快\n- **viduq3-pro**: 支持音画同步，支持视频分镜"
+          },
+          "style": {
+            "type": "string",
+            "enum": [
+              "general",
+              "anime"
+            ],
+            "description": "输出视频的风格。\n- **general**: 通用风格，允许通过提示词控制风格\n- **anime**: 动漫风格，针对动漫美学优化，对动漫相关提示词表现更好\n\n**注意**: 使用 q2 或 q3 模型时，此参数不生效。",
+            "default": "general"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "文本提示词，用于描述要生成的视频内容，最大长度 5000 字符。"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "视频时长（秒）。不同模型的默认值和可用范围：\n- **viduq3-pro, viduq3-turbo**: 默认 5s，可用范围 1-16s"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机种子。\n- 默认使用随机种子\n- 手动设置值将覆盖默认随机种子，用于结果复现"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "3:4",
+              "4:3",
+              "1:1"
+            ],
+            "description": "输出视频的宽高比。默认 16:9。\n\n**注意**: 3:4 和 4:3 仅支持 q2 和 q3 模型。",
+            "default": "16:9"
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "540p",
+              "720p",
+              "1080p"
+            ],
+            "description": "分辨率。不同模型和时长的默认值及可用范围：\n- **viduq3-pro, viduq3-turbo (1-16s)**: 默认 720p，可用 540p, 720p, 1080p"
+          },
+          "movement_amplitude": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "small",
+              "medium",
+              "large"
+            ],
+            "description": "画面中物体的运动幅度。默认 auto。\n\n**注意**: 使用 q2 和 q3 模型时，此参数不生效。",
+            "default": "auto"
+          },
+          "bgm": {
+            "type": "boolean",
+            "description": "是否为生成的视频添加背景音乐。（q3 模型不可用）\n- **false**: 不添加背景音乐（默认）\n- **true**: 系统自动添加合适的背景音乐\n\n**说明**:\n- BGM 无时长限制，系统自动适配\n- q3 模型不支持此参数",
+            "default": false
+          },
+          "audio": {
+            "type": "boolean",
+            "description": "是否使用直出音视频能力。（仅 q3 模型支持）\n- **false**: 不使用直出音视频，输出无声视频\n- **true**: 需要音画同步，输出有声视频（包含对话和音效）\n\n**注意**: 仅 q3 模型支持此参数。",
+            "default": true
+          },
+          "payload": {
+            "type": "string",
+            "maxLength": 1048576,
+            "description": "透传参数，不做处理，仅做数据传输，最大长度 1048576 字符。"
+          },
+          "off_peak": {
+            "type": "boolean",
+            "description": "错峰模式。默认 false。\n- **true**: 错峰生成模式，消耗积分较低，任务将在 48 小时内生成。未完成任务将自动取消并退还积分，支持取消错峰任务\n- **false**: 正常生成模式\n\n详见定价说明。",
+            "default": false
+          }
+        }
+      },
+      "TextToVideoResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "任务 ID。"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "任务处理状态：\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败"
+          },
+          "model": {
+            "type": "string",
+            "description": "本次调用使用的模型参数。"
+          },
+          "style": {
+            "type": "string",
+            "description": "本次调用使用的风格参数。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "本次调用使用的文本提示词。"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "本次调用使用的视频时长参数。"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "本次调用使用的随机种子参数。"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "本次调用使用的宽高比参数。"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "本次调用使用的分辨率参数。"
+          },
+          "bgm": {
+            "type": "boolean",
+            "description": "本次调用使用的背景音乐参数。"
+          },
+          "movement_amplitude": {
+            "type": "string",
+            "description": "本次调用使用的镜头运动幅度参数。"
+          },
+          "payload": {
+            "type": "string",
+            "description": "本次调用使用的透传参数。"
+          },
+          "credits": {
+            "type": "integer",
+            "description": "本次调用消耗的积分。"
+          },
+          "off_peak": {
+            "type": "boolean",
+            "description": "本次调用使用的错峰模式参数。"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "任务创建时间。"
+          }
+        }
+      },
+      "ViduVideoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "视频任务的唯一标识符。"
+          },
+          "task_id": {
+            "type": "string",
+            "description": "任务 ID，用于查询视频状态。"
+          },
+          "object": {
+            "type": "string",
+            "example": "video",
+            "description": "对象类型，固定为 'video'。"
+          },
+          "model": {
+            "type": "string",
+            "description": "使用的模型名称。"
+          },
+          "status": {
+            "type": "string",
+            "example": "queued",
+            "description": "任务状态。可能的值：queued（排队中）、processing（处理中）、completed（已完成）、failed（失败）。"
+          },
+          "progress": {
+            "type": "integer",
+            "example": 0,
+            "description": "任务进度百分比（0-100）。"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "任务创建时间戳（Unix 时间戳）。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误代码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误描述信息。"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "附加的错误数据（可选）。"
+          }
+        }
+      }
+    }
+  }
+}
