@@ -1,0 +1,284 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling Image Generation Task - Submit Task",
+    "version": "1.0.0",
+    "description": "Submit a Kling native async image generation or image-to-image task via `/kling/v1/images/generations`."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling native async task endpoints"
+    }
+  ],
+  "paths": {
+    "/kling/v1/images/generations": {
+      "post": {
+        "summary": "Kling image generation task",
+        "description": "Submit a Kling native async image generation or image-to-image task via `/kling/v1/images/generations`.",
+        "operationId": "createKlingImageGeneration",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KlingRequest"
+              },
+              "examples": {
+                "request": {
+                  "summary": "Request example",
+                  "value": {
+                    "model_name": "kling-v3",
+                    "prompt": "A clean product photo on a white background",
+                    "aspect_ratio": "1:1",
+                    "n": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or rejected by upstream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "KlingRequest": {
+        "type": "object",
+        "required": [
+          "model_name",
+          "prompt"
+        ],
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "description": "Model name",
+            "enum": [
+              "kling-v3"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Positive text prompt",
+            "maxLength": 2500
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Negative text prompt\nNote: Negative prompts are not supported in image-to-image mode (i.e., when the image field is not empty).",
+            "maxLength": 2500
+          },
+          "image": {
+            "type": "string",
+            "description": "Reference image\n- Supports image Base64 encoding or image URL (must be accessible)\nBase64 encoding notes:\nPlease ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\nCorrect example:\n`iVBORw0KGgoAAAANSUhEUgAAAAUA`\nIncorrect example:\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- This parameter is required when image_reference is not empty"
+          },
+          "image_reference": {
+            "type": "string",
+            "enum": [
+              "subject",
+              "face"
+            ],
+            "description": "Image reference type.\n- subject (character feature reference), face (facial appearance reference)\n- When using face (facial appearance reference), the uploaded image must contain only 1 face"
+          },
+          "image_fidelity": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Reference strength for the uploaded image during generation."
+          },
+          "human_fidelity": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Facial reference strength, i.e., facial feature similarity to the reference image."
+          },
+          "element_list": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "element_id"
+              ],
+              "properties": {
+                "element_id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Element ID from the element library."
+                }
+              }
+            },
+            "description": "Element reference list, configured based on element IDs in the element library.\nUse key:value format as shown:\n`\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]`\nThe total number of reference elements and reference images must not exceed 10"
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "1k",
+              "2k"
+            ],
+            "default": "1k",
+            "description": "Generated image resolution."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9,
+            "default": 1,
+            "description": "Number of images to generate."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Aspect ratio of generated images (width:height)",
+            "default": "16:9",
+            "enum": [
+              "1:1",
+              "16:9",
+              "4:3",
+              "3:2",
+              "2:3",
+              "3:4",
+              "9:16",
+              "21:9"
+            ]
+          },
+          "watermark_info": {
+            "type": "object",
+            "description": "Whether to also generate a watermarked result.",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "true to generate watermarked result, false to not generate."
+              }
+            }
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback notification URL for this task. If configured, the server will proactively notify when the task status changes."
+          },
+          "external_task_id": {
+            "type": "string",
+            "description": "Custom task ID"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "description": "Error details returned by the gateway or upstream provider."
+          }
+        }
+      },
+      "SubmitResponse": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kling response code. 0 indicates the task has been accepted."
+          },
+          "message": {
+            "type": "string",
+            "description": "Kling response message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Upstream request identifier (if provided)."
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "task_id",
+              "task_status"
+            ],
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "Public task ID generated by this gateway. The upstream task ID is not exposed."
+              },
+              "task_status": {
+                "type": "string",
+                "description": "Initial task status.",
+                "example": "submitted"
+              },
+              "task_info": {
+                "type": "object",
+                "properties": {
+                  "external_task_id": {
+                    "type": "string",
+                    "description": "External task ID provided by the client, or the public task ID injected by the gateway."
+                  }
+                }
+              },
+              "created_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Creation time in milliseconds."
+              },
+              "updated_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Update time in milliseconds."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

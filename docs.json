@@ -49,6 +49,20 @@
                           "zh-Hans/zmodelImage/byteplus/seedream-5-0-text-to-image",
                           "zh-Hans/zmodelImage/byteplus/seedream-5-0-image-to-image"
                         ]
+                      },
+                      {
+                        "group": "Kling",
+                        "pages": [
+                          "zh-Hans/zmodelImage/kling/kling-v2-image-generations",
+                          "zh-Hans/zmodelImage/kling/kling-v2-new-image-generations",
+                          "zh-Hans/zmodelImage/kling/kling-v3-image-generations",
+                          "zh-Hans/zmodelImage/kling/image-generations-status",
+                          "zh-Hans/zmodelImage/kling/kling-image-o1-image-omni",
+                          "zh-Hans/zmodelImage/kling/kling-v3-omni-image-omni",
+                          "zh-Hans/zmodelImage/kling/omni-image-status",
+                          "zh-Hans/zmodelImage/kling/multi-image2image",
+                          "zh-Hans/zmodelImage/kling/multi-image2image-status"
+                        ]
                       }
                     ]
                   },
@@ -222,6 +236,20 @@
                           "en/zmodelImage/byteplus/seedream-4-5-image-to-image",
                           "en/zmodelImage/byteplus/seedream-5-0-text-to-image",
                           "en/zmodelImage/byteplus/seedream-5-0-image-to-image"
+                        ]
+                      },
+                      {
+                        "group": "Kling",
+                        "pages": [
+                          "en/zmodelImage/kling/kling-v2-image-generations",
+                          "en/zmodelImage/kling/kling-v2-new-image-generations",
+                          "en/zmodelImage/kling/kling-v3-image-generations",
+                          "en/zmodelImage/kling/image-generations-status",
+                          "en/zmodelImage/kling/kling-image-o1-image-omni",
+                          "en/zmodelImage/kling/kling-v3-omni-image-omni",
+                          "en/zmodelImage/kling/omni-image-status",
+                          "en/zmodelImage/kling/multi-image2image",
+                          "en/zmodelImage/kling/multi-image2image-status"
                         ]
                       }
                     ]

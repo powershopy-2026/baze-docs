@@ -1,0 +1,166 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling 多图生图任务 - 查询任务状态",
+    "version": "1.0.0",
+    "description": "通过 `/kling/v1/images/multi-image2image/{task_id}` 查询 Kling 原生多图生图任务状态。"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "当前 new-api 网关实例"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling 原生异步任务接口"
+    }
+  ],
+  "paths": {
+    "/kling/v1/images/multi-image2image/{task_id}": {
+      "get": {
+        "summary": "查询 Kling 任务状态",
+        "description": "返回已持久化的 Kling 原生任务响应。路径参数 task_id 为提交接口返回的公共任务 ID。",
+        "operationId": "createKlingMultiImage2ImageStatus",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "description": "提交接口返回的公共任务 ID。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "任务状态响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FetchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "任务不存在或无法查询。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "缺少或无效的 Bearer 令牌。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "description": "网关或上游返回的错误详情。"
+          }
+        }
+      },
+      "FetchResponse": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kling 响应码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "Kling 响应消息。"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "上游请求标识符（如有提供）。"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "本网关生成的公共任务 ID。"
+              },
+              "task_status": {
+                "type": "string",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeed",
+                  "failed"
+                ],
+                "description": "当前任务状态。"
+              },
+              "task_status_msg": {
+                "type": "string",
+                "description": "来自 Kling 的失败或进度消息。"
+              },
+              "task_info": {
+                "type": "object",
+                "description": "任务元数据。网关不对外暴露上游任务 ID。"
+              },
+              "task_result": {
+                "type": "object",
+                "description": "Kling 任务结果。视频接口返回视频数据；图像接口返回图片数据，可能包含 series_images。"
+              },
+              "final_unit_deduction": {
+                "type": "string",
+                "description": "上游成本参考值，仅供审计保留，不作为用户计费配额使用。"
+              },
+              "created_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "创建时间，毫秒级时间戳。"
+              },
+              "updated_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "更新时间，毫秒级时间戳。"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
