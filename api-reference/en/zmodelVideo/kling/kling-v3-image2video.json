@@ -1,0 +1,462 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling Image-to-Video Task - Submit Task (kling-v3)",
+    "version": "1.0.0",
+    "description": "Submit a Kling image-to-video task via `/kling/v1/videos/image2video`. Uses model kling-v3."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling native async task endpoints"
+    }
+  ],
+  "paths": {
+    "/kling/v1/videos/image2video": {
+      "post": {
+        "summary": "Kling Image-to-Video Task (kling-v3)",
+        "description": "Submit a Kling image-to-video task via `/kling/v1/videos/image2video`. The request body is forwarded to the Kling official API after model mapping and public task ID injection.",
+        "operationId": "createKlingV3Image2Video",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KlingRequest"
+              },
+              "examples": {
+                "request": {
+                  "summary": "Request example",
+                  "value": {
+                    "model_name": "kling-v3",
+                    "image": "https://example.com/frame.png",
+                    "prompt": "Slow camera push-in",
+                    "duration": "5"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or rejected by upstream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "KlingRequest": {
+        "type": "object",
+        "required": [
+          "model_name"
+        ],
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "description": "Model name",
+            "enum": [
+              "kling-v3"
+            ]
+          },
+          "image": {
+            "type": "string",
+            "description": "Reference image\n- Supports image Base64 encoding or image URL (must be accessible)\n\nBase64 encoding notes:\nPlease ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n\nCorrect example:\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA`\n\nIncorrect example:\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- At least one of image or image_tail must be provided, both cannot be empty"
+          },
+          "image_tail": {
+            "type": "string",
+            "description": "Reference image - tail frame control\n- Supports image Base64 encoding or image URL (must be accessible)\n\nBase64 encoding notes:\nPlease ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n\nCorrect example:\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA`\n\nIncorrect example:\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- At least one of image or image_tail must be provided, both cannot be empty\n- image_tail, dynamic_masks/static_mask, and camera_control are mutually exclusive; cannot be used together"
+          },
+          "multi_shot": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to generate a multi-shot video.\nWhen this parameter is true, the prompt parameter is invalid.\nWhen this parameter is false, the shot_type and multi_prompt parameters are invalid."
+          },
+          "shot_type": {
+            "type": "string",
+            "enum": [
+              "customize",
+              "intelligence"
+            ],
+            "description": "Shot type\nRequired when multi_shot is true."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Positive text prompt\n\n```markdown\nOmni models can achieve various capabilities through prompts with subjects, images, videos, etc.:\n- Use <<<>>> format to specify a subject, image, or video, e.g.: <<<element_1>>>, <<<image_1>>>, <<<video_1>>>\n```\n\n- Use <<<voice_1>>> to specify a voice, index matching the order in voice_list\n- Up to 2 voices per video generation task; when specifying voices, sound must be 'on'\n- Keep syntax simple, e.g.: A man<<<voice_1>>>says: \"Hello\"\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'",
+            "maxLength": 2500
+          },
+          "multi_prompt": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "index",
+                "prompt",
+                "duration"
+              ],
+              "properties": {
+                "index": {
+                  "type": "integer",
+                  "description": "Shot index."
+                },
+                "prompt": {
+                  "type": "string",
+                  "description": "Shot prompt."
+                },
+                "duration": {
+                  "type": "string",
+                  "description": "Shot duration in seconds."
+                }
+              }
+            },
+            "description": "Multi-shot information including prompt, duration, etc.\nDefine shot index and corresponding prompt and duration via index, prompt, duration parameters.\n- Max 6 shots, min 1 shot.\n- Max length per shot content: 512 characters.\n- Each shot duration must not exceed total task duration and must be >= 1.\n- Sum of all shot durations must equal total task duration.\n\nRequired when multi_shot is true and shot_type is customize. Format:\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```\n\nRequired when multi_shot is true and shot_type is customize."
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Negative text prompt\n- Max 2500 characters\n- Supplement negative prompt information through negative sentences in the positive prompt",
+            "maxLength": 2500
+          },
+          "element_list": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "element_id"
+              ],
+              "properties": {
+                "element_id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Element ID from the element library."
+                }
+              }
+            },
+            "description": "Element reference list, configured based on element IDs in the element library.\n\nUse key:value format:\n\n```json\n\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]\n```"
+          },
+          "voice_list": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "voice_id"
+              ],
+              "properties": {
+                "voice_id": {
+                  "type": "string",
+                  "description": "Voice ID.",
+                  "enum": [
+                    "829836818102231083",
+                    "829837074797821984",
+                    "829837252279803904",
+                    "829837297074962436"
+                  ],
+                  "x-options": [
+                    {
+                      "label": "Owen",
+                      "value": "829836818102231083"
+                    },
+                    {
+                      "label": "Catherine",
+                      "value": "829837074797821984"
+                    },
+                    {
+                      "label": "Laura",
+                      "value": "829837252279803904"
+                    },
+                    {
+                      "label": "William",
+                      "value": "829837297074962436"
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Voice list referenced during video generation.\n- Up to 2 voices per video generation task\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'\n- element_list and voice_list are mutually exclusive, cannot coexist\n\nUse key:value format:\n\n```json\n\"voice_list\":[{ \"voice_id\": \"string\" },{ \"voice_id\": \"string\" }]\n```"
+          },
+          "sound": {
+            "type": "string",
+            "enum": [
+              "on",
+              "off"
+            ],
+            "default": "off",
+            "description": "Whether to also generate audio when creating the video"
+          },
+          "cfg_scale": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.5,
+            "description": "Creative freedom of video generation; higher values result in less creative freedom"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "std",
+              "pro",
+              "4k"
+            ],
+            "default": "std",
+            "description": "Video generation mode\n\n- std: Standard mode, cost-effective, output video resolution 720P.\n- pro: Expert mode (high quality), better video quality, output video resolution 1080P.\n- 4k: 4K mode, high quality (same as pro), better video quality, output video resolution 4K."
+          },
+          "static_mask": {
+            "type": "string",
+            "description": "Static brush mask area (mask image painted by the user via motion brush)\\n`The \"motion brush\" feature includes both \"dynamic brush dynamic_masks\" and \"static brush static_mask\"`\n\n- Supports image Base64 encoding or image URL (must be accessible, same format requirements as the image field)\n- Supported image formats: .jpg / .jpeg / .png\n- Image aspect ratio must match the input image (i.e., the image field), otherwise the task will fail\n- The resolution of static_mask and dynamic_masks.mask must be identical, otherwise the task will fail"
+          },
+          "dynamic_masks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "mask",
+                "trajectories"
+              ],
+              "properties": {
+                "mask": {
+                  "type": "string",
+                  "description": "Dynamic brush mask area (mask image painted by the user via motion brush)\n- Supports image Base64 encoding or image URL (must be accessible, same format requirements as the image field)\n- Supported image formats: .jpg / .jpeg / .png\n- Image aspect ratio must match the input image (i.e., the image field), otherwise the task will fail\n- The resolution of static_mask and dynamic_masks.mask must be identical, otherwise the task will fail"
+                },
+                "trajectories": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "properties": {
+                      "x": {
+                        "type": "integer",
+                        "description": "Trajectory point X-coordinate (in pixel coordinate system, origin at the bottom-left of the input image)"
+                      },
+                      "y": {
+                        "type": "integer",
+                        "description": "Trajectory point Y-coordinate (in pixel coordinate system, origin at the bottom-left of the input image)"
+                      }
+                    }
+                  },
+                  "description": "Motion trajectory coordinate sequence\n- For a 5s video, trajectory length must not exceed 77, i.e., coordinate count range: [2, 77]\n- Trajectory coordinate system: origin at the bottom-left corner of the image\n\n`Note 1: More coordinate points result in more accurate trajectory depiction; 2 points form a straight line`\n\n`Note 2: Trajectory direction follows the input order, with the first coordinate as the starting point, sequentially linking subsequent coordinates to form the motion trajectory`"
+                }
+              }
+            },
+            "description": "Dynamic brush configuration list\n- Can configure multiple groups (up to 6), each containing a \"mask area\" and \"motion trajectories\" sequence"
+          },
+          "camera_control": {
+            "type": "object",
+            "description": "Camera motion control settings (if not specified, the model will intelligently match based on input text/image)",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "simple",
+                  "down_back",
+                  "forward_up",
+                  "right_turn_forward",
+                  "left_turn_forward"
+                ],
+                "description": "Predefined camera motion types.\n- simple: Simple camera movement, choose one of six config options.\n- down_back: Camera tilts down and moves back ➡️ pull away, no config needed.\n- forward_up: Camera moves forward and tilts up ➡️ push in and up, no config needed.\n- right_turn_forward: Rotate right then move forward ➡️ right spin push, no config needed.\n- left_turn_forward: Rotate left and move forward ➡️ left spin push, no config needed."
+              },
+              "config": {
+                "type": "object",
+                "description": "Contains 6 fields to specify camera movement in different directions\n- Required when camera type is 'simple', leave empty for other types\n- Choose exactly 1 of the 6 parameters to be non-zero, the rest must be 0",
+                "properties": {
+                  "horizontal": {
+                    "type": "number",
+                    "minimum": -10,
+                    "maximum": 10,
+                    "description": "Horizontal movement along the X-axis\nNegative values move left, positive values move right"
+                  },
+                  "vertical": {
+                    "type": "number",
+                    "minimum": -10,
+                    "maximum": 10,
+                    "description": "Vertical movement along the Y-axis\nNegative values move down, positive values move up"
+                  },
+                  "pan": {
+                    "type": "number",
+                    "minimum": -10,
+                    "maximum": 10,
+                    "description": "Pan: rotation around the Y-axis\nNegative values rotate left, positive values rotate right"
+                  },
+                  "tilt": {
+                    "type": "number",
+                    "minimum": -10,
+                    "maximum": 10,
+                    "description": "Tilt: rotation around the X-axis\nNegative values tilt down, positive values tilt up"
+                  },
+                  "roll": {
+                    "type": "number",
+                    "minimum": -10,
+                    "maximum": 10,
+                    "description": "Roll: rotation around the Z-axis\nNegative values rotate counter-clockwise, positive values rotate clockwise"
+                  },
+                  "zoom": {
+                    "type": "number",
+                    "minimum": -10,
+                    "maximum": 10,
+                    "description": "Zoom: controls focal length and field of view\nNegative values zoom in (narrower FOV), positive values zoom out (wider FOV)"
+                  }
+                }
+              }
+            }
+          },
+          "duration": {
+            "type": "string",
+            "description": "Video duration in seconds.",
+            "enum": [
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15"
+            ],
+            "default": "5"
+          },
+          "watermark_info": {
+            "type": "object",
+            "description": "Whether to also generate a watermarked result.",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "true to generate watermarked result, false to not generate."
+              }
+            }
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback notification URL for this task. If configured, the server will proactively notify when the task status changes."
+          },
+          "external_task_id": {
+            "type": "string",
+            "description": "Custom task ID"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "description": "Error details returned by the gateway or upstream provider."
+          }
+        }
+      },
+      "SubmitResponse": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kling response code. 0 indicates the task has been accepted."
+          },
+          "message": {
+            "type": "string",
+            "description": "Kling response message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Upstream request identifier (if provided)."
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "task_id",
+              "task_status"
+            ],
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "Public task ID generated by this gateway. The upstream task ID is not exposed."
+              },
+              "task_status": {
+                "type": "string",
+                "description": "Initial task status.",
+                "example": "submitted"
+              },
+              "task_info": {
+                "type": "object",
+                "properties": {
+                  "external_task_id": {
+                    "type": "string",
+                    "description": "External task ID provided by the client, or the public task ID injected by the gateway."
+                  }
+                }
+              },
+              "created_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Creation time in milliseconds."
+              },
+              "updated_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Update time in milliseconds."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

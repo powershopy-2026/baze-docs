@@ -126,15 +126,15 @@
                 }
               }
             },
-            "description": "Subject reference image list\n- Supports up to 4 images, minimum 1 image, passed as key:value pairs:\n`\"subject_image_list\":[  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" }]`\n- No cropping logic on the API side — please upload pre-cropped subject images directly\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1"
+            "description": "Subject reference image list\n\n- Supports up to 4 images, minimum 1 image, passed as key:value pairs:\n`\"subject_image_list\":[  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" }]`\n- No cropping logic on the API side — please upload pre-cropped subject images directly\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1"
           },
           "scene_image": {
             "type": "string",
-            "description": "Scene reference image\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1"
+            "description": "Scene reference image\n\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1"
           },
           "style_image": {
             "type": "string",
-            "description": "Style reference image\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1"
+            "description": "Style reference image\n\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1"
           },
           "n": {
             "type": "integer",

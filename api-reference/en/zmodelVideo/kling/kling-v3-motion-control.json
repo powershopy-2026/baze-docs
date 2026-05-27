@@ -1,14 +1,14 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Kling Omni Image Task - Submit Task",
+    "title": "Kling Motion Control Video Task - Submit Task (kling-v3)",
     "version": "1.0.0",
-    "description": "Submit a Kling native omni image task via `/kling/v1/images/omni-image`. Task results may contain `images` or `series_images`."
+    "description": "Submit a Kling native motion control task via `/kling/v1/videos/motion-control`. Uses model kling-v3."
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": ""
+      "description": "Current new-api gateway instance"
     }
   ],
   "tags": [
@@ -18,11 +18,11 @@
     }
   ],
   "paths": {
-    "/kling/v1/images/omni-image": {
+    "/kling/v1/videos/motion-control": {
       "post": {
-        "summary": "Kling omni image task",
-        "description": "Submit a Kling native omni image task via `/kling/v1/images/omni-image`. Task results may contain `images` or `series_images`.",
-        "operationId": "createKlingOmniImage",
+        "summary": "Kling Motion Control Video Task (kling-v3)",
+        "description": "Submit a Kling native motion control task via `/kling/v1/videos/motion-control`. The request body is forwarded to the Kling official API after model mapping and public task ID injection.",
+        "operationId": "createKlingV3MotionControl",
         "tags": [
           "Kling"
         ],
@@ -42,9 +42,11 @@
                 "request": {
                   "summary": "Request example",
                   "value": {
-                    "model_name": "kling-image-o1",
-                    "prompt": "Create a three-frame product storyboard",
-                    "result_type": "single"
+                    "model_name": "kling-v3",
+                    "image_url": "https://example.com/character.png",
+                    "video_url": "https://example.com/motion.mp4",
+                    "character_orientation": "video",
+                    "mode": "std"
                   }
                 }
               }
@@ -98,36 +100,31 @@
         "type": "object",
         "required": [
           "model_name",
-          "prompt"
+          "image_url",
+          "video_url",
+          "character_orientation",
+          "mode"
         ],
         "properties": {
           "model_name": {
             "type": "string",
             "description": "Model name",
             "enum": [
-              "kling-image-o1"
+              "kling-v3"
             ]
           },
           "prompt": {
             "type": "string",
-            "description": "Text prompt, can include positive and negative descriptions\n\n- Prompts can be templated to meet different image generation needs\n- Must not exceed 2500 characters\n- Reference images using the <<<>>> format, e.g.: <<<image_1>>>",
+            "description": "Text prompt, can include positive and negative descriptions\n- Add elements to the scene or achieve camera movement effects through the prompt",
             "maxLength": 2500
           },
-          "image_list": {
-            "type": "array",
-            "description": "Reference image list, passed as key:value pairs:\n\n```json\n\"image_list\": [{ \"image\": \"image_url\" }]\n```\n\n- Supports image Base64 encoding or image URL (must be accessible)\n- Supported image formats: `.jpg` / `.jpeg` / `.png`\n- Image file size must not exceed **10MB**, image dimensions must be at least **300px**, aspect ratio between **1:2.5 ~ 2.5:1**\n- The total of reference elements and reference images must not exceed **10**\n- The `image_url` value must not be empty",
-            "items": {
-              "type": "object",
-              "required": [
-                "image"
-              ],
-              "properties": {
-                "image": {
-                  "type": "string",
-                  "description": "Image URL or Base64 string."
-                }
-              }
-            }
+          "image_url": {
+            "type": "string",
+            "description": "Reference image. The characters, background, and other elements in the generated video will be based on the reference image.\n- Video content requirements:\n  * Character proportions should match the reference action proportions; avoid using full-body actions to drive half-body characters\n  * Characters must show clear upper body or full body limbs and head, avoid occlusion\n  * Avoid extreme character orientations such as upside-down or lying flat; character proportion in frame must not be too low\n  * Supports realistic/stylized characters (including humans/humanoid animals/partial animals/characters with humanoid limb proportions)\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix (e.g., data:image/png;base64,) before the Base64 string; pass the Base64 encoded string directly.\n- Correct Base64 parameter:\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Incorrect Base64 parameter (includes data: prefix):\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions between 300px~65536px, aspect ratio between 1:2.5 ~ 2.5:1"
+          },
+          "video_url": {
+            "type": "string",
+            "description": "Reference video URL. The character motion in the generated video will match the reference video.\n- Video content requirements:\n  * Characters must show clear upper body or full body limbs and head, avoid occlusion\n  * Recommend uploading single-person action video; for 2+ people, the largest character action will be used\n  * Real person actions recommended; some stylized characters/humanoid limb proportions may work\n  * Action video should be a single continuous shot with the character always visible; avoid cuts, camera movements, etc., otherwise content will be truncated\n  * Avoid excessively fast actions; relatively smooth actions produce better results\n- Video files support .mp4/.mov, file size must not exceed 100MB, both width and height must be between 340px~3850px; validation failures will return error codes\n- Minimum video duration is 3 seconds; maximum duration depends on character orientation reference:\n  * When character orientation matches the video character: max 30 seconds\n  * When character orientation matches the image character: max 10 seconds\n- If your action difficulty is high or speed is fast, there is a chance the result will be shorter than the uploaded video duration because the model can only extract valid action duration; minimum 3s of usable continuous action is needed. Note that consumed credits cannot be refunded; adjust action difficulty and speed accordingly\n- The system validates video content and will return error codes if issues are found"
           },
           "element_list": {
             "type": "array",
@@ -144,63 +141,32 @@
                 }
               }
             },
-            "description": "Element reference list, configured based on element IDs in the element library\n\n- Passed as key:value pairs:\n`\"element_list\":[{ \"element_id\": 829836802793406551 }]`\n\n- The total of reference elements and reference images must not exceed 10"
+            "description": "Element reference list, configured based on element IDs in the element library.\n- Use key:value format:\n\n```json\n\"element_list\":[{ \"element_id\": 829836802793406551 }]```\n\n- When referencing elements, the generated video can only reference the character orientation from the video\n- Currently only supports 1 element"
           },
-          "resolution": {
+          "keep_original_sound": {
             "type": "string",
             "enum": [
-              "1k",
-              "2k"
+              "yes",
+              "no"
             ],
-            "description": "Generated image resolution",
-            "default": "1K"
+            "default": "yes",
+            "description": "Whether to keep the original audio of the video."
           },
-          "result_type": {
-            "type": "string",
-            "description": "Toggle between single image / series image output",
-            "enum": [
-              "single"
-            ],
-            "default": "single"
-          },
-          "aspect_ratio": {
+          "character_orientation": {
             "type": "string",
             "enum": [
-              "16:9",
-              "9:16",
-              "1:1",
-              "4:3",
-              "3:4",
-              "3:2",
-              "2:3",
-              "21:9",
-              "auto"
+              "image",
+              "video"
             ],
-            "default": "auto",
-            "description": "Aspect ratio of generated images (width:height)\n\nValues: `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` `auto`\n\n- `auto`: intelligently selects aspect ratio based on input content"
+            "description": "Character orientation in the generated video, can match the image or the video\n- image: Match the character orientation in the image; reference video duration must not exceed 10 seconds\n- video: Match the character orientation in the video; reference video duration must not exceed 30 seconds\n- When referencing elements, the generated video can only reference the character orientation from the video"
           },
-          "n": {
-            "type": "integer",
-            "description": "Number of images to generate\n\n- Range: [1, 9]\n- When result_type is series, this parameter has no effect",
-            "minimum": 1,
-            "maximum": 9,
-            "default": 1
-          },
-          "series_amount": {
-            "oneOf": [
-              {
-                "type": "integer",
-                "minimum": 2,
-                "maximum": 9
-              },
-              {
-                "type": "string",
-                "enum": [
-                  "auto"
-                ]
-              }
+          "mode": {
+            "type": "string",
+            "enum": [
+              "std",
+              "pro"
             ],
-            "description": "Number of images in the generated series\n\nValues: 2 3 4 5 6 7 8 9 auto\n\n- auto: intelligently selects the number of images based on input content\n- When using auto, it consumes concurrency quota equal to the actual number generated\n- When result_type is single, this parameter has no effect"
+            "description": "Video generation mode\n- std: Standard mode, cost-effective\n- pro: Expert mode (high quality), better video quality"
           },
           "watermark_info": {
             "type": "object",
@@ -218,7 +184,7 @@
           },
           "external_task_id": {
             "type": "string",
-            "description": "Custom task ID\n\n- User-defined task ID; providing one does not override the system-generated task ID, but the task can be queried using this ID\n- Must be unique per user"
+            "description": "Custom task ID"
           }
         }
       },

@@ -110,7 +110,7 @@
           },
           "prompt": {
             "type": "string",
-            "description": "文本提示词，可包含正向描述和负向描述\n- 可将提示词模板化来满足不同的图像生成需求\n- 不能超过 2500 个字符\n- 通过 <<<>>> 的格式来指定某个图片，如：<<<image_1>>>",
+            "description": "文本提示词，可包含正向描述和负向描述\n\n- 可将提示词模板化来满足不同的图像生成需求\n- 不能超过 2500 个字符\n- 通过 <<<>>> 的格式来指定某个图片，如：<<<image_1>>>",
             "maxLength": 2500
           },
           "image_list": {
@@ -144,7 +144,7 @@
                 }
               }
             },
-            "description": "主体参考列表，基于主体库中主体的 ID 配置\n- 用 key:value 承载，如下：\n`\"element_list\":[{ \"element_id\": 829836802793406551 }]`\n- 参考主体数量与参考图片数量有关，参考主体数量和参考图片数量之和不得超过 10"
+            "description": "主体参考列表，基于主体库中主体的 ID 配置\n\n- 用 key:value 承载，如下：\n`\"element_list\":[{ \"element_id\": 829836802793406551 }]`\n\n- 参考主体数量与参考图片数量有关，参考主体数量和参考图片数量之和不得超过 10"
           },
           "resolution": {
             "type": "string",
@@ -179,11 +179,11 @@
               "auto"
             ],
             "default": "auto",
-            "description": "生成图片的画面纵横比（宽:高）\n枚举值: `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` `auto`\n -其中：`auto`为根据传入内容智能生成图片宽高比"
+            "description": "生成图片的画面纵横比（宽:高）\n\n枚举值: `16:9` `9:16` `1:1` `4:3` `3:4` `3:2` `2:3` `21:9` `auto`\n\n- 其中：`auto`为根据传入内容智能生成图片宽高比"
           },
           "n": {
             "type": "integer",
-            "description": "生成图片数量\n- 取值范围：[1, 9]\n- 当 result_type 值为 series 时，当前参数无效",
+            "description": "生成图片数量\n\n- 取值范围：[1, 9]\n- 当 result_type 值为 series 时，当前参数无效",
             "minimum": 1,
             "maximum": 9,
             "default": 1
@@ -202,7 +202,7 @@
                 ]
               }
             ],
-            "description": "生成组图的图片数量\n枚举值：2 3 4 5 6 7 8 9 auto\n- 其中：auto 为根据传入内容智能选择生成图片的数量\n- 使用 auto 时，会占用与实际生成数量对应的并发量\n- 当 result_type 值为 single 时，当前参数无效"
+            "description": "生成组图的图片数量\n\n枚举值：2 3 4 5 6 7 8 9 auto\n\n- 其中：auto 为根据传入内容智能选择生成图片的数量\n- 使用 auto 时，会占用与实际生成数量对应的并发量\n- 当 result_type 值为 single 时，当前参数无效"
           },
           "watermark_info": {
             "type": "object",
@@ -220,7 +220,7 @@
           },
           "external_task_id": {
             "type": "string",
-            "description": "自定义任务 ID\n- 用户自定义任务 ID，传入不会覆盖系统生成的任务 ID，但支持通过该 ID 进行任务查询\n- 请注意，单用户下需要保证唯一性"
+            "description": "自定义任务 ID\n\n- 用户自定义任务 ID，传入不会覆盖系统生成的任务 ID，但支持通过该 ID 进行任务查询\n- 请注意，单用户下需要保证唯一性"
           }
         }
       },

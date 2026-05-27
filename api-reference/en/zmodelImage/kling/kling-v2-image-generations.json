@@ -121,7 +121,7 @@
           },
           "image": {
             "type": "string",
-            "description": "Reference image\n- Supports image Base64 encoding or image URL (must be accessible)\nBase64 encoding notes:\nPlease ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\nCorrect example:\n`iVBORw0KGgoAAAANSUhEUgAAAAUA`\nIncorrect example:\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- This parameter is required when image_reference is not empty"
+            "description": "Reference image\n\n- Supports image Base64 encoding or image URL (must be accessible)\n\nBase64 encoding notes:\nPlease ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n\nCorrect example:\n`iVBORw0KGgoAAAANSUhEUgAAAAUA`\n\nIncorrect example:\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- This parameter is required when image_reference is not empty"
           },
           "image_reference": {
             "type": "string",
@@ -129,7 +129,7 @@
               "subject",
               "face"
             ],
-            "description": "Image reference type.\n- subject (character feature reference), face (facial appearance reference)\n- When using face (facial appearance reference), the uploaded image must contain only 1 face"
+            "description": "Image reference type.\n\n- subject (character feature reference), face (facial appearance reference)\n- When using face (facial appearance reference), the uploaded image must contain only 1 face"
           },
           "element_list": {
             "type": "array",

@@ -120,6 +120,24 @@
                         ]
                       },
                       {
+                        "group": "Kling",
+                        "pages": [
+                          "zh-Hans/zmodelVideo/kling/kling-v2-1-master-text2video",
+                          "zh-Hans/zmodelVideo/kling/kling-v2-5-turbo-text2video",
+                          "zh-Hans/zmodelVideo/kling/kling-v3-text2video",
+                          "zh-Hans/zmodelVideo/kling/kling-v2-1-master-image2video",
+                          "zh-Hans/zmodelVideo/kling/kling-v2-5-turbo-image2video",
+                          "zh-Hans/zmodelVideo/kling/kling-v3-image2video",
+                          "zh-Hans/zmodelVideo/kling/kling-v3-motion-control",
+                          "zh-Hans/zmodelVideo/kling/kling-v3-omni-video-omni",
+                          "zh-Hans/zmodelVideo/kling/kling-video-o1-video-omni",
+                          "zh-Hans/zmodelVideo/kling/text2video-status",
+                          "zh-Hans/zmodelVideo/kling/image2video-status",
+                          "zh-Hans/zmodelVideo/kling/video-omni-status",
+                          "zh-Hans/zmodelVideo/kling/motion-control-status"
+                        ]
+                      },
+                      {
                         "group": "Vidu",
                         "pages": [
                           "zh-Hans/zmodelVideo/vidu/vidu-text-to-video",
@@ -330,6 +348,24 @@
                           "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
                           "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
                           "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video"
+                        ]
+                      },
+                      {
+                        "group": "Kling",
+                        "pages": [
+                          "en/zmodelVideo/kling/kling-v2-1-master-text2video",
+                          "en/zmodelVideo/kling/kling-v2-5-turbo-text2video",
+                          "en/zmodelVideo/kling/kling-v3-text2video",
+                          "en/zmodelVideo/kling/kling-v2-1-master-image2video",
+                          "en/zmodelVideo/kling/kling-v2-5-turbo-image2video",
+                          "en/zmodelVideo/kling/kling-v3-image2video",
+                          "en/zmodelVideo/kling/kling-v3-motion-control",
+                          "en/zmodelVideo/kling/kling-v3-omni-video-omni",
+                          "en/zmodelVideo/kling/kling-video-o1-video-omni",
+                          "en/zmodelVideo/kling/text2video-status",
+                          "en/zmodelVideo/kling/image2video-status",
+                          "en/zmodelVideo/kling/video-omni-status",
+                          "en/zmodelVideo/kling/motion-control-status"
                         ]
                       },
                       {
