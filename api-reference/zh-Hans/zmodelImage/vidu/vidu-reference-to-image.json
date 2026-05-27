@@ -14,7 +14,7 @@
       "post": {
         "summary": "Vidu 参考生图",
         "operationId": "viduReferenceToImage",
-        "description": "使用 Vidu 模型基于参考图片生成新图片。提交任务后，请通过 `GET /vidu/v1/{task_id}` 查询状态。",
+        "description": "使用 Vidu 模型基于参考图片生成新图片。",
         "requestBody": {
           "required": true,
           "content": {
@@ -210,7 +210,7 @@
             "items": {
               "type": "string"
             },
-            "description": "参考图片列表。\n- **viduq2**: 支持输入 0-7 张图片\n- **viduq1**: 支持输入 1-7 张图片\n模型将基于输入的图片生成具有相同主体的新图片。\n注意事项：\n- 支持 Base64 或 URL 格式（URL 必须可访问）\n- 支持格式：png, jpeg, jpg, webp\n- 图片分辨率不得小于 128×128\n- 宽高比必须在 1:4 到 4:1 之间\n- 单张图片大小不得超过 50MB\n- HTTP 请求体不得超过 20MB，且编码必须包含适当的内容类型字符串\n- Base64 格式示例：`data:image/png;base64,{base64_encode}`"
+            "description": "参考图片列表。\n- **viduq2**: 支持输入 0-7 张图片\n模型将基于输入的图片生成具有相同主体的新图片。\n- 支持 Base64 或 URL 格式（URL 必须可访问）\n- 支持格式：png, jpeg, jpg, webp\n- 图片分辨率不得小于 128×128\n- 宽高比必须在 1:4 到 4:1 之间\n- 单张图片大小不得超过 50MB\n- HTTP 请求体不得超过 20MB，且编码必须包含适当的内容类型字符串\n- Base64 格式示例：`data:image/png;base64,{base64_encode}`"
           },
           "prompt": {
             "type": "string",
@@ -235,7 +235,7 @@
               "auto"
             ],
             "default": "16:9",
-            "description": "图片宽高比。\n- **viduq1**: 默认 16:9，可选值：16:9, 9:16, 1:1, 3:4, 4:3\n- **viduq2**: 默认 16:9，可选值：16:9, 9:16, 1:1, 3:4, 4:3, 21:9, 2:3, 3:2\n- **auto**: 生成的图片宽高比与第一张输入图片保持一致"
+            "description": "图片宽高比。\n- **viduq2**: 默认 16:9，可选值：16:9, 9:16, 1:1, 3:4, 4:3, 21:9, 2:3, 3:2\n- **auto**: 生成的图片宽高比与第一张输入图片保持一致"
           },
           "resolution": {
             "type": "string",
@@ -245,7 +245,7 @@
               "4K"
             ],
             "default": "1080p",
-            "description": "图片分辨率。\n- **viduq1**: 默认 1080p，可选值：1080p\n- **viduq2**: 默认 1080p，可选值：1080p, 2K, 4K"
+            "description": "图片分辨率。\n- **viduq2**: 默认 1080p，可选值：1080p, 2K, 4K"
           },
           "payload": {
             "type": "string",
