@@ -2,3 +2,41 @@
 title: "Vidu Reference-to-Image"
 openapi: "/api-reference/en/zmodelImage/vidu/vidu-reference-to-image.json POST /vidu/v1/images/reference2image"
 ---
+
+## Overview
+
+Vidu Reference-to-Image allows you to generate images based on reference images using the Vidu model. This API supports text-to-image, image editing, and reference-to-image generation.
+
+## Workflow
+
+### Step 1: Create Image Generation Task
+
+Call the `POST /vidu/v1/images/reference2image` endpoint to submit your image generation request. The response will include a `task_id`.
+
+### Step 2: Query Task Status ⭐
+
+Use the returned `task_id` to query the task status via the **unified task query interface**:
+
+```
+GET /vidu/v1/tasks/{task_id}
+```
+
+💡 **Important**: This is a unified interface that works for **all Vidu tasks** including:
+- 🎬 Video generation tasks
+- 🔊 Audio generation tasks  
+- 🖼️ Image generation tasks
+
+📖 For detailed API documentation and examples, see [Query Task Status](/en/zmodelVideo/vidu/vidu-query-task-status).
+
+### Step 3: Get Results
+
+When the task status is `success`, the response will contain the generated image URLs in the `images` field.
+
+## Task States
+
+The task goes through the following states:
+- **created**: Task created successfully
+- **queueing**: Task in queue
+- **processing**: Task processing
+- **success**: Generation successful (results available)
+- **failed**: Task failed
