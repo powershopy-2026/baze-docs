@@ -14,7 +14,7 @@
       "get": {
         "summary": "查询音频任务状态",
         "operationId": "queryAudioTaskStatus",
-        "description": "根据任务ID查询音频生成任务的状态和结果。\n\n**支持的任务类型：**\n- 文生音频任务\n- 可控文生音效任务\n\n**任务状态：**\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败\n\n统一任务查询接口文档请参见 [Vidu 任务状态查询](/zh-Hans/zmodelVideo/vidu/vidu-query-task-status)。",
+        "description": "根据任务ID查询音频生成任务的状态和结果。",
         "tags": [
           "Vidu Audio Tasks"
         ],
@@ -183,37 +183,92 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
-      "AudioTaskResponse": {
+      "ImageTaskResponse": {
         "type": "object",
         "properties": {
           "state": {
             "type": "string",
-            "description": "任务状态。"
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "任务处理状态：\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败"
           },
           "err_code": {
             "type": "string",
-            "description": "错误代码。"
+            "description": "失败时返回的错误代码。无错误时为空字符串。"
           },
           "credits": {
             "type": "integer",
-            "description": "消耗的积分。"
+            "description": "此任务消耗的积分数量。单位：积分。"
           },
           "payload": {
             "type": "string",
-            "description": "任务结果。"
+            "description": "本次调用使用的透传参数。"
+          },
+          "bgm": {
+            "type": "boolean",
+            "description": "本次调用是否使用背景音乐（BGM）。"
+          },
+          "off_peak": {
+            "type": "boolean",
+            "description": "本次调用是否使用非高峰模式。"
           },
           "creations": {
             "type": "array",
-            "description": "生成的资源。",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string",
-                  "description": "资源ID。"
-                },
-                "url": {
-                  "type": "string",
-                  "description": "资源URL。"
-                },
+              "$ref": "#/components/schemas/CreationResult"
+            },
+            "description": "生成结果数组。"
+          }
+        }
+      },
+      "CreationResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "生成结果ID。"
+          },
+          "url": {
+            "type": "string",
+            "description": "生成结果的URL，有效期24小时。"
+          },
+          "cover_url": {
+            "type": "string",
+            "description": "生成结果的封面URL，有效期24小时。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误代码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误消息。"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "附加错误数据。"
+          }
+        }
+      }
+    }
+  }
+}

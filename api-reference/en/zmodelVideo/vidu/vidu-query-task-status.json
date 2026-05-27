@@ -16,7 +16,7 @@
       "get": {
         "summary": "Task Status Query",
         "operationId": "viduQueryTaskStatus",
-        "description": "Query the latest status of a Vidu task by task ID.\n\n**Supported Task Types:**\n- Video tasks (text-to-video, image-to-video, reference-to-video, start-end-to-video)\n- Audio tasks (text-to-audio, timing-to-audio)\n- Image tasks (reference-to-image)\n\n**Task States:**\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed\n\nAfter task completion, call the corresponding download endpoint based on task type to retrieve result files.",
+        "description": "Query the latest status of a Vidu task by task ID.",
         "tags": [
           "Vidu Tasks"
         ],
@@ -158,7 +158,7 @@
       }
     },
     "schemas": {
-      "TaskStatusResponse": {
+      "ImageTaskResponse": {
         "type": "object",
         "properties": {
           "state": {
@@ -218,3 +218,24 @@
           }
         }
       },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "Additional error data."
+          }
+        }
+      }
+    }
+  }
+}
