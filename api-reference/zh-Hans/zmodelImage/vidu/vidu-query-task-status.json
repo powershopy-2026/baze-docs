@@ -1,0 +1,276 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu 图片任务状态查询",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/tasks/{task_id}": {
+      "get": {
+        "summary": "查询图片任务状态",
+        "operationId": "queryImageTaskStatus",
+        "description": "根据任务ID查询图片生成任务的状态和结果。\n\n**支持的任务类型：**\n- 参考生图任务\n\n**任务状态：**\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败\n\n统一任务查询接口文档请参见 [Vidu 任务状态查询](/zh-Hans/zmodelVideo/vidu/vidu-query-task-status)。",
+        "tags": [
+          "Vidu Image Tasks"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "图片创建接口返回的任务ID（例如：POST /vidu/v1/images/reference2image）。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功，返回图片任务状态信息。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageTaskResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "图片生成成功",
+                    "value": {
+                      "task_id": "img_abc123def456",
+                      "state": "success",
+                      "model": "viduq2",
+                      "images": ["https://example.com/generated_image.png"],
+                      "prompt": "一只可爱的小猫在草地上玩耍，阳光明媚",
+                      "seed": 42,
+                      "aspect_ratio": "16:9",
+                      "resolution": "4K",
+                      "payload": "",
+                      "credits": 2,
+                      "created_at": "2025-09-08T09:53:22.083033428Z"
+                    }
+                  },
+                  "processing": {
+                    "summary": "图片任务处理中",
+                    "value": {
+                      "task_id": "img_abc123def456",
+                      "state": "processing",
+                      "model": "viduq2",
+                      "prompt": "一只可爱的小猫在草地上玩耍，阳光明媚",
+                      "aspect_ratio": "16:9",
+                      "resolution": "4K",
+                      "credits": 2,
+                      "created_at": "2025-09-08T09:53:22.083033428Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数无效",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "请求体格式错误或字段值无效",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "认证失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "认证失败",
+                    "value": {
+                      "code": "authentication_failed",
+                      "message": "API密钥认证失败",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "任务不存在",
+                    "value": {
+                      "code": "task_not_found",
+                      "message": "指定的任务不存在",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "超过速率限制。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "rate_limit": {
+                    "summary": "超过速率限制",
+                    "value": {
+                      "code": "rate_limit_exceeded",
+                      "message": "请求过多，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "server_error": {
+                    "summary": "服务器错误",
+                    "value": {
+                      "code": "internal_server_error",
+                      "message": "服务器发生意外错误",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ImageTaskResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "任务ID。"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "任务处理状态：\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败"
+          },
+          "model": {
+            "type": "string",
+            "description": "本次调用使用的模型参数。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "本次调用使用的文本提示词。"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "生成的图片URL列表。当状态为'success'时可用。"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "本次调用使用的随机种子参数。"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "本次调用使用的宽高比参数。"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "本次调用使用的分辨率参数。"
+          },
+          "credits": {
+            "type": "integer",
+            "description": "本次调用消耗的积分。"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "本次调用使用的回调URL参数。"
+          },
+          "payload": {
+            "type": "string",
+            "description": "本次调用使用的透传参数。"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "任务创建时间。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误代码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误消息。"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "附加错误数据。"
+          }
+        }
+      }
+    }
+  }
+}

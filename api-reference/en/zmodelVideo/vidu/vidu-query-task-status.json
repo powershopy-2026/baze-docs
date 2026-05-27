@@ -28,7 +28,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Task ID returned by the task creation endpoint."
+            "description": "Public task ID returned by the submit endpoint."
           }
         ],
         "responses": {
@@ -40,43 +40,40 @@
                   "$ref": "#/components/schemas/TaskStatusResponse"
                 },
                 "examples": {
-                  "video_task_processing": {
-                    "summary": "Video task processing",
+                  "success": {
+                    "summary": "Task completed successfully",
                     "value": {
-                      "task_id": "vid_abc123def456",
-                      "state": "processing",
-                      "model": "viduq3-pro",
-                      "prompt": "A kitten running on grass, sunny day",
-                      "duration": 5,
-                      "resolution": "720p",
-                      "progress": 45,
-                      "credits": 10,
-                      "created_at": "2025-01-01T15:41:31.968916Z"
-                    }
-                  },
-                  "audio_task_completed": {
-                    "summary": "Audio task completed",
-                    "value": {
-                      "task_id": "aud_xyz789",
                       "state": "success",
-                      "model": "audio1.0",
-                      "prompt": "Sound of raindrops falling on window",
-                      "duration": 10,
-                      "credits": 5,
-                      "created_at": "2025-01-01T15:40:00.000000Z",
-                      "completed_at": "2025-01-01T15:41:30.000000Z"
+                      "err_code": "",
+                      "credits": 4,
+                      "payload": "",
+                      "creations": [
+                        {
+                          "id": "your_creations_id",
+                          "url": "your_generated_results_url",
+                          "cover_url": "your_generated_results_cover_url"
+                        }
+                      ]
                     }
                   },
-                  "image_task_failed": {
-                    "summary": "Image task failed",
+                  "processing": {
+                    "summary": "Task processing",
                     "value": {
-                      "task_id": "img_def456ghi789",
-                      "state": "failed",
-                      "model": "viduq2",
-                      "prompt": "A beautiful sunset scene",
-                      "error_message": "Error occurred during generation",
+                      "state": "processing",
+                      "err_code": "",
                       "credits": 0,
-                      "created_at": "2025-01-01T15:30:00.000000Z"
+                      "payload": "",
+                      "creations": []
+                    }
+                  },
+                  "failed": {
+                    "summary": "Task failed",
+                    "value": {
+                      "state": "failed",
+                      "err_code": "generation_failed",
+                      "credits": 0,
+                      "payload": "",
+                      "creations": []
                     }
                   }
                 }
@@ -164,10 +161,6 @@
       "TaskStatusResponse": {
         "type": "object",
         "properties": {
-          "task_id": {
-            "type": "string",
-            "description": "Task ID."
-          },
           "state": {
             "type": "string",
             "enum": [
@@ -179,81 +172,49 @@
             ],
             "description": "Task processing state:\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed"
           },
-          "model": {
+          "err_code": {
             "type": "string",
-            "description": "Model name used."
-          },
-          "prompt": {
-            "type": "string",
-            "description": "Text prompt (if applicable)."
-          },
-          "images": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Input images list (if applicable)."
-          },
-          "duration": {
-            "type": "integer",
-            "description": "Duration parameter (seconds), used for video and audio tasks."
-          },
-          "seed": {
-            "type": "integer",
-            "description": "Random seed (if applicable)."
-          },
-          "resolution": {
-            "type": "string",
-            "description": "Resolution parameter (if applicable)."
-          },
-          "aspect_ratio": {
-            "type": "string",
-            "description": "Aspect ratio parameter (if applicable)."
-          },
-          "progress": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 100,
-            "description": "Task progress percentage (0-100), only returned when state is processing."
+            "description": "Error code returned in case of failure. Empty string if no error."
           },
           "credits": {
             "type": "integer",
-            "description": "Credits consumed."
+            "description": "The number of credits consumed by this task. Unit: credits."
           },
-          "error_message": {
+          "payload": {
             "type": "string",
-            "description": "Error message, only returned when state is failed."
+            "description": "The payload parameter used for this call."
           },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Task creation time (ISO 8601 format)."
+          "bgm": {
+            "type": "boolean",
+            "description": "Whether to use BGM (background music) for this call."
           },
-          "completed_at": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Task completion time (ISO 8601 format), only returned when state is success or failed."
+          "off_peak": {
+            "type": "boolean",
+            "description": "Whether to use off-peak mode for this call."
+          },
+          "creations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreationResult"
+            },
+            "description": "Generated results array."
           }
         }
       },
-      "ErrorResponse": {
+      "CreationResult": {
         "type": "object",
         "properties": {
-          "code": {
+          "id": {
             "type": "string",
-            "description": "Error code."
+            "description": "Creation ID."
           },
-          "message": {
+          "url": {
             "type": "string",
-            "description": "Error description message."
+            "description": "The URL of the generated results, valid for 24 hours."
           },
-          "data": {
-            "type": "object",
-            "nullable": true,
-            "description": "Additional error data (optional)."
+          "cover_url": {
+            "type": "string",
+            "description": "The cover URL of the generated results, valid for 24 hours."
           }
         }
-      }
-    }
-  }
-}
+      },
