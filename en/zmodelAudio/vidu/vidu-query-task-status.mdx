@@ -1,17 +1,17 @@
 ---
-title: "Vidu Image Task Status Query"
-openapi: "/api-reference/en/zmodelImage/vidu/vidu-query-task-status.json GET /vidu/v1/tasks/{task_id}"
+title: "Vidu Audio Task Status Query"
+openapi: "/api-reference/en/zmodelAudio/vidu/vidu-query-task-status.json GET /vidu/v1/tasks/{task_id}"
 ---
 
 ## Overview
 
-Query the status and result of a Vidu image generation task by task ID. This interface is specifically designed for image tasks created via endpoints like `POST /vidu/v1/images/reference2image`.
+Query the status and result of a Vidu audio generation task by task ID. This interface is specifically designed for audio tasks created via endpoints like `POST /vidu/v1/audio/text2audio` or `POST /vidu/v1/audio/timing2audio`.
 
 ## Usage
 
-### Step 1: Create Image Task
+### Step 1: Create Audio Task
 
-First, create an image generation task using the appropriate endpoint (e.g., [Vidu Reference-to-Image](/en/zmodelImage/vidu/vidu-reference-to-image)). The response will include a `task_id`.
+First, create an audio generation task using the appropriate endpoint (e.g., [Vidu Text-to-Audio](/en/zmodelAudio/vidu/vidu-text-to-audio) or [Vidu Timing-to-Audio](/en/zmodelAudio/vidu/vidu-timing-to-audio)). The response will include a `task_id`.
 
 ### Step 2: Query Task Status
 
@@ -25,7 +25,7 @@ GET /vidu/v1/tasks/{task_id}
 
 When the task state is `success`, the response will contain the generated results in the `creations` array. Each creation includes:
 - `id`: Creation ID
-- `url`: Generated image URL (valid for 24 hours)
+- `url`: Generated audio URL (valid for 24 hours)
 - `cover_url`: Cover image URL (valid for 24 hours)
 
 ## Task States
@@ -59,5 +59,6 @@ The response uses a unified structure with the `creations` array:
 
 ## Related APIs
 
-- [Vidu Reference-to-Image](/en/zmodelImage/vidu/vidu-reference-to-image) - Create image generation task
+- [Vidu Text-to-Audio](/en/zmodelAudio/vidu/vidu-text-to-audio) - Create text-to-audio task
+- [Vidu Timing-to-Audio](/en/zmodelAudio/vidu/vidu-timing-to-audio) - Create timing-to-audio task
 - [Vidu Task Status Query](/en/zmodelVideo/vidu/vidu-query-task-status) - Unified task query interface for all Vidu tasks

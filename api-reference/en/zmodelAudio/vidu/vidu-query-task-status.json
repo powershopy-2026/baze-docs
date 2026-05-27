@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Vidu Image Task Status Query",
+    "title": "Vidu Audio Task Status Query",
     "version": "1.0.0"
   },
   "servers": [
@@ -12,11 +12,11 @@
   "paths": {
     "/vidu/v1/tasks/{task_id}": {
       "get": {
-        "summary": "Query Image Task Status",
-        "operationId": "queryImageTaskStatusEn",
-        "description": "Query the status and result of an image generation task by task ID.\n\n**Supported Task Types:**\n- Reference-to-image tasks\n\n**Task States:**\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed\n\nFor unified task query interface documentation, see [Vidu Task Status Query](/en/zmodelVideo/vidu/vidu-query-task-status).",
+        "summary": "Query Audio Task Status",
+        "operationId": "queryAudioTaskStatusEn",
+        "description": "Query the status and result of an audio generation task by task ID.\n\n**Supported Task Types:**\n- Text-to-audio tasks\n- Timing-to-audio tasks\n\n**Task States:**\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed\n\nFor unified task query interface documentation, see [Vidu Task Status Query](/en/zmodelVideo/vidu/vidu-query-task-status).",
         "tags": [
-          "Vidu Image Tasks"
+          "Vidu Audio Tasks"
         ],
         "parameters": [
           {
@@ -26,20 +26,20 @@
             "schema": {
               "type": "string"
             },
-            "description": "Task ID returned by the image creation endpoint (e.g., POST /vidu/v1/images/reference2image)."
+            "description": "Task ID returned by the audio creation endpoint (e.g., POST /vidu/v1/audio/text2audio or POST /vidu/v1/audio/timing2audio)."
           }
         ],
         "responses": {
           "200": {
-            "description": "Query successful, returns image task status information.",
+            "description": "Query successful, returns audio task status information.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ImageTaskResponse"
+                  "$ref": "#/components/schemas/AudioTaskResponse"
                 },
                 "examples": {
                   "success": {
-                    "summary": "Image generation successful",
+                    "summary": "Audio generation successful",
                     "value": {
                       "state": "success",
                       "err_code": "",
@@ -55,7 +55,7 @@
                     }
                   },
                   "processing": {
-                    "summary": "Image task processing",
+                    "summary": "Audio task processing",
                     "value": {
                       "state": "processing",
                       "err_code": "",
@@ -65,7 +65,7 @@
                     }
                   },
                   "failed": {
-                    "summary": "Image task failed",
+                    "summary": "Audio task failed",
                     "value": {
                       "state": "failed",
                       "err_code": "generation_failed",
@@ -196,7 +196,7 @@
       }
     },
     "schemas": {
-      "ImageTaskResponse": {
+      "AudioTaskResponse": {
         "type": "object",
         "properties": {
           "state": {

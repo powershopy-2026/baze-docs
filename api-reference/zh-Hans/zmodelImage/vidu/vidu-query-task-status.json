@@ -41,30 +41,37 @@
                   "success": {
                     "summary": "图片生成成功",
                     "value": {
-                      "task_id": "img_abc123def456",
                       "state": "success",
-                      "model": "viduq2",
-                      "images": ["https://example.com/generated_image.png"],
-                      "prompt": "一只可爱的小猫在草地上玩耍，阳光明媚",
-                      "seed": 42,
-                      "aspect_ratio": "16:9",
-                      "resolution": "4K",
+                      "err_code": "",
+                      "credits": 4,
                       "payload": "",
-                      "credits": 2,
-                      "created_at": "2025-09-08T09:53:22.083033428Z"
+                      "creations": [
+                        {
+                          "id": "your_creations_id",
+                          "url": "https://example.com/generated_image.png",
+                          "cover_url": "https://example.com/cover_image.png"
+                        }
+                      ]
                     }
                   },
                   "processing": {
                     "summary": "图片任务处理中",
                     "value": {
-                      "task_id": "img_abc123def456",
                       "state": "processing",
-                      "model": "viduq2",
-                      "prompt": "一只可爱的小猫在草地上玩耍，阳光明媚",
-                      "aspect_ratio": "16:9",
-                      "resolution": "4K",
-                      "credits": 2,
-                      "created_at": "2025-09-08T09:53:22.083033428Z"
+                      "err_code": "",
+                      "credits": 0,
+                      "payload": "",
+                      "creations": []
+                    }
+                  },
+                  "failed": {
+                    "summary": "图片任务失败",
+                    "value": {
+                      "state": "failed",
+                      "err_code": "generation_failed",
+                      "credits": 0,
+                      "payload": "",
+                      "creations": []
                     }
                   }
                 }
@@ -192,10 +199,6 @@
       "ImageTaskResponse": {
         "type": "object",
         "properties": {
-          "task_id": {
-            "type": "string",
-            "description": "任务ID。"
-          },
           "state": {
             "type": "string",
             "enum": [
@@ -207,49 +210,49 @@
             ],
             "description": "任务处理状态：\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败"
           },
-          "model": {
+          "err_code": {
             "type": "string",
-            "description": "本次调用使用的模型参数。"
-          },
-          "prompt": {
-            "type": "string",
-            "description": "本次调用使用的文本提示词。"
-          },
-          "images": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "生成的图片URL列表。当状态为'success'时可用。"
-          },
-          "seed": {
-            "type": "integer",
-            "description": "本次调用使用的随机种子参数。"
-          },
-          "aspect_ratio": {
-            "type": "string",
-            "description": "本次调用使用的宽高比参数。"
-          },
-          "resolution": {
-            "type": "string",
-            "description": "本次调用使用的分辨率参数。"
+            "description": "失败时返回的错误代码。无错误时为空字符串。"
           },
           "credits": {
             "type": "integer",
-            "description": "本次调用消耗的积分。"
-          },
-          "callback_url": {
-            "type": "string",
-            "description": "本次调用使用的回调URL参数。"
+            "description": "此任务消耗的积分数量。单位：积分。"
           },
           "payload": {
             "type": "string",
             "description": "本次调用使用的透传参数。"
           },
-          "created_at": {
+          "bgm": {
+            "type": "boolean",
+            "description": "本次调用是否使用背景音乐（BGM）。"
+          },
+          "off_peak": {
+            "type": "boolean",
+            "description": "本次调用是否使用非高峰模式。"
+          },
+          "creations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreationResult"
+            },
+            "description": "生成结果数组。"
+          }
+        }
+      },
+      "CreationResult": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string",
-            "format": "date-time",
-            "description": "任务创建时间。"
+            "description": "生成结果ID。"
+          },
+          "url": {
+            "type": "string",
+            "description": "生成结果的URL，有效期24小时。"
+          },
+          "cover_url": {
+            "type": "string",
+            "description": "生成结果的封面URL，有效期24小时。"
           }
         }
       },

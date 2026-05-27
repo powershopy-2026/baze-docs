@@ -1,17 +1,17 @@
 ---
-title: "Vidu 图片任务状态查询"
-openapi: "/api-reference/zh-Hans/zmodelImage/vidu/vidu-query-task-status.json GET /vidu/v1/tasks/{task_id}"
+title: "Vidu 音频任务状态查询"
+openapi: "/api-reference/zh-Hans/zmodelAudio/vidu/vidu-query-task-status.json GET /vidu/v1/tasks/{task_id}"
 ---
 
 ## 概述
 
-根据任务ID查询 Vidu 图片生成任务的状态和结果。此接口专门用于查询通过 `POST /vidu/v1/images/reference2image` 等接口创建的图片任务。
+根据任务ID查询 Vidu 音频生成任务的状态和结果。此接口专门用于查询通过 `POST /vidu/v1/audio/text2audio` 或 `POST /vidu/v1/audio/timing2audio` 等接口创建的音频任务。
 
 ## 使用方法
 
-### 步骤 1：创建图片任务
+### 步骤 1：创建音频任务
 
-首先，使用相应的接口创建图片生成任务（例如：[Vidu 参考生图](/zh-Hans/zmodelImage/vidu/vidu-reference-to-image)）。响应中将包含一个 `task_id`。
+首先，使用相应的接口创建音频生成任务（例如：[Vidu 文生音频](/zh-Hans/zmodelAudio/vidu/vidu-text-to-audio) 或 [Vidu 可控文生音效](/zh-Hans/zmodelAudio/vidu/vidu-timing-to-audio)）。响应中将包含一个 `task_id`。
 
 ### 步骤 2：查询任务状态
 
@@ -25,7 +25,7 @@ GET /vidu/v1/tasks/{task_id}
 
 当任务状态为 `success` 时，响应中的 `creations` 数组将包含生成的结果。每个creation包含：
 - `id`: 生成结果ID
-- `url`: 生成的图片URL（有效期24小时）
+- `url`: 生成的音频URL（有效期24小时）
 - `cover_url`: 封面图片URL（有效期24小时）
 
 ## 任务状态
@@ -59,5 +59,6 @@ GET /vidu/v1/tasks/{task_id}
 
 ## 相关 API
 
-- [Vidu 参考生图](/zh-Hans/zmodelImage/vidu/vidu-reference-to-image) - 创建图片生成任务
+- [Vidu 文生音频](/zh-Hans/zmodelAudio/vidu/vidu-text-to-audio) - 创建文生音频任务
+- [Vidu 可控文生音效](/zh-Hans/zmodelAudio/vidu/vidu-timing-to-audio) - 创建可控文生音效任务
 - [Vidu 任务状态查询](/zh-Hans/zmodelVideo/vidu/vidu-query-task-status) - 适用于所有 Vidu 任务的统一查询接口
