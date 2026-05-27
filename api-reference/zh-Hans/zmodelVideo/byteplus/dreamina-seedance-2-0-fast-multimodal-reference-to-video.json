@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Seedance 2.0 Fast 多模态参考生视频",
-        "operationId": "seedance20FastMultimodalReference",
+        "operationId": "seedance20FastReferenceToVideoZh",
         "description": "适用于 `dreamina-seedance-2-0-fast-260128` 模型。",
         "tags": [
           "Seedance Video"

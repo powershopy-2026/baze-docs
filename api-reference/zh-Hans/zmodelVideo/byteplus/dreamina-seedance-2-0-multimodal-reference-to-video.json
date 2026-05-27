@@ -26,7 +26,7 @@
       "post": {
         "summary": "Seedance 2.0 多模态参考生视频",
         "description": "适用于 `dreamina-seedance-2-0-260128` 模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。",
-        "operationId": "seedance20MultimodalReference",
+        "operationId": "seedance20ReferenceToVideoZh",
         "tags": [
           "Seedance Video"
         ],
