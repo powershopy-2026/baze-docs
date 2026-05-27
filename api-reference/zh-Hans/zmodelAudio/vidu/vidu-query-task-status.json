@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Vidu 图片任务状态查询",
+    "title": "Vidu 音频任务状态查询",
     "version": "1.0.0"
   },
   "servers": [
@@ -12,11 +12,11 @@
   "paths": {
     "/vidu/v1/tasks/{task_id}": {
       "get": {
-        "summary": "查询图片任务状态",
-        "operationId": "queryImageTaskStatus",
-        "description": "根据任务ID查询图片生成任务的状态和结果。\n\n**支持的任务类型：**\n- 参考生图任务\n\n**任务状态：**\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败\n\n统一任务查询接口文档请参见 [Vidu 任务状态查询](/zh-Hans/zmodelVideo/vidu/vidu-query-task-status)。",
+        "summary": "查询音频任务状态",
+        "operationId": "queryAudioTaskStatus",
+        "description": "根据任务ID查询音频生成任务的状态和结果。\n\n**支持的任务类型：**\n- 文生音频任务\n- 可控文生音效任务\n\n**任务状态：**\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败\n\n统一任务查询接口文档请参见 [Vidu 任务状态查询](/zh-Hans/zmodelVideo/vidu/vidu-query-task-status)。",
         "tags": [
-          "Vidu Image Tasks"
+          "Vidu Audio Tasks"
         ],
         "parameters": [
           {
@@ -26,20 +26,20 @@
             "schema": {
               "type": "string"
             },
-            "description": "图片创建接口返回的任务ID（例如：POST /vidu/v1/images/reference2image）。"
+            "description": "音频创建接口返回的任务ID（例如：POST /vidu/v1/audio/text2audio 或 POST /vidu/v1/audio/timing2audio）。"
           }
         ],
         "responses": {
           "200": {
-            "description": "查询成功，返回图片任务状态信息。",
+            "description": "查询成功，返回音频任务状态信息。",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ImageTaskResponse"
+                  "$ref": "#/components/schemas/AudioTaskResponse"
                 },
                 "examples": {
                   "success": {
-                    "summary": "图片生成成功",
+                    "summary": "音频生成成功",
                     "value": {
                       "state": "success",
                       "err_code": "",
@@ -55,7 +55,7 @@
                     }
                   },
                   "processing": {
-                    "summary": "图片任务处理中",
+                    "summary": "音频任务处理中",
                     "value": {
                       "state": "processing",
                       "err_code": "",
@@ -65,7 +65,7 @@
                     }
                   },
                   "failed": {
-                    "summary": "图片任务失败",
+                    "summary": "音频任务失败",
                     "value": {
                       "state": "failed",
                       "err_code": "generation_failed",
@@ -178,102 +178,42 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     }
   },
   "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
     "schemas": {
-      "ImageTaskResponse": {
+      "AudioTaskResponse": {
         "type": "object",
         "properties": {
           "state": {
             "type": "string",
-            "enum": [
-              "created",
-              "queueing",
-              "processing",
-              "success",
-              "failed"
-            ],
-            "description": "任务处理状态：\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败"
+            "description": "任务状态。"
           },
           "err_code": {
             "type": "string",
-            "description": "失败时返回的错误代码。无错误时为空字符串。"
+            "description": "错误代码。"
           },
           "credits": {
             "type": "integer",
-            "description": "此任务消耗的积分数量。单位：积分。"
+            "description": "消耗的积分。"
           },
           "payload": {
             "type": "string",
-            "description": "本次调用使用的透传参数。"
-          },
-          "bgm": {
-            "type": "boolean",
-            "description": "本次调用是否使用背景音乐（BGM）。"
-          },
-          "off_peak": {
-            "type": "boolean",
-            "description": "本次调用是否使用非高峰模式。"
+            "description": "任务结果。"
           },
           "creations": {
             "type": "array",
+            "description": "生成的资源。",
             "items": {
-              "$ref": "#/components/schemas/CreationResult"
-            },
-            "description": "生成结果数组。"
-          }
-        }
-      },
-      "CreationResult": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "生成结果ID。"
-          },
-          "url": {
-            "type": "string",
-            "description": "生成结果的URL，有效期24小时。"
-          },
-          "cover_url": {
-            "type": "string",
-            "description": "生成结果的封面URL，有效期24小时。"
-          }
-        }
-      },
-      "ErrorResponse": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "description": "错误代码。"
-          },
-          "message": {
-            "type": "string",
-            "description": "错误消息。"
-          },
-          "data": {
-            "type": "object",
-            "nullable": true,
-            "description": "附加错误数据。"
-          }
-        }
-      }
-    }
-  }
-}
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "资源ID。"
+                },
+                "url": {
+                  "type": "string",
+                  "description": "资源URL。"
+                },

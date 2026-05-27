@@ -224,7 +224,8 @@
                         "group": "Vidu",
                         "pages": [
                           "zh-Hans/zmodelAudio/vidu/vidu-text-to-audio",
-                          "zh-Hans/zmodelAudio/vidu/vidu-timing-to-audio"
+                          "zh-Hans/zmodelAudio/vidu/vidu-timing-to-audio",
+                          "zh-Hans/zmodelAudio/vidu/vidu-query-task-status"
                         ]
                       }
                     ]
@@ -455,7 +456,8 @@
                         "group": "Vidu",
                         "pages": [
                           "en/zmodelAudio/vidu/vidu-text-to-audio",
-                          "en/zmodelAudio/vidu/vidu-timing-to-audio"
+                          "en/zmodelAudio/vidu/vidu-timing-to-audio",
+                          "en/zmodelAudio/vidu/vidu-query-task-status"
                         ]
                       }
                     ]

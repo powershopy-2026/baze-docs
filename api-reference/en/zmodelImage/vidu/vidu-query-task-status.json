@@ -41,30 +41,37 @@
                   "success": {
                     "summary": "Image generation successful",
                     "value": {
-                      "task_id": "img_abc123def456",
                       "state": "success",
-                      "model": "viduq2",
-                      "images": ["https://example.com/generated_image.png"],
-                      "prompt": "A cute kitten playing on grass under sunny weather",
-                      "seed": 42,
-                      "aspect_ratio": "16:9",
-                      "resolution": "4K",
+                      "err_code": "",
+                      "credits": 4,
                       "payload": "",
-                      "credits": 2,
-                      "created_at": "2025-09-08T09:53:22.083033428Z"
+                      "creations": [
+                        {
+                          "id": "your_creations_id",
+                          "url": "https://example.com/generated_image.png",
+                          "cover_url": "https://example.com/cover_image.png"
+                        }
+                      ]
                     }
                   },
                   "processing": {
                     "summary": "Image task processing",
                     "value": {
-                      "task_id": "img_abc123def456",
                       "state": "processing",
-                      "model": "viduq2",
-                      "prompt": "A cute kitten playing on grass under sunny weather",
-                      "aspect_ratio": "16:9",
-                      "resolution": "4K",
-                      "credits": 2,
-                      "created_at": "2025-09-08T09:53:22.083033428Z"
+                      "err_code": "",
+                      "credits": 0,
+                      "payload": "",
+                      "creations": []
+                    }
+                  },
+                  "failed": {
+                    "summary": "Image task failed",
+                    "value": {
+                      "state": "failed",
+                      "err_code": "generation_failed",
+                      "credits": 0,
+                      "payload": "",
+                      "creations": []
                     }
                   }
                 }
@@ -192,10 +199,6 @@
       "ImageTaskResponse": {
         "type": "object",
         "properties": {
-          "task_id": {
-            "type": "string",
-            "description": "Task ID."
-          },
           "state": {
             "type": "string",
             "enum": [
@@ -207,49 +210,49 @@
             ],
             "description": "Task processing state:\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed"
           },
-          "model": {
+          "err_code": {
             "type": "string",
-            "description": "Model parameter used for this call."
-          },
-          "prompt": {
-            "type": "string",
-            "description": "Text prompt used for this call."
-          },
-          "images": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Generated image URLs. Available when state is 'success'."
-          },
-          "seed": {
-            "type": "integer",
-            "description": "Random seed parameter used for this call."
-          },
-          "aspect_ratio": {
-            "type": "string",
-            "description": "Aspect ratio parameter used for this call."
-          },
-          "resolution": {
-            "type": "string",
-            "description": "Resolution parameter used for this call."
+            "description": "Error code returned in case of failure. Empty string if no error."
           },
           "credits": {
             "type": "integer",
-            "description": "Credits consumed for this call."
-          },
-          "callback_url": {
-            "type": "string",
-            "description": "Callback URL parameter used for this call."
+            "description": "The number of credits consumed by this task. Unit: credits."
           },
           "payload": {
             "type": "string",
-            "description": "Payload parameter used for this call."
+            "description": "The payload parameter used for this call."
           },
-          "created_at": {
+          "bgm": {
+            "type": "boolean",
+            "description": "Whether to use BGM (background music) for this call."
+          },
+          "off_peak": {
+            "type": "boolean",
+            "description": "Whether to use off-peak mode for this call."
+          },
+          "creations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreationResult"
+            },
+            "description": "Generated results array."
+          }
+        }
+      },
+      "CreationResult": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string",
-            "format": "date-time",
-            "description": "Task creation time."
+            "description": "Creation ID."
+          },
+          "url": {
+            "type": "string",
+            "description": "The URL of the generated results, valid for 24 hours."
+          },
+          "cover_url": {
+            "type": "string",
+            "description": "The cover URL of the generated results, valid for 24 hours."
           }
         }
       },
