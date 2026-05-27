@@ -1,0 +1,364 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling Omni Video Task - Submit Task",
+    "version": "1.0.0",
+    "description": "Submit a Kling native omni video task via `/kling/v1/videos/omni-video`."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling native async task endpoints"
+    }
+  ],
+  "paths": {
+    "/kling/v1/videos/omni-video": {
+      "post": {
+        "summary": "Kling Omni Video Task",
+        "description": "Submit a Kling native omni video task via `/kling/v1/videos/omni-video`.",
+        "operationId": "createKlingV3OmniVideo",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/KlingRequest"
+              },
+              "examples": {
+                "request": {
+                  "summary": "Request example",
+                  "value": {
+                    "model_name": "kling-v3-omni",
+                    "prompt": "A product reveal video with smooth lighting"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or rejected by upstream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "KlingRequest": {
+        "type": "object",
+        "required": [
+          "model_name"
+        ],
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "description": "Model name",
+            "enum": [
+              "kling-v3-omni"
+            ]
+          },
+          "multi_shot": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to generate a multi-shot video.\nWhen this parameter is true, the prompt parameter is invalid.\nWhen this parameter is false, the shot_type and multi_prompt parameters are invalid."
+          },
+          "shot_type": {
+            "type": "string",
+            "enum": [
+              "customize",
+              "intelligence"
+            ],
+            "description": "Shot type.\nRequired when multi_shot is true."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt, can include positive and negative descriptions.\n- Prompts can be templated to meet different video generation needs\n- Max 2,500 characters\n\nMust not be empty when multi_shot is false, or when multi_shot is true and shot_type is intelligence.\n\n```markdown\nOmni models can achieve various capabilities through prompts with subjects, images, videos, etc.:\n- Use <<<>>> format to specify a subject, image, or video, e.g.: <<<element_1>>>, <<<image_1>>>, <<<video_1>>>\n```",
+            "maxLength": 2500
+          },
+          "multi_prompt": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "index",
+                "prompt",
+                "duration"
+              ],
+              "properties": {
+                "index": {
+                  "type": "integer",
+                  "description": "Shot index."
+                },
+                "prompt": {
+                  "type": "string",
+                  "description": "Shot prompt."
+                },
+                "duration": {
+                  "type": "string",
+                  "description": "Shot duration in seconds."
+                }
+              }
+            },
+            "description": "Multi-shot information including prompt, duration, etc.\nDefine shot index and corresponding prompt and duration via index, prompt, duration parameters.\n- Max 6 shots, min 1 shot.\n- Max length per shot content: 512 characters.\n- Each shot duration must not exceed total task duration and must be >= 1.\n- Sum of all shot durations must equal total task duration.\n\nRequired when multi_shot is true and shot_type is customize. Format:\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```"
+          },
+          "image_list": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "image_url"
+              ],
+              "properties": {
+                "image_url": {
+                  "type": "string",
+                  "description": "Image URL or Base64 string."
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "first_frame",
+                    "end_frame"
+                  ],
+                  "description": "Frame type. first_frame for start frame, end_frame for end frame."
+                }
+              }
+            },
+            "description": "Reference image list, including subject, scene, style reference images\n- Includes subject, scene, style reference images; can also be used as first/last frame for video generation:\n  * Use the type parameter to define whether an image is a first/last frame: first_frame for start frame, end_frame for end frame:\n    - If an image is not a first or last frame, do not configure the type parameter\n    - End-frame-only is not currently supported; must have a first-frame image when using end-frame\n  * When using first frame or first/last frame video generation, video editing features cannot be used\n\nUse key:value format:\n\n```json\n\"image_list\":[{ \"image_url\": \"image_url\"},{ \"image_url\": \"image_url\" }]\n```\n\nImage requirements:\n- Supports image Base64 encoding or image URL (must be accessible)\n- Format: .jpg / .jpeg / .png\n- File size: ≤10MB\n- Dimensions: width and height both at least 300px, aspect ratio 1:2.5 ~ 2.5:1\n- Number of reference images depends on number and type of reference elements:\n  * No reference video + only multi-image elements: total of images + multi-image elements must not exceed 7\n\nQuantity limits:\n- Number of reference images depends on number and type of reference elements:\n  * No reference video + only multi-image elements: total of images + multi-image elements must not exceed 7\n  * No reference video + with video elements: total of images + multi-image elements must not exceed 4\n  * With reference video + only multi-image elements: total of images + multi-image elements must not exceed 4\n- When using kling-video-o1 model, first/last frame is not supported when array has more than 2 images\n- image_url parameter value must not be empty"
+          },
+          "element_list": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "element_id"
+              ],
+              "properties": {
+                "element_id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Element ID from the element library."
+                }
+              }
+            },
+            "description": "Element reference list, configured based on element IDs in the element library.\n- Use key:value format:\n\n```json\n\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]\n```\n\n- Elements are divided into video custom elements (video character elements) and image custom elements (multi-image elements), with different applicable scopes\n- Number of reference elements depends on element type, whether there is a reference video, number of reference images, etc.:\n  * When using first frame or first/last frame video generation, kling-v3-omni supports up to 3 elements\n  * When using first/last frame video generation, kling-video-o1 does not support elements\n  * No reference video + only multi-image elements: total of reference images + multi-image elements must not exceed 7\n  * No reference video + only video character elements: video character elements must not exceed 3\n  * No reference video + both video character and multi-image elements: video character elements <= 3, reference images + multi-image elements <= 4\n  * With reference video + only multi-image elements: reference images + multi-image elements <= 4\n  * With reference video: video character elements not supported"
+          },
+          "video_list": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "video_url"
+              ],
+              "properties": {
+                "video_url": {
+                  "type": "string",
+                  "description": "Video URL."
+                },
+                "refer_type": {
+                  "type": "string",
+                  "enum": [
+                    "feature",
+                    "base"
+                  ],
+                  "description": "Reference video type. feature for feature reference video, base for video to be edited."
+                },
+                "keep_original_sound": {
+                  "type": "string",
+                  "enum": [
+                    "yes",
+                    "no"
+                  ],
+                  "description": "Whether to keep the original audio of the video."
+                }
+              }
+            },
+            "description": "Reference video, obtained via URL.\n\nVideo types:\n- Can be used as a feature reference video or as a video to be edited; defaults to video to be edited\n- Use refer_type parameter to distinguish: feature for feature reference video, base for video to be edited\n- When the reference video is a video to be edited, video first/last frames cannot be defined\n- Use keep_original_sound to choose whether to keep original audio: yes to keep, no to discard (also applies to feature type)\n\nWhen there is a reference video, the sound parameter can only be 'off'.\n\nUse key:value format:\n\n```json\n\"video_list\":[{ \"video_url\": \"video_url\", \"refer_type\": \"base\", \"keep_original_sound\": \"yes\" }]\n```\n\nVideo requirements:\n- Format: only MP4/MOV supported\n- Duration: at least 3 seconds; upper limit depends on model version, see capability map\n- Resolution: 720px-2160px (width and height)\n- Frame rate: 24-60fps (output will be 24fps)\n- At most 1 video, size ≤200MB\n- video_url parameter value must not be empty"
+          },
+          "sound": {
+            "type": "string",
+            "enum": [
+              "on",
+              "off"
+            ],
+            "default": "off",
+            "description": "Whether to also generate audio when creating the video."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "std",
+              "pro",
+              "4k"
+            ],
+            "default": "pro",
+            "description": "Video generation mode\n\n- std: Standard mode, cost-effective, output video resolution 720P.\n- pro: Expert mode (high quality), better video quality, output video resolution 1080P.\n- 4k: 4K mode, high quality (same as pro), better video quality, output video resolution 4K."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Aspect ratio of generated video frames (width:height)\n\n- Required when not using first-frame reference or video editing features.",
+            "enum": [
+              "1:1",
+              "16:9",
+              "9:16"
+            ]
+          },
+          "duration": {
+            "type": "string",
+            "description": "Requested video duration in seconds.\n\n- When using video editing (refer_type=\"base\"), the output matches the input video duration; this parameter is ignored and billing is based on the input video duration rounded to the nearest integer.",
+            "default": "5",
+            "enum": [
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15"
+            ]
+          },
+          "watermark_info": {
+            "type": "object",
+            "description": "Whether to also generate a watermarked result.",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "true to generate watermarked result, false to not generate."
+              }
+            }
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback notification URL for this task. If configured, the server will proactively notify when the task status changes."
+          },
+          "external_task_id": {
+            "type": "string",
+            "description": "Custom task ID."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "description": "Error details returned by the gateway or upstream provider."
+          }
+        }
+      },
+      "SubmitResponse": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "data"
+        ],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Kling response code. 0 indicates the task has been accepted."
+          },
+          "message": {
+            "type": "string",
+            "description": "Kling response message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Upstream request identifier (if provided)."
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "task_id",
+              "task_status"
+            ],
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "Public task ID generated by this gateway. The upstream task ID is not exposed."
+              },
+              "task_status": {
+                "type": "string",
+                "description": "Initial task status.",
+                "example": "submitted"
+              },
+              "task_info": {
+                "type": "object",
+                "properties": {
+                  "external_task_id": {
+                    "type": "string",
+                    "description": "External task ID provided by the client, or the public task ID injected by the gateway."
+                  }
+                }
+              },
+              "created_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Creation time in milliseconds."
+              },
+              "updated_at": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Update time in milliseconds."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
