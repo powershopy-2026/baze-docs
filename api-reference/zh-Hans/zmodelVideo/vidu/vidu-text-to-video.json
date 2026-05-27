@@ -14,7 +14,7 @@
       "post": {
         "summary": "Vidu 文生视频",
         "operationId": "viduTextToVideo",
-        "description": "使用 Vidu 模型将文本提示词转换为视频。支持 viduq3-turbo、viduq3-pro模型。\n\n**模型特性：**\n- **viduq3-turbo**: 相比 viduq3-pro，生成速度更快\n- **viduq3-pro**: 支持音画同步，支持视频分镜\n\n提交任务后，请通过相应的查询接口获取视频状态和结果。",
+        "description": "使用 Vidu 模型将文本提示词转换为视频。提交任务后，请通过 `GET /vidu/v1/tasks/{task_id}` 查询状态。",
         "requestBody": {
           "required": true,
           "content": {
@@ -198,7 +198,7 @@
               "general",
               "anime"
             ],
-            "description": "输出视频的风格。\n- **general**: 通用风格，允许通过提示词控制风格\n- **anime**: 动漫风格，针对动漫美学优化，对动漫相关提示词表现更好\n\n**注意**: 使用 q2 或 q3 模型时，此参数不生效。",
+            "description": "输出视频的风格。\n- **general**: 通用风格，允许通过提示词控制风格\n- **anime**: 动漫风格，针对动漫美学优化，对动漫相关提示词表现更好\n\n**注意**: 使用 q3 模型时，此参数不生效。",
             "default": "general"
           },
           "prompt": {
@@ -223,7 +223,7 @@
               "4:3",
               "1:1"
             ],
-            "description": "输出视频的宽高比。默认 16:9。\n\n**注意**: 3:4 和 4:3 仅支持 q2 和 q3 模型。",
+            "description": "输出视频的宽高比。默认 16:9。\n\n**注意**: 3:4 和 4:3 仅支持 q3 模型。",
             "default": "16:9"
           },
           "resolution": {
@@ -243,7 +243,7 @@
               "medium",
               "large"
             ],
-            "description": "画面中物体的运动幅度。默认 auto。\n\n**注意**: 使用 q2 和 q3 模型时，此参数不生效。",
+            "description": "画面中物体的运动幅度。默认 auto。\n\n**注意**: 使用 q3 模型时，此参数不生效。",
             "default": "auto"
           },
           "bgm": {

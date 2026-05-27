@@ -14,7 +14,7 @@
       "post": {
         "summary": "Vidu Text-to-Video",
         "operationId": "viduTextToVideoEn",
-        "description": "Convert text prompts to videos using Vidu models. Supports viduq3-turbo, viduq3-pro.\n\n**Model Features:**\n- **viduq3-turbo**: Faster generation speed compared to viduq3-pro\n- **viduq3-pro**: Supports audio-visual synchronization and video shot segmentation\n\nAfter submission, query the video status and results through the corresponding API.",
+        "description": "Convert text prompts to videos using Vidu models. After submission, query status via `GET /vidu/v1/videos/{task_id}`.",
         "requestBody": {
           "required": true,
           "content": {
@@ -198,7 +198,7 @@
               "general",
               "anime"
             ],
-            "description": "The style of output video.\n- **general**: General style. Allows style control through prompts\n- **anime**: Anime style. Optimized for anime aesthetics, with better performance for anime-related prompts\n\n**Note**: This parameter is not effective when using q2 or q3 models.",
+            "description": "The style of output video.\n- **general**: General style. Allows style control through prompts\n- **anime**: Anime style. Optimized for anime aesthetics, with better performance for anime-related prompts\n\n**Note**: This parameter is not effective when using q3 models.",
             "default": "general"
           },
           "prompt": {
@@ -223,7 +223,7 @@
               "4:3",
               "1:1"
             ],
-            "description": "The aspect ratio of the output video. Defaults to 16:9.\n\n**Note**: 3:4 and 4:3 only support q2 & q3 model.",
+            "description": "The aspect ratio of the output video. Defaults to 16:9.\n\n**Note**: 3:4 and 4:3 only support q3 model.",
             "default": "16:9"
           },
           "resolution": {
@@ -243,7 +243,7 @@
               "medium",
               "large"
             ],
-            "description": "The movement amplitude of objects in the frame. Defaults to auto.\n\n**Note**: This parameter does not take effect when using the q2 & q3 model.",
+            "description": "The movement amplitude of objects in the frame. Defaults to auto.\n\n**Note**: This parameter does not take effect when using the q3 model.",
             "default": "auto"
           },
           "bgm": {
