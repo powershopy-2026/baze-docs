@@ -288,7 +288,7 @@
           "stream": {
             "type": "boolean",
             "description": "是否使用流式输出。默认为 false。",
-            "default": false
+            "default": true
           },
           "temperature": {
             "type": "number",

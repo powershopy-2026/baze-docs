@@ -183,7 +183,8 @@
           },
           "stream": {
             "type": "boolean",
-            "description": "是否启用流式输出"
+            "description": "是否启用流式输出",
+            "default": true
           }
         },
         "additionalProperties": true

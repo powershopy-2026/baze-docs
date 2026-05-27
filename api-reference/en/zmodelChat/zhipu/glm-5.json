@@ -360,7 +360,7 @@
           "stream": {
             "type": "boolean",
             "description": "Whether to enable streaming output. When `true`, the response is returned as `text/event-stream`.",
-            "default": false
+            "default": true
           },
           "thinking": {
             "$ref": "#/components/schemas/ThinkingConfig"

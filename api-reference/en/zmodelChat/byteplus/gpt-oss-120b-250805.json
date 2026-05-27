@@ -326,7 +326,7 @@
           },
           "stream": {
             "type": "boolean",
-            "default": false,
+            "default": true,
             "description": "Whether to enable streaming output. When `true`, the response content type is `text/event-stream`."
           },
           "stream_options": {

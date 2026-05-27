@@ -326,7 +326,7 @@
           },
           "stream": {
             "type": "boolean",
-            "default": false,
+            "default": true,
             "description": "是否启用流式输出。为 `true` 时响应内容类型为 `text/event-stream`。"
           },
           "stream_options": {

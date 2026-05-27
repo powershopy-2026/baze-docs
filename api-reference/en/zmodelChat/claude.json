@@ -183,7 +183,8 @@
           },
           "stream": {
             "type": "boolean",
-            "description": "Whether to enable streaming output"
+            "description": "Whether to enable streaming output",
+            "default": true
           }
         },
         "additionalProperties": true

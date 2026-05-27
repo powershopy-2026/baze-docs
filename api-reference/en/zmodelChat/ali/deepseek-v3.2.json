@@ -288,7 +288,7 @@
           "stream": {
             "type": "boolean",
             "description": "Whether to use streaming output. Defaults to false.",
-            "default": false
+            "default": true
           },
           "temperature": {
             "type": "number",

@@ -360,7 +360,7 @@
           "stream": {
             "type": "boolean",
             "description": "是否启用流式输出。为 `true` 时返回 `text/event-stream`。",
-            "default": false
+            "default": true
           },
           "thinking": {
             "$ref": "#/components/schemas/ThinkingConfig"
