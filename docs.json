@@ -67,7 +67,8 @@
                       {
                         "group": "Vidu",
                         "pages": [
-                          "zh-Hans/zmodelImage/vidu/vidu-reference-to-image"
+                          "zh-Hans/zmodelImage/vidu/vidu-reference-to-image",
+                          "zh-Hans/zmodelImage/vidu/vidu-query-task-status"
                         ]
                       }
                     ]
@@ -298,7 +299,8 @@
                       {
                         "group": "Vidu",
                         "pages": [
-                          "en/zmodelImage/vidu/vidu-reference-to-image"
+                          "en/zmodelImage/vidu/vidu-reference-to-image",
+                          "en/zmodelImage/vidu/vidu-query-task-status"
                         ]
                       }
                     ]

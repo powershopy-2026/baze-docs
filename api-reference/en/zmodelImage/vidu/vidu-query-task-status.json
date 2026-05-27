@@ -1,0 +1,276 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu Image Task Status Query",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/tasks/{task_id}": {
+      "get": {
+        "summary": "Query Image Task Status",
+        "operationId": "queryImageTaskStatusEn",
+        "description": "Query the status and result of an image generation task by task ID.\n\n**Supported Task Types:**\n- Reference-to-image tasks\n\n**Task States:**\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed\n\nFor unified task query interface documentation, see [Vidu Task Status Query](/en/zmodelVideo/vidu/vidu-query-task-status).",
+        "tags": [
+          "Vidu Image Tasks"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Task ID returned by the image creation endpoint (e.g., POST /vidu/v1/images/reference2image)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns image task status information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageTaskResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Image generation successful",
+                    "value": {
+                      "task_id": "img_abc123def456",
+                      "state": "success",
+                      "model": "viduq2",
+                      "images": ["https://example.com/generated_image.png"],
+                      "prompt": "A cute kitten playing on grass under sunny weather",
+                      "seed": 42,
+                      "aspect_ratio": "16:9",
+                      "resolution": "4K",
+                      "payload": "",
+                      "credits": 2,
+                      "created_at": "2025-09-08T09:53:22.083033428Z"
+                    }
+                  },
+                  "processing": {
+                    "summary": "Image task processing",
+                    "value": {
+                      "task_id": "img_abc123def456",
+                      "state": "processing",
+                      "model": "viduq2",
+                      "prompt": "A cute kitten playing on grass under sunny weather",
+                      "aspect_ratio": "16:9",
+                      "resolution": "4K",
+                      "credits": 2,
+                      "created_at": "2025-09-08T09:53:22.083033428Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Invalid parameters",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "Request body format error or invalid field values",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Authentication failed",
+                    "value": {
+                      "code": "authentication_failed",
+                      "message": "API key authentication failed",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "code": "task_not_found",
+                      "message": "The specified task does not exist",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "rate_limit": {
+                    "summary": "Rate limit exceeded",
+                    "value": {
+                      "code": "rate_limit_exceeded",
+                      "message": "Too many requests, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "server_error": {
+                    "summary": "Server error",
+                    "value": {
+                      "code": "internal_server_error",
+                      "message": "An unexpected error occurred on the server",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ImageTaskResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Task ID."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "Task processing state:\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model parameter used for this call."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt used for this call."
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Generated image URLs. Available when state is 'success'."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed parameter used for this call."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Aspect ratio parameter used for this call."
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Resolution parameter used for this call."
+          },
+          "credits": {
+            "type": "integer",
+            "description": "Credits consumed for this call."
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback URL parameter used for this call."
+          },
+          "payload": {
+            "type": "string",
+            "description": "Payload parameter used for this call."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Task creation time."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "Additional error data."
+          }
+        }
+      }
+    }
+  }
+}
