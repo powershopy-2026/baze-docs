@@ -250,7 +250,7 @@
           },
           "duration": {
             "type": "integer",
-            "description": "Video duration in seconds. Default values vary by model:\n- **viduq3-pro-fast, viduq3-pro, viduq3-turbo**: default 5, available: 1-16\n- **viduq2-pro-fast, viduq2-pro, viduq2-turbo**: default 5, available: 1-10\n- **viduq1, viduq1-classic**: default 5, available: 5\n- **vidu2.0**: default 4, available: 4, 8"
+            "description": "Video duration in seconds. Default values vary by model:\n- **viduq3-pro-fast, viduq3-pro, viduq3-turbo**: default 5, available: 1-16"
           },
           "seed": {
             "type": "integer",
@@ -264,7 +264,7 @@
               "720p",
               "1080p"
             ],
-            "description": "Resolution (based on model & duration):\n- **viduq3-pro-fast (1-16s)**: default 720p, options: 720p, 1080p\n- **viduq3-pro, viduq3-turbo (1-16s)**: default 720p, options: 540p, 720p, 1080p\n- **viduq2-pro-fast (1-10s)**: default 720p, options: 720p, 1080p\n- **viduq2-pro, viduq2-turbo (1-10s)**: default 720p, options: 540p, 720p, 1080p\n- **viduq1, viduq1-classic (5s)**: default 1080p, options: 1080p\n- **vidu2.0 (4s)**: default 360p, options: 360p, 720p, 1080p\n- **vidu2.0 (8s)**: default 720p, options: 720p"
+            "description": "Resolution (based on model & duration):\n- **viduq3-pro-fast (1-16s)**: default 720p, options: 720p, 1080p\n- **viduq3-pro, viduq3-turbo (1-16s)**: default 720p, options: 540p, 720p, 1080p"
           },
           "movement_amplitude": {
             "type": "string",

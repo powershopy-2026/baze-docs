@@ -250,7 +250,7 @@
           },
           "duration": {
             "type": "integer",
-            "description": "视频时长（秒）。不同模型的默认值和可用范围：\n- **viduq3-pro-fast, viduq3-pro, viduq3-turbo**: 默认 5，可用 1-16\n- **viduq2-pro-fast, viduq2-pro, viduq2-turbo**: 默认 5，可用 1-10\n- **viduq1, viduq1-classic**: 默认 5，可用 5\n- **vidu2.0**: 默认 4，可用 4, 8"
+            "description": "视频时长（秒）。不同模型的默认值和可用范围：\n- **viduq3-pro-fast, viduq3-pro, viduq3-turbo**: 默认 5，可用 1-16"
           },
           "seed": {
             "type": "integer",
@@ -264,7 +264,7 @@
               "720p",
               "1080p"
             ],
-            "description": "分辨率（基于模型和时长）。\n- **viduq3-pro-fast (1-16s)**: 默认 720p，可选 720p, 1080p\n- **viduq3-pro, viduq3-turbo (1-16s)**: 默认 720p，可选 540p, 720p, 1080p\n- **viduq2-pro-fast (1-10s)**: 默认 720p，可选 720p, 1080p\n- **viduq2-pro, viduq2-turbo (1-10s)**: 默认 720p，可选 540p, 720p, 1080p\n- **viduq1, viduq1-classic (5s)**: 默认 1080p，可选 1080p\n- **vidu2.0 (4s)**: 默认 360p，可选 360p, 720p, 1080p\n- **vidu2.0 (8s)**: 默认 720p，可选 720p"
+            "description": "分辨率（基于模型和时长）。\n- **viduq3-pro-fast (1-16s)**: 默认 720p，可选 720p, 1080p\n- **viduq3-pro, viduq3-turbo (1-16s)**: 默认 720p，可选 540p, 720p, 1080p"
           },
           "movement_amplitude": {
             "type": "string",
