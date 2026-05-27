@@ -26,7 +26,7 @@
       "post": {
         "summary": "Seedance 2.0 Multimodal Reference to Video",
         "description": "Applicable to the `dreamina-seedance-2-0-260128` model. After submitting a task, please query the status via `GET /v1/videos/{task_id}`.",
-        "operationId": "seedance20MultimodalReferenceEn",
+        "operationId": "seedance20ReferenceToVideoEn",
         "tags": [
           "Seedance Video"
         ],
