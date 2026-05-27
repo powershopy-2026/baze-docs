@@ -2,3 +2,41 @@
 title: "Vidu 参考生图"
 openapi: "/api-reference/zh-Hans/zmodelImage/vidu/vidu-reference-to-image.json POST /vidu/v1/images/reference2image"
 ---
+
+## 概述
+
+Vidu 参考生图允许您使用 Vidu 模型基于参考图片生成新图片。该 API 支持文生图、图片编辑和参考生图功能。
+
+## 工作流程
+
+### 步骤 1：创建图片生成任务
+
+调用 `POST /vidu/v1/images/reference2image` 接口提交图片生成请求。响应中将包含一个 `task_id`。
+
+### 步骤 2：查询任务状态 ⭐
+
+使用返回的 `task_id` 通过**统一的任务查询接口**查询任务状态：
+
+```
+GET /vidu/v1/tasks/{task_id}
+```
+
+💡 **重要提示**：这是一个统一接口，适用于**所有 Vidu 任务**，包括：
+- 🎬 视频生成任务
+- 🔊 音频生成任务  
+- 🖼️ 图片生成任务
+
+📖 详细的API文档和示例请参见 [查询任务状态](/zh-Hans/zmodelVideo/vidu/vidu-query-task-status)。
+
+### 步骤 3：获取结果
+
+当任务状态为 `success` 时，响应中的 `images` 字段将包含生成的图片 URL。
+
+## 任务状态
+
+任务会经历以下状态：
+- **created**: 任务创建成功
+- **queueing**: 任务排队中
+- **processing**: 任务处理中
+- **success**: 生成成功（可获取结果）
+- **failed**: 任务失败

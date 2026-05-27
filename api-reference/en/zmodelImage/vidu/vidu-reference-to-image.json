@@ -64,7 +64,112 @@
         },
         "responses": {
           "200": {
-            "description": "Submission successful, returns an image task object."
+            "description": "Submission successful, returns an image task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferenceToImageResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Submission successful",
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "viduq2",
+                      "images": ["your_image_url1","your_image_url2","your_image_url3"],
+                      "prompt": "your_prompt",
+                      "seed": 0,
+                      "aspect_ratio": "16:9",
+                      "resolution": "2K",
+                      "payload": "",
+                      "credits": 2,
+                      "created_at": "2025-09-08T09:53:22.083033428Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Invalid parameters",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "Request body format error or invalid field values",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Authentication failed",
+                    "value": {
+                      "code": "authentication_failed",
+                      "message": "API key authentication failed",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "rate_limit": {
+                    "summary": "Rate limit exceeded",
+                    "value": {
+                      "code": "rate_limit_exceeded",
+                      "message": "Too many requests, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "server_error": {
+                    "summary": "Server error",
+                    "value": {
+                      "code": "internal_server_error",
+                      "message": "An unexpected error occurred on the server",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -146,6 +251,88 @@
             "type": "string",
             "maxLength": 1048576,
             "description": "Transparent transmission parameters.\nNo processing, only data transmission, with a maximum length of 1048576 characters."
+          }
+        }
+      },
+      "ReferenceToImageResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Task ID."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "Task processing state:\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model parameter used for this call."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt used for this call."
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Images used for this call."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed parameter used for this call."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Aspect ratio parameter used for this call."
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Resolution parameter used for this call."
+          },
+          "credits": {
+            "type": "integer",
+            "description": "Credits consumed for this call."
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback URL parameter used for this call."
+          },
+          "payload": {
+            "type": "string",
+            "description": "Payload parameter used for this call."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Task creation time."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "Additional error data."
           }
         }
       }
