@@ -158,7 +158,7 @@
       }
     },
     "schemas": {
-      "ImageTaskResponse": {
+      "TaskStatusResponse": {
         "type": "object",
         "properties": {
           "state": {
