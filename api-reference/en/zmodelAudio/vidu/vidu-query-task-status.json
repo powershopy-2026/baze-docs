@@ -14,7 +14,7 @@
       "get": {
         "summary": "Query Audio Task Status",
         "operationId": "queryAudioTaskStatusEn",
-        "description": "Query the status and result of an audio generation task by task ID.\n\n**Supported Task Types:**\n- Text-to-audio tasks\n- Timing-to-audio tasks\n\n**Task States:**\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed\n\nFor unified task query interface documentation, see [Vidu Task Status Query](/en/zmodelVideo/vidu/vidu-query-task-status).",
+        "description": "Query the status and result of an audio generation task by task ID.",
         "tags": [
           "Vidu Audio Tasks"
         ],

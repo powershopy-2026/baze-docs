@@ -14,7 +14,7 @@
       "get": {
         "summary": "查询图片任务状态",
         "operationId": "queryImageTaskStatus",
-        "description": "根据任务ID查询图片生成任务的状态和结果。\n\n**支持的任务类型：**\n- 参考生图任务\n\n**任务状态：**\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败\n\n统一任务查询接口文档请参见 [Vidu 任务状态查询](/zh-Hans/zmodelVideo/vidu/vidu-query-task-status)。",
+        "description": "根据任务ID查询图片生成任务的状态和结果。",
         "tags": [
           "Vidu Image Tasks"
         ],
