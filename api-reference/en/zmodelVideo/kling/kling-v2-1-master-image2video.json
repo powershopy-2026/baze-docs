@@ -192,7 +192,31 @@
               "properties": {
                 "voice_id": {
                   "type": "string",
-                  "description": "Voice ID."
+                  "description": "Voice ID.",
+                  "enum": [
+                    "829836818102231083",
+                    "829837074797821984",
+                    "829837252279803904",
+                    "829837297074962436"
+                  ],
+                  "x-options": [
+                    {
+                      "label": "Owen",
+                      "value": "829836818102231083"
+                    },
+                    {
+                      "label": "Catherine",
+                      "value": "829837074797821984"
+                    },
+                    {
+                      "label": "Laura",
+                      "value": "829837252279803904"
+                    },
+                    {
+                      "label": "William",
+                      "value": "829837297074962436"
+                    }
+                  ]
                 }
               }
             },
