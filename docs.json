@@ -117,7 +117,9 @@
                           "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
                           "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
                           "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video"
+                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
+                          "zh-Hans/zmodelVideo/byteplus/list-video-generation-tasks",
+                          "zh-Hans/zmodelVideo/byteplus/cancel-delete-video-task"
                         ]
                       },
                       {
@@ -350,7 +352,9 @@
                           "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
                           "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
                           "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video"
+                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
+                          "en/zmodelVideo/byteplus/list-video-generation-tasks",
+                          "en/zmodelVideo/byteplus/cancel-delete-video-task"
                         ]
                       },
                       {

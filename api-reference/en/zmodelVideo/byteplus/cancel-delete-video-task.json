@@ -1,0 +1,99 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Cancel or Delete a Video Generation Task",
+    "version": "1.0.0",
+    "description": "Cancels a queued video generation task, or deletes a video generation task record.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Seedance Video",
+      "description": "Seedance series video generation capability"
+    }
+  ],
+  "paths": {
+    "/byteplus/api/v3/contents/generations/tasks/{id}": {
+      "delete": {
+        "summary": "Cancel or Delete a Video Generation Task",
+        "description": "Cancels a queued video generation task, or deletes a video generation task record.\n\nThe operation performed by the DELETE API varies depending on the current task status:\n\n| Task Status | Can it be deleted? | Operation Description | Post-DELETE Task Status |\n|-------------|---------------------|------------------------|--------------------------|\n| queued | Yes | The task is removed from the queue and its status is updated to `cancelled`. | cancelled |\n| running | No | - | - |\n| succeeded | Yes | The video generation task record is deleted and will no longer be queryable. | - |\n| failed | Yes | The video generation task record is deleted and will no longer be queryable. | - |\n| cancelled | No | - | - |\n| expired | Yes | The video generation task record is deleted and will no longer be queryable. | - |",
+        "operationId": "byteplusCancelDeleteVideoTaskEn",
+        "tags": [
+          "Seedance Video"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the video generation task to be canceled or deleted.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The task was canceled or the task record was deleted. This API operation has no response parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful response",
+                    "value": {}
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters or unsupported operation for the current task status."
+          },
+          "401": {
+            "description": "Authentication failed."
+          },
+          "404": {
+            "description": "The video generation task was not found."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "EmptyResponse": {
+        "type": "object",
+        "description": "Empty response object.",
+        "additionalProperties": false,
+        "example": {}
+      }
+    }
+  }
+}

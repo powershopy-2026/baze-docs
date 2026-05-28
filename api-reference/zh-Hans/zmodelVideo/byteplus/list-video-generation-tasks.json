@@ -1,0 +1,387 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "查询视频生成任务列表",
+    "version": "1.0.0",
+    "description": "通过传入筛选参数，查询符合条件的视频生成任务。仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。注意：视频 URL 有效期为 24 小时，请及时下载或转存。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Seedance Video",
+      "description": "Seedance 系列视频生成能力"
+    }
+  ],
+  "paths": {
+    "/byteplus/api/v3/contents/generations/tasks": {
+      "get": {
+        "summary": "查询视频生成任务列表",
+        "description": "通过分页和筛选参数查询视频生成任务列表。仅支持查询最近 7 天的任务记录；返回的视频 URL 有效期为 24 小时。",
+        "operationId": "byteplusListVideoGenerationTasks",
+        "tags": [
+          "Seedance Video"
+        ],
+        "parameters": [
+          {
+            "name": "page_num",
+            "in": "query",
+            "required": false,
+            "description": "返回结果的页码。默认值：1。取值范围：[1, 500]。",
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "default": 1,
+              "minimum": 1,
+              "maximum": 500
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "description": "每页显示的结果数量。默认值：20。取值范围：[1, 500]。",
+            "schema": {
+              "type": "integer",
+              "nullable": true,
+              "default": 20,
+              "minimum": 1,
+              "maximum": 500
+            }
+          },
+          {
+            "name": "filter.status",
+            "in": "query",
+            "required": false,
+            "description": "过滤参数，查询某个任务状态。",
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "enum": [
+                "queued",
+                "running",
+                "cancelled",
+                "succeeded",
+                "failed"
+              ]
+            }
+          },
+          {
+            "name": "filter.task_ids",
+            "in": "query",
+            "required": false,
+            "description": "视频生成任务 ID，精确搜索，支持同时搜索多个任务 ID。需通过重复参数名的方式传递，例如：`filter.task_ids=id1&filter.task_ids=id2`。",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "filter.model",
+            "in": "query",
+            "required": false,
+            "description": "任务使用的推理接入点 ID，精确搜索。与返回参数 `items.model` 不同。",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "name": "filter.service_tier",
+            "in": "query",
+            "required": false,
+            "description": "处理任务使用的服务等级。`default` 表示在线推理模式，`flex` 表示离线推理模式。",
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "default": "default",
+              "enum": [
+                "default",
+                "flex"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功，返回符合筛选条件的视频生成任务列表。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListVideoGenerationTasksResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "查询成功",
+                    "value": {
+                      "total": 30,
+                      "items": [
+                        {
+                          "id": "cgt-2026****-****",
+                          "model": "doubao-seedance-2-0-260128",
+                          "status": "succeeded",
+                          "content": {
+                            "video_url": "https://ark-acg-cn-beijing.tos-cn-beijing.volces.com/xxx"
+                          },
+                          "usage": {
+                            "completion_tokens": 109586,
+                            "total_tokens": 109586
+                          },
+                          "created_at": 1779354227,
+                          "updated_at": 1779354426,
+                          "seed": 70172,
+                          "resolution": "720p",
+                          "ratio": "4:3",
+                          "duration": 5,
+                          "framespersecond": 24,
+                          "service_tier": "default",
+                          "execution_expires_after": 172800,
+                          "generate_audio": true,
+                          "draft": false,
+                          "priority": 0
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。"
+          },
+          "401": {
+            "description": "鉴权失败。"
+          },
+          "500": {
+            "description": "服务端内部错误。"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ListVideoGenerationTasksResponse": {
+        "type": "object",
+        "required": [
+          "total",
+          "items"
+        ],
+        "properties": {
+          "total": {
+            "type": "integer",
+            "description": "符合筛选条件的任务数量。"
+          },
+          "items": {
+            "type": "array",
+            "description": "查询到的视频生成任务列表。",
+            "items": {
+              "$ref": "#/components/schemas/VideoGenerationTask"
+            }
+          }
+        }
+      },
+      "VideoGenerationTask": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "视频生成任务 ID。"
+          },
+          "model": {
+            "type": "string",
+            "description": "任务使用的模型名称和版本，格式为模型名称-版本。"
+          },
+          "status": {
+            "type": "string",
+            "description": "任务状态。",
+            "enum": [
+              "queued",
+              "running",
+              "cancelled",
+              "succeeded",
+              "failed",
+              "expired"
+            ]
+          },
+          "error": {
+            "$ref": "#/components/schemas/TaskError"
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "任务创建时间的 Unix 时间戳（秒）。"
+          },
+          "updated_at": {
+            "type": "integer",
+            "description": "任务当前状态更新时间的 Unix 时间戳（秒）。"
+          },
+          "content": {
+            "$ref": "#/components/schemas/VideoTaskContent"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "本次请求使用的种子整数值。"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "生成视频的分辨率。"
+          },
+          "ratio": {
+            "type": "string",
+            "description": "生成视频的宽高比。"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "生成视频的时长，单位：秒。`duration` 和 `frames` 参数只会返回一个。创建视频生成任务时未指定 `frames`，会返回 `duration`。"
+          },
+          "frames": {
+            "type": "integer",
+            "description": "生成视频的帧数。`duration` 和 `frames` 参数只会返回一个。创建视频生成任务时指定了 `frames`，会返回 `frames`。"
+          },
+          "framespersecond": {
+            "type": "integer",
+            "description": "生成视频的帧率。"
+          },
+          "generate_audio": {
+            "type": "boolean",
+            "description": "生成的视频是否包含与画面同步的声音。仅 Seedance 2.0 系列、Seedance 1.5 pro 会返回该参数。"
+          },
+          "tools": {
+            "type": "array",
+            "description": "本次请求模型实际使用的工具。未使用工具时不返回。",
+            "items": {
+              "$ref": "#/components/schemas/TaskTool"
+            }
+          },
+          "safety_identifier": {
+            "type": "string",
+            "description": "终端用户的唯一标识符。若创建视频生成任务时设置了该参数，接口会原样返回此信息。"
+          },
+          "priority": {
+            "type": "integer",
+            "description": "当前请求的执行优先级。"
+          },
+          "draft": {
+            "type": "boolean",
+            "description": "生成的视频是否为 Draft 视频。仅 Seedance 1.5 pro 会返回该参数。"
+          },
+          "draft_task_id": {
+            "type": "string",
+            "description": "Draft 视频任务 ID。基于 Draft 视频生成正式视频时，会返回该参数。"
+          },
+          "service_tier": {
+            "type": "string",
+            "description": "实际处理任务使用的服务等级。",
+            "enum": [
+              "default",
+              "flex"
+            ]
+          },
+          "execution_expires_after": {
+            "type": "integer",
+            "description": "任务超时阈值，单位：秒。"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/TaskUsage"
+          }
+        }
+      },
+      "TaskError": {
+        "type": "object",
+        "nullable": true,
+        "description": "错误提示信息。任务成功返回 null，任务失败时返回错误数据。",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误提示信息。"
+          }
+        }
+      },
+      "VideoTaskContent": {
+        "type": "object",
+        "description": "当视频生成任务完成，会输出该字段，包含生成视频下载的 URL。",
+        "properties": {
+          "video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "生成视频的 URL。有效期为 24 小时，请及时下载或转存。"
+          },
+          "last_frame_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "视频的尾帧图像 URL。有效期为 24 小时，请及时下载或转存。创建视频生成任务时设置 `return_last_frame=true` 时返回。"
+          }
+        }
+      },
+      "TaskTool": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "实际使用的工具类型。",
+            "enum": [
+              "web_search"
+            ]
+          }
+        }
+      },
+      "TaskUsage": {
+        "type": "object",
+        "description": "本次请求的 token 用量。",
+        "properties": {
+          "completion_tokens": {
+            "type": "integer",
+            "description": "模型生成视频消耗的 token 数量，可作为计费对账依据。Seedance 2.0 系列模型存在最低 token 用量限制，如果实际 token 用量小于最低 token 用量，本字段会返回最低 token 用量。"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "本次请求消耗的总 token 数量。视频生成模型不统计输入 token，输入 token 为 0，故 `total_tokens=completion_tokens`。"
+          },
+          "tool_usage": {
+            "$ref": "#/components/schemas/ToolUsage"
+          }
+        }
+      },
+      "ToolUsage": {
+        "type": "object",
+        "description": "使用工具的用量信息。",
+        "properties": {
+          "web_search": {
+            "type": "integer",
+            "description": "实际调用联网搜索工具的次数，仅开启联网搜索时返回。"
+          }
+        }
+      }
+    }
+  }
+}
