@@ -3,7 +3,7 @@
   "info": {
     "title": "List Video Generation Tasks",
     "version": "1.0.0",
-    "description": "Pass filter parameters to return matching video generation tasks. Only historical data from the last 7 days can be queried. Time calculation is always based on UTC timestamps. The timestamp interval is [T-7 days, T), where T is the request time accurate to the second. Generated video URLs are valid for 24 hours; save them to your own storage in time.",
+    "description": "Pass filter parameters to return matching video generation tasks. Only historical data from the last 7 days can be queried. Time calculation is always based on UTC timestamps. The timestamp interval is [T-7 days, T), where T is the request time accurate to the second.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/byteplus/api/v3/contents/generations/tasks": {
       "get": {
         "summary": "List Video Generation Tasks",
-        "description": "Query video generation tasks with pagination and filter parameters. Only tasks from the last 7 days can be queried. Returned video URLs are valid for 24 hours.",
+        "description": "Query video generation tasks with pagination and filter parameters. Only tasks from the last 7 days can be queried.",
         "operationId": "byteplusListVideoGenerationTasksEn",
         "tags": [
           "Seedance Video"
@@ -61,7 +61,7 @@
             "name": "filter.status",
             "in": "query",
             "required": false,
-            "description": "Filter parameter used to query tasks with a specific status.",
+            "description": "Filter parameter used to query tasks with a specific status.\n\n- queued: Task in queue.\n- running: Task in progress.\n- cancelled: Cancelled task.\n- succeeded: Successful task.\n- failed: Failed task.",
             "schema": {
               "type": "string",
               "nullable": true,
@@ -220,7 +220,7 @@
           },
           "status": {
             "type": "string",
-            "description": "Task status.",
+            "description": "Task status.\n\n- queued: Task in queue.\n- running: Task in progress.\n- cancelled: Cancelled task.\n- succeeded: Successful task.\n- failed: Failed task.\n- expired: Expired task.",
             "enum": [
               "queued",
               "running",
@@ -289,7 +289,7 @@
           },
           "draft": {
             "type": "boolean",
-            "description": "Whether the generated video is a draft video. Only Seedance 1.5 Pro returns this parameter."
+            "description": "Whether the generated video is a draft video. Only Seedance 1.5 Pro returns this parameter.\n\n- true: Indicates the current output is a draft video.\n- false: Indicates the current output is a normal video."
           },
           "draft_task_id": {
             "type": "string",
@@ -334,12 +334,12 @@
           "video_url": {
             "type": "string",
             "format": "uri",
-            "description": "URL of the generated video. It is valid for 24 hours. Save it to your own storage in time."
+            "description": "URL of the generated video."
           },
           "last_frame_url": {
             "type": "string",
             "format": "uri",
-            "description": "URL of the last frame image of the video. It is valid for 24 hours. Returned when `return_last_frame=true` is set when creating a video generation task."
+            "description": "URL of the last frame image of the video. Returned when `return_last_frame=true` is set when creating a video generation task."
           }
         }
       },
@@ -348,7 +348,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "Tool type actually used.",
+            "description": "Tool type actually used.\n\n- web_search: Web search tool.",
             "enum": [
               "web_search"
             ]

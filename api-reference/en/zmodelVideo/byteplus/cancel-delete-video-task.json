@@ -25,7 +25,7 @@
     "/byteplus/api/v3/contents/generations/tasks/{id}": {
       "delete": {
         "summary": "Cancel or Delete a Video Generation Task",
-        "description": "Cancels a queued video generation task, or deletes a video generation task record.\n\nThe operation performed by the DELETE API varies depending on the current task status:\n\n| Task Status | Can it be deleted? | Operation Description | Post-DELETE Task Status |\n|-------------|---------------------|------------------------|--------------------------|\n| queued | Yes | The task is removed from the queue and its status is updated to `cancelled`. | cancelled |\n| running | No | - | - |\n| succeeded | Yes | The video generation task record is deleted and will no longer be queryable. | - |\n| failed | Yes | The video generation task record is deleted and will no longer be queryable. | - |\n| cancelled | No | - | - |\n| expired | Yes | The video generation task record is deleted and will no longer be queryable. | - |",
+        "description": "Cancels a queued video generation task, or deletes a video generation task record.",
         "operationId": "byteplusCancelDeleteVideoTaskEn",
         "tags": [
           "Seedance Video"
@@ -35,7 +35,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "The ID of the video generation task to be canceled or deleted.",
+            "description": "The ID of the video generation task to be canceled or deleted.\n\nThe operation performed by the DELETE API varies depending on the current task status:\n\n| Task Status | Can it be deleted? | Operation Description | Post-DELETE Task Status |\n|-------------|---------------------|------------------------|--------------------------|\n| queued | Yes | The task is removed from the queue and its status is updated to `cancelled`. | cancelled |\n| running | No | - | - |\n| succeeded | Yes | The video generation task record is deleted and will no longer be queryable. | - |\n| failed | Yes | The video generation task record is deleted and will no longer be queryable. | - |\n| cancelled | No | - | - |\n| expired | Yes | The video generation task record is deleted and will no longer be queryable. | - |",
             "schema": {
               "type": "string"
             }
