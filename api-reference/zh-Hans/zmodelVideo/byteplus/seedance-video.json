@@ -225,6 +225,13 @@
         "properties": {
           "model": {
             "type": "string",
+            "enum": [
+              "seedance-1-5-pro-251215",
+              "seedance-1-0-pro-250528",
+              "seedance-1-0-pro-fast-251015",
+              "dreamina-seedance-2-0-260128",
+              "dreamina-seedance-2-0-fast-260128"
+            ],
             "description": "您需要调用的模型的 ID （Model ID），开通模型服务，并查询 Model ID。\n\n您也可通过 Endpoint ID 来调用模型，获得限流、计费类型（前付费/后付费）、运行状态查询、监控、安全等高级能力，可参考获取 Endpoint ID。"
           },
           "content": {
