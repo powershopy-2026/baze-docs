@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://ark.cn-beijing.volces.com",
+      "url": "https://api.powertokens.ai",
       "description": "火山方舟 API 服务地址"
     }
   ],
