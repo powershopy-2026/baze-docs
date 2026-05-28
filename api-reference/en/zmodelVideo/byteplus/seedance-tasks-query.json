@@ -1,0 +1,260 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Seedance Query Video Generation Task",
+    "version": "1.0.0",
+    "description": "Retrieves the information of a video generation task.\n\n> Only tasks from the last 7 days can be queried, with a time range of [T-7 days, T), where T is the UTC timestamp (in seconds) when the request is initiated. Note: Video URLs are valid for 24 hours. Please download or save them promptly.\n\n## Authentication\n\nThis interface only supports API Key authentication. See Authentication for details."
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai",
+      "description": "Volcano Ark API Service"
+    }
+  ],
+  "paths": {
+    "/api/v3/contents/generations/tasks/{id}": {
+      "get": {
+        "summary": "Query Video Generation Task",
+        "operationId": "querySeedanceVideoTask",
+        "description": "Retrieves the information of a video generation task.\n\n> Only tasks from the last 7 days can be queried, with a time range of [T-7 days, T), where T is the UTC timestamp (in seconds) when the request is initiated. Note: Video URLs are valid for 24 hours. Please download or save them promptly.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the video generation task to query.\n\n> Note: The above parameter is a Query String Parameter, passed in the URL String."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns video task details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryVideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters."
+          },
+          "401": {
+            "description": "Authentication failed."
+          },
+          "429": {
+            "description": "Request rate limit exceeded."
+          },
+          "500": {
+            "description": "Internal server error."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "This interface only supports API Key authentication. See Authentication for details."
+      }
+    },
+    "schemas": {
+      "QueryVideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the video generation task."
+          },
+          "model": {
+            "type": "string",
+            "description": "The name and version of the model used by the task (`Model name-Version`)."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "cancelled",
+              "succeeded",
+              "failed",
+              "expired"
+            ],
+            "description": "The status of the task. Valid values:\n\n* `queued`: In queue.\n* `running`: Task is running.\n* `cancelled`: Task cancelled (Only tasks in the queued state can be canceled). Cancelled status is automatically deleted after 24h.\n* `succeeded`: Task succeeded.\n* `failed`: Task failed.\n* `expired`: Task timed out."
+          },
+          "error": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ErrorObject"
+              }
+            ],
+            "description": "The error information. If the task succeeds, `null` is returned. If the task fails, the error information is returned. For more information, refer to Error codes."
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "The time when the task was created. The value is a Unix timestamp in seconds."
+          },
+          "updated_at": {
+            "type": "integer",
+            "description": "The time when the task was last updated. The value is a Unix timestamp in seconds."
+          },
+          "content": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskContent"
+              }
+            ],
+            "description": "The output after the video generation task is completed."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "The seed value (integer) used for this request."
+          },
+          "resolution": {
+            "type": "string",
+            "description": "The resolution of the generated video."
+          },
+          "ratio": {
+            "type": "string",
+            "description": "The width-to-height ratio of the generated video."
+          },
+          "duration": {
+            "type": "integer",
+            "description": "The length of the generated video in seconds.\n\nNote: Only one of the **duration** and **frames** parameters is returned. If **frames** is not specified in the creating video generation request, **duration** will be returned."
+          },
+          "frames": {
+            "type": "integer",
+            "description": "Number of frames for the generated video.\n\nNote: Only one of the **duration** and **frames** parameters will be returned. If **frames** is specified in the creating video generation request, **frames** will be returned."
+          },
+          "framespersecond": {
+            "type": "integer",
+            "description": "The frame rate of the generated video."
+          },
+          "generate_audio": {
+            "type": "boolean",
+            "description": "Whether the generated video includes audio synchronized with the visuals. This parameter is only supported by seedance 2.0 & 2.0 fast, and seedance 1.5 pro.\n\n* **true**: The model outputs a video with synchronized audio.\n* **false**: The model outputs a silent video."
+          },
+          "tools": {
+            "type": "array",
+            "description": "The tools actually used by the model for this request. Not returned when no tools are used.",
+            "items": {
+              "$ref": "#/components/schemas/TaskTool"
+            }
+          },
+          "safety_identifier": {
+            "type": "string",
+            "description": "A unique identifier for the end user. If you set this parameter when creating a video generation task, the API returns it unchanged."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The execution priority of the current request."
+          },
+          "draft": {
+            "type": "boolean",
+            "description": "Whether the generated video is a draft video. This parameter is only returned by seedance 1.5 pro.\n\n* **true**: The current output is a draft video.\n* **false**: The current output is a standard video."
+          },
+          "draft_task_id": {
+            "type": "string",
+            "description": "Draft video task ID. This parameter will be returned when generating an official video based on a draft video."
+          },
+          "service_tier": {
+            "type": "string",
+            "description": "The service tier actually used to process the task."
+          },
+          "execution_expires_after": {
+            "type": "integer",
+            "description": "The expiration threshold for the task, in seconds."
+          },
+          "usage": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TaskUsage"
+              }
+            ],
+            "description": "The token usage for the request."
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "The error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "The error message."
+          }
+        }
+      },
+      "TaskContent": {
+        "type": "object",
+        "properties": {
+          "video_url": {
+            "type": "string",
+            "description": "The URL of the output video. For security purposes, the output video is deleted after 24 hours. Be sure to save it in time.\n\nIt is recommended to configure the data subscription feature provided by Volcano Engine TOS to automatically save your model inference outputs to your own TOS bucket for long-term backup or secondary processing."
+          },
+          "last_frame_url": {
+            "type": "string",
+            "description": "URL of the last frame of the generated video. Valid for 24 hours. Be sure to save it in time.\n\nNote: If you set `\"return_last_frame\": true` in the creating a video generation task request, the parameter will be returned."
+          }
+        }
+      },
+      "TaskTool": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "web_search"
+            ],
+            "description": "The type of the tool actually used.\n\n* web_search: Web search tool."
+          }
+        }
+      },
+      "TaskUsage": {
+        "type": "object",
+        "properties": {
+          "completion_tokens": {
+            "type": "integer",
+            "description": "The number of tokens consumed for the video output by the model. Can be used as a billing reconciliation basis.\n\n> Seedance 2.0 series models have a minimum token usage limit. If the actual token usage is less than the minimum token usage, this field will return the minimum token usage, and the platform will charge based on the minimum token usage."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total tokens for this request. For video models, input tokens are always 0, therefore **total_tokens = completion_tokens**."
+          },
+          "tool_usage": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ToolUsage"
+              }
+            ],
+            "description": "Usage information for the tools used."
+          }
+        }
+      },
+      "ToolUsage": {
+        "type": "object",
+        "properties": {
+          "web_search": {
+            "type": "integer",
+            "description": "The actual number of times the web search tool was called. Only returned when web search is enabled."
+          }
+        }
+      }
+    }
+  }
+}
