@@ -3,7 +3,7 @@
   "info": {
     "title": "查询视频生成任务列表",
     "version": "1.0.0",
-    "description": "通过传入筛选参数，查询符合条件的视频生成任务。仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。注意：视频 URL 有效期为 24 小时，请及时下载或转存。",
+    "description": "通过传入筛选参数，查询符合条件的视频生成任务。仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/byteplus/api/v3/contents/generations/tasks": {
       "get": {
         "summary": "查询视频生成任务列表",
-        "description": "通过分页和筛选参数查询视频生成任务列表。仅支持查询最近 7 天的任务记录；返回的视频 URL 有效期为 24 小时。",
+        "description": "通过分页和筛选参数查询视频生成任务列表。仅支持查询最近 7 天的任务记录。",
         "operationId": "byteplusListVideoGenerationTasks",
         "tags": [
           "Seedance Video"
@@ -61,7 +61,7 @@
             "name": "filter.status",
             "in": "query",
             "required": false,
-            "description": "过滤参数，查询某个任务状态。",
+            "description": "过滤参数，用于查询特定状态的任务。\n\n- queued：排队中。\n- running：任务运行中。\n- cancelled：取消任务。\n- succeeded：任务成功。\n- failed：任务失败。",
             "schema": {
               "type": "string",
               "nullable": true,
@@ -183,7 +183,8 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "JWT",
+        "description": "Bearer 认证请求头，格式为 Bearer <token>，其中 <token> 是您的认证令牌。"
       }
     },
     "schemas": {
@@ -220,7 +221,7 @@
           },
           "status": {
             "type": "string",
-            "description": "任务状态。",
+            "description": "任务状态。\n\n- queued：排队中。\n- running：任务运行中。\n- cancelled：取消任务（只支持排队中状态的任务被取消）。\n- succeeded：任务成功。\n- failed：任务失败。\n- expired：任务超时。",
             "enum": [
               "queued",
               "running",
@@ -289,7 +290,7 @@
           },
           "draft": {
             "type": "boolean",
-            "description": "生成的视频是否为 Draft 视频。仅 Seedance 1.5 pro 会返回该参数。"
+            "description": "生成的视频是否为 Draft 视频。仅 Seedance 1.5 pro 会返回该参数。\n\n- true：表示当前输出为 Draft 视频。\n- false：表示当前输出为正常视频。"
           },
           "draft_task_id": {
             "type": "string",
@@ -334,12 +335,12 @@
           "video_url": {
             "type": "string",
             "format": "uri",
-            "description": "生成视频的 URL。有效期为 24 小时，请及时下载或转存。"
+            "description": "生成视频的 URL。"
           },
           "last_frame_url": {
             "type": "string",
             "format": "uri",
-            "description": "视频的尾帧图像 URL。有效期为 24 小时，请及时下载或转存。创建视频生成任务时设置 `return_last_frame=true` 时返回。"
+            "description": "视频的尾帧图像 URL。创建视频生成任务时设置 `return_last_frame=true` 时返回。"
           }
         }
       },
@@ -348,7 +349,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "实际使用的工具类型。",
+            "description": "实际使用的工具类型。\n\n- web_search：联网搜索工具。",
             "enum": [
               "web_search"
             ]
