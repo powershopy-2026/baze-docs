@@ -179,7 +179,8 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {

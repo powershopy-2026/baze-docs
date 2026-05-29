@@ -109,7 +109,8 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "API Token"
+        "bearerFormat": "API Token",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
       }
     },
     "schemas": {

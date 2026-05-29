@@ -81,7 +81,10 @@
                       "task_id": "your_task_id_here",
                       "state": "created",
                       "model": "viduq3-pro",
-                      "images": ["https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/startend2video-1.jpeg","https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/startend2video-2.jpeg"],
+                      "images": [
+                        "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/startend2video-1.jpeg",
+                        "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/startend2video-2.jpeg"
+                      ],
                       "prompt": "The camera zooms in on the bird, which then flies to the right. The bird flight is smooth and natural, with a red light effect following and surrounding it from behind.",
                       "duration": 5,
                       "seed": 123456789,
@@ -190,7 +193,8 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {

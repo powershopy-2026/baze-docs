@@ -69,26 +69,6 @@
               }
             }
           },
-          "404": {
-            "description": "Task does not exist or is temporarily unavailable.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "not_found": {
-                    "summary": "Task not found",
-                    "value": {
-                      "code": "task_not_found",
-                      "message": "Task does not exist or has expired",
-                      "data": null
-                    }
-                  }
-                }
-              }
-            }
-          },
           "401": {
             "content": {
               "application/json": {
@@ -108,6 +88,26 @@
               }
             },
             "description": "Authentication failed, e.g. missing or invalid token."
+          },
+          "404": {
+            "description": "Task does not exist or is temporarily unavailable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "code": "task_not_found",
+                      "message": "Task does not exist or has expired",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
           },
           "429": {
             "content": {
@@ -203,7 +203,8 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
       }
     },
     "schemas": {

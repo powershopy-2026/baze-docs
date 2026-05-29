@@ -59,23 +59,6 @@
               }
             }
           },
-          "404": {
-            "description": "任务不存在，或任务尚未生成可下载内容。",
-            "content": {
-              "application/json": {
-                "examples": {
-                  "not_found": {
-                    "summary": "任务不存在",
-                    "value": {
-                      "code": "task_not_found",
-                      "message": "任务不存在或已过期",
-                      "data": null
-                    }
-                  }
-                }
-              }
-            }
-          },
           "400": {
             "content": {
               "application/json": {
@@ -109,6 +92,23 @@
               }
             },
             "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "404": {
+            "description": "任务不存在，或任务尚未生成可下载内容。",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "not_found": {
+                    "summary": "任务不存在",
+                    "value": {
+                      "code": "task_not_found",
+                      "message": "任务不存在或已过期",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
           },
           "429": {
             "content": {
@@ -192,7 +192,8 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     }
   }

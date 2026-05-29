@@ -80,26 +80,6 @@
               }
             }
           },
-          "404": {
-            "description": "Task not found or expired.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "not_found": {
-                    "summary": "Task not found",
-                    "value": {
-                      "code": "task_not_found",
-                      "message": "Task not found or has expired",
-                      "data": null
-                    }
-                  }
-                }
-              }
-            }
-          },
           "401": {
             "description": "Authentication failed.",
             "content": {
@@ -113,6 +93,26 @@
                     "value": {
                       "code": "access_denied",
                       "message": "Invalid token",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found or expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "code": "task_not_found",
+                      "message": "Task not found or has expired",
                       "data": null
                     }
                   }
@@ -154,7 +154,8 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
       }
     },
     "schemas": {

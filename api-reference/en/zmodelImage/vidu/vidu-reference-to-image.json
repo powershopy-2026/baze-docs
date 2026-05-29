@@ -77,7 +77,11 @@
                       "task_id": "your_task_id_here",
                       "state": "created",
                       "model": "viduq2",
-                      "images": ["your_image_url1","your_image_url2","your_image_url3"],
+                      "images": [
+                        "your_image_url1",
+                        "your_image_url2",
+                        "your_image_url3"
+                      ],
                       "prompt": "your_prompt",
                       "seed": 0,
                       "aspect_ratio": "16:9",
@@ -185,7 +189,8 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
       }
     },
     "schemas": {

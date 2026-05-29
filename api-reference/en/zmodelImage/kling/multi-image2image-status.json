@@ -81,7 +81,8 @@
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
       }
     },
     "schemas": {

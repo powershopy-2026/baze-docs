@@ -210,7 +210,8 @@
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",
-        "scheme": "bearer"
+        "scheme": "bearer",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     }
   }

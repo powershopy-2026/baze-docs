@@ -75,7 +75,9 @@
                       "task_id": "your_task_id_here",
                       "state": "created",
                       "model": "viduq3-pro",
-                      "images": ["https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"],
+                      "images": [
+                        "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"
+                      ],
                       "prompt": "The astronaut waved and the camera moved up.",
                       "duration": 5,
                       "seed": 123456789,
@@ -185,7 +187,8 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {
