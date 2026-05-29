@@ -66,7 +66,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "本接口支持 API Key 鉴权，详见鉴权认证方式。"
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {

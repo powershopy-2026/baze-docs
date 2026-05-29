@@ -113,7 +113,7 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "API key for authentication"
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
       }
     },
     "schemas": {
