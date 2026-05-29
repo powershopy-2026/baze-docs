@@ -670,12 +670,14 @@
             "type": "number",
             "minimum": 0,
             "maximum": 2,
+            "default": 1,
             "description": "Sampling temperature. Lower values produce more stable output; higher values produce more diverse output."
           },
           "top_p": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
+            "default": 0.95,
             "description": "Nucleus sampling parameter. Typically tuned as an alternative to `temperature`."
           },
           "top_k": {
@@ -720,12 +722,14 @@
             "type": "number",
             "minimum": -2,
             "maximum": 2,
+            "default": 0,
             "description": "Presence penalty. Higher values encourage the model to introduce new topics."
           },
           "frequency_penalty": {
             "type": "number",
             "minimum": -2,
             "maximum": 2,
+            "default": 0,
             "description": "Frequency penalty. Higher values suppress repetitive expressions."
           },
           "tools": {

@@ -212,7 +212,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "本接口仅支持 API Key 鉴权，请在获取 API Key 页面，获取长效 API Key。"
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {

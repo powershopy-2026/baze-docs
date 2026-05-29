@@ -162,7 +162,6 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 9,
-            "default": "1",
             "description": "生成图片数量。"
           },
           "aspect_ratio": {

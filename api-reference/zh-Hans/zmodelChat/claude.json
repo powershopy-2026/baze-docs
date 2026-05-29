@@ -113,7 +113,7 @@
       "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "description": "API密钥用于身份验证"
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {

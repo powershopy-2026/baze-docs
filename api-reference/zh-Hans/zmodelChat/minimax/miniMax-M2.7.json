@@ -135,11 +135,15 @@
           },
           "temperature": {
             "type": "number",
-            "maximum": 1
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.7
           },
           "top_p": {
             "type": "number",
-            "maximum": 1
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.95
           },
           "max_tokens": {
             "type": "integer",

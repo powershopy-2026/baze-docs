@@ -136,12 +136,14 @@
             "type": "number",
             "minimum": 0,
             "maximum": 1,
+            "default": 0.8,
             "description": "Reference strength for the uploaded image during generation."
           },
           "human_fidelity": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
+            "default": 0.8,
             "description": "Facial reference strength, i.e., facial feature similarity to the reference image."
           },
           "element_list": {

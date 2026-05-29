@@ -384,12 +384,14 @@
             "type": "number",
             "minimum": 0,
             "maximum": 2,
+            "default": 1,
             "description": "采样温度。越低越稳定，越高越发散。"
           },
           "top_p": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
+            "default": 0.95,
             "description": "核采样参数。通常与 `temperature` 二选一调优。"
           },
           "tools": {

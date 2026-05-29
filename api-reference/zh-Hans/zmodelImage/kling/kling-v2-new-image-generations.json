@@ -136,12 +136,14 @@
             "type": "number",
             "minimum": 0,
             "maximum": 1,
+            "default": 0.8,
             "description": "生成过程中对上传图片的参考强度。"
           },
           "human_fidelity": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
+            "default": 0.8,
             "description": "面部参考强度，即参考图中人物五官相似度。"
           },
           "element_list": {

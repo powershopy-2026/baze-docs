@@ -212,7 +212,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "This interface only supports API Key authentication. Please obtain a long-term API Key on the API keys page."
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
       }
     },
     "schemas": {
