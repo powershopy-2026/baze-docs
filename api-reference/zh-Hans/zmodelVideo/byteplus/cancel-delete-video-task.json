@@ -91,7 +91,7 @@
     "schemas": {
       "EmptyResponse": {
         "type": "object",
-        "description": "空响应对象。",
+        "description": "",
         "additionalProperties": false,
         "example": {}
       }
