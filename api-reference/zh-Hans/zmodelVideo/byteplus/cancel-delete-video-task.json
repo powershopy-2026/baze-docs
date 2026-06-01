@@ -35,7 +35,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "需要取消或者删除的视频生成任务 ID。\n\n任务状态不同，调用 DELETE 接口执行的操作有所不同：\n\n| 当前任务状态 | 是否支持 DELETE 操作 | 操作含义 | DELETE 操作后任务状态 |\n|--------------|----------------------|----------|------------------------|\n| queued | 是 | 任务取消排队，任务状态被变更为 `cancelled`。 | cancelled |\n| running | 否 | - | - |\n| succeeded | 是 | 删除视频生成任务记录，后续将不支持查询。 | - |\n| failed | 是 | 删除视频生成任务记录，后续将不支持查询。 | - |\n| cancelled | 否 | - | - |\n| expired | 是 | 删除视频生成任务记录，后续将不支持查询。 | - |",
+            "description": "需要取消或者删除的视频生成任务 ID。\n\n任务状态不同，调用 DELETE 接口执行的操作有所不同，具体说明如下：\n\n| 当前任务状态 | 是否支持 DELETE 操作 | 操作含义 | DELETE 操作后任务状态 |\n|--------------|----------------------|----------|------------------------|\n| queued | 是 | 任务取消排队，任务状态被变更为 `cancelled`。 | cancelled |\n| running | 否 | - | - |\n| succeeded | 是 | 删除视频生成任务记录，后续将不支持查询。 | - |\n| failed | 是 | 删除视频生成任务记录，后续将不支持查询。 | - |\n| cancelled | 否 | - | - |\n| expired | 是 | 删除视频生成任务记录，后续将不支持查询。 | - |\n\n> 说明：上面参数为Query String Parameters，在URL String中传入。",
             "schema": {
               "type": "string"
             }
@@ -43,7 +43,7 @@
         ],
         "responses": {
           "200": {
-            "description": "任务取消成功或任务记录删除成功。本接口无返回参数。",
+            "description": "本接口无返回参数。",
             "content": {
               "application/json": {
                 "schema": {
