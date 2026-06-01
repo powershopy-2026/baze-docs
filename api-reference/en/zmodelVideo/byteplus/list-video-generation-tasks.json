@@ -25,7 +25,7 @@
     "/byteplus/api/v3/contents/generations/tasks": {
       "get": {
         "summary": "List Video Generation Tasks",
-        "description": "Query video generation tasks with pagination and filter parameters. Only tasks from the last 7 days can be queried.",
+        "description": "Pass filter parameters to return matching video generation tasks. Only historical data from the last 7 days can be queried. Time calculation is always based on UTC timestamps. The timestamp interval is [T-7 days, T), where T is the request time accurate to the second.",
         "operationId": "byteplusListVideoGenerationTasksEn",
         "tags": [
           "Seedance Video"
@@ -35,7 +35,7 @@
             "name": "page_num",
             "in": "query",
             "required": false,
-            "description": "Page number of the returned results. Default value: 1. Value range: [1, 500].",
+            "description": "Page number of the returned results. ",
             "schema": {
               "type": "integer",
               "nullable": true,
@@ -48,7 +48,7 @@
             "name": "page_size",
             "in": "query",
             "required": false,
-            "description": "Number of results per page. Default value: 20. Value range: [1, 500].",
+            "description": "Number of results per page. ",
             "schema": {
               "type": "integer",
               "nullable": true,
@@ -93,7 +93,7 @@
             "name": "filter.model",
             "in": "query",
             "required": false,
-            "description": "Model ID or endpoint ID for exact search. Only one input is supported. When the permission of your API key is Custom, manually enter the model ID or endpoint ID to query. A model resource generally corresponds to one preconfigured inference endpoint and multiple custom inference endpoints. Model ID is bound to the preconfigured inference endpoint.",
+            "description": "Model ID or endpoint ID for exact search. Only one input is supported. When the permission of your API key is Custom, manually enter the model ID or endpoint ID to query. A model resource generally corresponds to one preconfigured inference endpoint and multiple custom inference endpoints. Model ID is bound to the preconfigured inference endpoint.When a model ID is entered, video generation tasks initiated by calling this preconfigured inference endpoint will be returned.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -127,7 +127,7 @@
                   "success": {
                     "summary": "Successful response",
                     "value": {
-                      "total": 3,
+                      "total": 2,
                       "items": [
                         {
                           "id": "cgt-2025******-****",
@@ -145,6 +145,30 @@
                           "seed": 10,
                           "resolution": "720p",
                           "ratio": "16:9",
+                          "duration": 5,
+                          "framespersecond": 24,
+                          "service_tier": "default",
+                          "execution_expires_after": 172800,
+                          "generate_audio": true,
+                          "draft": false,
+                          "priority": 0
+                        },
+                        {
+                          "id": "cgt-2026****-****",
+                          "model": "doubao-seedance-2-0-260128",
+                          "status": "succeeded",
+                          "content": {
+                            "video_url": "https://ark-acg-cn-beijing.tos-cn-beijing.volces.com/xxx"
+                          },
+                          "usage": {
+                            "completion_tokens": 49761,
+                            "total_tokens": 49761
+                          },
+                          "created_at": 1779353985,
+                          "updated_at": 1779354268,
+                          "seed": 68292,
+                          "resolution": "480p",
+                          "ratio": "3:4",
                           "duration": 5,
                           "framespersecond": 24,
                           "service_tier": "default",
@@ -190,21 +214,17 @@
     "schemas": {
       "ListVideoGenerationTasksResponse": {
         "type": "object",
-        "required": [
-          "total",
-          "items"
-        ],
         "properties": {
-          "total": {
-            "type": "integer",
-            "description": "Number of tasks that meet the filter conditions."
-          },
           "items": {
             "type": "array",
             "description": "List of found video generation tasks.",
             "items": {
               "$ref": "#/components/schemas/VideoGenerationTask"
             }
+          },
+          "total": {
+            "type": "integer",
+            "description": "Number of tasks that meet the filter conditions."
           }
         }
       },
@@ -221,15 +241,7 @@
           },
           "status": {
             "type": "string",
-            "description": "Task status.\n\n- queued: Task in queue.\n- running: Task in progress.\n- cancelled: Cancelled task.\n- succeeded: Successful task.\n- failed: Failed task.\n- expired: Expired task.",
-            "enum": [
-              "queued",
-              "running",
-              "cancelled",
-              "succeeded",
-              "failed",
-              "expired"
-            ]
+            "description": "Task status.\n\n- queued: Task in queue.\n- running: Task in progress.\n- cancelled: Cancelled task.\n- succeeded: Successful task.\n- failed: Failed task.\n- expired: Expired task."
           },
           "error": {
             "$ref": "#/components/schemas/TaskError"
@@ -271,7 +283,7 @@
           },
           "generate_audio": {
             "type": "boolean",
-            "description": "Whether the generated video includes sound synchronized with the footage. Only Seedance 2.0 series and Seedance 1.5 Pro return this parameter."
+            "description": "Whether the generated video includes sound synchronized with the footage. Only Seedance 2.0 series and Seedance 1.5 Pro return this parameter.\n\n- true:The video output by the model includes synchronized audio.\n- false:The video output by the model is a silent video."
           },
           "tools": {
             "type": "array",
@@ -298,11 +310,7 @@
           },
           "service_tier": {
             "type": "string",
-            "description": "Service tier actually used for task processing.",
-            "enum": [
-              "default",
-              "flex"
-            ]
+            "description": "Service tier actually used for task processing."
           },
           "execution_expires_after": {
             "type": "integer",
@@ -349,10 +357,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "Tool type actually used.\n\n- web_search: Web search tool.",
-            "enum": [
-              "web_search"
-            ]
+            "description": "Tool type actually used.\n\n- web_search: Web search tool."
           }
         }
       },
@@ -362,7 +367,7 @@
         "properties": {
           "completion_tokens": {
             "type": "integer",
-            "description": "Number of tokens consumed for the model to output the video, which can be used for billing reconciliation. Seedance 2.0 series models have a minimum token usage limit. If actual token usage is less than the minimum, this parameter returns the minimum token usage."
+            "description": "Number of tokens consumed for the model to output the video, which can be used for billing reconciliation. Seedance 2.0 series models have a minimum token usage limit. If actual token usage is less than the minimum,  this parameter will return the minimum token usage which is used for billing."
           },
           "total_tokens": {
             "type": "integer",
