@@ -3,7 +3,7 @@
   "info": {
     "title": "Seedance 视频生成",
     "version": "1.0.0",
-    "description": "本文介绍创建视频生成任务 API 的输入输出参数，供您使用接口时查阅字段含义。模型会依据传入的图片及文本信息生成视频，待生成完成后，您可以按条件查询任务并获取生成的视频。\n\n## 模型能力\n\n* **Doubao Seedance 2.0 系列（有声视频/无声视频）**\n   * **多模态参考生视频**：输入参考图片（0~9）+参考视频（0~3）+ 参考音频（0~3）+ 文本提示词（可选）生成 1 个目标视频。注意不可单独输入音频，应至少包含 1 个参考视频或图片。支持生成全新视频、编辑视频、延长视频。\n   * **图生视频-首尾帧**：输入首帧图片+尾帧图片+文本提示词（可选）生成 1 个目标视频。\n   * **图生视频-首帧**：输入首帧图片+文本提示词（可选）生成 1 个目标视频。\n   * **文生视频**：输入文本提示词生成 1 个目标视频。\n\n* **Doubao Seedance 1.5 pro（有声视频/无声视频）**\n   【图生视频-首尾帧】【图生视频-首帧】【文生视频】\n\n* **Doubao Seedance 1.0 pro**\n   【图生视频-首尾帧】【图生视频-首帧】【文生视频】\n\n* **Doubao Seedance 1.0 pro fast**\n   【图生视频-首帧】【文生视频】\n\n## 鉴权\n\n本接口仅支持 API Key 鉴权，请在获取 API Key 页面，获取长效 API Key。"
+    "description": "本文介绍创建视频生成任务 API 的输入输出参数，供您使用接口时查阅字段含义。模型会依据传入的图片及文本信息生成视频，待生成完成后，您可以按条件查询任务并获取生成的视频。\n\n## 模型能力\n\n* **Doubao Seedance 2.0 系列（有声视频/无声视频）**\n   * **多模态参考生视频**：输入<ins>参考图片（0\\\\~9）+参考视频（0\\\\~3）+ 参考音频（0\\\\~3）+ 文本提示词（可选）</ins>生成 1 个目标视频。注意不可单独输入音频，应至少包含 1 个参考视频或图片。支持生成全新视频、编辑视频、延长视频。\n   * **图生视频-首尾帧**：输入<ins>首帧图片+尾帧图片+文本提示词（可选）</ins>生成 1 个目标视频。\n   * **图生视频-首帧**：输入<ins>首帧图片+文本提示词（可选）</ins>生成 1 个目标视频。\n   * **文生视频**：输入<ins>文本提示词</ins>生成 1 个目标视频。\n\n* **Doubao Seedance 1.5 pro（有声视频/无声视频）**\n   【图生视频-首尾帧】【图生视频-首帧】【文生视频】\n\n* **Doubao Seedance 1.0 pro**\n   【图生视频-首尾帧】【图生视频-首帧】【文生视频】\n\n* **Doubao Seedance 1.0 pro fast**\n   【图生视频-首帧】【文生视频】\n\n## 鉴权\n\n本接口仅支持 API Key 鉴权，请在获取 API Key 页面，获取长效 API Key。"
   },
   "servers": [
     {
@@ -12,11 +12,11 @@
     }
   ],
   "paths": {
-    "/api/v3/contents/generations/tasks": {
+    "/byteplus/api/v3/contents/generations/tasks": {
       "post": {
         "summary": "创建视频生成任务",
         "operationId": "createSeedanceVideoTask",
-        "description": "本文介绍创建视频生成任务 API 的输入输出参数，供您使用接口时查阅字段含义。模型会依据传入的图片及文本信息生成视频，待生成完成后，您可以按条件查询任务并获取生成的视频。",
+        "description": "本文介绍创建视频生成任务 API 的输入输出参数，供您使用接口时查阅字段含义。模型会依据传入的图片及文本信息生成视频，待生成完成后，您可以按条件查询任务并获取生成的视频。\n\n## 模型能力\n\n* **Doubao Seedance 2.0 系列（有声视频/无声视频）**\n   * **多模态参考生视频**：输入<ins>参考图片（0\\\\~9）+参考视频（0\\\\~3）+ 参考音频（0\\\\~3）+ 文本提示词（可选）</ins>生成 1 个目标视频。注意不可单独输入音频，应至少包含 1 个参考视频或图片。支持生成全新视频、编辑视频、延长视频。\n   * **图生视频-首尾帧**：输入<ins>首帧图片+尾帧图片+文本提示词（可选）</ins>生成 1 个目标视频。\n   * **图生视频-首帧**：输入<ins>首帧图片+文本提示词（可选）</ins>生成 1 个目标视频。\n   * **文生视频**：输入<ins>文本提示词</ins>生成 1 个目标视频。\n\n* **Doubao Seedance 1.5 pro（有声视频/无声视频）**\n   【图生视频-首尾帧】【图生视频-首帧】【文生视频】\n\n* **Doubao Seedance 1.0 pro**\n   【图生视频-首尾帧】【图生视频-首帧】【文生视频】\n\n* **Doubao Seedance 1.0 pro fast**\n   【图生视频-首帧】【文生视频】\n\n## 鉴权\n\n本接口仅支持 API Key 鉴权，请在获取 API Key 页面，获取长效 API Key。",
         "requestBody": {
           "required": true,
           "content": {
@@ -25,149 +25,131 @@
                 "$ref": "#/components/schemas/CreateVideoTaskRequest"
               },
               "examples": {
-                "text_to_video": {
-                  "summary": "文生视频",
+                "多模态参考生视频": {
                   "value": {
-                    "model": "doubao-seedance-2-0-260128",
+                    "model": "dreamina-seedance-2-0-260128",
                     "content": [
                       {
                         "type": "text",
-                        "text": "一只小猫在草地上奔跑，阳光明媚，镜头跟随移动"
-                      }
-                    ],
-                    "resolution": "720p",
-                    "ratio": "16:9",
-                    "duration": 5,
-                    "generate_audio": true
-                  }
-                },
-                "image_to_video_first_frame": {
-                  "summary": "图生视频-首帧",
-                  "value": {
-                    "model": "doubao-seedance-2-0-260128",
-                    "content": [
-                      {
-                        "type": "text",
-                        "text": "镜头缓缓推进，女孩微笑"
+                        "text": "全程使用视频1的第一视角构图，全程使用音频1作为背景音乐。第一人称视角果茶宣传广告，seedance牌「苹苹安安」苹果果茶限定款；首帧为图片1，你的手摘下一颗带晨露的阿克苏红苹果，轻脆的苹果碰撞声；2-4 秒：快速切镜，你的手将苹果块投入雪克杯，加入冰块与茶底，用力摇晃，冰块碰撞声与摇晃声卡点轻快鼓点，背景音：「鲜切现摇」；4-6 秒：第一人称成品特写，分层果茶倒入透明杯，你的手轻挤奶盖在顶部铺展，在杯身贴上粉红包标，镜头拉近看奶盖与果茶的分层纹理；6-8 秒：第一人称手持举杯，你将图片2中的果茶举到镜头前（模拟递到观众面前的视角），杯身标签清晰可见，背景音「来一口鲜爽」，尾帧定格为图片2。背景声音统一为女生音色。"
                       },
                       {
                         "type": "image_url",
                         "image_url": {
-                          "url": "https://example.com/first-frame.jpg"
-                        }
-                      }
-                    ],
-                    "resolution": "720p",
-                    "ratio": "adaptive",
-                    "duration": 5
-                  }
-                },
-                "image_to_video_first_last_frame": {
-                  "summary": "图生视频-首尾帧",
-                  "value": {
-                    "model": "doubao-seedance-2-0-260128",
-                    "content": [
-                      {
-                        "type": "text",
-                        "text": "镜头在两个状态间平滑过渡"
-                      },
-                      {
-                        "type": "image_url",
-                        "image_url": {
-                          "url": "https://example.com/start.jpg"
-                        },
-                        "role": "first_frame"
-                      },
-                      {
-                        "type": "image_url",
-                        "image_url": {
-                          "url": "https://example.com/end.jpg"
-                        },
-                        "role": "last_frame"
-                      }
-                    ],
-                    "resolution": "720p",
-                    "ratio": "adaptive",
-                    "duration": 5
-                  }
-                },
-                "multimodal_reference": {
-                  "summary": "多模态参考生视频（2.0 系列）",
-                  "value": {
-                    "model": "doubao-seedance-2-0-260128",
-                    "content": [
-                      {
-                        "type": "text",
-                        "text": "根据参考素材生成视频"
-                      },
-                      {
-                        "type": "image_url",
-                        "image_url": {
-                          "url": "https://example.com/ref1.jpg"
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic1.jpg"
                         },
                         "role": "reference_image"
                       },
                       {
                         "type": "image_url",
                         "image_url": {
-                          "url": "https://example.com/ref2.jpg"
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_image/r2v_tea_pic2.jpg"
                         },
                         "role": "reference_image"
                       },
                       {
                         "type": "video_url",
                         "video_url": {
-                          "url": "https://example.com/motion.mp4"
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_tea_video1.mp4"
                         },
                         "role": "reference_video"
                       },
                       {
                         "type": "audio_url",
                         "audio_url": {
-                          "url": "https://example.com/audio.mp3"
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_audio/r2v_tea_audio1.mp3"
                         },
                         "role": "reference_audio"
                       }
                     ],
-                    "resolution": "720p",
+                    "generate_audio": true,
                     "ratio": "16:9",
-                    "duration": -1,
-                    "generate_audio": true
+                    "duration": 11,
+                    "watermark": false
                   }
                 },
-                "new_method_params": {
-                  "summary": "新方式（推荐）：在 request body 中直接传入参数",
+                "有声视频-首帧": {
                   "value": {
-                    "model": "doubao-seedance-1-5-pro-251215",
+                    "model": "seedance-1-5-pro-251215",
                     "content": [
                       {
                         "type": "text",
-                        "text": "小猫对着镜头打哈欠"
-                      }
-                    ],
-                    "resolution": "720p",
-                    "ratio": "16:9",
-                    "duration": 5,
-                    "seed": 11,
-                    "camera_fixed": false,
-                    "watermark": true
-                  }
-                },
-                "draft_to_final": {
-                  "summary": "基于样片生成正式视频",
-                  "value": {
-                    "model": "doubao-seedance-1-5-pro-251215",
-                    "content": [
+                        "text": "女孩抱着狐狸，女孩睁开眼，温柔地看向镜头，狐狸友善地抱着，镜头缓缓拉出，女孩的头发被风吹动，可以听到风声"
+                      },
                       {
-                        "type": "draft_task",
-                        "draft_task": {
-                          "id": "task-xxxxxx"
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_image/i2v_foxrgirl.png"
                         }
                       }
                     ],
-                    "resolution": "720p",
+                    "generate_audio": true,
+                    "ratio": "adaptive",
+                    "duration": 5,
+                    "watermark": false
+                  }
+                },
+                "有声视频-首尾帧": {
+                  "value": {
+                    "model": "seedance-1-5-pro-251215",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "图中女孩对着镜头说\"茄子\"，360度环绕运镜"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_image/seepro_first_frame.jpeg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_image/seepro_last_frame.jpeg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ],
+                    "generate_audio": true,
+                    "ratio": "adaptive",
+                    "duration": 5,
+                    "watermark": false
+                  }
+                },
+                "图生视频-base64编码": {
+                  "value": {
+                    "model": "dreamina-seedance-2-0-260128",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "女孩抱着狐狸，女孩睁开眼，温柔地看向镜头，狐狸友善地抱着，镜头缓缓拉出，女孩的头发被风吹动"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "data:image/png;base64,aHR0******cG5n"
+                        }
+                      }
+                    ],
+                    "ratio": "adaptive",
+                    "duration": 5,
+                    "watermark": false
+                  }
+                },
+                "文生视频": {
+                  "value": {
+                    "model": "seedance-1-0-pro-250528",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "写实风格，晴朗的蓝天之下，一大片白色的雏菊花田，镜头逐渐拉近，最终定格在一朵雏菊花的特写上，花瓣上有几颗晶莹的露珠"
+                      }
+                    ],
                     "ratio": "16:9",
-                    "duration": 5
+                    "duration": 5,
+                    "watermark": false
                   }
                 }
               }
@@ -232,11 +214,11 @@
               "dreamina-seedance-2-0-260128",
               "dreamina-seedance-2-0-fast-260128"
             ],
-            "description": "您需要调用的模型的 ID （Model ID），开通模型服务，并查询 Model ID。\n\n您也可通过 Endpoint ID 来调用模型，获得限流、计费类型（前付费/后付费）、运行状态查询、监控、安全等高级能力，可参考获取 Endpoint ID。"
+            "description": "您需要调用的模型的 ID （Model ID）"
           },
           "content": {
             "type": "array",
-            "description": "输入给模型，生成视频的信息，支持文本、图片、音频、视频、样片任务 ID。\n\n注意：Seedance 2.0 系列模型不支持直接上传含有真人人脸的参考图/视频。为了便利创作者对肖像的使用，平台推出了以下解决方案，详情参见 教程。\n\n* 支持使用部分模型的含人脸原始产物作为输入素材\n* 支持使用预置虚拟人像作为输入素材\n* 支持使用已授权真人素材作为输入\n\n支持以下几种组合：\n* 文本\n* 文本（可选）+ 图片\n* 文本（可选）+ 视频\n* 文本（可选）+ 图片 + 音频\n* 文本（可选）+ 图片 + 视频\n* 文本（可选）+ 视频 + 音频\n* 文本（可选）+ 图片 + 视频 + 音频\n* 样片任务 ID：样片指使用 Seedance 模型成功生成的样片视频，模型可基于样片生成高质量正式视频。",
+            "description": "输入给模型，生成视频的信息，支持文本、图片、音频、视频、样片任务 ID。\n\n注意：Seedance 2.0 系列模型不支持直接上传含有真人人脸的参考图/视频。为了便利创作者对肖像的使用，平台推出了以下解决方案。\n\n* 支持使用部分模型的含人脸原始产物作为输入素材\n* 支持使用预置虚拟人像作为输入素材\n* 支持使用已授权真人素材作为输入\n\n支持以下几种组合：\n* 文本\n* 文本（可选）+ 图片\n* 文本（可选）+ 视频\n* 文本（可选）+ 图片 + 音频\n* 文本（可选）+ 图片 + 视频\n* 文本（可选）+ 视频 + 音频\n* 文本（可选）+ 图片 + 视频 + 音频\n* 样片任务 ID：样片指使用 Seedance 模型成功生成的样片视频，模型可基于样片生成高质量正式视频。\n\n---",
             "items": {
               "oneOf": [
                 {
@@ -282,7 +264,7 @@
               "default",
               "flex"
             ],
-            "description": "> 不支持修改已提交任务的服务等级\n> Seedance 2.0 系列仅支持在线推理模式，不支持配置该参数\n\n指定处理本次请求的服务等级类型，枚举值：\n\n* default：在线推理模式，RPM 和并发数配额较低（详见模型列表），适合对推理时效性要求较高的场景。\n* flex：离线推理模式，TPD 配额更高（详见模型列表），价格为在线推理的 50%，适合对推理时延要求不高的场景。",
+            "description": "> 不支持修改已提交任务的服务等级\n> Seedance 2.0 系列仅支持在线推理模式，不支持配置该参数\n\n指定处理本次请求的服务等级类型，枚举值：\n\n* default：在线推理模式，RPM 和并发数配额较低，适合对推理时效性要求较高的场景。\n* flex：离线推理模式，TPD 配额更高，价格为在线推理的 50%，适合对推理时延要求不高的场景。",
             "default": "default"
           },
           "execution_expires_after": {
@@ -316,7 +298,7 @@
           },
           "priority": {
             "type": "integer",
-            "description": "> 仅 Seedance 2.0 系列支持\n\n设置当前请求的执行优先级，决定其在队列中的排序位置。取值范围：0~9，数值越大，优先级越高。\n\n默认情况下，请求按 FIFO（First In, First Out，先进先出）顺序执行。设置较高优先级后，该请求将插队到同 Endpoint（推理接入点）下所有低优先级请求之前。\n\n说明：\n* 相同优先级的请求之间仍按 FIFO 排序。\n* 优先级仅影响排队顺序，不会中断正在执行中（status=running）的任务。\n* 优先级仅在同一 Endpoint 内生效，不影响其他 Endpoint。\n* 离线推理模式（service_tier=flex）不支持配置优先级。",
+            "description": "> 仅 Seedance 2.0 系列支持\n\n设置当前请求的执行优先级，决定其在队列中的排序位置。取值范围：0\\\\~9，数值越大，优先级越高。\n\n默认情况下，请求按 FIFO（First In, First Out，先进先出）顺序执行。设置较高优先级后，该请求将插队到同 Endpoint（推理接入点）下所有低优先级请求之前。\n\n说明：\n* 相同优先级的请求之间仍按 FIFO 排序。\n* 优先级仅影响排队顺序，不会中断正在执行中（status=running）的任务。\n* 优先级仅在同一 Endpoint 内生效，不影响其他 Endpoint。\n* 离线推理模式（service_tier=flex）不支持配置优先级。\n\n**示例**：\n\n某 Endpoint 当前队列中有 3 个排队中（status=queued）任务，优先级均为 0（默认）。\n\n队列：[任务A: priority=0] → [任务B: priority=0] → [任务C: priority=0]\n\n此时提交一个 priority=5 的新请求，该请求将直接排到队首：\n\n队列：[新请求: priority=5] → [任务A: priority=0] → [任务B: priority=0] → [任务C: priority=0]",
             "default": 0,
             "minimum": 0,
             "maximum": 9
@@ -341,18 +323,18 @@
               "21:9",
               "adaptive"
             ],
-            "description": "> Seedance 2.0 系列、Seedance 1.5 pro 默认值为 `adaptive`\n> 其他模型：文生视频默认值 `16:9`，图生视频默认值 `adaptive`\n\n生成视频的宽高比例。不同宽高比对应的宽高像素值见下方表格。\n\n* 16:9\n* 4:3\n* 1:1\n* 3:4\n* 9:16\n* 21:9\n* adaptive：根据输入自动选择最合适的宽高比（详见下文说明）\n\n**adaptive 适配规则**\n\n当配置 ratio 为 adaptive 时，模型会根据生成场景自动适配宽高比；实际生成的视频宽高比可通过查询视频生成任务 API 返回的 ratio 字段获取。\n\n**支持模型：**\n* Seedance 2.0 系列、Seedance 1.5 Pro 支持\n* 其他模型仅图生视频场景支持\n\n**取值规则：**\n* 文生视频：根据输入的提示词，智能选择最合适的宽高比。\n* 首帧 / 首尾帧生视频：根据上传的首帧图片比例，自动选择最接近的宽高比。\n* 多模态参考生视频：根据用户提示词意图判断，如果是首帧生视频/编辑视频/延长视频，以该图片/视频为准选择最接近的宽高比；否则，以传入的第一个媒体文件为准（优先级：视频＞图片）选择最接近的宽高比。\n\n注意：图生视频，选择的宽高比与您上传的图片宽高比不一致时，方舟会对您的图片进行裁剪，裁剪时会居中裁剪。\n\n不同宽高比对应的宽高像素值\n\n| 分辨率 | 宽高比 | 宽高像素值 Seedance 1.0 系列 | 宽高像素值 Seedance 1.5 pro / 2.0 系列 |\n|---|---|---|---|\n| 480p | 16:9 | 864×480 | 864×496 |\n| | 4:3 | 736×544 | 752×560 |\n| | 1:1 | 640×640 | 640×640 |\n| | 3:4 | 544×736 | 560×752 |\n| | 9:16 | 480×864 | 496×864 |\n| | 21:9 | 960×416 | 992×432 |\n| 720p | 16:9 | 1248×704 | 1280×720 |\n| | 4:3 | 1120×832 | 1112×834 |\n| | 1:1 | 960×960 | 960×960 |\n| | 3:4 | 832×1120 | 834×1112 |\n| | 9:16 | 704×1248 | 720×1280 |\n| | 21:9 | 1504×640 | 1470×630 |\n| 1080p | 16:9 | 1920×1088 | 1920×1080 |\n| | 4:3 | 1664×1248 | 1664×1248 |\n| | 1:1 | 1440×1440 | 1440×1440 |\n| | 3:4 | 1248×1664 | 1248×1664 |\n| | 9:16 | 1088×1920 | 1080×1920 |\n| | 21:9 | 2176×928 | 2206×946 |"
+            "description": "> Seedance 2.0 系列、Seedance 1.5 pro 默认值为 `adaptive`\n> 其他模型：文生视频默认值 `16:9`，图生视频默认值 `adaptive`\n\n生成视频的宽高比例。不同宽高比对应的宽高像素值见下方表格。\n\n* 16:9\n* 4:3\n* 1:1\n* 3:4\n* 9:16\n* 21:9\n* adaptive：根据输入自动选择最合适的宽高比（详见下文说明）\n\n**adaptive 适配规则**\n\n当配置 ratio 为 adaptive 时，模型会根据生成场景自动适配宽高比；实际生成的视频宽高比可通过查询视频生成任务 API 返回的 ratio 字段获取。\n\n**支持模型：**\n* Seedance 2.0 系列、Seedance 1.5 Pro 支持\n* 其他模型仅图生视频场景支持\n\n**取值规则：**\n* 文生视频：根据输入的提示词，智能选择最合适的宽高比。\n* 首帧 / 首尾帧生视频：根据上传的首帧图片比例，自动选择最接近的宽高比。\n* 多模态参考生视频：根据用户提示词意图判断，如果是首帧生视频/编辑视频/延长视频，以该图片/视频为准选择最接近的宽高比；否则，以传入的第一个媒体文件为准（优先级：视频＞图片）选择最接近的宽高比。\n\n不同宽高比对应的宽高像素值\n\n注意：图生视频，选择的宽高比与您上传的图片宽高比不一致时，方舟会对您的图片进行裁剪，裁剪时会居中裁剪。\n\n| 分辨率 | 宽高比 | 宽高像素值 Seedance 1.0 系列 | 宽高像素值 Seedance 1.5 pro / 2.0 系列 |\n|---|---|---|---|\n| 480p | 16:9 | 864×480 | 864×496 |\n| | 4:3 | 736×544 | 752×560 |\n| | 1:1 | 640×640 | 640×640 |\n| | 3:4 | 544×736 | 560×752 |\n| | 9:16 | 480×864 | 496×864 |\n| | 21:9 | 960×416 | 992×432 |\n| 720p | 16:9 | 1248×704 | 1280×720 |\n| | 4:3 | 1120×832 | 1112×834 |\n| | 1:1 | 960×960 | 960×960 |\n| | 3:4 | 832×1120 | 834×1112 |\n| | 9:16 | 704×1248 | 720×1280 |\n| | 21:9 | 1504×640 | 1470×630 |\n| 1080p | 16:9 | 1920×1088 | 1920×1080 |\n| | 4:3 | 1664×1248 | 1664×1248 |\n| | 1:1 | 1440×1440 | 1440×1440 |\n| | 3:4 | 1248×1664 | 1248×1664 |\n| | 9:16 | 1088×1920 | 1080×1920 |\n| | 21:9 | 2176×928 | 2206×946 |"
           },
           "duration": {
             "type": "integer",
-            "description": "> duration 和 frames 二选一即可，frames 的优先级高于 duration。如果您希望生成整数秒的视频，建议指定 duration。\n\n生成视频时长，仅支持整数，单位：秒。\n\n* Seedance 1.0 pro、Seedance 1.0 pro fast: [2, 12] s。\n* Seedance 1.5 pro: [4,12] 或设置为 -1\n* Seedance 2.0 系列: [4,15] 或设置为 -1\n\n> Seedance 2.0 系列、Seedance 1.5 pro 支持两种配置方法\n* 指定具体时长：支持有效范围内的任一整数。\n* 智能指定：设置为 -1，表示由模型在有效范围内自主选择合适的视频长度（整数秒）。实际生成视频的时长可通过查询视频生成任务 API 返回的 duration 字段获取。注意视频时长与计费相关，请谨慎设置。",
+            "description": "> duration 和 frames 二选一即可，frames 的优先级高于 duration。如果您希望生成整数秒的视频，建议指定 duration。\n\n生成视频时长，仅支持整数，单位：秒。\n\n* Seedance 1.0 pro、Seedance 1.0 pro fast: [2, 12] s。\n* Seedance 1.5 pro: [4,12] 或设置为 -1\n* Seedance 2.0 系列: [4,15] 或设置为 -1\n\n**注意**\n\nSeedance 2.0 系列、Seedance 1.5 pro 支持两种配置方法\n* 指定具体时长：支持有效范围内的任一整数。\n* 智能指定：设置为 -1，表示由模型在有效范围内自主选择合适的视频长度（整数秒）。实际生成视频的时长可通过查询视频生成任务 API 返回的 duration 字段获取。注意视频时长与计费相关，请谨慎设置。",
             "default": 5,
             "minimum": -1,
             "maximum": 15
           },
           "frames": {
             "type": "integer",
-            "description": "> Seedance 2.0 系列、Seedance 1.5 pro 暂不支持\n> duration 和 frames 二选一即可，frames 的优先级高于 duration。如果您希望生成小数秒的视频，建议指定 frames。\n\n生成视频的帧数。\n\n由于 frames 的取值限制，仅能支持有限小数秒，您需要根据公式推算最接近的帧数。\n\n* 计算公式：帧数 = 时长 × 帧率（24）。\n* 取值范围：支持 [29, 289] 区间内所有满足 25 + 4n 格式的整数值，其中 n 为正整数。\n\n例如：假设需要生成 2.4 秒的视频，帧数=2.4×24=57.6。由于 frames 不支持 57.6，此时您只能选择一个最接近的值。根据 25+4n 计算出最接近的帧数为 57，实际生成的视频为 57/24=2.375 秒。",
+            "description": "> Seedance 2.0 系列、Seedance 1.5 pro 暂不支持\n> duration 和 frames 二选一即可，frames 的优先级高于 duration。如果您希望生成小数秒的视频，建议指定 frames。\n\n生成视频的帧数。通过指定帧数，可以灵活控制生成视频的长度，生成小数秒的视频。\n\n由于 frames 的取值限制，仅能支持有限小数秒，您需要根据公式推算最接近的帧数。\n\n* 计算公式：帧数 = 时长 × 帧率（24）。\n* 取值范围：支持 [29, 289] 区间内所有满足 25 + 4n 格式的整数值，其中 n 为正整数。\n\n例如：假设需要生成 2.4 秒的视频，帧数=2.4×24=57.6。由于 frames 不支持 57.6，此时您只能选择一个最接近的值。根据 25+4n 计算出最接近的帧数为 57，实际生成的视频为 57/24=2.375 秒。",
             "minimum": 29,
             "maximum": 289
           },
@@ -394,7 +376,8 @@
             "type": "string",
             "description": "输入给模型的文本提示词，描述期望生成的视频。\n\n说明：\n* 提示词语言支持：所有模型均支持中英文提示词；seedance 2.0 及 seedance 2.0 fast 额外支持日语、印尼语、西班牙语、葡萄牙语。\n* 提示词字数建议：中文提示词不超过500字，英文提示词不超过1000词。字数过多易导致信息分散，模型可能忽略细节、仅关注重点，进而造成视频缺失部分元素。\n* 更多使用技巧：提示词的详细使用技巧，请参见 seedance 提示词指南。"
           }
-        }
+        },
+        "description": "输入给模型的提示词信息。"
       },
       "ImageContent": {
         "title": "图片信息",
@@ -420,7 +403,7 @@
             "properties": {
               "url": {
                 "type": "string",
-                "description": "图片 URL 、图片 Base64 编码、素材 ID。\n\n* 图片 URL：填入图片的公网 URL。\n* Base64 编码：将本地文件转换为 Base64 编码字符串，然后提交给大模型。遵循格式：data:image/<图片格式>;base64,<Base64编码>，注意 <图片格式> 需小写，如 data:image/png;base64,{base64_image}。\n* 素材 ID：用于视频生成的预置素材及虚拟人像的 ID，遵循格式：asset://<ASSET_ID>。可从素材&虚拟人像库获取。\n\n传入单张图片要求：\n* 格式：jpeg、png、webp、bmp、tiff、gif。其中，Seedance 1.5 pro 和 Seedance 2.0 系列模型新增支持 heic 和 heif。\n* 宽高比（宽/高）： (0.4, 2.5)\n* 宽高长度（px）：(300, 6000)\n* 大小：单张图片小于 30 MB。请求体大小不超过 64 MB。大文件请勿使用Base64编码。\n* 图片数量：\n   * 图生视频-首帧：1 张\n   * 图生视频-首尾帧：2 张\n   * Seedance 2.0 系列 多模态参考生视频：1~9 张"
+                "description": "图片 URL 、图片 Base64 编码、素材 ID。\n\n* 图片 URL：填入图片的公网 URL。\n* Base64 编码：将本地文件转换为 Base64 编码字符串，然后提交给大模型。遵循格式：data:image/<图片格式>;base64,<Base64编码>，注意 <图片格式> 需小写，如 data:image/png;base64,{base64_image}。\n* 素材 ID：用于视频生成的预置素材及虚拟人像的 ID，遵循格式：asset://<ASSET_ID>。可从素材&虚拟人像库获取。\n\n传入单张图片要求：\n* 格式：jpeg、png、webp、bmp、tiff、gif。其中，Seedance 1.5 pro 和 Seedance 2.0 系列模型新增支持 heic 和 heif。\n* 宽高比（宽/高）： (0.4, 2.5)\n* 宽高长度（px）：(300, 6000)\n* 大小：单张图片小于 30 MB。请求体大小不超过 64 MB。大文件请勿使用Base64编码。\n* 图片数量：\n   * 图生视频-首帧：1 张\n   * 图生视频-首尾帧：2 张\n   * Seedance 2.0 系列 多模态参考生视频：1\\\\~9 张"
               }
             }
           },
@@ -431,9 +414,10 @@
               "last_frame",
               "reference_image"
             ],
-            "description": "图片的位置或用途。条件必填。\n\n注意：\n* 图生视频-首帧、图生视频-首尾帧、多模态参考生视频（包括参考图、视频、音频）为 3 种互斥场景，不可混用。\n* 多模态参考生视频可通过提示词指定参考图片作为首帧/尾帧，间接实现\"首尾帧+多模态参考\"效果。若需严格保障首尾帧和指定图片一致，优先使用图生视频-首尾帧（配置 role 为 first_frame/last_frame）。\n\n图生视频-首帧：\n* 支持模型：所有模型\n* 字段role取值：需要传入1个 image_url 对象，字段 role 为 first_frame 或不填。\n\n图生视频-首尾帧：\n* 支持模型：Seedance 2.0 系列，Seedance 1.5 pro、Seedance 1.0 pro\n* 字段role取值：需要传入2个image_url对象，且字段 role 必填。\n\n   * 首帧图片对应的字段 role 为：first_frame\n\n   * 尾帧图片对应的字段 role 为：last_frame\n\n说明：传入的首尾帧图片可相同。首尾帧图片的宽高比不一致时，以首帧图片为主，尾帧图片会自动裁剪适配。\n\n图生视频-参考图：\n* 支持模型：Seedance 2.0 系列（1~9 张图片）\n* 字段role取值：必填，每张参考图对应的字段 role 均为：reference_image"
+            "description": "图片的位置或用途。条件必填。\n\n注意：\n* 图生视频-首帧、图生视频-首尾帧、多模态参考生视频（包括参考图、视频、音频）为 3 种互斥场景，不可混用。\n* 多模态参考生视频可通过提示词指定参考图片作为首帧/尾帧，间接实现\"首尾帧+多模态参考\"效果。若需严格保障首尾帧和指定图片一致，优先使用图生视频-首尾帧（配置 role 为 first_frame/last_frame）。\n\n图生视频-首帧：\n* 支持模型：所有模型\n* 字段role取值：需要传入1个 image_url 对象，字段 role 为 first_frame 或不填。\n\n图生视频-首尾帧：\n* 支持模型：Seedance 2.0 系列，Seedance 1.5 pro、Seedance 1.0 pro\n* 字段role取值：需要传入2个image_url对象，且字段 role 必填。\n\n   * 首帧图片对应的字段 role 为：first_frame\n\n   * 尾帧图片对应的字段 role 为：last_frame\n\n说明：传入的首尾帧图片可相同。首尾帧图片的宽高比不一致时，以首帧图片为主，尾帧图片会自动裁剪适配。\n\n图生视频-参考图：\n* 支持模型：Seedance 2.0 系列（1\\\\~9 张图片）\n* 字段role取值：必填，每张参考图对应的字段 role 均为：reference_image"
           }
-        }
+        },
+        "description": "输入给模型的图片信息。"
       },
       "VideoContent": {
         "title": "视频信息",
@@ -448,14 +432,14 @@
             "enum": [
               "video_url"
             ],
-            "description": "输入内容的类型，此处应为 video_url。仅 Seedance 2.0 系列支持输入视频。"
+            "description": "输入内容的类型，此处应为 video_url。"
           },
           "video_url": {
             "type": "object",
             "required": [
               "url"
             ],
-            "description": "输入给模型的视频对象。仅 Seedance 2.0 系列支持输入视频。\n\n方舟平台信任 Seedance 2.0 系列模型生成的含人脸视频，您可使用本账号下近30天内由上述模型生成的含人脸原始视频，作为输入素材进行二次创作。",
+            "description": "输入给模型的视频对象。",
             "properties": {
               "url": {
                 "type": "string",
@@ -470,7 +454,8 @@
             ],
             "description": "视频的位置或用途。当前仅支持 reference_video：参考视频。条件必填。"
           }
-        }
+        },
+        "description": "输入给模型的视频信息。仅 Seedance 2.0 系列支持输入视频。"
       },
       "AudioContent": {
         "title": "音频信息",
@@ -507,7 +492,8 @@
             ],
             "description": "音频的位置或用途。当前仅支持 reference_audio：参考音频。条件必填。"
           }
-        }
+        },
+        "description": "输入给模型的音频信息。仅 Seedance 2.0 系列支持输入音频。注意不可单独输入音频，应至少包含 1 个参考视频或图片。"
       },
       "DraftTaskContent": {
         "title": "样片信息",
@@ -522,7 +508,7 @@
             "enum": [
               "draft_task"
             ],
-            "description": "输入内容的类型，此处应为 draft_task。仅 Seedance 1.5 pro 支持该功能。"
+            "description": "输入内容的类型，此处应为 draft_task。"
           },
           "draft_task": {
             "type": "object",
@@ -537,7 +523,8 @@
               }
             }
           }
-        }
+        },
+        "description": "基于样片任务 ID，生成正式视频。仅 Seedance 1.5 pro 支持该功能。"
       },
       "Tool": {
         "type": "object",
