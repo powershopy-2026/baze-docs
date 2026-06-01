@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "/api/v3/contents/generations/tasks/{id}": {
+    "/byteplus/api/v3/contents/generations/tasks/{id}": {
       "get": {
         "summary": "查询视频生成任务",
         "operationId": "querySeedanceVideoTask",

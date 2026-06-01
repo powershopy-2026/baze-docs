@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "/api/v3/contents/generations/tasks/{id}": {
+    "/byteplus/api/v3/contents/generations/tasks/{id}": {
       "get": {
         "summary": "Query Video Generation Task",
         "operationId": "querySeedanceVideoTask",
