@@ -441,6 +441,7 @@
         "type": "object",
         "required": [
           "model",
+          "prompt",
           "images"
         ],
         "properties": {
