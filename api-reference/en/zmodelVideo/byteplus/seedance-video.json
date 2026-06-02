@@ -269,7 +269,7 @@
               "default",
               "flex"
             ],
-            "description": "> Modifying the service tier of a submitted task is not supported.\n> The Seedance 2.0 series supports only online inference mode and does not support configuring this parameter.\n\nSpecify the service tier type for processing this request. Valid values:\n\n* default: Online inference mode, with lower RPM and concurrency quotas , suitable with high requirements for inference efficiency.\n* flex: Offline inference mode, with higher TPD quota , priced at 50% of online inference, suitable for scenarios with high tolerance for inference latency.",
+            "description": "> Modifying the service tier of a submitted task is not supported.\n> The Seedance 2.0 series supports only online inference mode and does not support configuring this parameter.\nWe have not yet integrated offline inference.\n\nSpecify the service tier type for processing this request. Valid values:\n\n* default: Online inference mode, with lower RPM and concurrency quotas , suitable with high requirements for inference efficiency.\n* flex: Offline inference mode, with higher TPD quota , priced at 50% of online inference, suitable for scenarios with high tolerance for inference latency.",
             "default": "default"
           },
           "execution_expires_after": {
