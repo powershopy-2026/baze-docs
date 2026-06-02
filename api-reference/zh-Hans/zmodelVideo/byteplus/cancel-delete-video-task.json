@@ -32,16 +32,6 @@
         ],
         "parameters": [
           {
-            "name": "Content-Type",
-            "in": "header",
-            "required": true,
-            "description": "请求内容类型",
-            "schema": {
-              "type": "string",
-              "enum": ["application/json"]
-            }
-          },
-          {
             "name": "id",
             "in": "path",
             "required": true,
