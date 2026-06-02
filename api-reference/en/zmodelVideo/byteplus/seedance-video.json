@@ -291,7 +291,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "> Only supported by Seedance 2.0 series\n\nConfigure the tools the model should call.",
+            "description": "> Only supported by Seedance 2.0 series\n\nConfigure the tools the model should call. (Overseas nodes currently do not support web_search)",
             "items": {
               "$ref": "#/components/schemas/Tool"
             }
@@ -303,7 +303,7 @@
           },
           "priority": {
             "type": "integer",
-            "description": "> Only supported by Seedance 2.0\n\nSets the execution priority of the current request and determines its position in the queue. Valid values: 0-9. A larger value indicates a higher priority.\n\nBy default, requests are executed in FIFO (First In, First Out) order. After you set a higher priority, the request is inserted before all lower-priority requests under the same Endpoint.\n\nNotes:\n* Requests with the same priority are still ordered by FIFO.\n* Priority affects only the queue order. It does not interrupt tasks that are already running (status=running).\n* Priority takes effect only within the same Endpoint and does not affect other Endpoints.\n* Offline inference mode (service_tier=flex) does not support priority configuration.\n\n**Example**:\n\nSuppose there are 3 tasks in the queued status in the current queue of an Endpoint, all with priority 0 (default).\n\nQueue: [Task A: priority=0] → [Task B: priority=0] → [Task C: priority=0]\n\nWhen a new request with priority=5 is submitted, it will be placed at the front of the queue:\n\nQueue: [New request: priority=5] → [Task A: priority=0] → [Task B: priority=0] → [Task C: priority=0]",
+            "description": "> Only supported by Seedance 2.0. (Please contact sales to obtain the maximum priority available for each user)\n\nSets the execution priority of the current request and determines its position in the queue. Valid values: 0-9. A larger value indicates a higher priority.\n\nBy default, requests are executed in FIFO (First In, First Out) order. After you set a higher priority, the request is inserted before all lower-priority requests under the same Endpoint.\n\nNotes:\n* Requests with the same priority are still ordered by FIFO.\n* Priority affects only the queue order. It does not interrupt tasks that are already running (status=running).\n* Priority takes effect only within the same Endpoint and does not affect other Endpoints.\n* Offline inference mode (service_tier=flex) does not support priority configuration.\n\n**Example**:\n\nSuppose there are 3 tasks in the queued status in the current queue of an Endpoint, all with priority 0 (default).\n\nQueue: [Task A: priority=0] → [Task B: priority=0] → [Task C: priority=0]\n\nWhen a new request with priority=5 is submitted, it will be placed at the front of the queue:\n\nQueue: [New request: priority=5] → [Task A: priority=0] → [Task B: priority=0] → [Task C: priority=0]",
             "default": 0,
             "minimum": 0,
             "maximum": 9
