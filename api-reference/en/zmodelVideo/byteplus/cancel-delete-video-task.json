@@ -57,18 +57,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid request parameters or unsupported operation for the current task status."
-          },
-          "401": {
-            "description": "Authentication failed."
-          },
-          "404": {
-            "description": "The video generation task was not found."
-          },
-          "500": {
-            "description": "Internal server error."
           }
         },
         "security": [
