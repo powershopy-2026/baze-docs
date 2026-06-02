@@ -264,7 +264,7 @@
               "default",
               "flex"
             ],
-            "description": "> 不支持修改已提交任务的服务等级\n> Seedance 2.0 系列仅支持在线推理模式，不支持配置该参数\n\n指定处理本次请求的服务等级类型，枚举值：\n\n* default：在线推理模式，RPM 和并发数配额较低，适合对推理时效性要求较高的场景。\n* flex：离线推理模式，TPD 配额更高，价格为在线推理的 50%，适合对推理时延要求不高的场景。",
+            "description": "> 不支持修改已提交任务的服务等级\n> Seedance 2.0 系列仅支持在线推理模式，不支持配置该参数\n目前我们还未接入离线推理\n\n指定处理本次请求的服务等级类型，枚举值：\n\n* default：在线推理模式，RPM 和并发数配额较低，适合对推理时效性要求较高的场景。\n* flex：离线推理模式，TPD 配额更高，价格为在线推理的 50%，适合对推理时延要求不高的场景。",
             "default": "default"
           },
           "execution_expires_after": {
@@ -286,7 +286,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "> 仅 Seedance 2.0 系列支持\n\n配置模型要调用的工具。",
+            "description": "> 仅 Seedance 2.0 系列支持\n\n配置模型要调用的工具。(海外节点目前不支持web_search)",
             "items": {
               "$ref": "#/components/schemas/Tool"
             }
@@ -298,7 +298,7 @@
           },
           "priority": {
             "type": "integer",
-            "description": "> 仅 Seedance 2.0 系列支持\n\n设置当前请求的执行优先级，决定其在队列中的排序位置。取值范围：0\\~9，数值越大，优先级越高。\n\n默认情况下，请求按 FIFO（First In, First Out，先进先出）顺序执行。设置较高优先级后，该请求将插队到同 Endpoint（推理接入点）下所有低优先级请求之前。\n\n说明：\n* 相同优先级的请求之间仍按 FIFO 排序。\n* 优先级仅影响排队顺序，不会中断正在执行中（status=running）的任务。\n* 优先级仅在同一 Endpoint 内生效，不影响其他 Endpoint。\n* 离线推理模式（service_tier=flex）不支持配置优先级。\n\n**示例**：\n\n某 Endpoint 当前队列中有 3 个排队中（status=queued）任务，优先级均为 0（默认）。\n\n队列：[任务A: priority=0] → [任务B: priority=0] → [任务C: priority=0]\n\n此时提交一个 priority=5 的新请求，该请求将直接排到队首：\n\n队列：[新请求: priority=5] → [任务A: priority=0] → [任务B: priority=0] → [任务C: priority=0]",
+            "description": "> 仅 Seedance 2.0 系列支持。(每个用户可使用的最高priority请联系销售获取)\n\n设置当前请求的执行优先级，决定其在队列中的排序位置。取值范围：0\\~9，数值越大，优先级越高。\n\n默认情况下，请求按 FIFO（First In, First Out，先进先出）顺序执行。设置较高优先级后，该请求将插队到同 Endpoint（推理接入点）下所有低优先级请求之前。\n\n说明：\n* 相同优先级的请求之间仍按 FIFO 排序。\n* 优先级仅影响排队顺序，不会中断正在执行中（status=running）的任务。\n* 优先级仅在同一 Endpoint 内生效，不影响其他 Endpoint。\n* 离线推理模式（service_tier=flex）不支持配置优先级。\n\n**示例**：\n\n某 Endpoint 当前队列中有 3 个排队中（status=queued）任务，优先级均为 0（默认）。\n\n队列：[任务A: priority=0] → [任务B: priority=0] → [任务C: priority=0]\n\n此时提交一个 priority=5 的新请求，该请求将直接排到队首：\n\n队列：[新请求: priority=5] → [任务A: priority=0] → [任务B: priority=0] → [任务C: priority=0]",
             "default": 0,
             "minimum": 0,
             "maximum": 9
