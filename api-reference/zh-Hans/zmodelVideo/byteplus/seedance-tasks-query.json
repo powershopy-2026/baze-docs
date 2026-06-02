@@ -19,6 +19,16 @@
         "description": "查询视频生成任务的状态。\n\n> 仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。注意：视频 URL 有效期为 24 小时，请及时下载或转存。",
         "parameters": [
           {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "请求内容类型。"
+          },
+          {
             "name": "id",
             "in": "path",
             "required": true,
@@ -30,11 +40,35 @@
         ],
         "responses": {
           "200": {
-            "description": "查询成功，返回视频任务详情。",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QueryVideoTaskResponse"
+                },
+                "example": {
+                  "id": "cgt-2026****-****",
+                  "model": "doubao-seedance-2-0-260128",
+                  "status": "succeeded",
+                  "content": {
+                    "video_url": "https://ark-content-generation-cn-beijing.tos-cn-beijing.volces.com/xxx"
+                  },
+                  "usage": {
+                    "completion_tokens": 108900,
+                    "total_tokens": 108900
+                  },
+                  "created_at": 1779348818,
+                  "updated_at": 1779348874,
+                  "seed": 78674,
+                  "resolution": "720p",
+                  "ratio": "16:9",
+                  "duration": 5,
+                  "framespersecond": 24,
+                  "service_tier": "default",
+                  "execution_expires_after": 172800,
+                  "generate_audio": true,
+                  "draft": false,
+                  "priority": 0
                 }
               }
             }
@@ -205,7 +239,7 @@
         "properties": {
           "video_url": {
             "type": "string",
-            "description": "生成视频的 URL，格式为 mp4。有效期为 24 小时，请及时下载或转存。\n\n推荐配置火山引擎 TOS 提供的数据订阅功能，将您的模型推理产物自动转存到自己的 TOS 桶中，便于长期备份或二次加工。详细介绍请参见 TOS 数据订阅。"
+            "description": "生成视频的 URL，格式为 mp4。有效期为 24 小时，请及时下载或转存。"
           },
           "last_frame_url": {
             "type": "string",

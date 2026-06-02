@@ -19,6 +19,16 @@
         "description": "Retrieves the information of a video generation task.\n\n> Only tasks from the last 7 days can be queried, with a time range of [T-7 days, T), where T is the UTC timestamp (in seconds) when the request is initiated. Note: Video URLs are valid for 24 hours. Please download or save them promptly.",
         "parameters": [
           {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "The content type of the request."
+          },
+          {
             "name": "id",
             "in": "path",
             "required": true,
@@ -30,11 +40,35 @@
         ],
         "responses": {
           "200": {
-            "description": "Query successful, returns video task details.",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/QueryVideoTaskResponse"
+                },
+                "example": {
+                  "id": "cgt-2026****-****",
+                  "model": "doubao-seedance-2-0-260128",
+                  "status": "succeeded",
+                  "content": {
+                    "video_url": "https://ark-content-generation-cn-beijing.tos-cn-beijing.volces.com/xxx"
+                  },
+                  "usage": {
+                    "completion_tokens": 108900,
+                    "total_tokens": 108900
+                  },
+                  "created_at": 1779348818,
+                  "updated_at": 1779348874,
+                  "seed": 78674,
+                  "resolution": "720p",
+                  "ratio": "16:9",
+                  "duration": 5,
+                  "framespersecond": 24,
+                  "service_tier": "default",
+                  "execution_expires_after": 172800,
+                  "generate_audio": true,
+                  "draft": false,
+                  "priority": 0
                 }
               }
             }
@@ -205,7 +239,7 @@
         "properties": {
           "video_url": {
             "type": "string",
-            "description": "The URL of the output video. For security purposes, the output video is deleted after 24 hours. Be sure to save it in time.\n\nIt is recommended to configure the data subscription feature provided by Volcano Engine TOS to automatically save your model inference outputs to your own TOS bucket for long-term backup or secondary processing."
+            "description": "The URL of the output video. For security purposes, the output video is deleted after 24 hours. Be sure to save it in time."
           },
           "last_frame_url": {
             "type": "string",
