@@ -32,6 +32,16 @@
         ],
         "parameters": [
           {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "description": "请求内容类型",
+            "schema": {
+              "type": "string",
+              "enum": ["application/json"]
+            }
+          },
+          {
             "name": "id",
             "in": "path",
             "required": true,
@@ -57,18 +67,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "请求参数不合法，或当前任务状态不支持 DELETE 操作。"
-          },
-          "401": {
-            "description": "鉴权失败。"
-          },
-          "404": {
-            "description": "视频生成任务不存在。"
-          },
-          "500": {
-            "description": "服务端内部错误。"
           }
         },
         "security": [
