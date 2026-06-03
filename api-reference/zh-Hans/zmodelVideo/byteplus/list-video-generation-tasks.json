@@ -25,7 +25,7 @@
     "/byteplus/api/v3/contents/generations/tasks": {
       "get": {
         "summary": "查询视频生成任务列表",
-        "description": "通过传入筛选参数，查询符合条件的视频生成任务。仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。",
+        "description": "通过传入筛选参数，查询符合条件的视频生成任务。仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。\n\n> 说明：下面参数为Query String Parameters，在URL String中传入。",
         "operationId": "byteplusListVideoGenerationTasks",
         "tags": [
           "Seedance Video"
@@ -103,7 +103,7 @@
             "name": "filter.service_tier",
             "in": "query",
             "required": false,
-            "description": "处理任务使用的服务等级。`default` 表示在线推理模式，`flex` 表示离线推理模式。\n\n> 说明：上面参数为Query String Parameters，在URL String中传入。",
+            "description": "处理任务使用的服务等级。`default` 表示在线推理模式，`flex` 表示离线推理模式。",
             "schema": {
               "type": "string",
               "nullable": true,
