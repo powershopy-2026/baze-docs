@@ -103,7 +103,7 @@
             "name": "filter.service_tier",
             "in": "query",
             "required": false,
-            "description": "处理任务使用的服务等级。`default` 表示在线推理模式，`flex` 表示离线推理模式。",
+            "description": "处理任务使用的服务等级。`default` 表示在线推理模式，`flex` 表示离线推理模式。\n\n> 说明：上面参数为Query String Parameters，在URL String中传入。",
             "schema": {
               "type": "string",
               "nullable": true,
@@ -342,12 +342,10 @@
         "properties": {
           "video_url": {
             "type": "string",
-            "format": "uri",
             "description": "生成视频的 URL。"
           },
           "last_frame_url": {
             "type": "string",
-            "format": "uri",
             "description": "视频的尾帧图像 URL。创建视频生成任务时设置 `return_last_frame=true` 时会返回参数。"
           }
         }

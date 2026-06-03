@@ -103,7 +103,7 @@
             "name": "filter.service_tier",
             "in": "query",
             "required": false,
-            "description": "Service tier used for task processing. `default` means online inference mode, and `flex` means offline inference mode.",
+            "description": "Service tier used for task processing. `default` means online inference mode, and `flex` means offline inference mode.\n\n> Note: The above parameters are Query String Parameters, passed in the URL string.",
             "schema": {
               "type": "string",
               "nullable": true,
@@ -342,12 +342,10 @@
         "properties": {
           "video_url": {
             "type": "string",
-            "format": "uri",
             "description": "URL of the generated video."
           },
           "last_frame_url": {
             "type": "string",
-            "format": "uri",
             "description": "URL of the last frame image of the video. Returned when `return_last_frame=true` is set when creating a video generation task."
           }
         }
