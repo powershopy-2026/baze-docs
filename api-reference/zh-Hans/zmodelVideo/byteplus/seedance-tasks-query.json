@@ -3,7 +3,7 @@
   "info": {
     "title": "Seedance 查询视频生成任务",
     "version": "1.0.0",
-    "description": "查询视频生成任务的状态。\n\n> 仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。注意：视频 URL 有效期为 24 小时，请及时下载或转存。\n\n## 鉴权\n\n本接口支持 API Key 鉴权，详见鉴权认证方式。"
+    "description": "查询视频生成任务的状态。\n\n> 仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。注意：视频 URL 有效期为 14 天，请及时下载或转存。\n\n## 鉴权\n\n本接口支持 API Key 鉴权，详见鉴权认证方式。"
   },
   "servers": [
     {
@@ -16,7 +16,7 @@
       "get": {
         "summary": "request",
         "operationId": "querySeedanceVideoTask",
-        "description": "查询视频生成任务的状态。\n\n> 仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。注意：视频 URL 有效期为 24 小时，请及时下载或转存。",
+        "description": "查询视频生成任务的状态。\n\n> 仅支持查询最近 7 天的任务记录，时间区间为 [T-7天, T)，其中 T 为请求发起时刻的 UTC 时间戳（精确到秒）。注意：视频 URL 有效期为 14 天，请及时下载或转存。",
         "parameters": [
           {
             "name": "Content-Type",
@@ -238,11 +238,11 @@
         "properties": {
           "video_url": {
             "type": "string",
-            "description": "生成视频的 URL，格式为 mp4。有效期为 24 小时，请及时下载或转存。"
+            "description": "生成视频的 URL，格式为 mp4。有效期为 14 天，请及时下载或转存。"
           },
           "last_frame_url": {
             "type": "string",
-            "description": "视频的尾帧图像 URL。有效期为 24 小时，请及时下载或转存。说明：创建视频生成任务 时设置 `\"return_last_frame\": true` 时，会返回该参数。"
+            "description": "视频的尾帧图像 URL。有效期为 14 天，请及时下载或转存。说明：创建视频生成任务 时设置 `\"return_last_frame\": true` 时，会返回该参数。"
           }
         }
       },
