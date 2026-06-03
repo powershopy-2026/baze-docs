@@ -3,7 +3,7 @@
   "info": {
     "title": "Seedance Query Video Generation Task",
     "version": "1.0.0",
-    "description": "Retrieves the information of a video generation task.\n\n> Only tasks from the last 7 days can be queried, with a time range of [T-7 days, T), where T is the UTC timestamp (in seconds) when the request is initiated. Note: Video URLs are valid for 24 hours. Please download or save them promptly.\n\n## Authentication\n\nThis interface only supports API Key authentication. See Authentication for details."
+    "description": "Retrieves the information of a video generation task.\n\n> Only tasks from the last 7 days can be queried, with a time range of [T-7 days, T), where T is the UTC timestamp (in seconds) when the request is initiated. Note: Video URLs are valid for 14 days. Please download or save them promptly.\n\n## Authentication\n\nThis interface only supports API Key authentication. See Authentication for details."
   },
   "servers": [
     {
@@ -16,7 +16,7 @@
       "get": {
         "summary": "request",
         "operationId": "querySeedanceVideoTask",
-        "description": "Retrieves the information of a video generation task.\n\n> Only tasks from the last 7 days can be queried, with a time range of [T-7 days, T), where T is the UTC timestamp (in seconds) when the request is initiated. Note: Video URLs are valid for 24 hours. Please download or save them promptly.",
+        "description": "Retrieves the information of a video generation task.\n\n> Only tasks from the last 7 days can be queried, with a time range of [T-7 days, T), where T is the UTC timestamp (in seconds) when the request is initiated. Note: Video URLs are valid for 14 days. Please download or save them promptly.",
         "parameters": [
           {
             "name": "Content-Type",
@@ -238,11 +238,11 @@
         "properties": {
           "video_url": {
             "type": "string",
-            "description": "The URL of the output video. For security purposes, the output video is deleted after 24 hours. Be sure to save it in time."
+            "description": "The URL of the output video. For security purposes, the output video is deleted after 14 days. Be sure to save it in time."
           },
           "last_frame_url": {
             "type": "string",
-            "description": "URL of the last frame of the generated video. Valid for 24 hours. Be sure to save it in time.\n\nNote: If you set `\"return_last_frame\": true` in the creating a video generation task request, the parameter will be returned."
+            "description": "URL of the last frame of the generated video. Valid for 14 days. Be sure to save it in time.\n\nNote: If you set `\"return_last_frame\": true` in the creating a video generation task request, the parameter will be returned."
           }
         }
       },
