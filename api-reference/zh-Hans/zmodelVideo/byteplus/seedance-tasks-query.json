@@ -133,7 +133,7 @@
                 "$ref": "#/components/schemas/ErrorObject"
               }
             ],
-            "description": "错误提示信息，任务成功返回`null`，任务失败时返回错误数据，错误信息具体参见 错误处理。"
+            "description": "错误提示信息，任务成功返回`null`，任务失败时返回错误数据"
           },
           "created_at": {
             "type": "integer",

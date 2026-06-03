@@ -133,7 +133,7 @@
                 "$ref": "#/components/schemas/ErrorObject"
               }
             ],
-            "description": "The error information. If the task succeeds, `null` is returned. If the task fails, the error information is returned. For more information, refer to Error codes."
+            "description": "The error information. If the task succeeds, `null` is returned. If the task fails, the error information is returned. "
           },
           "created_at": {
             "type": "integer",
