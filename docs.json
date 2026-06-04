@@ -248,7 +248,8 @@
                       "zh-Hans/assetLibrary/group-delete",
                       "zh-Hans/assetLibrary/group-list",
                       "zh-Hans/assetLibrary/group-rename",
-                      "zh-Hans/assetLibrary/get-asset-id"
+                      "zh-Hans/assetLibrary/get-asset-id",
+                      "zh-Hans/assetLibrary/get-authorize-url"
                     ]
                   }
                 ]
@@ -494,7 +495,8 @@
                       "en/assetLibrary/group-delete",
                       "en/assetLibrary/group-list",
                       "en/assetLibrary/group-rename",
-                      "en/assetLibrary/get-asset-id"
+                      "en/assetLibrary/get-asset-id",
+                      "en/assetLibrary/get-authorize-url"
                     ]
                   }
                 ]
