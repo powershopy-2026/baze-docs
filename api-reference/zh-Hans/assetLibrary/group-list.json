@@ -40,8 +40,6 @@
                   }
                 },
                 "required": [
-                  "page_size",
-                  "page",
                   "email",
                   "login_style"
                 ]
