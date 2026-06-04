@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "默认模块",
     "description": "",
@@ -11,11 +11,11 @@
     }
   ],
   "paths": {
-    "/interface/upload": {
+    "/interface/group-create": {
       "post": {
-        "summary": "Upload file",
+        "summary": "创建组",
         "deprecated": false,
-        "description": "Asynchronously upload the asset file, first obtain the task_id, then use the task_id to query the asset_id",
+        "description": "",
         "tags": [
           "interface"
         ],
@@ -25,7 +25,7 @@
             "in": "header",
             "description": "",
             "required": false,
-            "example": "",
+            "example": "8HpJQT81y8Z2ZJvsnq5z32Vpm6rUWFAm",
             "schema": {
               "type": "string"
             }
@@ -40,17 +40,17 @@
                   "file": {
                     "format": "binary",
                     "type": "string",
-                    "description": "file",
+                    "description": "文件",
                     "example": ""
                   },
                   "email": {
-                    "description": "email",
+                    "description": "邮箱",
                     "example": "",
                     "type": "string"
                   },
                   "login_style": {
-                    "description": "Login methods: Google and GitHub",
-                    "example": "google",
+                    "description": "google,github",
+                    "example": "",
                     "type": "string"
                   }
                 }
@@ -74,11 +74,46 @@
                     "data": {
                       "type": "object",
                       "properties": {
+                        "assets": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "file_url": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "ext": {
+                                "type": "string"
+                              },
+                              "file_size": {
+                                "type": "integer"
+                              },
+                              "duration": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        },
+                        "group_id": {
+                          "type": "string"
+                        },
+                        "group_name": {
+                          "type": "string"
+                        },
                         "task_id": {
                           "type": "string"
                         }
                       },
                       "required": [
+                        "assets",
+                        "group_id",
+                        "group_name",
                         "task_id"
                       ]
                     },
@@ -95,7 +130,18 @@
                 "example": {
                   "code": 200,
                   "data": {
-                    "task_id": "task_2605191840200001"
+                    "assets": [
+                      {
+                        "id": 170,
+                        "file_url": "https://pub-4b7cc9eedad945ec9c28d5548493e66c.r2.dev/upload/20260604100607/f4412571fac9b4f33d8de3ef315d5be9.jpg",
+                        "name": "5308ce78897416214ab5bdc640716fb7.jpg",
+                        "ext": ".jpg",
+                        "file_size": 657139,
+                        "duration": 0
+                      }
+                    ],
+                    "group_id": "group-20260604100609-xbxss",
+                    "group_name": "5308ce78897416214ab5bdc640716fb7.jpg_group"
                   },
                   "msg": ""
                 }
@@ -108,12 +154,17 @@
       }
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {},
     "responses": {},
     "securitySchemes": {}
   },
   "servers": [
+    {
+      "url": "https://baze.powerbuyin.top/api",
+      "description": "测试环境"
+    },
     {
       "url": "https://powertokens.ai/api",
       "description": "正式环境"

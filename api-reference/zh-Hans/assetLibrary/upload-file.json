@@ -11,26 +11,55 @@
     }
   ],
   "paths": {
-    "/interface/get-asset-id": {
-      "get": {
-        "summary": "Obtain asset ID",
+    "/interface/upload": {
+      "post": {
+        "summary": "批量上传文件",
         "deprecated": false,
-        "description": "",
+        "description": "异步上传资产文件，先获取到task_id，然后用task_id查询asset_id",
         "tags": [
           "interface"
         ],
         "parameters": [
           {
-            "name": "task_id",
-            "in": "query",
+            "name": "Internal-Asset-Key",
+            "in": "header",
             "description": "",
             "required": false,
-            "example": "task_2605191608220001",
+            "example": "",
             "schema": {
               "type": "string"
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "format": "binary",
+                    "type": "string",
+                    "description": "文件",
+                    "example": ""
+                  },
+                  "email": {
+                    "description": "邮箱",
+                    "example": "",
+                    "type": "string"
+                  },
+                  "login_style": {
+                    "description": "登录方式 google与github",
+                    "example": "google",
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "",
@@ -45,12 +74,12 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "asset_id": {
+                        "task_id": {
                           "type": "string"
                         }
                       },
                       "required": [
-                        "asset_id"
+                        "task_id"
                       ]
                     },
                     "msg": {
@@ -66,7 +95,7 @@
                 "example": {
                   "code": 200,
                   "data": {
-                    "asset_id": "asset-20260519160823-7gcnx"
+                    "task_id": "task_2605191840200001"
                   },
                   "msg": ""
                 }
@@ -85,6 +114,10 @@
     "securitySchemes": {}
   },
   "servers": [
+    {
+      "url": "https://baze.powerbuyin.top/api",
+      "description": "测试环境"
+    },
     {
       "url": "https://powertokens.ai/api",
       "description": "正式环境"

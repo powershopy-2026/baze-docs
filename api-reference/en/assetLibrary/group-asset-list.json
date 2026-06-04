@@ -1,0 +1,227 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "默认模块",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "interface"
+    }
+  ],
+  "paths": {
+    "/interface/group-asset-list": {
+      "post": {
+        "summary": "List of Asset Groups",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "interface"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page": {
+                    "type": "integer",
+                    "description": "page"
+                  },
+                  "page_size": {
+                    "type": "integer",
+                    "description": "pageSize"
+                  },
+                  "asset_id": {
+                    "type": "string",
+                    "description": "Asset ID"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "asset name"
+                  },
+                  "type": {
+                    "type": "integer",
+                    "description": "1:image, 2:video, 3:audio"
+                  },
+                  "status": {
+                    "type": "integer",
+                    "description": "1: Under review, 2: Successful, 3: Failed"
+                  },
+                  "group_id": {
+                    "type": "string",
+                    "description": "group ID"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "email"
+                  },
+                  "login_style": {
+                    "type": "string",
+                    "description": "login style"
+                  }
+                },
+                "required": [
+                  "page",
+                  "page_size",
+                  "asset_id",
+                  "name",
+                  "type",
+                  "status",
+                  "group_id",
+                  "email",
+                  "login_style"
+                ]
+              },
+              "example": {
+                "page": 1,
+                "page_size": 12,
+                "asset_id": "",
+                "name": "",
+                "type": 0,
+                "status": 0,
+                "group_id": "group-20260604102314-bnz4j",
+                "email": "hua20128@gmail.com",
+                "login_style": "google"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "asset_id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "integer"
+                              },
+                              "file_url": {
+                                "type": "string"
+                              },
+                              "thumbnail_url": {
+                                "type": "string"
+                              },
+                              "file_size": {
+                                "type": "integer"
+                              },
+                              "duration": {
+                                "type": "integer"
+                              },
+                              "ext": {
+                                "type": "string"
+                              },
+                              "source": {
+                                "type": "integer"
+                              },
+                              "created_at": {
+                                "type": "integer"
+                              },
+                              "updated_at": {
+                                "type": "integer"
+                              },
+                              "status": {
+                                "type": "integer"
+                              },
+                              "fail_reason": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "total": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "list",
+                        "total"
+                      ]
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data",
+                    "msg"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "data": {
+                    "list": [
+                      {
+                        "id": 174,
+                        "asset_id": "asset-20260604102315-bhlt9",
+                        "name": "5308ce78897416214ab5bdc640716fb7.jpg",
+                        "type": 1,
+                        "file_url": "https://pub-4b7cc9eedad945ec9c28d5548493e66c.r2.dev/upload/20260604102312/ca517b10651e5a5f449976f10273e790.jpg",
+                        "thumbnail_url": "https://pub-4b7cc9eedad945ec9c28d5548493e66c.r2.dev/compressed_images/1780539902658115900.webp",
+                        "file_size": 657139,
+                        "duration": 0,
+                        "ext": ".jpg",
+                        "source": 0,
+                        "created_at": 1780539794,
+                        "updated_at": 1780539904,
+                        "status": 2,
+                        "fail_reason": ""
+                      }
+                    ],
+                    "total": 1
+                  },
+                  "msg": ""
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "webhooks": {},
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [
+    {
+      "url": "https://baze.powerbuyin.top/api",
+      "description": "测试环境"
+    },
+    {
+      "url": "https://powertokens.ai/api",
+      "description": "正式环境"
+    }
+  ],
+  "security": []
+}

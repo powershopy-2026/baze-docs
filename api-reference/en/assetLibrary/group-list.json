@@ -1,0 +1,164 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "默认模块",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "interface"
+    }
+  ],
+  "paths": {
+    "/interface/group-list": {
+      "post": {
+        "summary": "group list",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "interface"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "page_size": {
+                    "type": "integer"
+                  },
+                  "page": {
+                    "type": "integer"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "login_style": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "page_size",
+                  "page",
+                  "email",
+                  "login_style"
+                ]
+              },
+              "example": {
+                "page_size": 20,
+                "page": 1,
+                "email": "603842915@qq.com",
+                "login_style": "github"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "group_id": {
+                                "type": "string"
+                              },
+                              "group_name": {
+                                "type": "string"
+                              },
+                              "group_cover_url": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "group_id",
+                              "group_name",
+                              "group_cover_url"
+                            ]
+                          }
+                        },
+                        "total": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "list",
+                        "total"
+                      ]
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data",
+                    "msg"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "data": {
+                    "list": [
+                      {
+                        "group_id": "group-20260603105838-5ssn8",
+                        "group_name": "风景实拍照片0603_1_group",
+                        "group_cover_url": "https://pub-4b7cc9eedad945ec9c28d5548493e66c.r2.dev/upload/20260507/63070f5b976c52d590650b39049f2689.jpeg"
+                      },
+                      {
+                        "group_id": "group-20260603104020-d7rcc",
+                        "group_name": "风景实拍照片0603_group",
+                        "group_cover_url": "https://pub-4b7cc9eedad945ec9c28d5548493e66c.r2.dev/upload/20260507/63070f5b976c52d590650b39049f2689.jpeg"
+                      },
+                      {
+                        "group_id": "group-20260514152200-5d7cj",
+                        "group_name": "测试改名2",
+                        "group_cover_url": "https://pub-4b7cc9eedad945ec9c28d5548493e66c.r2.dev/upload/20260507/63070f5b976c52d590650b39049f2689.jpeg"
+                      }
+                    ],
+                    "total": 3
+                  },
+                  "msg": ""
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "webhooks": {},
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [
+    {
+      "url": "https://baze.powerbuyin.top/api",
+      "description": "测试环境"
+    },
+    {
+      "url": "https://powertokens.ai/api",
+      "description": "正式环境"
+    }
+  ],
+  "security": []
+}

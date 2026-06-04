@@ -1,0 +1,114 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "默认模块",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "interface"
+    }
+  ],
+  "paths": {
+    "/interface/group-rename": {
+      "post": {
+        "summary": "rename group",
+        "deprecated": false,
+        "description": "",
+        "tags": [
+          "interface"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "group_id": {
+                    "type": "string"
+                  },
+                  "group_name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "login_style": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "group_id",
+                  "group_name",
+                  "email",
+                  "login_style"
+                ]
+              },
+              "example": {
+                "group_id": "group-20260604102314-bnz4j",
+                "group_name": "hua20128",
+                "email": "hua20128@gmail.com",
+                "login_style": "google"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "data": {
+                      "type": "null"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "data",
+                    "msg"
+                  ]
+                },
+                "example": {
+                  "code": 200,
+                  "data": null,
+                  "msg": ""
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "webhooks": {},
+  "components": {
+    "schemas": {},
+    "responses": {},
+    "securitySchemes": {}
+  },
+  "servers": [
+    {
+      "url": "https://baze.powerbuyin.top/api",
+      "description": "测试环境"
+    },
+    {
+      "url": "https://powertokens.ai/api",
+      "description": "正式环境"
+    }
+  ],
+  "security": []
+}

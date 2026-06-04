@@ -240,10 +240,15 @@
                     ]
                   },
                   {
-                    "group": "工具栏",
+                    "group": "资产库",
                     "pages": [
-                      "zh-Hans/tools/upload-file",
-                      "zh-Hans/tools/get-asset-id"
+                      "zh-Hans/assetLibrary/upload-file",
+                      "zh-Hans/assetLibrary/group-asset-list",
+                      "zh-Hans/assetLibrary/group-create",
+                      "zh-Hans/assetLibrary/group-delete",
+                      "zh-Hans/assetLibrary/group-list",
+                      "zh-Hans/assetLibrary/group-rename",
+                      "zh-Hans/assetLibrary/get-asset-id"
                     ]
                   }
                 ]
@@ -481,10 +486,15 @@
                     ]
                   },
                   {
-                    "group": "tools",
+                    "group": "asset library",
                     "pages": [
-                      "en/tools/upload-file",
-                      "en/tools/get-asset-id"
+                      "en/assetLibrary/upload-file",
+                      "en/assetLibrary/group-asset-list",
+                      "en/assetLibrary/group-create",
+                      "en/assetLibrary/group-delete",
+                      "en/assetLibrary/group-list",
+                      "en/assetLibrary/group-rename",
+                      "en/assetLibrary/get-asset-id"
                     ]
                   }
                 ]
