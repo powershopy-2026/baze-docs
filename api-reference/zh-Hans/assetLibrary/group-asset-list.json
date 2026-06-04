@@ -64,12 +64,7 @@
                   }
                 },
                 "required": [
-                  "page",
-                  "page_size",
                   "asset_id",
-                  "name",
-                  "type",
-                  "status",
                   "group_id",
                   "email",
                   "login_style"
