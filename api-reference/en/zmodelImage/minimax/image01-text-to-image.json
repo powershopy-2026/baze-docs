@@ -275,13 +275,15 @@
             "type": "integer",
             "description": "Generated image width (pixels). Only effective when model is image-01. Note: width and height must be set together, range [512, 2048], and must be multiples of 8. If set together with aspect_ratio, aspect_ratio takes priority.",
             "minimum": 512,
-            "maximum": 2048
+            "maximum": 2048,
+            "step": 8
           },
           "height": {
             "type": "integer",
             "description": "Generated image height (pixels). Only effective when model is image-01. Note: width and height must be set together, range [512, 2048], and must be multiples of 8. If set together with aspect_ratio, aspect_ratio takes priority.",
             "minimum": 512,
-            "maximum": 2048
+            "maximum": 2048,
+            "step": 8
           },
           "response_format": {
             "type": "string",

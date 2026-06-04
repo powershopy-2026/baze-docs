@@ -275,13 +275,15 @@
             "type": "integer",
             "description": "生成图片的宽度（像素）。仅当 model 为 image-01 时生效。注意：width 和 height 需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 aspect_ratio 同时设置，则优先使用 aspect_ratio",
             "minimum": 512,
-            "maximum": 2048
+            "maximum": 2048,
+            "step": 8
           },
           "height": {
             "type": "integer",
             "description": "生成图片的高度（像素）。仅当 model 为 image-01 时生效。注意：width 和 height 需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 aspect_ratio 同时设置，则优先使用 aspect_ratio",
             "minimum": 512,
-            "maximum": 2048
+            "maximum": 2048,
+            "step": 8
           },
           "response_format": {
             "type": "string",
