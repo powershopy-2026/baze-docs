@@ -1,0 +1,401 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu Text-to-Video (viduq3-pro)",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/videos/text2video": {
+      "post": {
+        "summary": "Vidu Text-to-Video (viduq3-pro)",
+        "operationId": "viduTextToVideoEnViduq3Pro",
+        "description": "Convert text prompts to videos using Vidu models. After submission, query status via `GET /vidu/v1/videos/{task_id}`. Uses model viduq3-pro.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToVideoRequest"
+              },
+              "examples": {
+                "basic_example": {
+                  "summary": "Basic text-to-video example",
+                  "value": {
+                    "model": "viduq3-pro",
+                    "prompt": "A small cat running on grass, sunny day",
+                    "duration": 5,
+                    "aspect_ratio": "16:9",
+                    "resolution": "720p"
+                  }
+                },
+                "audio_video_sync_example": {
+                  "summary": "Audio-visual synchronization example (q3 models only)",
+                  "value": {
+                    "model": "viduq3-pro",
+                    "prompt": "A person speaking: Hello World",
+                    "duration": 5,
+                    "audio": true,
+                    "aspect_ratio": "16:9",
+                    "resolution": "720p"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submission successful, returns a video task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextToVideoResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Submission successful",
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "viduq3-pro",
+                      "prompt": "In an ultra-realistic fashion photography style featuring light blue and pale amber tones, an astronaut in a spacesuit walks through the fog. The background consists of enchanting white and golden lights, creating a minimalist still life and an impressive panoramic scene.",
+                      "duration": 5,
+                      "seed": 123456789,
+                      "aspect_ratio": "16:9",
+                      "resolution": "720p",
+                      "movement_amplitude": "auto",
+                      "payload": "",
+                      "credits": 10,
+                      "off_peak": false,
+                      "created_at": "2025-01-01T15:41:31.968916Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Invalid parameters",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "Request body format error or invalid field values",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded or insufficient quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient account quota, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "server_error": {
+                    "summary": "Server error",
+                    "value": {
+                      "code": "internal_server_error",
+                      "message": "Internal server error, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "TextToVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "viduq3-pro"
+            ],
+            "description": "Model name.\n- **viduq3-pro**: Supports audio-visual synchronization, supports video shot segmentation"
+          },
+          "style": {
+            "type": "string",
+            "enum": [
+              "general",
+              "anime"
+            ],
+            "description": "The style of output video.\n- **general**: General style. Allows style control through prompts\n- **anime**: Anime style. Optimized for anime aesthetics, with better performance for anime-related prompts\n\n**Note**: This parameter is not effective when using q3 models.",
+            "default": "general"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "Text prompt. A textual description for video generation, with a maximum length of 5000 characters."
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration. Default values vary by model:\n- **viduq3-pro, viduq3-turbo**: default 5s, available: 1-16"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed.\n- Defaults to a random seed number\n- Manually set values will override the default random seed"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "3:4",
+              "4:3",
+              "1:1"
+            ],
+            "description": "The aspect ratio of the output video. Defaults to 16:9.\n\n**Note**: 3:4 and 4:3 only support q3 model.",
+            "default": "16:9"
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "540p",
+              "720p",
+              "1080p"
+            ],
+            "description": "Resolution. Default values vary by model & duration:\n- **viduq3-pro, viduq3-turbo (1-16s)**: default 720p, available: 540p, 720p, 1080p"
+          },
+          "movement_amplitude": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "small",
+              "medium",
+              "large"
+            ],
+            "description": "The movement amplitude of objects in the frame. Defaults to auto.\n\n**Note**: This parameter does not take effect when using the q3 model.",
+            "default": "auto"
+          },
+          "bgm": {
+            "type": "boolean",
+            "description": "Whether to add background music to the generated video. (q3 model not available)\n- **false**: Do not add background music (default)\n- **true**: System automatically adds suitable BGM\n\n**Notes**:\n- BGM has no time limit and the system automatically adapts\n- q3 models do not support this parameter",
+            "default": false
+          },
+          "audio": {
+            "type": "boolean",
+            "description": "Whether to use direct audio-video generation capability. Default: true.\n- **false**: No direct audio-video generation, outputs silent video\n- **true**: Requires audio-video synchronization, outputs video with sound (including dialogue and sound effects)\n\n**Note**: Only the q3 models supports this parameter.",
+            "default": true
+          },
+          "payload": {
+            "type": "string",
+            "maxLength": 1048576,
+            "description": "Transparent transmission parameters. No processing, only data transmission, with a maximum length of 1048576 characters."
+          },
+          "off_peak": {
+            "type": "boolean",
+            "description": "Off peak mode. Defaults to false.\n- **true**: Off peak generate mode\n- **false**: Normal generate mode\n\nThe off_peak mode consumes lower points, please refer to the details Pricing. Tasks submitted in off peak mode will be generated within 48 hours. Tasks that are not completed will be automatically cancelled and their points will be refunded. We also support cancel off_peak tasks.",
+            "default": false
+          }
+        }
+      },
+      "TextToVideoResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Task ID."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "Task processing state:\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model parameter used for this call."
+          },
+          "style": {
+            "type": "string",
+            "description": "Style parameter used for this call."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt used for this call."
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration parameter used for this call."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed parameter used for this call."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Aspect ratio parameter used for this call."
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Resolution parameter used for this call."
+          },
+          "bgm": {
+            "type": "boolean",
+            "description": "Background music parameter used for this call."
+          },
+          "movement_amplitude": {
+            "type": "string",
+            "description": "Camera movement amplitude parameter used for this call."
+          },
+          "payload": {
+            "type": "string",
+            "description": "Payload parameter used for this call."
+          },
+          "credits": {
+            "type": "integer",
+            "description": "Credits consumed for this call."
+          },
+          "off_peak": {
+            "type": "boolean",
+            "description": "Off-peak mode parameter used for this call."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Task creation time."
+          }
+        }
+      },
+      "ViduVideoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the video task."
+          },
+          "task_id": {
+            "type": "string",
+            "description": "Task ID used to query video status."
+          },
+          "object": {
+            "type": "string",
+            "example": "video",
+            "description": "Object type, fixed as 'video'."
+          },
+          "model": {
+            "type": "string",
+            "description": "Model name used for generation."
+          },
+          "status": {
+            "type": "string",
+            "example": "queued",
+            "description": "Task status. Possible values: queued, processing, completed, failed."
+          },
+          "progress": {
+            "type": "integer",
+            "example": 0,
+            "description": "Task progress percentage (0-100)."
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Task creation timestamp (Unix timestamp)."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error description message."
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "Additional error data (optional)."
+          }
+        }
+      }
+    }
+  }
+}

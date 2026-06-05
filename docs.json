@@ -150,10 +150,15 @@
                       {
                         "group": "Vidu",
                         "pages": [
-                          "zh-Hans/zmodelVideo/vidu/vidu-text-to-video",
-                          "zh-Hans/zmodelVideo/vidu/vidu-image-to-video",
-                          "zh-Hans/zmodelVideo/vidu/vidu-reference-to-video",
-                          "zh-Hans/zmodelVideo/vidu/vidu-start-end-to-video",
+                          "zh-Hans/zmodelVideo/vidu/viduq3-turbo-text-to-video",
+                          "zh-Hans/zmodelVideo/vidu/viduq3-pro-text-to-video",
+                          "zh-Hans/zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
+                          "zh-Hans/zmodelVideo/vidu/viduq3-turbo-image-to-video",
+                          "zh-Hans/zmodelVideo/vidu/viduq3-pro-image-to-video",
+                          "zh-Hans/zmodelVideo/vidu/viduq3-turbo-reference-to-video",
+                          "zh-Hans/zmodelVideo/vidu/viduq3-reference-to-video",
+                          "zh-Hans/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
+                          "zh-Hans/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
                           "zh-Hans/zmodelVideo/vidu/vidu-query-task-status"
                         ]
                       },
@@ -398,10 +403,15 @@
                       {
                         "group": "Vidu",
                         "pages": [
-                          "en/zmodelVideo/vidu/vidu-text-to-video",
-                          "en/zmodelVideo/vidu/vidu-image-to-video",
-                          "en/zmodelVideo/vidu/vidu-reference-to-video",
-                          "en/zmodelVideo/vidu/vidu-start-end-to-video",
+                          "en/zmodelVideo/vidu/viduq3-turbo-text-to-video",
+                          "en/zmodelVideo/vidu/viduq3-pro-text-to-video",
+                          "en/zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
+                          "en/zmodelVideo/vidu/viduq3-turbo-image-to-video",
+                          "en/zmodelVideo/vidu/viduq3-pro-image-to-video",
+                          "en/zmodelVideo/vidu/viduq3-turbo-reference-to-video",
+                          "en/zmodelVideo/vidu/viduq3-reference-to-video",
+                          "en/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
+                          "en/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
                           "en/zmodelVideo/vidu/vidu-query-task-status"
                         ]
                       },

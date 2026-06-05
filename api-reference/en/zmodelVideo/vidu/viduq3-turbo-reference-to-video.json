@@ -1,0 +1,455 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu Reference-to-Video (viduq3-turbo)",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/v1/videos/reference2video": {
+      "post": {
+        "summary": "Vidu Reference-to-Video (viduq3-turbo)",
+        "operationId": "viduReferenceToVideoEnViduq3Turbo",
+        "description": "Generate videos using the Vidu model based on reference subjects. Supports defining characters/objects through images and text, and referencing them in prompts. After submission, query status via `GET /vidu/v1/videos/{task_id}`. Uses model viduq3-turbo.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferenceToVideoRequest"
+              },
+              "examples": {
+                "basic_reference_video": {
+                  "summary": "Basic reference-to-video",
+                  "value": {
+                    "model": "viduq3-turbo",
+                    "subjects": [
+                      {
+                        "name": "XiaoMing",
+                        "images": [
+                          "https://example.com/xiaoming.png"
+                        ]
+                      },
+                      {
+                        "name": "XiaoHong",
+                        "images": [
+                          "https://example.com/xiaohong.png"
+                        ]
+                      }
+                    ],
+                    "prompt": "@XiaoMing and @XiaoHong are cooking together, and both say they love hot pot.",
+                    "duration": 5
+                  }
+                },
+                "with_audio_generation": {
+                  "summary": "Reference video with audio generation (q3 model)",
+                  "value": {
+                    "model": "viduq3-turbo",
+                    "auto_subjects": false,
+                    "subjects": [
+                      {
+                        "name": "CharacterA",
+                        "images": [
+                          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAE..."
+                        ],
+                        "voice_id": "voice_123456"
+                      }
+                    ],
+                    "audio": true,
+                    "audio_type": "all",
+                    "prompt": "@CharacterA is introducing product features",
+                    "duration": 8,
+                    "resolution": "1080p"
+                  }
+                },
+                "multi_image_subject": {
+                  "summary": "Multi-image subject reference",
+                  "value": {
+                    "model": "viduq3-turbo",
+                    "subjects": [
+                      {
+                        "name": "Product",
+                        "images": [
+                          "https://example.com/product_front.jpg",
+                          "https://example.com/product_side.jpg",
+                          "https://example.com/product_back.jpg"
+                        ]
+                      }
+                    ],
+                    "prompt": "@Product rotates on the display stand",
+                    "aspect_ratio": "1:1",
+                    "seed": 42
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submission successful, returns a video task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferenceToVideoResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Submission successful",
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "viduq3-turbo",
+                      "prompt": "@1 and @2 are cooking together, and both say they love hot pot.",
+                      "duration": 8,
+                      "seed": 123456789,
+                      "resolution": "1080p",
+                      "movement_amplitude": "auto",
+                      "payload": "",
+                      "off_peak": false,
+                      "credits": "15",
+                      "created_at": "2025-01-01T15:41:31.968916Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Invalid parameters",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "Request body format error or invalid field values",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded or insufficient quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient account quota, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "server_error": {
+                    "summary": "Server error",
+                    "value": {
+                      "code": "internal_server_error",
+                      "message": "Internal server error, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ReferenceToVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "subjects",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "viduq3-turbo"
+            ],
+            "description": "Video generation model name.\n- **viduq3-turbo**: Supports intelligent scene switching and simultaneous audio and video output, boasts the fastest generation speed, and offers the highest cost-effectiveness"
+          },
+          "auto_subjects": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to use the intelligent entity library capability.\n- **true**: Utilize the capabilities of the intelligent agent library\n- **false**: Do not use the intelligent agent library capability"
+          },
+          "subjects": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 7,
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            },
+            "description": "List of subjects.\n- When using q3, q2, q1, and 2.0 series models, only image and text subjects can be used, with a maximum of 7 subjects\n- When using the q2-pro model, video subjects, text subjects, and image subjects can be employed, with no more than 4 image or text subjects, and no more than 2 video subjects (or 1 temporary video subject)\n- viduq3-mix does not support the use of entities for the time being"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "Text prompt for describing video generation content, with a maximum length of 5000 characters.\nYou can reference subject content using @subject_name. For example: `@XiaoMing and @XiaoHong are cooking together, and both say they love hot pot.`"
+          },
+          "voice_id": {
+            "type": "string",
+            "description": "Voice ID, used to determine the voice character in the video.\nThe system will automatically recommend a suitable voice, and you can also clone any voice through the Voice Cloning API. The voice_id parameters can be used interchangeably."
+          },
+          "audio": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to enable audio-video output capability.\n- **false**: Outputs silent video\n- **true**: Outputs video with generated speech and background music based on the prompt\nNote: audio defaults to true for viduq3 and viduq3-turbo, and false for other models"
+          },
+          "audio_type": {
+            "type": "string",
+            "enum": [
+              "all",
+              "speech_only",
+              "sound-effect_only"
+            ],
+            "default": "all",
+            "description": "Audio type, required when audio is true.\n- **all**: Sound effects + vocals\n- **speech_only**: Vocal only\n- **sound-effect_only**: Sound effects only"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds. Default values vary by model:\n- **viduq3, viduq3-turbo**: default 5, available: 3-16\n- **viduq2**: default 5, available: 1-10\n- **viduq1**: default 5, available: 5\n- **vidu2.0**: default 4, available: 4"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed.\n- Defaults to a random seed number\n- Manually set values will override the default random seed"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1"
+            ],
+            "default": "16:9",
+            "description": "The aspect ratio of the output video.\n- Default: 16:9\n- Accepted values: 16:9, 9:16, 1:1\nNote: q2, q3 models support any aspect ratio"
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "360p",
+              "540p",
+              "720p",
+              "1080p"
+            ],
+            "description": "Resolution (based on model & duration):\n- **viduq3, viduq3-turbo (3-16s)**: default 720p, options: 540p, 720p, 1080p\n- **viduq2 (1-10s)**: default 720p, options: 540p, 720p, 1080p\n- **viduq1 (5s)**: default 1080p, options: 1080p\n- **vidu2.0 (4s)**: default 360p, options: 360p, 720p"
+          },
+          "movement_amplitude": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "small",
+              "medium",
+              "large"
+            ],
+            "default": "auto",
+            "description": "The movement amplitude of objects in the frame.\n- Default: auto\n- Accepted values: auto, small, medium, large\nNote: Modifying this parameter is ineffective for q2, q3 models."
+          },
+          "payload": {
+            "type": "string",
+            "maxLength": 1048576,
+            "description": "Transparent transmission parameters.\nNo processing, only data transmission, with a maximum length of 1048576 characters."
+          },
+          "off_peak": {
+            "type": "boolean",
+            "default": false,
+            "description": "Off peak mode.\n- **true**: Off peak generate mode\n- **false**: Normal generate mode\nNotes:\n1. The off_peak mode consumes lower points (see Pricing for details)\n2. Tasks submitted in off peak mode will be generated within 48 hours. Tasks that are not completed will be automatically cancelled and their points will be refunded\n3. We also support cancel off_peak tasks\n4. The q3 model supports peak-shifting tasks when the audio parameter is true; the q2, q1, and 2.0 series models support peak-shifting tasks when the audio parameter is false"
+          }
+        }
+      },
+      "ReferenceToVideoResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Task ID."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "Task processing state:\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model parameter used for this call."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt used for this call."
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Images used for this call."
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration parameter used for this call."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed parameter used for this call."
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "Aspect ratio parameter used for this call."
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Resolution parameter used for this call."
+          },
+          "bgm": {
+            "type": "boolean",
+            "description": "Whether to use background music for this call."
+          },
+          "audio": {
+            "type": "boolean",
+            "description": "Whether to use audio for this call."
+          },
+          "audio_type": {
+            "type": "string",
+            "description": "Audio type parameter used for this call."
+          },
+          "movement_amplitude": {
+            "type": "string",
+            "description": "Camera movement amplitude parameter used for this call."
+          },
+          "payload": {
+            "type": "string",
+            "description": "Payload parameter used for this call."
+          },
+          "off_peak": {
+            "type": "boolean",
+            "description": "Off-peak mode parameter used for this call."
+          },
+          "credits": {
+            "type": "string",
+            "description": "Credits consumed for this call."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Task creation time."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error description message."
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "Additional error data (optional)."
+          }
+        }
+      },
+      "Subject": {
+        "type": "object",
+        "required": [
+          "name",
+          "images"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Subject name.\nCan be referenced in prompts via @subject_name."
+          },
+          "images": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string"
+            },
+            "description": "URLs of images corresponding to the subject.\n- Each subject supports up to 3 images\n- Assets can be provided via URLs or Base64 encode\n- You must use one of the following codecs: PNG, JPEG, JPG, WebP\n- The dimensions of the images must be at least 128x128 pixels\n- The aspect ratio of the images must be between 1:4 and 4:1\n- All images are limited to 50MB\n- The post body of the HTTP request should not exceed 20MB, and it must include an appropriate content type string\n- Base64 format example: `data:image/png;base64,{base64_encode}`"
+          },
+          "voice_id": {
+            "type": "string",
+            "description": "Voice ID, used to determine the voice character for this subject.\nThe system will automatically recommend a suitable voice, and you can also clone any voice through the Voice Cloning API."
+          }
+        }
+      }
+    }
+  }
+}
