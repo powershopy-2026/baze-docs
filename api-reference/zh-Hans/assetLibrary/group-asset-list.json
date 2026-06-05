@@ -60,7 +60,7 @@
                   },
                   "login_style": {
                     "type": "string",
-                    "description": "登录方式"
+                    "description": "登录方式 google与github"
                   }
                 },
                 "required": [

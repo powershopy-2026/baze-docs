@@ -13,7 +13,7 @@
   "paths": {
     "/interface/group-create": {
       "post": {
-        "summary": "group-create",
+        "summary": "创建组",
         "deprecated": false,
         "description": "",
         "tags": [
@@ -45,15 +45,20 @@
                   },
                   "email": {
                     "description": "email",
-                    "example": "",
+                    "example": "hua20128@gmail.com",
                     "type": "string"
                   },
                   "login_style": {
-                    "description": "google,github",
-                    "example": "",
+                    "description": "Login methods: Google and GitHub",
+                    "example": "google",
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "file",
+                  "email",
+                  "login_style"
+                ]
               },
               "examples": {}
             }

@@ -45,15 +45,20 @@
                   },
                   "email": {
                     "description": "邮箱",
-                    "example": "",
+                    "example": "hua20128@gmail.com",
                     "type": "string"
                   },
                   "login_style": {
-                    "description": "google,github",
-                    "example": "",
+                    "description": "登录方式 google与github",
+                    "example": "google",
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "file",
+                  "email",
+                  "login_style"
+                ]
               },
               "examples": {}
             }
