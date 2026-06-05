@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "默认模块",
     "description": "",
@@ -15,7 +15,7 @@
       "post": {
         "summary": "批量上传文件",
         "deprecated": false,
-        "description": "异步上传资产文件，先获取到task_id，然后用task_id查询asset_id",
+        "description": "",
         "tags": [
           "interface"
         ],
@@ -25,7 +25,7 @@
             "in": "header",
             "description": "",
             "required": false,
-            "example": "",
+            "example": "8HpJQT81y8Z2ZJvsnq5z32Vpm6rUWFAm",
             "schema": {
               "type": "string"
             }
@@ -40,7 +40,7 @@
                   "file": {
                     "format": "binary",
                     "type": "string",
-                    "description": "文件",
+                    "description": "文件（图片：JPEG、PNG、WebP、BMP、TIFF、GIF。< 30MB。比例 0.4-2.5。300-6000px，视频：MP4、MOV。480p/720p。2-15s。≤ 50MB。24-60fps，音频：WAV、MP3。2-15s。≤ 15MB）",
                     "example": ""
                   },
                   "email": {
@@ -49,11 +49,22 @@
                     "type": "string"
                   },
                   "login_style": {
-                    "description": "登录方式 google与github",
-                    "example": "google",
+                    "description": "google,github",
+                    "example": "",
+                    "type": "string"
+                  },
+                  "group_id": {
+                    "description": "组ID",
+                    "example": "",
                     "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "file",
+                  "email",
+                  "login_style",
+                  "group_id"
+                ]
               },
               "examples": {}
             }
@@ -108,6 +119,7 @@
       }
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {},
     "responses": {},
