@@ -286,6 +286,28 @@
             "type": "boolean",
             "default": false,
             "description": "错峰模式。\n- **true**: 错峰生成模式\n- **false**: 正常生成模式\n错峰模式消耗更低积分（详见定价说明）。错峰模式下提交的任务将在 48 小时内生成，未完成的任务将自动取消并退还积分。支持取消错峰任务。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印。\n- **true**: 添加水印\n- **false**: 不添加水印\n\n注1：目前水印内容为固定，内容由AI生成，默认不加\n注2：您可以通过 `watermarked_url` 参数查询获取带水印的视频内容，详情见查询任务接口",
+            "default": false
+          },
+          "wm_position": {
+            "type": "integer",
+            "description": "水印位置，表示水印出现在图片的位置，可选项为：\n- **1**: 左上角\n- **2**: 右上角\n- **3**: 右下角\n- **4**: 左下角\n\n默认为：3",
+            "default": 3
+          },
+          "wm_url": {
+            "type": "string",
+            "description": "水印内容，此处为图片URL。不传时，使用默认水印：内容由AI生成"
+          },
+          "meta_data": {
+            "type": "string",
+            "description": "元数据标识，json格式字符串，透传字段，您可以自定义格式或使用示例格式，示例如下：\n```json\n{\n  \"Label\": \"your_label\",\n  \"ContentProducer\": \"your_content_producer\",\n  \"ContentPropagator\": \"your_content_propagator\",\n  \"ProduceID\": \"your_product_id\",\n  \"PropagateID\": \"your_propagate_id\",\n  \"ReservedCode1\": \"your_reserved_code1\",\n  \"ReservedCode2\": \"your_reserved_code2\"\n}\n```\n该参数为空时，默认使用vidu生成的元数据标识"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback 协议。需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致。\n\n回调返回的 \"status\" 包括以下状态：\n- **processing**: 任务处理中\n- **success**: 任务完成（如发送失败，回调三次）\n- **failed**: 任务失败（如发送失败，回调三次）"
           }
         }
       },
@@ -357,6 +379,10 @@
           "credits": {
             "type": "integer",
             "description": "本次调用消耗的积分。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "本次提交任务是否使用水印。"
           },
           "created_at": {
             "type": "string",
