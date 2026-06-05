@@ -49,8 +49,8 @@
                     "type": "string"
                   },
                   "login_style": {
-                    "description": "google,github",
-                    "example": "",
+                    "description": "登录方式 google与github",
+                    "example": "google",
                     "type": "string"
                   },
                   "group_id": {

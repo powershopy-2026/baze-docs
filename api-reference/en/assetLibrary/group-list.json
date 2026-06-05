@@ -33,9 +33,12 @@
                     "type": "integer"
                   },
                   "email": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "email"
                   },
                   "login_style": {
+                    "description": "Login methods: Google and GitHub",
+                    "example": "google",
                     "type": "string"
                   }
                 },

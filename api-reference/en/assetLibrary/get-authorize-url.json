@@ -13,9 +13,9 @@
   "paths": {
     "/interface/get-authorize-url": {
       "post": {
-        "summary": "Obtain authentication URL",
+        "summary": "Obtain the authentication URL",
         "deprecated": false,
-        "description": "Obtain authentication URL",
+        "description": "Obtain the authentication URL",
         "tags": [
           "interface"
         ],
@@ -27,10 +27,14 @@
                 "type": "object",
                 "properties": {
                   "email": {
-                    "type": "string"
+                    "type": "string",
+                    "title": "email",
+                    "description": "hua20128@gmail.com"
                   },
                   "login_style": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Login methods: Google and GitHub",
+                    "title": "Login method"
                   }
                 },
                 "required": [

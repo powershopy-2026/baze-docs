@@ -27,10 +27,14 @@
                 "type": "object",
                 "properties": {
                   "email": {
-                    "type": "string"
+                    "type": "string",
+                    "title": "邮箱",
+                    "description": "hua20128@gmail.com"
                   },
                   "login_style": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "登录方式 google与github",
+                    "title": "登录方式"
                   }
                 },
                 "required": [

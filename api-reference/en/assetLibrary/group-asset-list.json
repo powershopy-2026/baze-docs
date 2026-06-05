@@ -60,7 +60,8 @@
                   },
                   "login_style": {
                     "type": "string",
-                    "description": "login style"
+                    "description": "Login methods: Google and GitHub",
+                    "title": "Login method"
                   }
                 },
                 "required": [

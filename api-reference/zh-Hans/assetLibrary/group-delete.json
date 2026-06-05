@@ -27,13 +27,16 @@
                 "type": "object",
                 "properties": {
                   "group_id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "组ID"
                   },
                   "email": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "邮箱"
                   },
                   "login_style": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "登录方式 google与github"
                   }
                 },
                 "required": [
