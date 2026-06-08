@@ -203,7 +203,7 @@
             "enum": [
               "viduq3"
             ],
-            "description": "模型名称可选值：viduq3-turbo、viduq3、viduq2-pro、viduq2、viduq1、vidu2.0\n- viduq3-turbo：支持智能切镜，支持音画同出，生成速度最快，性价比最高\n- viduq3：支持智能切镜，支持音画同出，多机位的一致性更出色"
+            "description": "模型名称可选值：viduq3\n- viduq3-turbo：支持智能切镜，支持音画同出，生成速度最快，性价比最高\n- viduq3：支持智能切镜，支持音画同出，多机位的一致性更出色"
           },
           "auto_subjects": {
             "type": "boolean",

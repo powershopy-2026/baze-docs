@@ -188,7 +188,7 @@
             "enum": [
               "viduq3-pro"
             ],
-            "description": "模型名称\n可选值：viduq3-turbo、viduq3-pro、viduq3-pro-fast\n- viduq3-pro-fast：高效生成优质音视频内容，生成速度更快，性价比高\n- viduq3-turbo：对比viduq3-pro，生成速度更快\n- viduq3-pro：高效生成优质音视频内容，让视频内容更生动、更形象、更立体，效果更好"
+            "description": "模型名称\n可选值：viduq3-pro\n- viduq3-pro-fast：高效生成优质音视频内容，生成速度更快，性价比高\n- viduq3-turbo：对比viduq3-pro，生成速度更快\n- viduq3-pro：高效生成优质音视频内容，让视频内容更生动、更形象、更立体，效果更好"
           },
           "images": {
             "type": "array",
