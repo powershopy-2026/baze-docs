@@ -40,6 +40,14 @@
                     "description": "Login methods: Google and GitHub",
                     "example": "google",
                     "type": "string"
+                  },
+                  "group_type": {
+                    "type": "integer",
+                    "description": "0: Virtual group, 1 real person group (default 0)"
+                  },
+                  "real_human_type": {
+                    "type": "integer",
+                    "description": "Real person group 1: Create, 2: Authorize (default 1)"
                   }
                 },
                 "required": [
@@ -51,7 +59,9 @@
                 "page_size": 20,
                 "page": 1,
                 "email": "603842915@qq.com",
-                "login_style": "github"
+                "login_style": "github",
+                "group_type":0,
+                "real_human_type":0
               }
             }
           },
@@ -152,10 +162,6 @@
     "securitySchemes": {}
   },
   "servers": [
-    {
-      "url": "https://baze.powerbuyin.top/api",
-      "description": "测试环境"
-    },
     {
       "url": "https://powertokens.ai/api",
       "description": "正式环境"
