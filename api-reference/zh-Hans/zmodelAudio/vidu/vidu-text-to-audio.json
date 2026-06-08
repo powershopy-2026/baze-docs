@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Vidu 文生音频",
+    "title": "文生音频",
     "version": "1.0.0"
   },
   "servers": [
@@ -10,9 +10,9 @@
     }
   ],
   "paths": {
-    "/vidu/v1/audio/text2audio": {
+    "/vidu/ent/v2/text2audio": {
       "post": {
-        "summary": "Vidu 文生音频",
+        "summary": "文生音频",
         "operationId": "viduTextToAudio",
         "description": "适用于通过输入提示词，生成一段音频（支持生成音效和背景音乐 BGM）。提交任务后，请通过 `GET /vidu/v1/{task_id}` 查询状态。",
         "requestBody": {
@@ -88,12 +88,12 @@
             "enum": [
               "audio1.0"
             ],
-            "description": "音频生成模型名称。\n- **audio1.0**: 支持基于文本提示词生成音频"
+            "description": "模型名称可选值：audio1.0"
           },
           "prompt": {
             "type": "string",
             "maxLength": 1500,
-            "description": "文本提示词，用于描述要生成的音频内容，最大长度 1500 字符。"
+            "description": "文本提示词用于生成音频的描述。字符长度不能超过 1500 个字符"
           },
           "duration": {
             "type": "number",
@@ -101,11 +101,15 @@
             "default": 10,
             "minimum": 2,
             "maximum": 10,
-            "description": "音频时长（秒）。\n- 默认值：10 秒\n- 取值范围：2-10 秒"
+            "description": "音频时长默认 10，可选范围：2～10 秒内"
           },
           "seed": {
             "type": "integer",
-            "description": "随机种子。\n- 如果未提供或设置为 0，将使用随机值\n- 固定值可确保结果可复现"
+            "description": "随机种子随机种子，若不传或传0则自动生成随机数，传固定值生成确定性结果"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback 协议需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致回调返回的\"status\"包括以下状态：- processing 任务处理中- success 任务完成（如发送失败，回调三次）- failed 任务失败（如发送失败，回调三次）Vidu采用回调签名算法进行认证，详情见：回调签名算法"
           }
         }
       }
