@@ -10,7 +10,7 @@
     }
   ],
   "paths": {
-    "/vidu/v1/videos/text2video": {
+    "/vidu/ent/v2/text2video": {
       "post": {
         "summary": "Vidu Text-to-Video (viduq3-turbo)",
         "operationId": "viduTextToVideoEnViduq3Turbo",
