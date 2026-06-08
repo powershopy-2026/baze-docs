@@ -23,39 +23,19 @@
                 "$ref": "#/components/schemas/ReferenceToImageRequest"
               },
               "examples": {
-                "text_to_image": {
-                  "summary": "纯文本生图（viduq2）",
-                  "value": {
-                    "model": "viduq2",
-                    "prompt": "一只可爱的小猫在草地上玩耍，阳光明媚",
-                    "aspect_ratio": "16:9",
-                    "resolution": "4K",
-                    "seed": 42
-                  }
-                },
                 "reference_to_image": {
-                  "summary": "参考图片生图",
                   "value": {
                     "model": "viduq2",
                     "images": [
-                      "https://example.com/reference1.png",
-                      "https://example.com/reference2.png"
+                      "your_image_url1",
+                      "your_image_url2",
+                      "your_image_url3"
                     ],
-                    "prompt": "保持角色风格，生成一张新的场景图",
-                    "aspect_ratio": "1:1",
-                    "resolution": "2K"
-                  }
-                },
-                "image_editing": {
-                  "summary": "图片编辑",
-                  "value": {
-                    "model": "viduq2",
-                    "images": [
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAE..."
-                    ],
-                    "prompt": "将背景改为夜晚星空，添加月亮",
-                    "aspect_ratio": "auto",
-                    "resolution": "1080p"
+                    "prompt": "your_prompt",
+                    "seed": 0,
+                    "aspect_ratio": "16:9",
+                    "resolution": "2K",
+                    "payload": ""
                   }
                 }
               }
