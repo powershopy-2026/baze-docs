@@ -215,7 +215,7 @@
             "items": {
               "type": "string"
             },
-            "description": "图像参考\n- **viduq2**: 支持输入 0～7 张图片\n模型将以此参数中传入的图片中的主题为参考，生成与图片中主体一致的视频。\n注1：支持传入图片 Base64 编码或图片URL（确保可访问）\n注2：图片支持 png、jpeg、jpg、webp格式\n注3：图片像素不能小于 128*128，且比例需要小于1:4或者4:1\n注4: 且大小不超过50M\n注5：请注意，http请求的post body不超过20MB，且编码必须包含适当的内容类型字符串，例如：\ndata:image/png;base64,{base64_encode}"
+            "description": "图像参考\n\n- **viduq2**: 支持输入 0～7 张图片\n\n模型将以此参数中传入的图片中的主题为参考，生成与图片中主体一致的视频。\n\n- 注1：支持传入图片 Base64 编码或图片URL（确保可访问）\n- 注2：图片支持 png、jpeg、jpg、webp格式\n- 注3：图片像素不能小于 128*128，且比例需要小于1:4或者4:1\n- 注4: 且大小不超过50M\n- 注5：请注意，http请求的post body不超过20MB，且编码必须包含适当的内容类型字符串，例如：\n- data:image/png;base64,{base64_encode}"
           },
           "prompt": {
             "type": "string",
@@ -224,7 +224,7 @@
           },
           "seed": {
             "type": "integer",
-            "description": "随机种子。\n- 默认为随机种子数\n- 手动设置值将覆盖默认随机种子"
+            "description": "随机种子参数 \n- 当默认不传或者传0时，会使用随机数替代\n- 手动设置则使用设置的种子"
           },
           "aspect_ratio": {
             "type": "string",
