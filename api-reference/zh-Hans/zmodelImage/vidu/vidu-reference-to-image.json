@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Vidu 参考生图",
+    "title": "图片生成",
     "version": "1.0.0"
   },
   "servers": [
@@ -10,9 +10,9 @@
     }
   ],
   "paths": {
-    "/vidu/v1/images/reference2image": {
+    "/vidu/ent/v2/reference2image": {
       "post": {
-        "summary": "Vidu 参考生图",
+        "summary": "图片生成",
         "operationId": "viduReferenceToImage",
         "description": "使用 Vidu 模型基于参考图片生成新图片。",
         "requestBody": {
@@ -206,7 +206,7 @@
             "enum": [
               "viduq2"
             ],
-            "description": "图片生成模型名称。\n- **viduq2**: 支持文生图、图片编辑、参考生图，效果更佳"
+            "description": "模型名称\n- **viduq2**: 支持文生图、图片编辑、参考生图"
           },
           "images": {
             "type": "array",
@@ -215,7 +215,7 @@
             "items": {
               "type": "string"
             },
-            "description": "参考图片列表。\n- **viduq2**: 支持输入 0-7 张图片\n模型将基于输入的图片生成具有相同主体的新图片。\n- 支持 Base64 或 URL 格式（URL 必须可访问）\n- 支持格式：png, jpeg, jpg, webp\n- 图片分辨率不得小于 128×128\n- 宽高比必须在 1:4 到 4:1 之间\n- 单张图片大小不得超过 50MB\n- HTTP 请求体不得超过 20MB，且编码必须包含适当的内容类型字符串\n- Base64 格式示例：`data:image/png;base64,{base64_encode}`"
+            "description": "图像参考\n- **viduq2**: 支持输入 0～7 张图片\n模型将以此参数中传入的图片中的主题为参考，生成与图片中主体一致的视频。\n注1：支持传入图片 Base64 编码或图片URL（确保可访问）\n注2：图片支持 png、jpeg、jpg、webp格式\n注3：图片像素不能小于 128*128，且比例需要小于1:4或者4:1\n注4: 且大小不超过50M\n注5：请注意，http请求的post body不超过20MB，且编码必须包含适当的内容类型字符串，例如：\ndata:image/png;base64,{base64_encode}"
           },
           "prompt": {
             "type": "string",
@@ -256,6 +256,10 @@
             "type": "string",
             "maxLength": 1048576,
             "description": "透传参数。\n不做处理，仅做数据透传，最大长度 1048576 字符。"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback 协议\n需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致\n回调返回的\"status\"包括以下状态：\n- processing 任务处理中\n- success 任务完成（如发送失败，回调三次）\n- failed 任务失败（如发送失败，回调三次）\nVidu采用回调签名算法进行认证，详情见：回调签名算法"
           }
         }
       },

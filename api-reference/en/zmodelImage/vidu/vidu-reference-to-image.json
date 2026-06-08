@@ -10,7 +10,7 @@
     }
   ],
   "paths": {
-    "/vidu/v1/images/reference2image": {
+    "/vidu/ent/v2/reference2image": {
       "post": {
         "summary": "Vidu Reference-to-Image",
         "operationId": "viduReferenceToImageEn",
