@@ -10,11 +10,11 @@
     }
   ],
   "paths": {
-    "/vidu/v1/videos/img2video": {
+    "/vidu/ent/v2/img2video": {
       "post": {
         "summary": "Vidu 图生视频 (viduq3-pro-fast)",
         "operationId": "viduImageToVideoViduq3ProFast",
-        "description": "使用 Vidu 模型将图片转换为视频。提交任务后，请通过 `GET /vidu/v1/tasks/{task_id}` 查询状态。 使用模型 viduq3-pro-fast。",
+        "description": "使用 Vidu 模型将图片转换为视频。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}/creations` 查询状态。 使用模型 viduq3-pro-fast。",
         "requestBody": {
           "required": true,
           "content": {
