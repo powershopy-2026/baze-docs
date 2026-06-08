@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Vidu 可控文生音效",
+    "title": "可控文生音效",
     "version": "1.0.0"
   },
   "servers": [
@@ -10,9 +10,9 @@
     }
   ],
   "paths": {
-    "/vidu/v1/audio/timing2audio": {
+    "/vidu/ent/v2/timing2audio": {
       "post": {
-        "summary": "Vidu 可控文生音效",
+        "summary": "可控文生音效",
         "operationId": "viduTimingToAudio",
         "description": "使用 Vidu 模型基于时间轴生成可控音效片段。创作者可以通过时间轴自由控制音频中多个声音事件的时机。（不支持背景音乐）提交任务后，请通过 `GET /vidu/v1/audio/{task_id}` 查询状态。",
         "requestBody": {
@@ -30,81 +30,22 @@
                     "duration": 10,
                     "timing_prompts": [
                       {
-                        "from": 0,
-                        "to": 3,
-                        "prompt": "雨声"
+                        "from": 0.0,
+                        "to": 3.0,
+                        "prompt": "清晨的鸟叫声"
                       },
                       {
-                        "from": 2,
-                        "to": 5,
-                        "prompt": "雷声"
+                        "from": 3.0,
+                        "to": 6.0,
+                        "prompt": "远处传来火车驶过的声音"
                       },
                       {
-                        "from": 6,
-                        "to": 9,
-                        "prompt": "鸟鸣声"
+                        "from": 5.0,
+                        "to": 9.5,
+                        "prompt": "海浪轻轻拍打沙滩"
                       }
                     ],
-                    "seed": 42
-                  }
-                },
-                "overlapping_events": {
-                  "summary": "重叠声音事件",
-                  "value": {
-                    "model": "audio1.0",
-                    "duration": 8,
-                    "timing_prompts": [
-                      {
-                        "from": 0,
-                        "to": 8,
-                        "prompt": "环境背景音"
-                      },
-                      {
-                        "from": 1,
-                        "to": 3,
-                        "prompt": "脚步声"
-                      },
-                      {
-                        "from": 4,
-                        "to": 6,
-                        "prompt": "开门声"
-                      },
-                      {
-                        "from": 7,
-                        "to": 8,
-                        "prompt": "关门声"
-                      }
-                    ]
-                  }
-                },
-                "precise_control": {
-                  "summary": "精确时序控制",
-                  "value": {
-                    "model": "audio1.0",
-                    "duration": 5,
-                    "timing_prompts": [
-                      {
-                        "from": 0,
-                        "to": 0.5,
-                        "prompt": "手机解锁声"
-                      },
-                      {
-                        "from": 1,
-                        "to": 1.5,
-                        "prompt": "键盘敲击声"
-                      },
-                      {
-                        "from": 2.5,
-                        "to": 3,
-                        "prompt": "消息提示音"
-                      },
-                      {
-                        "from": 4,
-                        "to": 4.5,
-                        "prompt": "通知铃声"
-                      }
-                    ],
-                    "seed": 123456
+                    "seed": 0
                   }
                 }
               }
@@ -146,7 +87,7 @@
             "enum": [
               "audio1.0"
             ],
-            "description": "音频生成模型名称。\n- **audio1.0**: 支持基于时间轴生成可控音效"
+            "description": "模型名称可选值：audio1.0"
           },
           "duration": {
             "type": "number",
@@ -154,7 +95,7 @@
             "default": 10,
             "minimum": 2,
             "maximum": 10,
-            "description": "音频时长（秒）。\n- 默认值：10 秒\n- 取值范围：2-10 秒"
+            "description": "音频时长默认 10，可选范围：2～10 秒内"
           },
           "timing_prompts": {
             "type": "array",
@@ -162,11 +103,15 @@
             "items": {
               "$ref": "#/components/schemas/TimingPrompt"
             },
-            "description": "基于时间轴的声音事件提示词列表。\n每个项目定义一个声音事件，包含 from 和 to 时间戳以及 prompt 描述。\n注意事项：\n- 每个事件的 prompt 最大长度 1500 字符\n- 事件可以重叠\n- from 和 to 必须在 [0, duration] 范围内"
+            "description": "可控音效参数。描述多个音效事件及各自时间区间，支持多个事件重叠。- 单个事件最大提示词字符数：1500 字符- from、to 必须在 [0, duration] 区间内"
           },
           "seed": {
             "type": "integer",
-            "description": "随机种子。\n- 如果未提供或设置为 0，将使用随机值\n- 固定值可确保结果可复现"
+            "description": "随机种子随机种子，若不传或传0则自动生成随机数，传固定值生成确定性结果"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback 协议需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致回调返回的\"status\"包括以下状态：- processing 任务处理中- success 任务完成（如发送失败，回调三次）- failed 任务失败（如发送失败，回调三次）Vidu采用回调签名算法进行认证，详情见：回调签名算法"
           }
         }
       },

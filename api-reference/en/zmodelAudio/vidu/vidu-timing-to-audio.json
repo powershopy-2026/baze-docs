@@ -10,7 +10,7 @@
     }
   ],
   "paths": {
-    "/vidu/v1/audio/timing2audio": {
+    "/vidu/ent/v2/timing2audio": {
       "post": {
         "summary": "Vidu Timing-to-Audio",
         "operationId": "viduTimingToAudioEn",
@@ -167,6 +167,10 @@
           "seed": {
             "type": "integer",
             "description": "Random seed.\n- If not provided or set to 0, a random value will be used\n- Fixed value ensures reproducibility"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback When creating a task, you need to actively set the callback_url with a POST request. When the video generation task changes its status, Vidu will send a callback request to this URL, containing the latest status of the task. The structure of the callback request content will be the same as the return body of the GET Generation API.The \"status\" in the callback response includes the following states:- processing: Task is being processed.- success: Task is completed (if sending fails, it will retry the callback three times).- failed: Task failed (if sending fails, it will retry the callback three times).Vidu uses a callback signature algorithm for verification, check out the details here: Callback Signature"
           }
         }
       },

@@ -256,6 +256,10 @@
             "type": "string",
             "maxLength": 1048576,
             "description": "Transparent transmission parameters.\nNo processing, only data transmission, with a maximum length of 1048576 characters."
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback\nWhen creating a task, you need to actively set the callback_url with a POST request. When the video generation task changes its status, Vidu will send a callback request to this URL, containing the latest status of the task. The structure of the callback request content will be the same as the return body of the Get Generation API.\nThe \"status\" in the callback response includes the following states:\n- processing: Task is being processed.\n- success: Task is completed (if sending fails, it will retry the callback three times).\n- failed: Task failed (if sending fails, it will retry the callback three times).\nVidu uses a callback signature algorithm for verification, check out the details here: Callback Signature"
           }
         }
       },
