@@ -10,11 +10,11 @@
     }
   ],
   "paths": {
-    "/vidu/v1/videos/reference2video": {
+    "/vidu/ent/v2/reference2video": {
       "post": {
         "summary": "Vidu Reference-to-Video (viduq3)",
         "operationId": "viduReferenceToVideoEnViduq3",
-        "description": "Generate videos using the Vidu model based on reference subjects. Supports defining characters/objects through images and text, and referencing them in prompts. After submission, query status via `GET /vidu/v1/videos/{task_id}`. Uses model viduq3.",
+        "description": "Generate videos using the Vidu model based on reference subjects. Supports defining characters/objects through images and text, and referencing them in prompts. After submission, query status via `GET /vidu/ent/v2/tasks/{task_id}`. Uses model viduq3.",
         "requestBody": {
           "required": true,
           "content": {
@@ -266,7 +266,7 @@
             "enum": [
               "all",
               "speech_only",
-              "sound-effect_only"
+              "sound_effect_only"
             ],
             "default": "all",
             "description": "Audio type, required when audio is true.\n- **all**: Sound effects + vocals\n- **speech_only**: Vocal only\n- **sound-effect_only**: Sound effects only"
@@ -319,6 +319,10 @@
             "type": "boolean",
             "default": false,
             "description": "Off peak mode.\n- **true**: Off peak generate mode\n- **false**: Normal generate mode\nNotes:\n1. The off_peak mode consumes lower points (see Pricing for details)\n2. Tasks submitted in off peak mode will be generated within 48 hours. Tasks that are not completed will be automatically cancelled and their points will be refunded\n3. We also support cancel off_peak tasks\n4. The q3 model supports peak-shifting tasks when the audio parameter is true; the q2, q1, and 2.0 series models support peak-shifting tasks when the audio parameter is false"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback\nWhen creating a task, you need to actively set the callback_url with a POST request. When the video generation task changes its status, Vidu will send a callback request to this URL, containing the latest status of the task. The structure of the callback request content will be the same as the return body of the GET Generation API.\nThe \"status\" in the callback response includes the following states:\n- processing: Task is being processed.\n- success: Task is completed (if sending fails, it will retry the callback three times).\n- failed: Task failed (if sending fails, it will retry the callback three times).\nVidu uses a callback signature algorithm for verification, check out the details here: Callback Signature"
           }
         }
       },

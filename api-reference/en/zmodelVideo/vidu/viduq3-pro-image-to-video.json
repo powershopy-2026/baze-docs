@@ -10,11 +10,11 @@
     }
   ],
   "paths": {
-    "/vidu/v1/videos/img2video": {
+    "/vidu/ent/v2/img2video": {
       "post": {
         "summary": "Vidu Image-to-Video (viduq3-pro)",
         "operationId": "viduImageToVideoEnViduq3Pro",
-        "description": "Convert images to videos using the Vidu model. After submission, query status via `GET /vidu/v1/videos/{task_id}`. Uses model viduq3-pro.",
+        "description": "Convert images to videos using the Vidu model. After submission, query status via `GET /vidu/ent/v2/tasks/{task_id}`. Uses model viduq3-pro.",
         "requestBody": {
           "required": true,
           "content": {
@@ -244,7 +244,7 @@
             "enum": [
               "all",
               "speech_only",
-              "sound-effect_only"
+              "sound_effect_only"
             ],
             "default": "all",
             "description": "Audio type, required when audio is true.\n- **all**: Sound effects + vocals\n- **speech_only**: Vocal only\n- **sound-effect_only**: Sound effects only\nNote: Currently, this parameter only supports audio splitting for q2, q1, and 2.0 series models."

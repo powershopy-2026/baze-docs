@@ -10,11 +10,11 @@
     }
   ],
   "paths": {
-    "/vidu/v1/videos/reference2video": {
+    "/vidu/ent/v2/reference2video": {
       "post": {
         "summary": "Vidu 参考生视频 (viduq3-turbo)",
         "operationId": "viduReferenceToVideoViduq3Turbo",
-        "description": "使用 Vidu 模型基于参考主体生成视频。支持通过图片、文本定义角色/物体，并在提示词中引用。提交任务后，请通过 `GET /vidu/v1/videos/{task_id}` 查询状态。 使用模型 viduq3-turbo。",
+        "description": "使用 Vidu 模型基于参考主体生成视频。支持通过图片、文本定义角色/物体，并在提示词中引用。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}` 查询状态。 使用模型 viduq3-turbo。",
         "requestBody": {
           "required": true,
           "content": {
@@ -24,65 +24,32 @@
               },
               "examples": {
                 "basic_reference_video": {
-                  "summary": "基础参考生视频",
+                  "summary": "参考生视频示例",
                   "value": {
                     "model": "viduq3-turbo",
                     "subjects": [
                       {
-                        "name": "小明",
+                        "name": "your_subject1_name",
                         "images": [
-                          "https://example.com/xiaoming.png"
-                        ]
+                          "your_image_url1",
+                          "your_image_url2",
+                          "your_image_url3"
+                        ],
+                        "voice_id": ""
                       },
                       {
-                        "name": "小红",
+                        "name": "your_subject2_name",
                         "images": [
-                          "https://example.com/xiaohong.png"
-                        ]
-                      }
-                    ],
-                    "prompt": "@小明 和 @小红 一起做饭，两人都说喜欢吃火锅。",
-                    "duration": 5
-                  }
-                },
-                "with_audio_generation": {
-                  "summary": "带音频生成的参考视频（q3 模型）",
-                  "value": {
-                    "model": "viduq3-turbo",
-                    "auto_subjects": false,
-                    "subjects": [
-                      {
-                        "name": "角色A",
-                        "images": [
-                          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAE..."
+                          "your_image_url4",
+                          "your_image_url5",
+                          "your_image_url6"
                         ],
-                        "voice_id": "voice_123456"
+                        "voice_id": ""
                       }
                     ],
-                    "audio": true,
-                    "audio_type": "all",
-                    "prompt": "@角色A 正在介绍产品功能",
+                    "prompt": "@your_subject1_name 和 @your_subject2_name 在一起吃火锅，并且旁白音说火锅大家都爱吃。",
                     "duration": 8,
-                    "resolution": "1080p"
-                  }
-                },
-                "multi_image_subject": {
-                  "summary": "多图片主体参考",
-                  "value": {
-                    "model": "viduq3-turbo",
-                    "subjects": [
-                      {
-                        "name": "产品",
-                        "images": [
-                          "https://example.com/product_front.jpg",
-                          "https://example.com/product_side.jpg",
-                          "https://example.com/product_back.jpg"
-                        ]
-                      }
-                    ],
-                    "prompt": "@产品 在展台上旋转展示",
-                    "aspect_ratio": "1:1",
-                    "seed": 42
+                    "audio": true
                   }
                 }
               }
@@ -104,14 +71,19 @@
                       "task_id": "your_task_id_here",
                       "state": "created",
                       "model": "viduq3-turbo",
-                      "prompt": "@1 and @2 are cooking together, and both say they love hot pot.",
+                      "images": [
+                        "your_image_url1",
+                        "your_image_url2"
+                      ],
+                      "prompt": "@1 和 @2 在一起吃火锅，并且旁白音说火锅大家都爱吃。",
                       "duration": 8,
-                      "seed": 123456789,
+                      "seed": "random_number",
+                      "aspect_ratio": "3:4",
                       "resolution": "1080p",
                       "movement_amplitude": "auto",
                       "payload": "",
                       "off_peak": false,
-                      "credits": "15",
+                      "credits": "credits_number",
                       "created_at": "2025-01-01T15:41:31.968916Z"
                     }
                   }
@@ -231,12 +203,12 @@
             "enum": [
               "viduq3-turbo"
             ],
-            "description": "视频生成模型名称。\n- **viduq3-turbo**: 支持智能场景切换和音视频同步输出，生成速度最快，性价比最高"
+            "description": "模型名称可选值：viduq3-turbo、viduq3、viduq2-pro、viduq2、viduq1、vidu2.0\n- viduq3-turbo：支持智能切镜，支持音画同出，生成速度最快，性价比最高\n- viduq3：支持智能切镜，支持音画同出，多机位的一致性更出色"
           },
           "auto_subjects": {
             "type": "boolean",
             "default": false,
-            "description": "是否使用智能实体库能力。\n- **true**: 使用智能代理库能力\n- **false**: 不使用智能代理库能力"
+            "description": "是否使用智能主体库能力，默认false，可选值 true、false\n- true：使用智能主体库能力。\n- false：不使用智能主体库能力。"
           },
           "subjects": {
             "type": "array",
@@ -245,39 +217,43 @@
             "items": {
               "$ref": "#/components/schemas/Subject"
             },
-            "description": "主体列表。\n- 使用 q3、q2、q1 和 2.0 系列模型时，仅可使用图像和文本主体，数量不超过 7 个\n- 使用 q2-pro 模型时，可使用视频主体、文本主体和图像主体，其中图像或文本主体不超过 4 个，视频主体不超过 2 个（临时视频主体不超过 1 个）\n- viduq3-mix 暂不支持使用实体"
+            "description": "使用q3、q2、q1、2.0模型时，只能使用图片主体和文字主体\n- 图片或文字主体最多不超过7个\n使用q2-pro模型时，可以使用视频主体、文字主体和图片主体\n- 图片或文字主体最多不超过4个\n- 视频主体最多不超过2个（如果是临时的视频主体，则最多1个）\n注：viduq3-mix暂不支持使用主体"
+          },
+          "server_id": {
+            "type": "string",
+            "description": "通过创建主体API获取的 主体id，使用已有主体时必传该参数\n- 创建主体参考[创建和使用主体库"
           },
           "prompt": {
             "type": "string",
             "maxLength": 5000,
-            "description": "文本提示词，用于描述视频生成内容，最大长度 5000 字符。\n可以使用 @主体名 的方式引用主体内容。例如：`@小明 和 @小红 一起做饭，两人都说喜欢吃火锅。`"
-          },
-          "voice_id": {
-            "type": "string",
-            "description": "声音 ID，用于确定视频中的语音角色。\n系统会自动推荐合适的声音，也可通过声音克隆 API 克隆任意声音。voice_id 参数可互换使用。"
+            "description": "文本提示词生成视频的文本描述。\n注1：字符长度不能超过 5000 个字符\n注2：使用sujects主体参数时，可以通过@主体name 来表示主体内容，例如：\"@1 和 @2 在一起吃火锅，并且旁白音说火锅大家都爱吃。\""
           },
           "audio": {
             "type": "boolean",
             "default": false,
-            "description": "是否启用音视频输出能力。\n- **false**: 输出无声视频\n- **true**: 输出包含根据提示词生成的语音和背景音乐的有声视频\n注意：viduq3 和 viduq3-turbo 默认 audio=true，其他模型默认 audio=false"
+            "description": "是否使用音视频直出能力，默认false，可选值 true、false\n- true：使用音视频直出能力。\n- false：不使用音视频直出能力。\nviduq3、viduq3-turbo默认audio为true，其他模型为false"
           },
           "audio_type": {
             "type": "string",
             "enum": [
               "all",
               "speech_only",
-              "sound-effect_only"
+              "sound_effect_only"
             ],
             "default": "all",
-            "description": "音频类型，当 audio=true 时必填。\n- **all**: 音效+人声\n- **speech_only**: 仅人声\n- **sound-effect_only**: 仅音效"
+            "description": "音频类型，audio为true时必填，默认为all\n- all：音效+人声\n- speech_only：仅人声\n- sound_effect_only：仅音效"
+          },
+          "voice_id": {
+            "type": "string",
+            "description": "音色ID用来决定视频中的声音音色，为空时系统会自动推荐，可选枚举值参考列表：新音色列表\n或者您可以使用声音复刻API来复刻任意音色，voice_id可以互通\n- 该参数在q3参考生模型中不生成"
           },
           "duration": {
             "type": "integer",
-            "description": "视频时长（秒）。不同模型的默认值和可用范围：\n- **viduq3, viduq3-turbo**: 默认 5，可用 3-16\n- **viduq2**: 默认 5，可用 1-10\n- **viduq1**: 默认 5，可用 5\n- **vidu2.0**: 默认 4，可用 4"
+            "description": "视频时长参数，默认值依据模型而定：\nviduq3-turbo：默认5秒，可选：3 - 16\nviduq3：默认5秒，可选：3 - 16"
           },
           "seed": {
             "type": "integer",
-            "description": "随机种子。\n- 默认为随机种子数\n- 手动设置值将覆盖默认随机种子"
+            "description": "随机种子当默认不传或者传0时，会使用随机数替代手动设置则使用设置的种子"
           },
           "aspect_ratio": {
             "type": "string",
@@ -287,17 +263,16 @@
               "1:1"
             ],
             "default": "16:9",
-            "description": "输出视频的宽高比。\n- 默认值：16:9\n- 可选值：16:9, 9:16, 1:1\n注意：q2、q3 模型支持任意宽高比"
+            "description": "比例默认 16:9，可选值如下：16:9、9:16、1:1"
           },
           "resolution": {
             "type": "string",
             "enum": [
-              "360p",
               "540p",
               "720p",
               "1080p"
             ],
-            "description": "分辨率（基于模型和时长）。\n- **viduq3, viduq3-turbo (3-16s)**: 默认 720p，可选 540p, 720p, 1080p\n- **viduq2 (1-10s)**: 默认 720p，可选 540p, 720p, 1080p\n- **viduq1 (5s)**: 默认 1080p，可选 1080p\n- **vidu2.0 (4s)**: 默认 360p，可选 360p, 720p"
+            "description": "分辨率参数，默认值依据模型和视频时长而定：\nviduq3-turbo（3-16秒）：默认 720p, 可选：540p、720p、1080p\nviduq3（3-16秒）：默认 720p, 可选：540p、720p、1080p"
           },
           "movement_amplitude": {
             "type": "string",
@@ -308,17 +283,39 @@
               "large"
             ],
             "default": "auto",
-            "description": "画面中物体的运动幅度。\n- 默认值：auto\n- 可选值：auto, small, medium, large\n注意：修改此参数对 q2、q3 模型无效。"
+            "description": "运动幅度默认 auto，可选值：auto、small、medium、large\n注：使用q2、q3模型时该参数不生效"
           },
           "payload": {
             "type": "string",
             "maxLength": 1048576,
-            "description": "透传参数。\n不做处理，仅做数据透传，最大长度 1048576 字符。"
+            "description": "透传参数不做任何处理，仅数据传输注：最多 1048576个字符"
           },
           "off_peak": {
             "type": "boolean",
             "default": false,
-            "description": "错峰模式。\n- **true**: 错峰生成模式\n- **false**: 正常生成模式\n说明：\n1. 错峰模式消耗更低积分（详见定价说明）\n2. 错峰模式下提交的任务将在 48 小时内生成，未完成的任务将自动取消并退还积分\n3. 支持取消错峰任务\n4. q3 模型在 audio=true 时支持错峰任务；q2、q1 和 2.0 系列模型在 audio=false 时支持错峰任务"
+            "description": "错峰模式，默认为：false，可选值：\n- true：错峰生成视频；\n- false：即时生成视频；\n注1：错峰模式消耗的积分更低，具体请查看产品定价\n注2：错峰模式下提交的任务，会在48小时内生成，未能完成的任务会被自动取消，并返还该任务的积分；\n注3：您也可以手动取消错峰任务\n注4：q3模型在audio参数为true时，支持错峰任务；"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印\n- true：添加水印；\n- false：不添加水印；\n注1：目前水印内容为固定，内容由AI生成，默认不加\n注2：您可以通过watermarked_url参数查询获取带水印的视频内容，详情见查询任务接口",
+            "default": false
+          },
+          "wm_position": {
+            "type": "integer",
+            "description": "水印位置，表示水印出现在图片的位置，默认为：3，可选项为：\n1：左上角\n2：右上角\n3：右下角\n4：左下角",
+            "default": 3
+          },
+          "wm_url": {
+            "type": "string",
+            "description": "水印内容，此处为图片URL不传时，使用默认水印：内容由AI生成"
+          },
+          "meta_data": {
+            "type": "string",
+            "description": "元数据标识，json格式字符串，透传字段，您可以 自定义格式 或使用 示例格式 ，示例如下：\n{\n\"Label\": \"your_label\",\"ContentProducer\": \"yourcontentproducer\",\"ContentPropagator\": \"your_content_propagator\",\"ProduceID\": \"yourproductid\", \"PropagateID\": \"your_propagate_id\",\"ReservedCode1\": \"yourreservedcode1\", \"ReservedCode2\": \"your_reserved_code2\"\n}\n该参数为空时，默认使用vidu生成的元数据标识"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback 协议\n需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致\n回调返回的\"status\"包括以下状态：\n- processing 任务处理中\n- success 任务完成（如发送失败，回调三次）\n- failed 任务失败（如发送失败，回调三次）\nVidu采用回调签名算法进行认证，详情见：回调签名算法"
           }
         }
       },
@@ -327,7 +324,7 @@
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "任务 ID。"
+            "description": "Vidu 生成的任务ID"
           },
           "state": {
             "type": "string",
@@ -338,71 +335,75 @@
               "success",
               "failed"
             ],
-            "description": "任务处理状态：\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败"
+            "description": "处理状态\n可选值：\ncreated 创建成功\nqueueing 任务排队中\nprocessing 任务处理中\nsuccess 任务成功\nfailed 任务失败"
           },
           "model": {
             "type": "string",
-            "description": "本次调用使用的模型参数。"
+            "description": "本次调用的模型名称"
           },
           "prompt": {
             "type": "string",
-            "description": "本次调用使用的文本提示词。"
+            "description": "本次调用的提示词参数"
           },
           "images": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "本次调用使用的图片列表。"
+            "description": "本次调用的图像参数"
           },
           "duration": {
             "type": "integer",
-            "description": "本次调用使用的视频时长参数。"
+            "description": "本次调用的视频时长参数"
           },
           "seed": {
             "type": "integer",
-            "description": "本次调用使用的随机种子参数。"
+            "description": "本次调用的随机种子参数"
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "本次调用使用的宽高比参数。"
+            "description": "本次调用的 比例 参数"
           },
           "resolution": {
             "type": "string",
-            "description": "本次调用使用的分辨率参数。"
+            "description": "本次调用的分辨率参数"
           },
           "bgm": {
             "type": "boolean",
-            "description": "本次调用是否使用背景音乐。"
+            "description": "本次调用的背景音乐参数"
           },
           "audio": {
             "type": "boolean",
-            "description": "本次调用是否使用音频。"
+            "description": "本次调用是否开启音视频直出"
           },
           "audio_type": {
             "type": "string",
-            "description": "本次调用使用的音频类型参数。"
+            "description": "本次调用输出的音频类型"
           },
           "movement_amplitude": {
             "type": "string",
-            "description": "本次调用使用的镜头运动幅度参数。"
+            "description": "本次调用的镜头动态幅度参数"
           },
           "payload": {
             "type": "string",
-            "description": "本次调用使用的透传参数。"
+            "description": "本次调用时传入的透传参数"
           },
           "off_peak": {
             "type": "boolean",
-            "description": "本次调用使用的错峰模式参数。"
+            "description": "本次调用时是否使用错峰模式"
           },
           "credits": {
-            "type": "string",
-            "description": "本次调用消耗的积分。"
+            "type": "integer",
+            "description": "本次调用使用的积分数"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "本次提交任务是否使用水印"
           },
           "created_at": {
             "type": "string",
             "format": "date-time",
-            "description": "任务创建时间。"
+            "description": "任务创建时间"
           }
         }
       },
@@ -427,13 +428,12 @@
       "Subject": {
         "type": "object",
         "required": [
-          "name",
-          "images"
+          "name"
         ],
         "properties": {
           "name": {
             "type": "string",
-            "description": "主体名称。\n可在提示词中通过 @主体名 的方式引用。"
+            "description": "主体id，后续生成时可以通过@主体id的方式使用"
           },
           "images": {
             "type": "array",
@@ -442,11 +442,20 @@
             "items": {
               "type": "string"
             },
-            "description": "主体对应的图片 URL 列表。\n- 每个主体最多支持 3 张图片\n- 支持公网 URL 或 Base64 格式\n- 必须使用以下编解码器之一：PNG, JPEG, JPG, WebP\n- 图片尺寸至少为 128x128 像素\n- 图片宽高比必须在 1:4 到 4:1 之间\n- 单张图片限制 50MB\n- HTTP 请求体不超过 20MB，且必须包含适当的内容类型字符串\n- Base64 格式示例：`data:image/png;base64,{base64_encode}`"
+            "description": "主体图片，该主体对应的图片url，与videos必填一个\n注1：支持传入图片 Base64 编码或图片URL（确保可访问）；\n注2：最多支持输入 3 张图；\n注3：图片支持 png、jpeg、jpg、webp格式；\n注4：图片比例需要小于 1:4 或者 4:1 ；\n注5：请注意，base64 decode之后的字节长度需要小于20M，且编码必须包含适当的内容类型字符串，例如：\ndata:image/png;base64,{base64_encode}"
+          },
+          "videos": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "description": "主体视频，该主体对应的视频url，与images必填一个\n注1： 仅viduq2-pro模型支持使用视频主体\n注2：每个主体中的图片和视频，共享3个槽位\n注3：支持1个5秒视频\n注4：支持传入视频 Base64 编码或URL（确保可访问）\n注5：视频支持 mp4、avi、mov格式\n注6：视频像素不能小于 128*128，且比例需要小于1:4或者4:1\n注7：请注意，base64 decode之后的字节长度需要小于20M，且编码必须包含适当的内容类型字符串，例如：\ndata:video/mp4;base64,{base64_encode}"
           },
           "voice_id": {
             "type": "string",
-            "description": "声音 ID，用于确定该主体的语音角色。\n系统会自动推荐合适的声音，也可通过声音克隆 API 克隆任意声音。"
+            "description": "音色ID用来决定视频中的声音音色，为空时系统会自动推荐，可选枚举值参考列表：新音色列表\n或者您可以使用声音复刻API来复刻任意音色，voice_id可以互通\n- 该参数在q3参考生模型中不生成"
           }
         }
       }

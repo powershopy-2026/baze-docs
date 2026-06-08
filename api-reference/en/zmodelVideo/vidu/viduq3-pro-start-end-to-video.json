@@ -10,7 +10,7 @@
     }
   ],
   "paths": {
-    "/vidu/v1/videos/start-end2video": {
+    "/vidu/ent/v2/start-end2video": {
       "post": {
         "summary": "Vidu Start-End-to-Video (viduq3-pro)",
         "operationId": "viduStartEndToVideoEnViduq3Pro",
@@ -279,6 +279,10 @@
             "type": "boolean",
             "default": false,
             "description": "Off peak mode.\n- **true**: Off peak generate mode\n- **false**: Normal generate mode\nNotes:\n1. The off_peak mode consumes lower points (see Pricing for details)\n2. Tasks submitted in off peak mode will be generated within 48 hours. Tasks that are not completed will be automatically cancelled and their points will be refunded\n3. We also support cancel off_peak tasks\n4. Except for q3, other direct audio-video generation functions"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback\nWhen creating a task, you need to actively set the callback_url with a POST request. When the video generation task changes its status, Vidu will send a callback request to this URL, containing the latest status of the task. The structure of the callback request content will be the same as the return body of the GET Generation API.\nThe \"status\" in the callback response includes the following states:\n- processing: Task is being processed.\n- success: Task is completed (if sending fails, it will retry the callback three times).\n- failed: Task failed (if sending fails, it will retry the callback three times).\nVidu uses a callback signature algorithm for verification, check out the details here: Callback Signature"
           }
         }
       },

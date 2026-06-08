@@ -10,7 +10,7 @@
     }
   ],
   "paths": {
-    "/vidu/v1/videos/text2video": {
+    "/vidu/ent/v2/text2video": {
       "post": {
         "summary": "Vidu 文生视频 (viduq3-pro)",
         "operationId": "viduTextToVideoViduq3Pro",
@@ -27,21 +27,14 @@
                   "summary": "基础文生视频示例",
                   "value": {
                     "model": "viduq3-pro",
-                    "prompt": "一只小猫在草地上奔跑，阳光明媚",
+                    "style": "general",
+                    "prompt": "In an ultra-realistic fashion photography style featuring light blue and pale amber tones, an astronaut in a spacesuit walks through the fog. The background consists of enchanting white and golden lights, creating a minimalist still life and an impressive panoramic scene.",
                     "duration": 5,
-                    "aspect_ratio": "16:9",
-                    "resolution": "720p"
-                  }
-                },
-                "audio_video_sync_example": {
-                  "summary": "音画同步示例（仅 q3 模型）",
-                  "value": {
-                    "model": "viduq3-pro",
-                    "prompt": "一个人在说话：你好，世界",
-                    "duration": 5,
-                    "audio": true,
-                    "aspect_ratio": "16:9",
-                    "resolution": "720p"
+                    "seed": 0,
+                    "aspect_ratio": "4:3",
+                    "resolution": "540p",
+                    "movement_amplitude": "auto",
+                    "off_peak": false
                   }
                 }
               }
@@ -63,15 +56,16 @@
                       "task_id": "your_task_id_here",
                       "state": "created",
                       "model": "viduq3-pro",
+                      "style": "general",
                       "prompt": "In an ultra-realistic fashion photography style featuring light blue and pale amber tones, an astronaut in a spacesuit walks through the fog. The background consists of enchanting white and golden lights, creating a minimalist still life and an impressive panoramic scene.",
                       "duration": 5,
-                      "seed": 123456789,
-                      "aspect_ratio": "16:9",
-                      "resolution": "720p",
+                      "seed": "random_number",
+                      "aspect_ratio": "4:3",
+                      "resolution": "540p",
                       "movement_amplitude": "auto",
                       "payload": "",
-                      "credits": 10,
                       "off_peak": false,
+                      "credits": "credits_number",
                       "created_at": "2025-01-01T15:41:31.968916Z"
                     }
                   }
@@ -190,7 +184,7 @@
             "enum": [
               "viduq3-pro"
             ],
-            "description": "模型名称。\n- **viduq3-pro**: 支持音画同步，支持视频分镜"
+            "description": "模型名称\n可选值：viduq3-turbo 、viduq3-pro\n- viduq3-turbo：对比viduq3-pro，生成速度更快\n- viduq3-pro：高效生成优质音视频内容，让视频内容更生动、更形象、更立体，效果更好"
           },
           "style": {
             "type": "string",
@@ -198,21 +192,21 @@
               "general",
               "anime"
             ],
-            "description": "输出视频的风格。\n- **general**: 通用风格，允许通过提示词控制风格\n- **anime**: 动漫风格，针对动漫美学优化，对动漫相关提示词表现更好\n\n**注意**: 使用 q3 模型时，此参数不生效。",
+            "description": "风格\n默认 general，可选值：general、anime\ngeneral：通用风格，可以通过提示词来控制风格\nanime：动漫风格，仅在动漫风格表现突出，可以通过不同的动漫风格提示词来控制\n注：使用q2、q3系列模型时该参数不生效",
             "default": "general"
           },
           "prompt": {
             "type": "string",
             "maxLength": 5000,
-            "description": "文本提示词，用于描述要生成的视频内容，最大长度 5000 字符。"
+            "description": "文本提示词\n生成视频的文本描述。\n注：字符长度不能超过 5000 个字符"
           },
           "duration": {
             "type": "integer",
-            "description": "视频时长（秒）。不同模型的默认值和可用范围：\n- **viduq3-pro, viduq3-turbo**: 默认 5s，可用范围 1-16s"
+            "description": "视频时长参数，默认值依据模型而定：\n- viduq3-pro、viduq3-turbo: 默认5秒，可选：1-16"
           },
           "seed": {
             "type": "integer",
-            "description": "随机种子。\n- 默认使用随机种子\n- 手动设置值将覆盖默认随机种子，用于结果复现"
+            "description": "随机种子\n当默认不传或者传0时，会使用随机数替代\n手动设置则使用设置的种子"
           },
           "aspect_ratio": {
             "type": "string",
@@ -223,7 +217,7 @@
               "4:3",
               "1:1"
             ],
-            "description": "输出视频的宽高比。默认 16:9。\n\n**注意**: 3:4 和 4:3 仅支持 q3 模型。",
+            "description": "比例\n默认 16:9，可选值：16:9、9:16、3:4、4:3、1:1\n注：3:4、4:3仅支持q2、q3系列模型",
             "default": "16:9"
           },
           "resolution": {
@@ -233,7 +227,7 @@
               "720p",
               "1080p"
             ],
-            "description": "分辨率。不同模型和时长的默认值及可用范围：\n- **viduq3-pro, viduq3-turbo (1-16s)**: 默认 720p，可用 540p, 720p, 1080p"
+            "description": "分辨率参数，默认值依据模型和视频时长而定：\n- viduq3-pro、viduq3-turbo(1-16秒)：默认 720p，可选：540p、720p、1080p"
           },
           "movement_amplitude": {
             "type": "string",
@@ -243,50 +237,50 @@
               "medium",
               "large"
             ],
-            "description": "画面中物体的运动幅度。默认 auto。\n\n**注意**: 使用 q3 模型时，此参数不生效。",
+            "description": "运动幅度\n默认 auto，可选值：auto、small、medium、large\n注：使用q2、q3系列模型时该参数不生效",
             "default": "auto"
           },
           "bgm": {
             "type": "boolean",
-            "description": "是否为生成的视频添加背景音乐。（q3 模型不可用）\n- **false**: 不添加背景音乐（默认）\n- **true**: 系统自动添加合适的背景音乐\n\n**说明**:\n- BGM 无时长限制，系统自动适配\n- q3 模型不支持此参数",
+            "description": "是否为生成的视频添加背景音乐。\n默认：false，可选值 true 、false\n传 true 时系统将从预设 BGM 库中自动挑选合适的音乐并添加；不传或为 false 则不添加 BGM。\n- BGM不限制时长，系统根据视频时长自动适配\n- BGM参数在q2模型的duration为 9秒 或 10秒 时不生效；该参数在q3系列模型中不生效",
             "default": false
           },
           "audio": {
             "type": "boolean",
-            "description": "是否使用直出音视频能力。（仅 q3 模型支持）\n- **false**: 不使用直出音视频，输出无声视频\n- **true**: 需要音画同步，输出有声视频（包含对话和音效）\n\n**注意**: 仅 q3 模型支持此参数。",
+            "description": "是否使用音视频直出能力，默认为true，枚举值为：\n- false：不需要音视频直出，输出静音视频\n- true：需要音画同步，输出声音的视频（包括台词和音效）\n注1：仅q3系列模型支持该参数",
             "default": true
           },
           "payload": {
             "type": "string",
             "maxLength": 1048576,
-            "description": "透传参数，不做处理，仅做数据传输，最大长度 1048576 字符。"
+            "description": "透传参数\n不做任何处理，仅数据传输\n注：最多 1048576个字符"
           },
           "off_peak": {
             "type": "boolean",
-            "description": "错峰模式。默认 false。\n- **true**: 错峰生成模式，消耗积分较低，任务将在 48 小时内生成。未完成任务将自动取消并退还积分，支持取消错峰任务\n- **false**: 正常生成模式\n\n详见定价说明。",
+            "description": "错峰模式，默认为：false，可选值：\n- true：错峰生成视频；\n- false：即时生成视频；\n注1：错峰模式消耗的积分更低，具体请查看产品定价\n注2：错峰模式下提交的任务，会在48小时内生成，未能完成的任务会被自动取消，并返还该任务的积分；\n注3：您也可以手动取消错峰任务",
             "default": false
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。\n- **true**: 添加水印\n- **false**: 不添加水印\n\n注1：目前水印内容为固定，内容由AI生成，默认不加\n注2：您可以通过 `watermarked_url` 参数查询获取带水印的视频内容，详情见查询任务接口",
+            "description": "是否添加水印\n- true：添加水印；\n- false：不添加水印；\n注1：目前水印内容为固定，内容由AI生成，默认不加\n注2：您可以通过watermarked_url参数查询获取带水印的视频内容，详情见查询任务接口",
             "default": false
           },
           "wm_position": {
             "type": "integer",
-            "description": "水印位置，表示水印出现在图片的位置，可选项为：\n- **1**: 左上角\n- **2**: 右上角\n- **3**: 右下角\n- **4**: 左下角\n\n默认为：3",
+            "description": "水印位置，表示水印出现在图片的位置，可选项为：\n1：左上角\n2：右上角\n3：右下角\n4：左下角\n默认为：3",
             "default": 3
           },
           "wm_url": {
             "type": "string",
-            "description": "水印内容，此处为图片URL。不传时，使用默认水印：内容由AI生成"
+            "description": "水印内容，此处为图片URL\n不传时，使用默认水印：内容由AI生成"
           },
           "meta_data": {
             "type": "string",
-            "description": "元数据标识，json格式字符串，透传字段，您可以自定义格式或使用示例格式，示例如下：\n```json\n{\n  \"Label\": \"your_label\",\n  \"ContentProducer\": \"your_content_producer\",\n  \"ContentPropagator\": \"your_content_propagator\",\n  \"ProduceID\": \"your_product_id\",\n  \"PropagateID\": \"your_propagate_id\",\n  \"ReservedCode1\": \"your_reserved_code1\",\n  \"ReservedCode2\": \"your_reserved_code2\"\n}\n```\n该参数为空时，默认使用vidu生成的元数据标识"
+            "description": "元数据标识，json格式字符串，透传字段，您可以 自定义格式 或使用 示例格式 ，示例如下：\n{\n\"Label\": \"your_label\",\n\"ContentProducer\": \"your_content_producer\",\n\"ContentPropagator\": \"your_content_propagator\",\n\"ProduceID\": \"your_product_id\",\n\"PropagateID\": \"your_propagate_id\",\n\"ReservedCode1\": \"your_reserved_code1\",\n\"ReservedCode2\": \"your_reserved_code2\"\n}\n该参数为空时，默认使用vidu生成的元数据标识"
           },
           "callback_url": {
             "type": "string",
-            "description": "Callback 协议。需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致。\n\n回调返回的 \"status\" 包括以下状态：\n- **processing**: 任务处理中\n- **success**: 任务完成（如发送失败，回调三次）\n- **failed**: 任务失败（如发送失败，回调三次）"
+            "description": "Callback 协议\n需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致\n回调返回的\"status\"包括以下状态：\n- processing 任务处理中\n- success 任务完成（如发送失败，回调三次）\n- failed 任务失败（如发送失败，回调三次）\nVidu采用回调签名算法进行认证，详情见：回调签名算法"
           }
         }
       },
@@ -306,64 +300,64 @@
               "success",
               "failed"
             ],
-            "description": "任务处理状态：\n- **created**: 任务创建成功\n- **queueing**: 任务排队中\n- **processing**: 任务处理中\n- **success**: 生成成功\n- **failed**: 任务失败"
+            "description": "处理状态\n可选值：\ncreated 创建成功\nqueueing 任务排队中\nprocessing 任务处理中\nsuccess 任务成功\nfailed 任务失败"
           },
           "model": {
             "type": "string",
-            "description": "本次调用使用的模型参数。"
+            "description": "本次调用的模型名称"
           },
           "style": {
             "type": "string",
-            "description": "本次调用使用的风格参数。"
+            "description": "本次调用使用的风格参数"
           },
           "prompt": {
             "type": "string",
-            "description": "本次调用使用的文本提示词。"
+            "description": "本次调用的提示词参数"
           },
           "duration": {
             "type": "integer",
-            "description": "本次调用使用的视频时长参数。"
+            "description": "本次调用的视频时长参数"
           },
           "seed": {
             "type": "integer",
-            "description": "本次调用使用的随机种子参数。"
+            "description": "本次调用的随机种子参数"
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "本次调用使用的宽高比参数。"
+            "description": "本次调用的 比例 参数"
           },
           "resolution": {
             "type": "string",
-            "description": "本次调用使用的分辨率参数。"
+            "description": "本次调用的分辨率参数"
           },
           "bgm": {
             "type": "boolean",
-            "description": "本次调用使用的背景音乐参数。"
+            "description": "本次调用的背景音乐参数"
           },
           "movement_amplitude": {
             "type": "string",
-            "description": "本次调用使用的镜头运动幅度参数。"
+            "description": "本次调用的镜头动态幅度参数"
           },
           "payload": {
             "type": "string",
-            "description": "本次调用使用的透传参数。"
+            "description": "本次调用时传入的透传参数"
           },
           "credits": {
             "type": "integer",
-            "description": "本次调用消耗的积分。"
+            "description": "本次调用使用的积分数"
           },
           "off_peak": {
             "type": "boolean",
-            "description": "本次调用使用的错峰模式参数。"
+            "description": "本次调用时是否使用错峰模式"
           },
           "watermark": {
             "type": "boolean",
-            "description": "本次调用使用的水印参数。"
+            "description": "本次提交任务是否使用水印"
           },
           "created_at": {
             "type": "string",
             "format": "date-time",
-            "description": "任务创建时间。"
+            "description": "任务创建时间"
           }
         }
       },
