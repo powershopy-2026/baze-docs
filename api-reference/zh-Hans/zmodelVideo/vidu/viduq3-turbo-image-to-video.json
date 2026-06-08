@@ -64,12 +64,12 @@
                       ],
                       "prompt": "The astronaut waved and the camera moved up.",
                       "duration": 5,
-                      "seed": "random_number",
+                      "seed": 123456789,
                       "resolution": "1080p",
                       "movement_amplitude": "auto",
                       "payload": "",
                       "off_peak": false,
-                      "credits": "credits_number",
+                      "credits": 10,
                       "created_at": "2025-01-01T15:41:31.968916Z"
                     }
                   }
