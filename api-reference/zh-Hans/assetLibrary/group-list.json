@@ -39,6 +39,14 @@
                   "login_style": {
                     "type": "string",
                     "description": "登录方式 google与github"
+                  },
+                  "group_type": {
+                    "type": "integer",
+                    "description": "0：虚拟组，1真人组（默认0）"
+                  },
+                  "real_human_type": {
+                    "type": "integer",
+                    "description": "真人组 1：创建，2：授权（默认1）"
                   }
                 },
                 "required": [
@@ -50,7 +58,9 @@
                 "page_size": 20,
                 "page": 1,
                 "email": "603842915@qq.com",
-                "login_style": "github"
+                "login_style": "github",
+                "group_type": 0,
+                "real_human_type": 0
               }
             }
           },
@@ -151,10 +161,6 @@
     "securitySchemes": {}
   },
   "servers": [
-    {
-      "url": "https://baze.powerbuyin.top/api",
-      "description": "测试环境"
-    },
     {
       "url": "https://powertokens.ai/api",
       "description": "正式环境"
