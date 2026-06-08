@@ -10,7 +10,7 @@
     }
   ],
   "paths": {
-    "/vidu/v1/videos/img2video": {
+    "/vidu/ent/v2/img2video": {
       "post": {
         "summary": "Vidu Image-to-Video (viduq3-pro-fast)",
         "operationId": "viduImageToVideoEnViduq3ProFast",

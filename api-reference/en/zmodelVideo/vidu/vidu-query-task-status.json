@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "/vidu/v1/tasks/{task_id}": {
+    "/vidu/ent/v2/tasks/{task_id}/creations": {
       "get": {
         "summary": "Task Status Query",
         "operationId": "viduQueryTaskStatus",

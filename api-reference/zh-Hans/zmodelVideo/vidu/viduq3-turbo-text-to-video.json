@@ -14,7 +14,7 @@
       "post": {
         "summary": "Vidu 文生视频 (viduq3-turbo)",
         "operationId": "viduTextToVideoViduq3Turbo",
-        "description": "使用 Vidu 模型将文本提示词转换为视频。提交任务后，请通过 `GET /vidu/v1/tasks/{task_id}` 查询状态。 使用模型 viduq3-turbo。",
+        "description": "使用 Vidu 模型将文本提示词转换为视频。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}/creations` 查询状态。 使用模型 viduq3-turbo。",
         "requestBody": {
           "required": true,
           "content": {
