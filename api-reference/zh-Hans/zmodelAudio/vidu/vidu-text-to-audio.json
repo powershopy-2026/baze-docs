@@ -14,7 +14,7 @@
       "post": {
         "summary": "文生音频",
         "operationId": "viduTextToAudio",
-        "description": "适用于通过输入提示词，生成一段音频（支持生成音效和背景音乐 BGM）。提交任务后，请通过 `GET /vidu/v1/{task_id}` 查询状态。",
+        "description": "适用于通过输入提示词，生成一段音频（支持生成音效和背景音乐 BGM）。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}/creations` 查询状态。",
         "requestBody": {
           "required": true,
           "content": {
@@ -26,27 +26,10 @@
                 "basic_audio_generation": {
                   "summary": "基础文生音频",
                   "value": {
-                    "model": "audio1.0",
-                    "prompt": "雨滴落在窗户上的声音，伴随着远处的雷声",
-                    "duration": 10,
-                    "seed": 42
-                  }
-                },
-                "short_sound_effect": {
-                  "summary": "短音效生成",
-                  "value": {
-                    "model": "audio1.0",
-                    "prompt": "手机通知铃声",
-                    "duration": 3
-                  }
-                },
-                "ambient_background": {
-                  "summary": "环境背景音",
-                  "value": {
-                    "model": "audio1.0",
-                    "prompt": "森林中的鸟鸣声，微风拂过树叶",
-                    "duration": 8,
-                    "seed": 123456
+                      "model": "audio1.0",
+                      "prompt": "清晨的鸟叫声",
+                      "duration": 10,
+                      "seed": 0
                   }
                 }
               }
@@ -55,7 +38,28 @@
         },
         "responses": {
           "200": {
-            "description": "提交成功，返回音频任务对象。"
+            "description": "提交成功，返回音频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextToAudioResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "audio1.0",
+                      "prompt": "清晨的鸟叫声",
+                      "duration": 10,
+                      "seed": 123456789,
+                      "credits": 10,
+                      "created_at": "2025-01-01T15:41:31.968916Z"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -110,6 +114,50 @@
           "callback_url": {
             "type": "string",
             "description": "Callback 协议需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致回调返回的\"status\"包括以下状态：- processing 任务处理中- success 任务完成（如发送失败，回调三次）- failed 任务失败（如发送失败，回调三次）Vidu采用回调签名算法进行认证，详情见：回调签名算法"
+          }
+        }
+      },
+      "TextToAudioResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Vidu 生成的任务ID"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "处理状态 可选值：\n- created 创建成功\n- queueing 任务排队中\n- processing 任务处理中\n- success 任务成功\n- failed 任务失败"
+          },
+          "model": {
+            "type": "string",
+            "description": "本次调用的模型名称"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "本次调用的提示词参数"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "本次调用的音频时长参数"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "本次调用的随机种子参数"
+          },
+          "credits": {
+            "type": "integer",
+            "description": "本次调用使用的积分数"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "任务创建时间"
           }
         }
       }

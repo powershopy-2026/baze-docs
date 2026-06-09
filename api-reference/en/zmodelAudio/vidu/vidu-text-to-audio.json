@@ -14,7 +14,7 @@
       "post": {
         "summary": "Vidu Text-to-Audio",
         "operationId": "viduTextToAudioEn",
-        "description": "Generate an audio clip (supports sound effects & BGM) by inputting a text prompt. After submission, query status via `GET /vidu/v1/{task_id}`.",
+        "description": "Generate an audio clip (supports sound effects & BGM) by inputting a text prompt. After submission, query status via `GET /vidu/ent/v2/tasks/{task_id}/creations`.",
         "requestBody": {
           "required": true,
           "content": {
@@ -55,7 +55,28 @@
         },
         "responses": {
           "200": {
-            "description": "Submission successful, returns an audio task object."
+            "description": "Submission successful, returns an audio task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextToAudioResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "audio1.0",
+                      "prompt": "Birds chirping in the morning",
+                      "duration": 10,
+                      "seed": 123456789,
+                      "credits": 10,
+                      "created_at": "2025-01-01T15:41:31.968916Z"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -110,6 +131,50 @@
           "callback_url": {
             "type": "string",
             "description": "Callback When creating a task, you need to actively set the callback_url with a POST request. When the video generation task changes its status, Vidu will send a callback request to this URL, containing the latest status of the task. The structure of the callback request content will be the same as the return body of the GET Generation API.The \"status\" in the callback response includes the following states:- processing: Task is being processed.- success: Task is completed (if sending fails, it will retry the callback three times).- failed: Task failed (if sending fails, it will retry the callback three times).Vidu uses a callback signature algorithm for verification, check out the details here: Callback Signature"
+          }
+        }
+      },
+      "TextToAudioResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Vidu generated Task ID"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "Task state:\n- created: Task created successfully\n- queueing: Task in queue\n- processing: Task is being processed\n- success: Generation successful\n- failed: Task failed"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model parameter used"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Prompt text used"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Audio duration"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed used"
+          },
+          "credits": {
+            "type": "integer",
+            "description": "The credits used for this call"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Task creation timestamp (ISO8601 format)"
           }
         }
       }
