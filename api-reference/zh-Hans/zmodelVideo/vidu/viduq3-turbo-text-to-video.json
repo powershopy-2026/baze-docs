@@ -257,12 +257,12 @@
           },
           "off_peak": {
             "type": "boolean",
-            "description": "错峰模式，默认为：false，可选值：\n- true：错峰生成视频；\n- false：即时生成视频；\n注1：错峰模式消耗的积分更低，具体请查看产品定价\n注2：错峰模式下提交的任务，会在48小时内生成，未能完成的任务会被自动取消，并返还该任务的积分；\n注3：您也可以手动取消错峰任务",
+            "description": "错峰模式，默认为：false，可选值：\n- true：错峰生成视频；\n- false：即时生成视频；\n\n注1：错峰模式消耗的积分更低，具体请查看产品定价\n\n注2：错峰模式下提交的任务，会在48小时内生成，未能完成的任务会被自动取消，并返还该任务的积分；\n\n注3：您也可以手动取消错峰任务",
             "default": false
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印\n- true：添加水印；\n- false：不添加水印；\n注1：目前水印内容为固定，内容由AI生成，默认不加\n注2：您可以通过watermarked_url参数查询获取带水印的视频内容，详情见查询任务接口",
+            "description": "是否添加水印\n- true：添加水印；\n- false：不添加水印；\n\n注1：目前水印内容为固定，内容由AI生成，默认不加\n\n注2：您可以通过watermarked_url参数查询获取带水印的视频内容，详情见查询任务接口",
             "default": false
           },
           "wm_position": {
