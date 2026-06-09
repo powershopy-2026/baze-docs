@@ -24,36 +24,20 @@
               },
               "examples": {
                 "basic_image_to_video": {
-                  "summary": "基础图生视频",
+                  "summary": "图生视频示例",
                   "value": {
-                    "model": "viduq3-pro-fast",
+                    "model": "viduq3-pro",
                     "images": [
-                      "https://example.com/image.png"
+                      "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"
                     ],
-                    "prompt": "让图片中的场景动起来"
-                  }
-                },
-                "with_audio": {
-                  "summary": "带音频的图生视频（q3 模型）",
-                  "value": {
-                    "model": "viduq3-pro-fast",
-                    "images": [
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAE..."
-                    ],
+                    "prompt": "The astronaut waved and the camera moved up.",
                     "audio": true,
-                    "audio_type": "all",
-                    "duration": 5
-                  }
-                },
-                "with_recommended_prompt": {
-                  "summary": "使用推荐提示词",
-                  "value": {
-                    "model": "viduq3-pro-fast",
-                    "images": [
-                      "https://example.com/character.jpg"
-                    ],
-                    "is_rec": true,
-                    "resolution": "720p"
+                    "voice_id": "professional_host",
+                    "duration": 5,
+                    "seed": 0,
+                    "resolution": "1080p",
+                    "movement_amplitude": "auto",
+                    "off_peak": false
                   }
                 }
               }
