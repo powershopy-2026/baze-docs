@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://api.powertokens.ai",
+      "url": "https://baze-api.powerbuyin.top",
       "description": "Baze API 服务地址"
     }
   ],
