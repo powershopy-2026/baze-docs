@@ -91,7 +91,7 @@
                         "task_info": {
                           "external_task_id": "string"
                         },
-                        "task_status": "submitted",
+                        "task_status": "string",
                         "created_at": 1722769557708,
                         "updated_at": 1722769557708
                       }
@@ -186,7 +186,7 @@
           },
           "watermark_info": {
             "type": "object",
-            "description": "是否同时生成含水印的结果。",
+            "description": "是否同时生成含水印的结果。\n- 通过enabled参数定义，具体格式如下：\n\n```json\n \"watermark_info\": { \"enabled\": boolean } ```\n\n- true 为生成，false 为不生成\n- 暂不支持自定义水印",
             "properties": {
               "enabled": {
                 "type": "boolean",
