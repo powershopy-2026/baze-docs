@@ -192,7 +192,7 @@
       }
     },
     "schemas": {
-      "ImageTaskResponse": {
+      "AudioTaskResponse": {
         "type": "object",
         "properties": {
           "state": {

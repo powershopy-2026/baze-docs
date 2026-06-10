@@ -22,7 +22,7 @@
       "post": {
         "summary": "Kling 全能图像任务",
         "description": "通过 `/kling/v1/images/omni-image` 提交 Kling 原生全能图像任务。任务结果可能包含 `images` 或 `series_images`。",
-        "operationId": "createKlingOmniImage",
+        "operationId": "createKlingOmniImageGeneration",
         "tags": [
           "Kling"
         ],
