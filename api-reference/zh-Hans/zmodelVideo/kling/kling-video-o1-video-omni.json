@@ -22,7 +22,7 @@
       "post": {
         "summary": "Kling 全能视频任务",
         "description": "通过 `/kling/v1/videos/omni-video` 提交 Kling 原生全能视频任务。",
-        "operationId": "createKlingVideoO1OmniVideo",
+        "operationId": "createKlingVideoO1OmniVideoGeneration",
         "tags": [
           "Kling"
         ],

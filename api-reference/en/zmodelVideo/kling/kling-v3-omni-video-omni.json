@@ -22,7 +22,7 @@
       "post": {
         "summary": "Kling Omni Video Task",
         "description": "Submit a Kling native omni video task via `/kling/v1/videos/omni-video`.",
-        "operationId": "createKlingV3OmniVideo",
+        "operationId": "createKlingV3OmniVideoGeneration",
         "tags": [
           "Kling"
         ],

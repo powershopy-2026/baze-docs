@@ -22,7 +22,7 @@
       "post": {
         "summary": "Kling 全能视频任务",
         "description": "Omni 模型可以通过 Prompt 结合元素、图片、视频等内容实现多种能力。",
-        "operationId": "createKlingV3OmniVideo",
+        "operationId": "createKlingV3OmniVideoGeneration",
         "tags": [
           "Kling"
         ],
