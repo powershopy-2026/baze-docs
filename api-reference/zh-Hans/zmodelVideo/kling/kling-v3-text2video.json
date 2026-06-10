@@ -31,6 +31,18 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "数据交换格式"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -43,9 +55,14 @@
                   "summary": "请求示例",
                   "value": {
                     "model_name": "kling-v3",
-                    "prompt": "A cinematic shot of clouds moving over a mountain ridge",
+                    "prompt": "一只可爱的小兔子，戴着眼镜，坐在桌边，看报纸，桌上放着一杯卡布奇诺",
+                    "negative_prompt": "",
                     "duration": "5",
-                    "aspect_ratio": "16:9"
+                    "mode": "pro",
+                    "sound": "on",
+                    "aspect_ratio": "1:1",
+                    "callback_url": "",
+                    "external_task_id": ""
                   }
                 }
               }
@@ -59,6 +76,25 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "响应示例",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": {
+                        "task_id": "string",
+                        "task_info": {
+                          "external_task_id": "string"
+                        },
+                        "task_status": "submitted",
+                        "created_at": 1722769557708,
+                        "updated_at": 1722769557708
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -124,7 +160,8 @@
           },
           "prompt": {
             "type": "string",
-            "description": "正向文本提示词\n\n```markdown\nOmni模型可通过Prompt与主体、图片、视频等内容实现多种能力：\n- 通过<<<>>>的格式来指定某个主体、图片或视频，如：<<<element_1>>>、<<<image_1>>>、<<<video_1>>>\n```\n\n- 用 <<<voice_1>>> 来指定音色，序号同 voice_list；至多引用 2 个音色；指定音色时 sound 必须为 on；语法结构越简单越好，如：男人<<<voice_1>>>说：\"你好\"；\n-voice_list 不为空且 prompt 引用音色 ID 时按「有指定音色」计费\n- 当 multi_shot 为 false 或 shot_type 为 intelligence 时不得为空。"
+            "description": "正向文本提示词\n\n```markdown\nOmni模型可通过Prompt与主体、图片、视频等内容实现多种能力：\n- 通过<<<>>>的格式来指定某个主体、图片或视频，如：<<<element_1>>>、<<<image_1>>>、<<<video_1>>>\n```\n\n- 不能超过 2500 个字符\n- 用 <<<voice_1>>> 来指定音色，序号同 voice_list；至多引用 2 个音色；指定音色时 sound 必须为 on；语法结构越简单越好，如：男人<<<voice_1>>>说：\"你好\"；\n-voice_list 不为空且 prompt 引用音色 ID 时按「有指定音色」计费\n- 当 multi_shot 为 false 或 shot_type 为 intelligence 时不得为空。",
+            "maxLength": 2500
           },
           "multi_prompt": {
             "type": "array",
@@ -150,7 +187,7 @@
                 }
               }
             },
-            "description": "各分镜信息，如提示词、时长等。\n通过 index、prompt、duration 参数定义分镜序号及相应提示词和时长。\n- 最多支持 6 个分镜，最小支持 1 个分镜。\n- 每个分镜相关内容的最大长度不超过 512。\n- 每个分镜的时长不大于当前任务的总时长，不小于 1。\n- 所有分镜的时长之和等于当前任务的总时长。\n\n当 multi_shot 为 true 且 shot_type 为 customize 时，当前参数不得为空。格式如下：\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```\n\n当 multi_shot 为 true 且 shot_type 为 customize 时必填"
+            "description": "各分镜信息，如提示词、时长等。\n通过 index、prompt、duration 参数定义分镜序号及相应提示词和时长。\n- 最多支持 6 个分镜，最小支持 1 个分镜。\n- 每个分镜相关内容的最大长度不超过 512。\n- 每个分镜的时长不大于当前任务的总时长，不小于 1。\n- 所有分镜的时长之和等于当前任务的总时长。\n\n用key:value承载，格式如下：\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```\n\n当 multi_shot 为 true 且 shot_type 为 customize 时必填"
           },
           "negative_prompt": {
             "type": "string",
@@ -274,7 +311,7 @@
           },
           "watermark_info": {
             "type": "object",
-            "description": "是否同时生成含水印的结果。",
+            "description": "是否同时生成含水印的结果。\n- 通过enabled参数定义，具体格式如下：\n\n```json\n \"watermark_info\": { \"enabled\": boolean }```\n\n- true 为生成，false 为不生成\n- 暂不支持自定义水印",
             "properties": {
               "enabled": {
                 "type": "boolean",
@@ -288,7 +325,7 @@
           },
           "external_task_id": {
             "type": "string",
-            "description": "自定义任务ID"
+            "description": "自定义任务ID。\n- 传入不会覆盖系统生成的任务ID，但支持通过该ID进行任务查询。\n- 请注意，单用户下需要保证唯一性。"
           }
         }
       },
@@ -306,55 +343,66 @@
         "required": [
           "code",
           "message",
+          "request_id",
           "data"
         ],
         "properties": {
           "code": {
             "type": "integer",
-            "description": "Kling 响应码。0 表示任务已被接受。"
+            "description": "错误码；具体定义见错误码。"
           },
           "message": {
             "type": "string",
-            "description": "Kling 响应消息。"
+            "description": "错误信息。"
           },
           "request_id": {
             "type": "string",
-            "description": "上游请求标识符（如有提供）。"
+            "description": "请求ID，系统生成，用于跟踪请求、排查问题。"
           },
           "data": {
             "type": "object",
             "required": [
               "task_id",
-              "task_status"
+              "task_info",
+              "task_status",
+              "created_at",
+              "updated_at"
             ],
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "由本网关生成的公开任务 ID。上游任务 ID 不对外暴露。"
-              },
-              "task_status": {
-                "type": "string",
-                "description": "初始任务状态。",
-                "example": "submitted"
+                "description": "任务ID，系统生成。"
               },
               "task_info": {
                 "type": "object",
+                "description": "任务创建时的参数信息。",
                 "properties": {
                   "external_task_id": {
                     "type": "string",
-                    "description": "客户端提供的外部任务 ID，或由网关注入的公开任务 ID。"
+                    "description": "客户自定义任务ID。"
                   }
                 }
+              },
+              "task_status": {
+                "type": "string",
+                "description": "任务状态。",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeed",
+                  "failed"
+                ],
+                "example": "submitted"
               },
               "created_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "创建时间，毫秒级时间戳。"
+                "description": "任务创建时间，Unix时间戳、单位ms。"
               },
               "updated_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "更新时间，毫秒级时间戳。"
+                "description": "任务更新时间，Unix时间戳、单位ms。"
               }
             }
           }

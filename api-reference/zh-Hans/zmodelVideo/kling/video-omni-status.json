@@ -46,7 +46,7 @@
             "name": "task_id",
             "in": "path",
             "required": true,
-            "description": "视频生成的任务ID。直接在请求路径中填写值",
+            "description": "视频生成的任务ID。直接在请求路径中填写值，task_id与external_task_id两种查询方式二选一",
             "schema": {
               "type": "string"
             }
