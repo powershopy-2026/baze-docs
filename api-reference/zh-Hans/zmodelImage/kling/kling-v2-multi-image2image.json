@@ -31,6 +31,18 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "数据交换格式"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -43,7 +55,16 @@
                   "summary": "请求示例",
                   "value": {
                     "model_name": "kling-v2",
-                    "prompt": "Blend both references into one consistent illustration"
+                    "prompt": "身着飘逸红色连衣裙,在草原上，吉卜力风格。",
+                    "negative_prompt": "",
+                    "subject_image_list": [
+                      { "subject_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-1.png" },
+                      { "subject_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-2.png" }
+                    ],
+                    "scene_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/background.jpeg",
+                    "style_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/16x9_jipuli.png",
+                    "n": 2,
+                    "aspect_ratio": "9:16"
                   }
                 }
               }
@@ -57,6 +78,25 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "响应示例",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": {
+                        "task_id": "string",
+                        "task_info": {
+                          "external_task_id": "string"
+                        },
+                        "task_status": "submitted",
+                        "created_at": 1722769557708,
+                        "updated_at": 1722769557708
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -110,7 +150,12 @@
           },
           "prompt": {
             "type": "string",
-            "description": "正向文本提示词",
+            "description": "正向文本提示词\n- 不能超过2500个字符",
+            "maxLength": 2500
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "负向文本提示词\n- 不能超过2500个字符",
             "maxLength": 2500
           },
           "subject_image_list": {
@@ -127,15 +172,15 @@
                 }
               }
             },
-            "description": "主体参考图片列表\n\n- 最多支持 4 张图片，最少支持 1 张图片，用 key:value 承载，如下：\n`\"subject_image_list\":[  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" }]`\n- API 端无裁剪逻辑，请直接上传已选主体后的图片\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px，图片宽高比要在 1:2.5 ~ 2.5:1 之间"
+            "description": "主体参考图片列表\n\n- 最多支持 4 张图片，最少支持 1 张图片，用 key:value 承载，如下：\n`\"subject_image_list\":[  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" }]`\n- API 端无裁剪逻辑，请直接上传已选主体后的图片\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 正确的 Base64 编码参数：\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 错误的 Base64 编码参数（包含 data: 前缀）：\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px，图片宽高比要在 1:2.5 ~ 2.5:1 之间"
           },
           "scene_image": {
             "type": "string",
-            "description": "场景参考图\n\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px，图片宽高比要在 1:2.5 ~ 2.5:1 之间"
+            "description": "场景参考图\n\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 正确的 Base64 编码参数：\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 错误的 Base64 编码参数（包含 data: 前缀）：\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px，图片宽高比要在 1:2.5 ~ 2.5:1 之间"
           },
           "style_image": {
             "type": "string",
-            "description": "风格参考图\n\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px，图片宽高比要在 1:2.5 ~ 2.5:1 之间"
+            "description": "风格参考图\n\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 正确的 Base64 编码参数：\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 错误的 Base64 编码参数（包含 data: 前缀）：\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px，图片宽高比要在 1:2.5 ~ 2.5:1 之间"
           },
           "n": {
             "type": "integer",
@@ -175,7 +220,7 @@
           },
           "external_task_id": {
             "type": "string",
-            "description": "自定义任务 ID"
+            "description": "自定义任务ID。\n- 传入不会覆盖系统生成的任务ID，但支持通过该ID进行任务查询。\n- 请注意，单用户下需要保证唯一性。"
           }
         }
       },
@@ -198,15 +243,18 @@
         "properties": {
           "code": {
             "type": "integer",
-            "description": "Kling 响应码。0 表示任务已接受。"
+            "description": "错误码；具体定义见错误码",
+            "example": 0
           },
           "message": {
             "type": "string",
-            "description": "Kling 响应消息。"
+            "description": "错误信息",
+            "example": "string"
           },
           "request_id": {
             "type": "string",
-            "description": "上游请求标识符（如有提供）。"
+            "description": "请求ID，系统生成，用于跟踪请求、排查问题",
+            "example": "string"
           },
           "data": {
             "type": "object",
@@ -217,31 +265,42 @@
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "本网关生成的公共任务 ID。上游任务 ID 不对外暴露。"
-              },
-              "task_status": {
-                "type": "string",
-                "description": "初始任务状态。",
-                "example": "submitted"
+                "description": "任务ID，系统生成",
+                "example": "string"
               },
               "task_info": {
                 "type": "object",
+                "description": "任务创建时的参数信息",
                 "properties": {
                   "external_task_id": {
                     "type": "string",
-                    "description": "客户端提供的外部任务 ID，或网关注入的公共任务 ID。"
+                    "description": "客户自定义任务ID",
+                    "example": "string"
                   }
                 }
+              },
+              "task_status": {
+                "type": "string",
+                "description": "任务状态",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeed",
+                  "failed"
+                ],
+                "example": "submitted"
               },
               "created_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "创建时间，毫秒级时间戳。"
+                "description": "任务创建时间，Unix时间戳、单位ms",
+                "example": 1722769557708
               },
               "updated_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "更新时间，毫秒级时间戳。"
+                "description": "任务更新时间，Unix时间戳、单位ms",
+                "example": 1722769557708
               }
             }
           }
