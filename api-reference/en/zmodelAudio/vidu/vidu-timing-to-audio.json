@@ -14,7 +14,7 @@
       "post": {
         "summary": "Vidu Timing-to-Audio",
         "operationId": "viduTimingToAudioEn",
-        "description": "Generate controllable sound effect clips using the Vidu model based on timeline. Creators can freely control the timing of multiple sound events within the audio through a timeline. (BGM not supported) After submission, query status via `GET /vidu/v1/audio/{task_id}`.",
+        "description": "Generate controllable sound effect clips using the Vidu model based on timeline. Creators can freely control the timing of multiple sound events within the audio through a timeline. (BGM not supported) After submission, query status via `GET /vidu/ent/v2/tasks/{task_id}/creations`.",
         "requestBody": {
           "required": true,
           "content": {
@@ -113,7 +113,44 @@
         },
         "responses": {
           "200": {
-            "description": "Submission successful, returns an audio task object."
+            "description": "Submission successful, returns an audio task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimingToAudioResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "audio1.0",
+                      "duration": 10,
+                      "timing_prompts": [
+                        {
+                          "from": 0.0,
+                          "to": 3.0,
+                          "prompt": "Birds chirping in the morning"
+                        },
+                        {
+                          "from": 3.0,
+                          "to": 6.0,
+                          "prompt": "A distant train passing by"
+                        },
+                        {
+                          "from": 5.0,
+                          "to": 9.5,
+                          "prompt": "Waves gently lapping the beach"
+                        }
+                      ],
+                      "seed": 0,
+                      "credits": 10,
+                      "created_at": "2025-01-01T10:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -197,6 +234,53 @@
             "type": "string",
             "maxLength": 1500,
             "description": "Text description of the sound event, with a maximum length of 1500 characters."
+          }
+        }
+      },
+      "TimingToAudioResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Vidu generated Task ID"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "Task state:\n- created: Task created successfully\n- queueing: Task in queue\n- processing: Task is being processed\n- success: Generation successful\n- failed: Task failed"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model parameter used"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Audio duration"
+          },
+          "timing_prompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimingPrompt"
+            },
+            "description": "List of configured sound events"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed used"
+          },
+          "credits": {
+            "type": "integer",
+            "description": "The credits used for this call"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "Task creation timestamp (ISO8601 format)"
           }
         }
       }

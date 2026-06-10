@@ -14,7 +14,7 @@
       "post": {
         "summary": "可控文生音效",
         "operationId": "viduTimingToAudio",
-        "description": "使用 Vidu 模型基于时间轴生成可控音效片段。创作者可以通过时间轴自由控制音频中多个声音事件的时机。（不支持背景音乐）提交任务后，请通过 `GET /vidu/v1/audio/{task_id}` 查询状态。",
+        "description": "使用 Vidu 模型基于时间轴生成可控音效片段。创作者可以通过时间轴自由控制音频中多个声音事件的时机。（不支持背景音乐）提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}/creations` 查询状态。",
         "requestBody": {
           "required": true,
           "content": {
@@ -54,7 +54,44 @@
         },
         "responses": {
           "200": {
-            "description": "提交成功，返回音频任务对象。"
+            "description": "提交成功，返回音频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimingToAudioResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "audio1.0",
+                      "duration": 10,
+                      "timing_prompts": [
+                        {
+                          "from": 0.0,
+                          "to": 3.0,
+                          "prompt": "清晨的鸟叫声"
+                        },
+                        {
+                          "from": 3.0,
+                          "to": 6.0,
+                          "prompt": "远处传来火车驶过的声音"
+                        },
+                        {
+                          "from": 5.0,
+                          "to": 9.5,
+                          "prompt": "海浪轻轻拍打沙滩"
+                        }
+                      ],
+                      "seed": 123456789,
+                      "credits": 10,
+                      "created_at": "2025-01-01T10:00:00.000Z"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -138,6 +175,53 @@
             "type": "string",
             "maxLength": 1500,
             "description": "声音事件的文本描述，最大长度 1500 字符。"
+          }
+        }
+      },
+      "TimingToAudioResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Vidu 生成的任务ID"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "处理状态 可选值：\n- created 创建成功\n- queueing 任务排队中\n- processing 任务处理中\n- success 任务成功\n- failed 任务失败"
+          },
+          "model": {
+            "type": "string",
+            "description": "本次调用的模型名称"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "本次调用的音频时长参数"
+          },
+          "timing_prompts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TimingPrompt"
+            },
+            "description": "本次调用中定义的多个音频事件参数"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "本次调用的随机种子参数"
+          },
+          "credits": {
+            "type": "integer",
+            "description": "本次调用使用的积分数"
+          },
+          "created_at": {
+            "type": "string",
+            "description": "任务创建时间"
           }
         }
       }
