@@ -176,7 +176,8 @@
                           "zh-Hans/zmodelChat/minimax/miniMax-M2.5",
                           "zh-Hans/zmodelChat/minimax/miniMax-M2.5-highspeed",
                           "zh-Hans/zmodelChat/minimax/miniMax-M2.7",
-                          "zh-Hans/zmodelChat/minimax/miniMax-M2.7-highspeed"
+                          "zh-Hans/zmodelChat/minimax/miniMax-M2.7-highspeed",
+                          "zh-Hans/zmodelChat/minimax/miniMax-M3"
                         ]
                       },
                       {
@@ -428,7 +429,8 @@
                           "en/zmodelChat/minimax/miniMax-M2.5",
                           "en/zmodelChat/minimax/miniMax-M2.5-highspeed",
                           "en/zmodelChat/minimax/miniMax-M2.7",
-                          "en/zmodelChat/minimax/miniMax-M2.7-highspeed"
+                          "en/zmodelChat/minimax/miniMax-M2.7-highspeed",
+                          "en/zmodelChat/minimax/miniMax-M3"
                         ]
                       },
                       {
