@@ -46,7 +46,7 @@
             "name": "task_id",
             "in": "path",
             "required": true,
-            "description": "图生视频的任务ID\n- 请求路径参数，直接将值填写在请求路径中",
+            "description": "图生视频的任务ID\n- 请求路径参数，直接将值填写在请求路径中\n- task_id与external_task_id两种查询方式二选一",
             "schema": {
               "type": "string"
             }
