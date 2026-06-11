@@ -269,9 +269,6 @@
       },
       "SubmitResponse": {
         "type": "object",
-        "required": [
-          "request_id"
-        ],
         "properties": {
           "code": {
             "type": "integer",
@@ -287,13 +284,6 @@
           },
           "data": {
             "type": "object",
-            "required": [
-              "task_id",
-              "task_info",
-              "task_status",
-              "created_at",
-              "updated_at"
-            ],
             "properties": {
               "task_id": {
                 "type": "string",

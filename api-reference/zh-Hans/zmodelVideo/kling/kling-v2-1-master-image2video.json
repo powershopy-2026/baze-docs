@@ -382,10 +382,6 @@
           },
           "data": {
             "type": "object",
-            "required": [
-              "task_id",
-              "task_status"
-            ],
             "properties": {
               "task_id": {
                 "type": "string",
