@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Kling 全能视频任务 - 提交任务",
+    "title": "Kling 视频Omni任务 - 提交任务",
     "version": "1.0.0",
-    "description": "通过 `/kling/v1/videos/omni-video` 提交 Kling 原生全能视频任务。"
+    "description": "通过 `/kling/v1/videos/omni-video` 提交 Kling 原生视频Omni任务。"
   },
   "servers": [
     {
@@ -20,8 +20,8 @@
   "paths": {
     "/kling/v1/videos/omni-video": {
       "post": {
-        "summary": "Kling 全能视频任务",
-        "description": "通过 `/kling/v1/videos/omni-video` 提交 Kling 原生全能视频任务。",
+        "summary": "Kling 视频Omni任务",
+        "description": "通过 `/kling/v1/videos/omni-video` 提交 Kling 原生视频Omni任务。",
         "operationId": "createKlingVideoO1OmniVideoGeneration",
         "tags": [
           "Kling"

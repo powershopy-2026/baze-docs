@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Kling 全能视频任务 - 提交任务",
+    "title": "Kling 视频Omni任务 - 提交任务",
     "version": "1.0.0",
     "description": "Omni 模型可以通过 Prompt 结合元素、图片、视频等内容实现多种能力。"
   },
@@ -20,7 +20,7 @@
   "paths": {
     "/kling/v1/videos/omni-video": {
       "post": {
-        "summary": "Kling 全能视频任务",
+        "summary": "Kling 视频Omni任务",
         "description": "Omni 模型可以通过 Prompt 结合元素、图片、视频等内容实现多种能力。",
         "operationId": "createKlingV3OmniVideoGeneration",
         "tags": [
