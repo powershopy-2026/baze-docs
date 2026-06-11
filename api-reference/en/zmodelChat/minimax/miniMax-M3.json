@@ -1,0 +1,267 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax-M3",
+    "version": "1.0.0",
+    "description": "MiniMax (`type=35`) channel Chat Completions capability documentation. The unified API endpoint is `/v1/chat/completions`. The platform gateway forwards requests to the upstream provider `POST /v1/text/chatcompletion_v2`, using an OpenAI Chat Completions-compatible request and response structure.\n\nThis document describes only the field subset that the platform gateway reliably passes through and that is consistent with MiniMax OpenAI-compatible capabilities: `model`, `messages`, `temperature`, `top_p`, `max_tokens`, `stream`, `stop`."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Chat",
+      "description": "MiniMax OpenAI-compatible Chat Completions capability"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "MiniMax-M3",
+        "description": "Call the MiniMax OpenAI-compatible chat model via the baze platform. The currently stable model is `MiniMax-M3`.",
+        "operationId": "minimaxChatCompletions",
+        "tags": [
+          "MiniMax Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "Non-streaming chat",
+                  "value": {
+                    "model": "MiniMax-M3",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Describe Paris in one sentence."
+                      }
+                    ],
+                    "temperature": 0.3
+                  }
+                },
+                "stream": {
+                  "summary": "Streaming chat",
+                  "value": {
+                    "model": "MiniMax-M3",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Count from one to five."
+                      }
+                    ],
+                    "stream": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Non-streaming returns OpenAI-compatible JSON; streaming returns an OpenAI-compatible SSE event stream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE data stream. Each `data:` event can be parsed as an OpenAI Chat Completions Chunk; the stream typically ends with `data: [DONE]`."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "MiniMax-M3"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          },
+          "temperature": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "default": 0.7
+          },
+          "top_p": {
+            "type": "number",
+            "maximum": 1,
+            "minimum": 0,
+            "default": 0.95
+          },
+          "max_tokens": {
+            "type": "integer",
+            "maximum": 2048,
+            "minimum": 1
+          },
+          "stream": {
+            "type": "boolean",
+            "default": true
+          },
+          "stop": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "user_system",
+              "group",
+              "sample_message_user",
+              "sample_message_ai"
+            ],
+            "description": "Role of the message sender\nsystem: Set the model's role and behavior\nuser: User input\nassistant: Model's historical replies\nuser_system: Set the user's role and persona\ngroup: Name of the conversation\nsample_message_user: Example user input\nsample_message_ai: Example model output"
+          },
+          "content": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array"
+              }
+            ],
+            "description": "Name of the sender. If there are multiple messages with the same role type, a specific name must be provided to distinguish them"
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          },
+          "created": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "usage": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

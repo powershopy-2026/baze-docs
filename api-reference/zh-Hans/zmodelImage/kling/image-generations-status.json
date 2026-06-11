@@ -33,10 +33,20 @@
         ],
         "parameters": [
           {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "数据交换格式"
+          },
+          {
             "name": "task_id",
             "in": "path",
             "required": true,
-            "description": "提交接口返回的公共任务 ID。",
+            "description": "图片生成的任务ID。请求路径参数，直接将值填写在请求路径中\n- 创建任务时填写的 external_task_id，与 task_id 两种查询方式二选一\n- 请注意，单用户下需要保证唯一性",
             "schema": {
               "type": "string"
             }
@@ -49,26 +59,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FetchResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "任务不存在或无法查询。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "缺少或无效的 Bearer Token。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -86,41 +76,27 @@
       }
     },
     "schemas": {
-      "ErrorResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "object",
-            "description": "网关或上游提供商返回的错误详情。"
-          }
-        }
-      },
       "FetchResponse": {
         "type": "object",
-        "required": [
-          "code",
-          "message",
-          "data"
-        ],
         "properties": {
           "code": {
             "type": "integer",
-            "description": "Kling 响应码。"
+            "description": "错误码；具体定义见错误码。"
           },
           "message": {
             "type": "string",
-            "description": "Kling 响应消息。"
+            "description": "错误信息。"
           },
           "request_id": {
             "type": "string",
-            "description": "上游请求标识符（如有提供）。"
+            "description": "请求ID，系统生成，用于跟踪请求、排查问题。"
           },
           "data": {
             "type": "object",
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "由本网关生成的公共任务 ID。"
+                "description": "任务ID，系统生成。"
               },
               "task_status": {
                 "type": "string",
@@ -130,34 +106,101 @@
                   "succeed",
                   "failed"
                 ],
-                "description": "当前任务状态。"
+                "description": "任务状态，枚举值：submitted（已提交）、processing（处理中）、succeed（成功）、failed（失败）。"
               },
               "task_status_msg": {
                 "type": "string",
-                "description": "Kling 返回的失败或进度消息。"
-              },
-              "task_info": {
-                "type": "object",
-                "description": "任务元数据。网关不暴露上游任务 ID。"
-              },
-              "task_result": {
-                "type": "object",
-                "description": "Kling 任务结果。视频接口返回视频；图像接口返回图像，可能包含 series_images。"
+                "description": "任务状态信息，当任务失败时展示失败原因（如触发平台的内容风控等）。"
               },
               "final_unit_deduction": {
                 "type": "string",
-                "description": "上游费用参考值，仅用于审计，不作为用户计费配额。"
+                "description": "任务最终扣减积分数值。"
+              },
+              "watermark_info": {
+                "type": "object",
+                "description": "水印信息。",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "是否启用水印。"
+                  }
+                }
+              },
+              "task_info": {
+                "type": "object",
+                "description": "任务创建时的参数信息。",
+                "properties": {
+                  "external_task_id": {
+                    "type": "string",
+                    "description": "客户自定义任务ID。"
+                  }
+                }
               },
               "created_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "创建时间，单位为毫秒。"
+                "description": "任务创建时间，Unix时间戳、单位ms。"
               },
               "updated_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "更新时间，单位为毫秒。"
+                "description": "任务更新时间，Unix时间戳、单位ms。"
+              },
+              "task_result": {
+                "type": "object",
+                "description": "任务结果。",
+                "properties": {
+                  "images": {
+                    "type": "array",
+                    "description": "生成的图片列表。",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "index": {
+                          "type": "integer",
+                          "description": "图片编号，0-9。"
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "生成图片的URL（请注意，为保障信息安全，生成的图片/视频会在30天后被清理，请及时转存）。"
+                        },
+                        "watermark_url": {
+                          "type": "string",
+                          "description": "含水印图片下载URL，防盗链格式。"
+                        }
+                      }
+                    }
+                  }
+                }
               }
+            }
+          }
+        },
+        "example": {
+          "code": 0,
+          "message": "string",
+          "request_id": "string",
+          "data": {
+            "task_id": "string",
+            "task_status": "succeed",
+            "task_status_msg": "string",
+            "final_unit_deduction": "string",
+            "watermark_info": {
+              "enabled": false
+            },
+            "task_info": {
+              "external_task_id": "string"
+            },
+            "created_at": 1722769557708,
+            "updated_at": 1722769557708,
+            "task_result": {
+              "images": [
+                {
+                  "index": 0,
+                  "url": "string",
+                  "watermark_url": "string"
+                }
+              ]
             }
           }
         }

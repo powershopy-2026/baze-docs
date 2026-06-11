@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Kling 全能视频任务 - 提交任务",
+    "title": "Kling 视频Omni任务 - 提交任务",
     "version": "1.0.0",
-    "description": "通过 `/kling/v1/videos/omni-video` 提交 Kling 原生全能视频任务。"
+    "description": "Omni 模型可以通过 Prompt 结合元素、图片、视频等内容实现多种能力。"
   },
   "servers": [
     {
@@ -20,15 +20,27 @@
   "paths": {
     "/kling/v1/videos/omni-video": {
       "post": {
-        "summary": "Kling 全能视频任务",
-        "description": "通过 `/kling/v1/videos/omni-video` 提交 Kling 原生全能视频任务。",
-        "operationId": "createKlingV3OmniVideo",
+        "summary": "Kling 视频Omni任务",
+        "description": "Omni 模型可以通过 Prompt 结合元素、图片、视频等内容实现多种能力。",
+        "operationId": "createKlingV3OmniVideoGeneration",
         "tags": [
           "Kling"
         ],
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "数据交换格式"
           }
         ],
         "requestBody": {
@@ -43,7 +55,17 @@
                   "summary": "请求示例",
                   "value": {
                     "model_name": "kling-v3-omni",
-                    "prompt": "A product reveal video with smooth lighting"
+                    "prompt": "让<<<image_1>>>中的人物向镜头挥手",
+                    "image_list": [
+                      {
+                        "image_url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-1.png"
+                      }
+                    ],
+                    "duration": "5",
+                    "mode": "pro",
+                    "aspect_ratio": "16:9",
+                    "callback_url": "",
+                    "external_task_id": ""
                   }
                 }
               }
@@ -57,6 +79,25 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "响应示例",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": {
+                        "task_id": "string",
+                        "task_info": {
+                          "external_task_id": "string"
+                        },
+                        "task_status": "submitted",
+                        "created_at": 1722769557708,
+                        "updated_at": 1722769557708
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -210,7 +251,7 @@
                     "feature",
                     "base"
                   ],
-                  "description": "参考视频类型。feature 为特征参考视频，base 为待编辑视频。"
+                  "description": "参考类型：feature（特征参考视频）或 base（待编辑视频）\n- base - 指令变换（视频编辑）：\n视频编辑，例如增加/删除/修改内容（主体/背景/局部/视频风格/物体颜色/天气等），切换景别/视角。\n- feature - 视频参考：\n参考视频内容生成下一个镜头/上一个镜头，或者参考视频的风格/运镜方式进行视频生成。"
                 },
                 "keep_original_sound": {
                   "type": "string",
@@ -254,7 +295,7 @@
           },
           "duration": {
             "type": "string",
-            "description": "请求的视频时长，单位秒。\n\n- 使用视频编辑功能（\"refer_type\":\"base\"）时，输出结果与传入视频时长相同，此时当前参数无效；此时，按输入视频时长四舍五入取整计量计费",
+            "description": "生成视频时长，单位秒。\n\n- 使用视频编辑功能（\"refer_type\":\"base\"）时，输出结果与传入视频时长相同，此时当前参数无效；此时，按输入视频时长四舍五入取整计量计费",
             "default": "5",
             "enum": [
               "3",
@@ -288,7 +329,7 @@
           },
           "external_task_id": {
             "type": "string",
-            "description": "自定义任务ID。"
+            "description": "自定义任务ID。\n- 传入不会覆盖系统生成的任务ID，但支持通过该ID进行任务查询。\n- 请注意，单用户下需要保证唯一性。"
           }
         }
       },
@@ -303,58 +344,56 @@
       },
       "SubmitResponse": {
         "type": "object",
-        "required": [
-          "code",
-          "message",
-          "data"
-        ],
         "properties": {
           "code": {
             "type": "integer",
-            "description": "Kling 响应码。0 表示任务已被接受。"
+            "description": "错误码；具体定义见错误码。"
           },
           "message": {
             "type": "string",
-            "description": "Kling 响应消息。"
+            "description": "错误信息。"
           },
           "request_id": {
             "type": "string",
-            "description": "上游请求标识符（如有提供）。"
+            "description": "请求ID，系统生成，用于跟踪请求、排查问题。"
           },
           "data": {
             "type": "object",
-            "required": [
-              "task_id",
-              "task_status"
-            ],
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "由本网关生成的公开任务 ID。上游任务 ID 不对外暴露。"
+                "description": "任务ID，系统生成。"
               },
               "task_status": {
                 "type": "string",
-                "description": "初始任务状态。",
+                "description": "任务状态。",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeed",
+                  "failed"
+                ],
                 "example": "submitted"
               },
               "task_info": {
                 "type": "object",
+                "description": "任务创建时的参数信息。",
                 "properties": {
                   "external_task_id": {
                     "type": "string",
-                    "description": "客户端提供的外部任务 ID，或由网关注入的公开任务 ID。"
+                    "description": "客户自定义任务ID。"
                   }
                 }
               },
               "created_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "创建时间，毫秒级时间戳。"
+                "description": "任务创建时间，Unix时间戳、单位ms。"
               },
               "updated_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "更新时间，毫秒级时间戳。"
+                "description": "任务更新时间，Unix时间戳、单位ms。"
               }
             }
           }

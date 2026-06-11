@@ -24,36 +24,20 @@
               },
               "examples": {
                 "basic_image_to_video": {
-                  "summary": "基础图生视频",
+                  "summary": "图生视频示例",
                   "value": {
-                    "model": "viduq3-pro-fast",
+                    "model": "viduq3-pro",
                     "images": [
-                      "https://example.com/image.png"
+                      "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"
                     ],
-                    "prompt": "让图片中的场景动起来"
-                  }
-                },
-                "with_audio": {
-                  "summary": "带音频的图生视频（q3 模型）",
-                  "value": {
-                    "model": "viduq3-pro-fast",
-                    "images": [
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAE..."
-                    ],
+                    "prompt": "The astronaut waved and the camera moved up.",
                     "audio": true,
-                    "audio_type": "all",
-                    "duration": 5
-                  }
-                },
-                "with_recommended_prompt": {
-                  "summary": "使用推荐提示词",
-                  "value": {
-                    "model": "viduq3-pro-fast",
-                    "images": [
-                      "https://example.com/character.jpg"
-                    ],
-                    "is_rec": true,
-                    "resolution": "720p"
+                    "voice_id": "professional_host",
+                    "duration": 5,
+                    "seed": 0,
+                    "resolution": "1080p",
+                    "movement_amplitude": "auto",
+                    "off_peak": false
                   }
                 }
               }
@@ -285,11 +269,11 @@
           "off_peak": {
             "type": "boolean",
             "default": false,
-            "description": "错峰模式。\n- **true**: 错峰生成模式\n- **false**: 正常生成模式\n错峰模式消耗更低积分（详见定价说明）。错峰模式下提交的任务将在 48 小时内生成，未完成的任务将自动取消并退还积分。支持取消错峰任务。"
+            "description": "错峰模式，默认为：false，可选值：\n- true：错峰生成视频；\n- false：即时生成视频；\n\n注1：错峰模式消耗的积分更低，具体请查看产品定价\n\n注2：错峰模式下提交的任务，会在48小时内生成，未能完成的任务会被自动取消，并返还该任务的积分；\n\n注3：您也可以手动取消错峰任务\n\n注4：除q3 外的其他音视频直出功能，都不支持错峰模式"
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。\n- **true**: 添加水印\n- **false**: 不添加水印\n\n注1：目前水印内容为固定，内容由AI生成，默认不加\n注2：您可以通过 `watermarked_url` 参数查询获取带水印的视频内容，详情见查询任务接口",
+            "description": "是否添加水印\n- true：添加水印；\n- false：不添加水印；\n\n注1：目前水印内容为固定，内容由AI生成，默认不加\n\n注2：您可以通过watermarked_url参数查询获取带水印的视频内容，详情见查询任务接口",
             "default": false
           },
           "wm_position": {

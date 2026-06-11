@@ -21,7 +21,7 @@
     "/kling/v1/videos/motion-control": {
       "post": {
         "summary": "可灵运镜控制视频任务 (kling-v3)",
-        "description": "通过 `/kling/v1/videos/motion-control` 提交可灵原生运镜控制任务。请求体经模型映射和公共任务 ID 注入后转发至可灵官方接口。",
+        "description": "通过 `/kling/v1/videos/motion-control` 提交可灵原生运镜控制任务。",
         "operationId": "createKlingV3MotionControl",
         "tags": [
           "Kling"
@@ -29,6 +29,18 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "数据交换格式"
           }
         ],
         "requestBody": {
@@ -43,10 +55,14 @@
                   "summary": "请求示例",
                   "value": {
                     "model_name": "kling-v3",
-                    "image_url": "https://example.com/character.png",
-                    "video_url": "https://example.com/motion.mp4",
-                    "character_orientation": "video",
-                    "mode": "std"
+                    "image_url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-3.ng.png",
+                    "prompt": "女孩穿着灰色宽松T恤和牛仔短裤",
+                    "video_url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/dance.mp4",
+                    "keep_original_sound": "yes",
+                    "character_orientation": "image",
+                    "mode": "pro",
+                    "callback_url": "",
+                    "external_task_id": "xxx"
                   }
                 }
               }
@@ -60,6 +76,25 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "响应示例",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": {
+                        "task_id": "string",
+                        "task_info": {
+                          "external_task_id": "string"
+                        },
+                        "task_status": "submitted",
+                        "created_at": 1722769557708,
+                        "updated_at": 1722769557708
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -185,7 +220,7 @@
           },
           "external_task_id": {
             "type": "string",
-            "description": "自定义任务ID"
+            "description": "自定义任务ID。\n- 传入不会覆盖系统生成的任务ID，但支持通过该ID进行任务查询。\n- 请注意，单用户下需要保证唯一性。"
           }
         }
       },
@@ -200,58 +235,56 @@
       },
       "SubmitResponse": {
         "type": "object",
-        "required": [
-          "code",
-          "message",
-          "data"
-        ],
         "properties": {
           "code": {
             "type": "integer",
-            "description": "可灵响应码。0 表示任务已被接受。"
+            "description": "错误码；具体定义见错误码"
           },
           "message": {
             "type": "string",
-            "description": "可灵响应消息。"
+            "description": "错误信息"
           },
           "request_id": {
             "type": "string",
-            "description": "上游请求标识符（如有提供）。"
+            "description": "请求ID，系统生成，用于跟踪请求、排查问题"
           },
           "data": {
             "type": "object",
-            "required": [
-              "task_id",
-              "task_status"
-            ],
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "由本网关生成的公开任务 ID。上游任务 ID 不对外暴露。"
-              },
-              "task_status": {
-                "type": "string",
-                "description": "初始任务状态。",
-                "example": "submitted"
+                "description": "任务ID，系统生成"
               },
               "task_info": {
                 "type": "object",
+                "description": "任务创建时的参数信息",
                 "properties": {
                   "external_task_id": {
                     "type": "string",
-                    "description": "客户端提供的外部任务 ID，或由网关注入的公开任务 ID。"
+                    "description": "客户自定义任务ID"
                   }
                 }
+              },
+              "task_status": {
+                "type": "string",
+                "description": "任务状态，枚举值：submitted（已提交）、processing（处理中）、succeed（成功）、failed（失败）",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeed",
+                  "failed"
+                ],
+                "example": "submitted"
               },
               "created_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "创建时间，毫秒级时间戳。"
+                "description": "任务创建时间，Unix时间戳、单位ms"
               },
               "updated_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "更新时间，毫秒级时间戳。"
+                "description": "任务更新时间，Unix时间戳、单位ms"
               }
             }
           }

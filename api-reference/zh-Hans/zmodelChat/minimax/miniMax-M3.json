@@ -1,0 +1,267 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax-M3",
+    "version": "1.0.0",
+    "description": "MiniMax（`type=35`）通道对话能力文档。公开统一入口为 `/v1/chat/completions`，当前网关会将请求转发到上游 `POST /v1/text/chatcompletion_v2`，并沿用 OpenAI Chat Completions 兼容的请求与响应结构。\n\n本文档只描述当前网关已稳定透传且与 MiniMax OpenAI 兼容能力一致的字段子集：`model`、`messages`、`temperature`、`top_p`、`max_tokens`、`stream`、`stop`。"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Chat",
+      "description": "MiniMax OpenAI 兼容对话能力"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "MiniMax-M3",
+        "description": "调用 MiniMax OpenAI 兼容聊天模型。当前稳定模型为 `MiniMax-M3`。",
+        "operationId": "minimaxChatCompletions",
+        "tags": [
+          "MiniMax Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "非流式对话",
+                  "value": {
+                    "model": "MiniMax-M3",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是一个简洁的助手。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "请用一句话介绍巴黎。"
+                      }
+                    ],
+                    "temperature": 0.3
+                  }
+                },
+                "stream": {
+                  "summary": "流式对话",
+                  "value": {
+                    "model": "MiniMax-M3",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Count from one to five."
+                      }
+                    ],
+                    "stream": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功。非流式返回 OpenAI 兼容 JSON；流式返回 OpenAI 兼容 SSE 事件流。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE 数据流。每个 `data:` 事件都可按 OpenAI Chat Completions Chunk 解析；结束时通常返回 `data: [DONE]`。"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "MiniMax-M3"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.7
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.95
+          },
+          "max_tokens": {
+            "type": "integer",
+            "maximum": 2048,
+            "minimum": 1
+          },
+          "stream": {
+            "type": "boolean",
+            "default": true
+          },
+          "stop": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "user_system",
+              "group",
+              "sample_message_user",
+              "sample_message_ai"
+            ],
+            "description": "消息发送者的角色system: 设定模型的角色和行为\nuser: 用户的输入\nassistant: 模型的历史回复\nuser_system: 设定用户的角色和人设\ngroup: 对话的名称\nsample_message_user: 示例的用户输入\nsample_message_ai: 示例的模型输出"
+          },
+          "content": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array"
+              }
+            ],
+            "description": "发送者的名称。若同一类型的角色有多个，须提供具体名称以区分"
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          },
+          "created": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "usage": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
