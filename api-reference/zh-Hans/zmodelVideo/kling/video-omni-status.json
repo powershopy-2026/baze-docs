@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Kling 全能视频任务 - 查询任务状态",
+    "title": "Kling 视频Omni任务 - 查询任务状态",
     "version": "1.0.0",
-    "description": "通过 `/kling/v1/videos/omni-video/{task_id}` 查询 Kling 原生全能视频任务状态。"
+    "description": "通过 `/kling/v1/videos/omni-video/{task_id}` 查询 Kling 原生视频Omni任务状态。"
   },
   "servers": [
     {
