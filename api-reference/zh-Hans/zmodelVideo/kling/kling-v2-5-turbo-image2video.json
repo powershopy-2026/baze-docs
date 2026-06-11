@@ -152,7 +152,7 @@
           },
           "image_tail": {
             "type": "string",
-            "description": "参考图像 - 尾帧控制\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px\n- image 参数与 image_tail 参数至少二选一，二者不能同时为空\n- image_tail 参数与 dynamic_masks/static_mask 参数二选一，不能同时使用"
+            "description": "参考图像 - 尾帧控制\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px\n- image 参数与 image_tail 参数至少二选一，二者不能同时为空"
           },
           "multi_shot": {
             "type": "boolean",
@@ -284,48 +284,6 @@
             ],
             "default": "std",
             "description": "生成视频的模式\n\n- std：标准模式（标准），基础模式，性价比高，输出视频分辨率为720P。\n- pro：专家模式（高品质），高表现模式，生成视频质量更佳，输出视频分辨率为1080P。\n- 4k：4K模式，高表现（同pro），生成视频质量更佳，输出视频分辨率为4K。"
-          },
-          "static_mask": {
-            "type": "string",
-            "description": "静态笔刷涂抹区域（用户通过运动笔刷涂抹的 mask 图片）\n`\"运动笔刷\"能力包含\"动态笔刷 dynamic_masks\"和\"静态笔刷 static_mask\"两种`\n\n- 支持传入图片 Base64 编码或图片 URL（确保可访问，格式要求同 image 字段）\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片长宽比必须与输入图片相同（即 image 字段），否则任务失败（failed）\n- static_mask 和 dynamic_masks.mask 这两张图片的分辨率必须一致，否则任务失败（failed）"
-          },
-          "dynamic_masks": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": [
-                "mask",
-                "trajectories"
-              ],
-              "properties": {
-                "mask": {
-                  "type": "string",
-                  "description": "动态笔刷涂抹区域（用户通过运动笔刷涂抹的 mask 图片）\n- 支持传入图片 Base64 编码或图片 URL（确保可访问，格式要求同 image 字段）\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片长宽比必须与输入图片相同（即 image 字段），否则任务失败（failed）\n- static_mask 和 dynamic_masks.mask 这两张图片的分辨率必须一致，否则任务失败（failed）"
-                },
-                "trajectories": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": [
-                      "x",
-                      "y"
-                    ],
-                    "properties": {
-                      "x": {
-                        "type": "integer",
-                        "description": "轨迹点横坐标（在像素二维坐标系下，以输入图片 image 左下为原点的像素坐标）"
-                      },
-                      "y": {
-                        "type": "integer",
-                        "description": "轨迹点纵坐标（在像素二维坐标系下，以输入图片 image 左下为原点的像素坐标）"
-                      }
-                    }
-                  },
-                  "description": "运动轨迹坐标序列\n- 生成 5s 的视频，轨迹长度不超过 77，即坐标个数取值范围：[2, 77]\n- 轨迹坐标系，以图片左下角为坐标原点\n\n`注1：坐标点个数越多轨迹刻画越准确，如只有 2 个轨迹点则为这两点连接的直线`\n\n`注2：轨迹方向以传入顺序为指向，以最先传入的坐标为轨迹起点，依次链接后续坐标形成运动轨迹`"
-                }
-              }
-            },
-            "description": "动态笔刷配置列表\n- 可配置多组（最多 6 组），每组包含\"涂抹区域 mask\"与\"运动轨迹 trajectories\"序列"
           },
           "duration": {
             "type": "string",
