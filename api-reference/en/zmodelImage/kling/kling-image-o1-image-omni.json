@@ -128,7 +128,8 @@
                   "description": "Image URL or Base64 string."
                 }
               }
-            }
+            },
+            "maxItems": 10
           },
           "element_list": {
             "type": "array",
@@ -145,7 +146,8 @@
                 }
               }
             },
-            "description": "Element reference list, configured based on element IDs in the element library\n\n- Passed as key:value pairs:\n`\"element_list\":[{ \"element_id\": 829836802793406551 }]`\n\n- The total of reference elements and reference images must not exceed 10"
+            "description": "Element reference list, configured based on element IDs in the element library\n\n- Passed as key:value pairs:\n`\"element_list\":[{ \"element_id\": 829836802793406551 }]`\n\n- The total of reference elements and reference images must not exceed 10",
+            "maxItems": 10
           },
           "resolution": {
             "type": "string",

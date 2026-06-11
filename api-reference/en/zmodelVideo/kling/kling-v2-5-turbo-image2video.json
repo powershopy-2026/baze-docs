@@ -151,7 +151,8 @@
                 },
                 "prompt": {
                   "type": "string",
-                  "description": "Shot prompt."
+                  "description": "Shot prompt.",
+                  "maxLength": 512
                 },
                 "duration": {
                   "type": "string",
@@ -159,7 +160,9 @@
                 }
               }
             },
-            "description": "Multi-shot information including prompt, duration, etc.\nDefine shot index and corresponding prompt and duration via index, prompt, duration parameters.\n- Max 6 shots, min 1 shot.\n- Max length per shot content: 512 characters.\n- Each shot duration must not exceed total task duration and must be >= 1.\n- Sum of all shot durations must equal total task duration.\n\nRequired when multi_shot is true and shot_type is customize. Format:\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```\n\nRequired when multi_shot is true and shot_type is customize."
+            "description": "Multi-shot information including prompt, duration, etc.\nDefine shot index and corresponding prompt and duration via index, prompt, duration parameters.\n- Max 6 shots, min 1 shot.\n- Max length per shot content: 512 characters.\n- Each shot duration must not exceed total task duration and must be >= 1.\n- Sum of all shot durations must equal total task duration.\n\nRequired when multi_shot is true and shot_type is customize. Format:\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```\n\nRequired when multi_shot is true and shot_type is customize.",
+            "minItems": 1,
+            "maxItems": 6
           },
           "negative_prompt": {
             "type": "string",
@@ -181,7 +184,8 @@
                 }
               }
             },
-            "description": "Element reference list, configured based on element IDs in the element library.\n\nUse key:value format:\n\n```json\n\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]\n```"
+            "description": "Element reference list, configured based on element IDs in the element library.\n\nUse key:value format:\n\n```json\n\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]\n```",
+            "maxItems": 3
           },
           "voice_list": {
             "type": "array",
@@ -221,7 +225,8 @@
                 }
               }
             },
-            "description": "Voice list referenced during video generation.\n- Up to 2 voices per video generation task\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'\n- element_list and voice_list are mutually exclusive, cannot coexist\n\nUse key:value format:\n\n```json\n\"voice_list\":[{ \"voice_id\": \"string\" },{ \"voice_id\": \"string\" }]\n```"
+            "description": "Voice list referenced during video generation.\n- Up to 2 voices per video generation task\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'\n- element_list and voice_list are mutually exclusive, cannot coexist\n\nUse key:value format:\n\n```json\n\"voice_list\":[{ \"voice_id\": \"string\" },{ \"voice_id\": \"string\" }]\n```",
+            "maxItems": 2
           },
           "sound": {
             "type": "string",
@@ -247,107 +252,6 @@
             ],
             "default": "std",
             "description": "Video generation mode\n\n- std: Standard mode, cost-effective, output video resolution 720P.\n- pro: Expert mode (high quality), better video quality, output video resolution 1080P.\n- 4k: 4K mode, high quality (same as pro), better video quality, output video resolution 4K."
-          },
-          "static_mask": {
-            "type": "string",
-            "description": "Static brush mask area (mask image painted by the user via motion brush)\\n`The \"motion brush\" feature includes both \"dynamic brush dynamic_masks\" and \"static brush static_mask\"`\n\n- Supports image Base64 encoding or image URL (must be accessible, same format requirements as the image field)\n- Supported image formats: .jpg / .jpeg / .png\n- Image aspect ratio must match the input image (i.e., the image field), otherwise the task will fail\n- The resolution of static_mask and dynamic_masks.mask must be identical, otherwise the task will fail"
-          },
-          "dynamic_masks": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": [
-                "mask",
-                "trajectories"
-              ],
-              "properties": {
-                "mask": {
-                  "type": "string",
-                  "description": "Dynamic brush mask area (mask image painted by the user via motion brush)\n- Supports image Base64 encoding or image URL (must be accessible, same format requirements as the image field)\n- Supported image formats: .jpg / .jpeg / .png\n- Image aspect ratio must match the input image (i.e., the image field), otherwise the task will fail\n- The resolution of static_mask and dynamic_masks.mask must be identical, otherwise the task will fail"
-                },
-                "trajectories": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": [
-                      "x",
-                      "y"
-                    ],
-                    "properties": {
-                      "x": {
-                        "type": "integer",
-                        "description": "Trajectory point X-coordinate (in pixel coordinate system, origin at the bottom-left of the input image)"
-                      },
-                      "y": {
-                        "type": "integer",
-                        "description": "Trajectory point Y-coordinate (in pixel coordinate system, origin at the bottom-left of the input image)"
-                      }
-                    }
-                  },
-                  "description": "Motion trajectory coordinate sequence\n- For a 5s video, trajectory length must not exceed 77, i.e., coordinate count range: [2, 77]\n- Trajectory coordinate system: origin at the bottom-left corner of the image\n\n`Note 1: More coordinate points result in more accurate trajectory depiction; 2 points form a straight line`\n\n`Note 2: Trajectory direction follows the input order, with the first coordinate as the starting point, sequentially linking subsequent coordinates to form the motion trajectory`"
-                }
-              }
-            },
-            "description": "Dynamic brush configuration list\n- Can configure multiple groups (up to 6), each containing a \"mask area\" and \"motion trajectories\" sequence"
-          },
-          "camera_control": {
-            "type": "object",
-            "description": "Camera motion control settings (if not specified, the model will intelligently match based on input text/image)",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "simple",
-                  "down_back",
-                  "forward_up",
-                  "right_turn_forward",
-                  "left_turn_forward"
-                ],
-                "description": "Predefined camera motion types.\n- simple: Simple camera movement, choose one of six config options.\n- down_back: Camera tilts down and moves back ➡️ pull away, no config needed.\n- forward_up: Camera moves forward and tilts up ➡️ push in and up, no config needed.\n- right_turn_forward: Rotate right then move forward ➡️ right spin push, no config needed.\n- left_turn_forward: Rotate left and move forward ➡️ left spin push, no config needed."
-              },
-              "config": {
-                "type": "object",
-                "description": "Contains 6 fields to specify camera movement in different directions\n- Required when camera type is 'simple', leave empty for other types\n- Choose exactly 1 of the 6 parameters to be non-zero, the rest must be 0",
-                "properties": {
-                  "horizontal": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "Horizontal movement along the X-axis\nNegative values move left, positive values move right"
-                  },
-                  "vertical": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "Vertical movement along the Y-axis\nNegative values move down, positive values move up"
-                  },
-                  "pan": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "Pan: rotation around the Y-axis\nNegative values rotate left, positive values rotate right"
-                  },
-                  "tilt": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "Tilt: rotation around the X-axis\nNegative values tilt down, positive values tilt up"
-                  },
-                  "roll": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "Roll: rotation around the Z-axis\nNegative values rotate counter-clockwise, positive values rotate clockwise"
-                  },
-                  "zoom": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "Zoom: controls focal length and field of view\nNegative values zoom in (narrower FOV), positive values zoom out (wider FOV)"
-                  }
-                }
-              }
-            }
           },
           "duration": {
             "type": "string",

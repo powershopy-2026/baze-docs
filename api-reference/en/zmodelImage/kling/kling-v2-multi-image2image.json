@@ -127,7 +127,9 @@
                 }
               }
             },
-            "description": "Subject reference image list\n\n- Supports up to 4 images, minimum 1 image, passed as key:value pairs:\n`\"subject_image_list\":[  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" }]`\n- No cropping logic on the API side — please upload pre-cropped subject images directly\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1"
+            "description": "Subject reference image list\n\n- Supports up to 4 images, minimum 1 image, passed as key:value pairs:\n`\"subject_image_list\":[  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" },  { \"subject_image\":\"image_url\" }]`\n- No cropping logic on the API side — please upload pre-cropped subject images directly\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1",
+            "minItems": 1,
+            "maxItems": 4
           },
           "scene_image": {
             "type": "string",
@@ -176,6 +178,11 @@
           "external_task_id": {
             "type": "string",
             "description": "Custom task ID"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Negative text prompt.\n- Cannot exceed 2500 characters\n- It is recommended to supplement negative prompt information through negative sentences in the positive prompt",
+            "maxLength": 2500
           }
         }
       },

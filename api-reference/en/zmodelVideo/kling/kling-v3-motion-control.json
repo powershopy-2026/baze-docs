@@ -142,7 +142,8 @@
                 }
               }
             },
-            "description": "Element reference list, configured based on element IDs in the element library.\n- Use key:value format:\n\n```json\n\"element_list\":[{ \"element_id\": 829836802793406551 }]```\n\n- When referencing elements, the generated video can only reference the character orientation from the video\n- Currently only supports 1 element"
+            "description": "Element reference list, configured based on element IDs in the element library.\n- Use key:value format:\n\n```json\n\"element_list\":[{ \"element_id\": 829836802793406551 }]```\n\n- When referencing elements, the generated video can only reference the character orientation from the video\n- Currently only supports 1 element",
+            "maxItems": 1
           },
           "keep_original_sound": {
             "type": "string",

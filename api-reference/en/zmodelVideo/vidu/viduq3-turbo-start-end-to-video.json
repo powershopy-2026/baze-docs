@@ -233,7 +233,10 @@
           },
           "duration": {
             "type": "integer",
-            "description": "Video duration in seconds. Default values vary by model:\n- **viduq3-pro, viduq3-turbo**: default 5, available: 1-16\n- **viduq2-pro-fast, viduq2-pro, viduq2-turbo**: default 5, available: 1-8\n- **viduq1, viduq1-classic**: default 5, available: 5\n- **vidu2.0**: default 4, available: 4, 8"
+            "description": "Video duration in seconds. Default values vary by model:\n- **viduq3-pro, viduq3-turbo**: default 5, available: 1-16\n- **viduq2-pro-fast, viduq2-pro, viduq2-turbo**: default 5, available: 1-8\n- **viduq1, viduq1-classic**: default 5, available: 5\n- **vidu2.0**: default 4, available: 4, 8",
+            "minimum": 1,
+            "maximum": 16,
+            "default": 5
           },
           "seed": {
             "type": "integer",
@@ -267,6 +270,50 @@
           "callback_url": {
             "type": "string",
             "description": "Callback\nWhen creating a task, you need to actively set the callback_url with a POST request. When the video generation task changes its status, Vidu will send a callback request to this URL, containing the latest status of the task. The structure of the callback request content will be the same as the return body of the GET Generation API.\nThe \"status\" in the callback response includes the following states:\n- processing: Task is being processed.\n- success: Task is completed (if sending fails, it will retry the callback three times).\n- failed: Task failed (if sending fails, it will retry the callback three times).\nVidu uses a callback signature algorithm for verification, check out the details here: Callback Signature"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark.\n- **true**: Add watermark\n- **false**: Do not add watermark\n\nNote 1: Currently the watermark content is fixed, default is no watermark\nNote 2: You can retrieve watermarked video content through the watermarked_url parameter in the query task API",
+            "default": false
+          },
+          "wm_position": {
+            "type": "integer",
+            "description": "Watermark position on the image. Options:\n- **1**: Top left\n- **2**: Top right\n- **3**: Bottom right\n- **4**: Bottom left\n\nDefault: 3",
+            "default": 3,
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "minimum": 1,
+            "maximum": 4,
+            "x-options": [
+              {
+                "label": "Top Left",
+                "value": 1
+              },
+              {
+                "label": "Top Right",
+                "value": 2
+              },
+              {
+                "label": "Bottom Right",
+                "value": 3
+              },
+              {
+                "label": "Bottom Left",
+                "value": 4
+              }
+            ]
+          },
+          "wm_url": {
+            "type": "string",
+            "description": "Watermark image URL. When not specified, the default watermark is used."
+          },
+          "meta_data": {
+            "type": "string",
+            "description": "Metadata identifier, a JSON format string used as a passthrough field. You can customize the format or use the example format below:\n\n```json\n{\n  \"Label\": \"your_label\",\n  \"ContentProducer\": \"your_content_producer\",\n  \"ContentPropagator\": \"your_content_propagator\",\n  \"ProduceID\": \"your_product_id\",\n  \"PropagateID\": \"your_propagate_id\",\n  \"ReservedCode1\": \"your_reserved_code1\",\n  \"ReservedCode2\": \"your_reserved_code2\"\n}\n```\n\nWhen this parameter is empty, the Vidu-generated metadata identifier is used by default."
           }
         }
       },
@@ -331,6 +378,10 @@
             "type": "string",
             "format": "date-time",
             "description": "Task creation time."
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "本次提交任务是否使用水印"
           }
         }
       },

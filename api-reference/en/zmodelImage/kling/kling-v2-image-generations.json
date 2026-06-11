@@ -147,7 +147,8 @@
                 }
               }
             },
-            "description": "Element reference list, configured based on element IDs in the element library.\nUse key:value format as shown:\n`\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]`\nThe total number of reference elements and reference images must not exceed 10"
+            "description": "Element reference list, configured based on element IDs in the element library.\nUse key:value format as shown:\n`\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]`\nThe total number of reference elements and reference images must not exceed 10",
+            "maxItems": 10
           },
           "resolution": {
             "type": "string",
