@@ -32,11 +32,9 @@
                     ],
                     "prompt": "The astronaut waved and the camera moved up.",
                     "audio": true,
-                    "voice_id": "professional_host",
                     "duration": 5,
                     "seed": 0,
                     "resolution": "1080p",
-                    "movement_amplitude": "auto",
                     "off_peak": false
                   }
                 }
@@ -66,7 +64,6 @@
                       "duration": 5,
                       "seed": 123456789,
                       "resolution": "1080p",
-                      "movement_amplitude": "auto",
                       "payload": "",
                       "off_peak": false,
                       "credits": 10,
@@ -204,19 +201,10 @@
             "maxLength": 5000,
             "description": "文本提示词，用于描述视频生成内容。\n注意：如果使用了推荐提示词（is_rec=true），模型将忽略手动输入的 prompt 参数。"
           },
-          "voice_id": {
-            "type": "string",
-            "description": "声音 ID，用于确定视频中的语音角色。**Q3 系列模型不生效**。\n系统会自动推荐合适的声音，也可通过声音克隆 API 克隆任意声音。"
-          },
           "is_rec": {
             "type": "boolean",
             "default": false,
             "description": "是否使用推荐提示词。\n- **true**: 是，系统自动生成并应用推荐提示词，推荐提示词数量 = 1\n- **false**: 否，根据用户提供的提示词生成视频\n注意：启用推荐提示词功能时，每个任务将额外消耗 10 积分。"
-          },
-          "bgm": {
-            "type": "boolean",
-            "default": false,
-            "description": "是否为生成的视频添加背景音乐。**q3 模型不生效**。\n- **true**: 系统自动添加合适的 BGM，无时长限制，系统自动适配\n- **false**: 不添加背景音乐\n注意：q2 模型在时长为 9 或 10 秒时 BGM 不生效；q3 模型不支持 BGM。"
           },
           "audio": {
             "type": "boolean",
@@ -249,17 +237,6 @@
               "1080p"
             ],
             "description": "分辨率（基于模型和时长）。\n- **viduq3-pro-fast (1-16s)**: 默认 720p，可选 720p, 1080p\n- **viduq3-pro, viduq3-turbo (1-16s)**: 默认 720p，可选 540p, 720p, 1080p"
-          },
-          "movement_amplitude": {
-            "type": "string",
-            "enum": [
-              "auto",
-              "small",
-              "medium",
-              "large"
-            ],
-            "default": "auto",
-            "description": "画面中物体的运动幅度。\n- 默认值：auto\n- 可选值：auto, small, medium, large\n注意：修改此参数对 q2、q3 模型无效。"
           },
           "payload": {
             "type": "string",
@@ -347,10 +324,6 @@
           "resolution": {
             "type": "string",
             "description": "本次调用使用的分辨率参数。"
-          },
-          "movement_amplitude": {
-            "type": "string",
-            "description": "本次调用使用的镜头运动幅度参数。"
           },
           "payload": {
             "type": "string",

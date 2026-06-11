@@ -108,7 +108,6 @@
                       "duration": 8,
                       "seed": 123456789,
                       "resolution": "1080p",
-                      "movement_amplitude": "auto",
                       "payload": "",
                       "off_peak": false,
                       "credits": "15",
@@ -252,10 +251,6 @@
             "maxLength": 5000,
             "description": "Text prompt for describing video generation content, with a maximum length of 5000 characters.\nYou can reference subject content using @subject_name. For example: `@XiaoMing and @XiaoHong are cooking together, and both say they love hot pot.`"
           },
-          "voice_id": {
-            "type": "string",
-            "description": "Voice ID, used to determine the voice character in the video.\nThe system will automatically recommend a suitable voice, and you can also clone any voice through the Voice Cloning API. The voice_id parameters can be used interchangeably."
-          },
           "audio": {
             "type": "boolean",
             "default": false,
@@ -298,17 +293,6 @@
               "1080p"
             ],
             "description": "Resolution (based on model & duration):\n- **viduq3, viduq3-turbo (3-16s)**: default 720p, options: 540p, 720p, 1080p\n- **viduq2 (1-10s)**: default 720p, options: 540p, 720p, 1080p\n- **viduq1 (5s)**: default 1080p, options: 1080p\n- **vidu2.0 (4s)**: default 360p, options: 360p, 720p"
-          },
-          "movement_amplitude": {
-            "type": "string",
-            "enum": [
-              "auto",
-              "small",
-              "medium",
-              "large"
-            ],
-            "default": "auto",
-            "description": "The movement amplitude of objects in the frame.\n- Default: auto\n- Accepted values: auto, small, medium, large\nNote: Modifying this parameter is ineffective for q2, q3 models."
           },
           "payload": {
             "type": "string",
@@ -387,10 +371,6 @@
             "type": "string",
             "description": "Audio type parameter used for this call."
           },
-          "movement_amplitude": {
-            "type": "string",
-            "description": "Camera movement amplitude parameter used for this call."
-          },
           "payload": {
             "type": "string",
             "description": "Payload parameter used for this call."
@@ -447,10 +427,6 @@
               "type": "string"
             },
             "description": "URLs of images corresponding to the subject.\n- Each subject supports up to 3 images\n- Assets can be provided via URLs or Base64 encode\n- You must use one of the following codecs: PNG, JPEG, JPG, WebP\n- The dimensions of the images must be at least 128x128 pixels\n- The aspect ratio of the images must be between 1:4 and 4:1\n- All images are limited to 50MB\n- The post body of the HTTP request should not exceed 20MB, and it must include an appropriate content type string\n- Base64 format example: `data:image/png;base64,{base64_encode}`"
-          },
-          "voice_id": {
-            "type": "string",
-            "description": "Voice ID, used to determine the voice character for this subject.\nThe system will automatically recommend a suitable voice, and you can also clone any voice through the Voice Cloning API."
           }
         }
       }

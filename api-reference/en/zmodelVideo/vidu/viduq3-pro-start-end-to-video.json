@@ -249,22 +249,6 @@
             ],
             "description": "Resolution (based on model & duration):\n- **viduq3-pro, viduq3-turbo (1-16s)**: default 720p, options: 540p, 720p, 1080p\n- **viduq2-pro-fast (1-8s)**: default 720p, options: 720p, 1080p\n- **viduq2-pro, viduq2-turbo (1-8s)**: default 720p, options: 540p, 720p, 1080p\n- **viduq1, viduq1-classic (5s)**: default 1080p, options: 1080p\n- **vidu2.0 (4s)**: default 360p, options: 360p, 720p, 1080p\n- **vidu2.0 (8s)**: default 720p, options: 720p"
           },
-          "movement_amplitude": {
-            "type": "string",
-            "enum": [
-              "auto",
-              "small",
-              "medium",
-              "large"
-            ],
-            "default": "auto",
-            "description": "The movement amplitude of objects in the frame.\n- Default: auto\n- Accepted values: auto, small, medium, large\nNote: Modifying this parameter is ineffective for q2, q3 models."
-          },
-          "bgm": {
-            "type": "boolean",
-            "default": false,
-            "description": "Whether to add background music to the generated video.\n- Default: false\n- Acceptable values: true, false\nWhen true, the system will automatically add a suitable BGM.\nBGM has no time limit and the system automatically adapts.\nNote: BGM does not take effect when the duration of the q2 model is 9 or 10 seconds; BGM does not available in q3 models."
-          },
           "audio": {
             "type": "boolean",
             "default": true,
@@ -330,14 +314,6 @@
           "resolution": {
             "type": "string",
             "description": "Resolution parameter used for this call."
-          },
-          "bgm": {
-            "type": "boolean",
-            "description": "Background music parameter used for this call."
-          },
-          "movement_amplitude": {
-            "type": "string",
-            "description": "Camera movement amplitude parameter used for this call."
           },
           "payload": {
             "type": "string",

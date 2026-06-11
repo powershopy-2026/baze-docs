@@ -82,7 +82,6 @@
                       "duration": 5,
                       "seed": 123456789,
                       "resolution": "1080p",
-                      "movement_amplitude": "auto",
                       "payload": "",
                       "off_peak": false,
                       "credits": 10,
@@ -220,19 +219,10 @@
             "maxLength": 5000,
             "description": "Text prompt for describing video generation content.\nNote: If the recommended prompt feature is enabled (is_rec=true), the model will ignore the manually entered prompt parameter."
           },
-          "voice_id": {
-            "type": "string",
-            "description": "Voice ID, used to determine the voice character in the video. **Q3 series models are not effective**.\nThe system will automatically recommend a suitable voice, and you can also clone any voice through the Voice Cloning API."
-          },
           "is_rec": {
             "type": "boolean",
             "default": false,
             "description": "Whether to use the recommended prompt.\n- **true**: Yes, the system will automatically generate and apply a recommended prompt. Number of recommended prompts = 1\n- **false**: No, the video will be generated based on the user-provided prompt\nNote: When the recommended prompt feature is enabled, each task will consume an additional 10 credits."
-          },
-          "bgm": {
-            "type": "boolean",
-            "default": false,
-            "description": "Whether to add background music to the generated video. **Ineffective for q3 model**.\n- **true**: The system will automatically add a suitable BGM, no time limit, system automatically adapts\n- **false**: Do not add background music\nNote: BGM does not take effect when the duration of the q2 model is 9 or 10 seconds; BGM is not available in q3 models."
           },
           "audio": {
             "type": "boolean",
@@ -265,17 +255,6 @@
               "1080p"
             ],
             "description": "Resolution (based on model & duration):\n- **viduq3-pro-fast (1-16s)**: default 720p, options: 720p, 1080p\n- **viduq3-pro, viduq3-turbo (1-16s)**: default 720p, options: 540p, 720p, 1080p"
-          },
-          "movement_amplitude": {
-            "type": "string",
-            "enum": [
-              "auto",
-              "small",
-              "medium",
-              "large"
-            ],
-            "default": "auto",
-            "description": "The movement amplitude of objects in the frame.\n- Default: auto\n- Accepted values: auto, small, medium, large\nNote: Modifying this parameter is ineffective for q2, q3 models."
           },
           "payload": {
             "type": "string",
@@ -345,10 +324,6 @@
           "resolution": {
             "type": "string",
             "description": "Resolution parameter used for this call."
-          },
-          "movement_amplitude": {
-            "type": "string",
-            "description": "Camera movement amplitude parameter used for this call."
           },
           "payload": {
             "type": "string",

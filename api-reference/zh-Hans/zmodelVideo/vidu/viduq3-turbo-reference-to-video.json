@@ -80,7 +80,6 @@
                       "seed": "random_number",
                       "aspect_ratio": "3:4",
                       "resolution": "1080p",
-                      "movement_amplitude": "auto",
                       "payload": "",
                       "off_peak": false,
                       "credits": "credits_number",
@@ -243,10 +242,6 @@
             "default": "all",
             "description": "音频类型，audio为true时必填，默认为all\n- all：音效+人声\n- speech_only：仅人声\n- sound_effect_only：仅音效"
           },
-          "voice_id": {
-            "type": "string",
-            "description": "音色ID用来决定视频中的声音音色，为空时系统会自动推荐，可选枚举值参考列表：新音色列表\n或者您可以使用声音复刻API来复刻任意音色，voice_id可以互通\n- 该参数在q3参考生模型中不生成"
-          },
           "duration": {
             "type": "integer",
             "description": "视频时长参数，默认值依据模型而定：\nviduq3-turbo：默认5秒，可选：3 - 16\nviduq3：默认5秒，可选：3 - 16"
@@ -273,17 +268,6 @@
               "1080p"
             ],
             "description": "分辨率参数，默认值依据模型和视频时长而定：\nviduq3-turbo（3-16秒）：默认 720p, 可选：540p、720p、1080p\nviduq3（3-16秒）：默认 720p, 可选：540p、720p、1080p"
-          },
-          "movement_amplitude": {
-            "type": "string",
-            "enum": [
-              "auto",
-              "small",
-              "medium",
-              "large"
-            ],
-            "default": "auto",
-            "description": "运动幅度默认 auto，可选值：auto、small、medium、large\n注：使用q2、q3模型时该参数不生效"
           },
           "payload": {
             "type": "string",
@@ -380,10 +364,6 @@
             "type": "string",
             "description": "本次调用输出的音频类型"
           },
-          "movement_amplitude": {
-            "type": "string",
-            "description": "本次调用的镜头动态幅度参数"
-          },
           "payload": {
             "type": "string",
             "description": "本次调用时传入的透传参数"
@@ -452,10 +432,6 @@
               "type": "string"
             },
             "description": "主体视频，该主体对应的视频url，与images必填一个\n注1： 仅viduq2-pro模型支持使用视频主体\n注2：每个主体中的图片和视频，共享3个槽位\n注3：支持1个5秒视频\n注4：支持传入视频 Base64 编码或URL（确保可访问）\n注5：视频支持 mp4、avi、mov格式\n注6：视频像素不能小于 128*128，且比例需要小于1:4或者4:1\n注7：请注意，base64 decode之后的字节长度需要小于20M，且编码必须包含适当的内容类型字符串，例如：\ndata:video/mp4;base64,{base64_encode}"
-          },
-          "voice_id": {
-            "type": "string",
-            "description": "音色ID用来决定视频中的声音音色，为空时系统会自动推荐，可选枚举值参考列表：新音色列表\n或者您可以使用声音复刻API来复刻任意音色，voice_id可以互通\n- 该参数在q3参考生模型中不生成"
           }
         }
       }

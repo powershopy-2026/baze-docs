@@ -22,7 +22,7 @@
       "get": {
         "summary": "查询 Kling 任务状态",
         "description": "返回已持久化的 Kling 原生任务响应。路径参数 task_id 为提交接口返回的公共任务 ID。",
-        "operationId": "createKlingMultiImage2ImageStatus",
+        "operationId": "createKlingMultiReference2ImageStatus",
         "tags": [
           "Kling"
         ],
