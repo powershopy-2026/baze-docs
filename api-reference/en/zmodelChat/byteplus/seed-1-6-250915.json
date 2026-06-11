@@ -478,6 +478,7 @@
         "oneOf": [
           {
             "type": "object",
+            "title": "text",
             "required": [
               "type",
               "text"
@@ -498,6 +499,7 @@
           },
           {
             "type": "object",
+            "title": "image",
             "required": [
               "type",
               "image_url"
@@ -517,6 +519,7 @@
           },
           {
             "type": "object",
+            "title": "video",
             "required": [
               "type",
               "video_url"
