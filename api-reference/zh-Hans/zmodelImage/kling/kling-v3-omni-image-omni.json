@@ -58,7 +58,7 @@
                     "prompt": "将所有图片中的人物融合到<<<object_1>>>图中",
                     "element_list": [
                       {
-                        "element_id": 829836802793406551
+                        "element_id": 829836802793406600
                       }
                     ],
                     "image_list": [
@@ -267,11 +267,6 @@
       },
       "SubmitResponse": {
         "type": "object",
-        "required": [
-          "code",
-          "message",
-          "data"
-        ],
         "properties": {
           "code": {
             "type": "integer",

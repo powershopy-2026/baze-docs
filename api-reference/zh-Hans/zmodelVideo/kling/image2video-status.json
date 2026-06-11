@@ -107,11 +107,6 @@
       },
       "FetchResponse": {
         "type": "object",
-        "required": [
-          "code",
-          "message",
-          "data"
-        ],
         "properties": {
           "code": {
             "type": "integer",
