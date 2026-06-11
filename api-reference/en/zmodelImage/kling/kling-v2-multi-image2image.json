@@ -22,7 +22,7 @@
       "post": {
         "summary": "Kling multi image-to-image task",
         "description": "Submit a Kling native multi image-to-image task via `/kling/v1/images/multi-image2image`.",
-        "operationId": "createKlingMultiImage2Image",
+        "operationId": "createKlingMultiReference2Image",
         "tags": [
           "Kling"
         ],

@@ -22,7 +22,7 @@
       "get": {
         "summary": "Query Kling task status",
         "description": "Returns the persisted Kling native task response. The task_id path parameter is the public task ID returned by the submission endpoint.",
-        "operationId": "createKlingMultiImage2ImageStatus",
+        "operationId": "createKlingMultiReference2ImageStatus",
         "tags": [
           "Kling"
         ],

@@ -27,13 +27,11 @@
                   "summary": "基础文生视频示例",
                   "value": {
                     "model": "viduq3-pro",
-                    "style": "general",
                     "prompt": "In an ultra-realistic fashion photography style featuring light blue and pale amber tones, an astronaut in a spacesuit walks through the fog. The background consists of enchanting white and golden lights, creating a minimalist still life and an impressive panoramic scene.",
                     "duration": 5,
                     "seed": 0,
                     "aspect_ratio": "4:3",
                     "resolution": "540p",
-                    "movement_amplitude": "auto",
                     "off_peak": false
                   }
                 }
@@ -56,13 +54,11 @@
                       "task_id": "your_task_id_here",
                       "state": "created",
                       "model": "viduq3-pro",
-                      "style": "general",
                       "prompt": "In an ultra-realistic fashion photography style featuring light blue and pale amber tones, an astronaut in a spacesuit walks through the fog. The background consists of enchanting white and golden lights, creating a minimalist still life and an impressive panoramic scene.",
                       "duration": 5,
                       "seed": "random_number",
                       "aspect_ratio": "4:3",
                       "resolution": "540p",
-                      "movement_amplitude": "auto",
                       "payload": "",
                       "off_peak": false,
                       "credits": "credits_number",
@@ -186,15 +182,6 @@
             ],
             "description": "模型名称\n可选值：viduq3-turbo\n- viduq3-turbo：对比viduq3-pro，生成速度更快\n- viduq3-pro：高效生成优质音视频内容，让视频内容更生动、更形象、更立体，效果更好"
           },
-          "style": {
-            "type": "string",
-            "enum": [
-              "general",
-              "anime"
-            ],
-            "description": "风格\n默认 general，可选值：general、anime\ngeneral：通用风格，可以通过提示词来控制风格\nanime：动漫风格，仅在动漫风格表现突出，可以通过不同的动漫风格提示词来控制\n注：使用q2、q3系列模型时该参数不生效",
-            "default": "general"
-          },
           "prompt": {
             "type": "string",
             "maxLength": 5000,
@@ -228,22 +215,6 @@
               "1080p"
             ],
             "description": "分辨率参数，默认值依据模型和视频时长而定：\n- viduq3-pro、viduq3-turbo(1-16秒)：默认 720p，可选：540p、720p、1080p"
-          },
-          "movement_amplitude": {
-            "type": "string",
-            "enum": [
-              "auto",
-              "small",
-              "medium",
-              "large"
-            ],
-            "description": "运动幅度\n默认 auto，可选值：auto、small、medium、large\n注：使用q2、q3系列模型时该参数不生效",
-            "default": "auto"
-          },
-          "bgm": {
-            "type": "boolean",
-            "description": "是否为生成的视频添加背景音乐。\n默认：false，可选值 true 、false\n传 true 时系统将从预设 BGM 库中自动挑选合适的音乐并添加；不传或为 false 则不添加 BGM。\n- BGM不限制时长，系统根据视频时长自动适配\n- BGM参数在q2模型的duration为 9秒 或 10秒 时不生效；该参数在q3系列模型中不生效",
-            "default": false
           },
           "audio": {
             "type": "boolean",
@@ -306,10 +277,6 @@
             "type": "string",
             "description": "本次调用的模型名称"
           },
-          "style": {
-            "type": "string",
-            "description": "本次调用使用的风格参数"
-          },
           "prompt": {
             "type": "string",
             "description": "本次调用的提示词参数"
@@ -329,14 +296,6 @@
           "resolution": {
             "type": "string",
             "description": "本次调用的分辨率参数"
-          },
-          "bgm": {
-            "type": "boolean",
-            "description": "本次调用的背景音乐参数"
-          },
-          "movement_amplitude": {
-            "type": "string",
-            "description": "本次调用的镜头动态幅度参数"
           },
           "payload": {
             "type": "string",

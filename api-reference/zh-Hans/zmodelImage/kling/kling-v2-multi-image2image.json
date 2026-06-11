@@ -22,7 +22,7 @@
       "post": {
         "summary": "Kling 多图生图任务",
         "description": "通过 `/kling/v1/images/multi-image2image` 提交 Kling 原生多图生图任务。",
-        "operationId": "createKlingMultiImage2Image",
+        "operationId": "createKlingMultiReference2Image",
         "tags": [
           "Kling"
         ],
