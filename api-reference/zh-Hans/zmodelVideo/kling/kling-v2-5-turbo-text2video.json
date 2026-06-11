@@ -270,10 +270,7 @@
       "SubmitResponse": {
         "type": "object",
         "required": [
-          "code",
-          "message",
-          "request_id",
-          "data"
+          "request_id"
         ],
         "properties": {
           "code": {

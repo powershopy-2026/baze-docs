@@ -58,8 +58,12 @@
                     "prompt": "身着飘逸红色连衣裙,在草原上，吉卜力风格。",
                     "negative_prompt": "",
                     "subject_image_list": [
-                      { "subject_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-1.png" },
-                      { "subject_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-2.png" }
+                      {
+                        "subject_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-1.png"
+                      },
+                      {
+                        "subject_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-2.png"
+                      }
                     ],
                     "scene_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/background.jpeg",
                     "style_image": "https://v1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/16x9_jipuli.png",
@@ -215,11 +219,6 @@
       },
       "SubmitResponse": {
         "type": "object",
-        "required": [
-          "code",
-          "message",
-          "data"
-        ],
         "properties": {
           "code": {
             "type": "integer",
