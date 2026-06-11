@@ -142,7 +142,8 @@
                 }
               }
             },
-            "description": "主体参考列表，基于主体库中的主体 ID 配置。\n用 key:value 承载，格式如上：\n`\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]`\n参考主体数量与参考图片数量有关，参考主体数量和参考图片数量之和不得超过 10"
+            "description": "主体参考列表，基于主体库中的主体 ID 配置。\n用 key:value 承载，格式如上：\n`\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]`\n参考主体数量与参考图片数量有关，参考主体数量和参考图片数量之和不得超过 10",
+            "maxItems": 10
           },
           "resolution": {
             "type": "string",

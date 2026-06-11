@@ -132,20 +132,6 @@
             ],
             "description": "Image reference type.\n\n- subject (character feature reference), face (facial appearance reference)\n- When using face (facial appearance reference), the uploaded image must contain only 1 face"
           },
-          "image_fidelity": {
-            "type": "number",
-            "minimum": 0,
-            "maximum": 1,
-            "default": 0.8,
-            "description": "Reference strength for the uploaded image during generation."
-          },
-          "human_fidelity": {
-            "type": "number",
-            "minimum": 0,
-            "maximum": 1,
-            "default": 0.8,
-            "description": "Facial reference strength, i.e., facial feature similarity to the reference image."
-          },
           "element_list": {
             "type": "array",
             "items": {
@@ -161,7 +147,8 @@
                 }
               }
             },
-            "description": "Element reference list, configured based on element IDs in the element library.\nUse key:value format as shown:\n`\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]`\nThe total number of reference elements and reference images must not exceed 10"
+            "description": "Element reference list, configured based on element IDs in the element library.\nUse key:value format as shown:\n`\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]`\nThe total number of reference elements and reference images must not exceed 10",
+            "maxItems": 10
           },
           "resolution": {
             "type": "string",

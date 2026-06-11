@@ -158,7 +158,8 @@
                   "description": "图片 URL 或 Base64 字符串。"
                 }
               }
-            }
+            },
+            "maxItems": 10
           },
           "element_list": {
             "type": "array",
@@ -175,7 +176,8 @@
                 }
               }
             },
-            "description": "主体参考列表，基于主体库中主体的 ID 配置\n\n- 用 key:value 承载，如下：\n`\"element_list\":[{ \"element_id\": 829836802793406551 }]`\n\n- 参考主体数量与参考图片数量有关，参考主体数量和参考图片数量之和不得超过 10"
+            "description": "主体参考列表，基于主体库中主体的 ID 配置\n\n- 用 key:value 承载，如下：\n`\"element_list\":[{ \"element_id\": 829836802793406551 }]`\n\n- 参考主体数量与参考图片数量有关，参考主体数量和参考图片数量之和不得超过 10",
+            "maxItems": 10
           },
           "resolution": {
             "type": "string",

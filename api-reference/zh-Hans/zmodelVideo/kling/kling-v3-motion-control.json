@@ -177,7 +177,8 @@
                 }
               }
             },
-            "description": "主体参考列表，基于主体库中的主体 ID 配置。\n- 用 key:value 承载，如下：\n\n```json\n\"element_list\":[{ \"element_id\": 829836802793406551 }]```\n\n- 引用主体时，生成的视频暂时只能参考视频中的人物朝向\n- 暂时仅支持引入1个主体"
+            "description": "主体参考列表，基于主体库中的主体 ID 配置。\n- 用 key:value 承载，如下：\n\n```json\n\"element_list\":[{ \"element_id\": 829836802793406551 }]```\n\n- 引用主体时，生成的视频暂时只能参考视频中的人物朝向\n- 暂时仅支持引入1个主体",
+            "maxItems": 1
           },
           "keep_original_sound": {
             "type": "string",

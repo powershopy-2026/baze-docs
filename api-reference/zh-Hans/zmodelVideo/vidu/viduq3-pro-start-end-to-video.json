@@ -211,7 +211,10 @@
           },
           "duration": {
             "type": "integer",
-            "description": "视频时长参数，默认值依据模型而定：\n- viduq3-pro 、viduq3-turbo默认为 5，可选：1 - 16"
+            "description": "视频时长参数，默认值依据模型而定：\n- viduq3-pro 、viduq3-turbo默认为 5，可选：1 - 16",
+            "minimum": 1,
+            "maximum": 16,
+            "default": 5
           },
           "seed": {
             "type": "integer",
@@ -248,7 +251,21 @@
           "wm_position": {
             "type": "integer",
             "default": 3,
-            "description": "水印位置，表示水印出现在图片的位置，可选项为：\n1：左上角\n2：右上角\n3：右下角\n4：左下角\n默认为：3"
+            "description": "水印位置，表示水印出现在图片的位置，可选项为：\n1：左上角\n2：右上角\n3：右下角\n4：左下角\n默认为：3",
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "minimum": 1,
+            "maximum": 4,
+            "x-options": [
+              { "label": "左上角", "value": 1 },
+              { "label": "右上角", "value": 2 },
+              { "label": "右下角", "value": 3 },
+              { "label": "左下角", "value": 4 }
+            ]
           },
           "wm_url": {
             "type": "string",
