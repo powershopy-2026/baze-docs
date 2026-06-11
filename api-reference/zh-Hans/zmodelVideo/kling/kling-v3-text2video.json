@@ -220,65 +220,6 @@
             "default": "std",
             "description": "生成视频的模式\n\n- std：标准模式（标准），基础模式，性价比高，输出视频分辨率为720P。\n- pro：专家模式（高品质），高表现模式，生成视频质量更佳，输出视频分辨率为1080P。\n- 4k：4K模式，高表现（同pro），生成视频质量更佳，输出视频分辨率为4K。"
           },
-          "camera_control": {
-            "type": "object",
-            "description": "控制相机运动的条款（如不指定，模型将根据输入的文本/图片智能匹配）",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "simple",
-                  "down_back",
-                  "forward_up",
-                  "right_turn_forward",
-                  "left_turn_forward"
-                ],
-                "description": "预定义的相机运动类型。\n- simple：简单运镜，此类型下可在\"config\"中六选一进行运镜\n- down_back：镜头下压并后退 ➡️ 下移拉远，此类型下config参数无需填写\n- forward_up：镜头前进并上仰 ➡️ 推进上移，此类型下config参数无需填写\n- right_turn_forward：先右旋转后前进 ➡️ 右旋推进，此类型下config参数无需填写\n- left_turn_forward：先左旋并前进 ➡️ 左旋推进，此类型下config参数无需填写"
-              },
-              "config": {
-                "type": "object",
-                "description": "包含 6 个字段，用于指定相机在不同方向上的移动或变化\n- 当运镜类型指定simple时必填，指定其他类型时不填\n- 以下参数6选1，即只能有一个参数不为0，其余参数为0",
-                "properties": {
-                  "horizontal": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "水平方向，控制相机沿水平轴的移动（沿 x 轴平移）\n负值表示向左平移，正值表示向右平移"
-                  },
-                  "vertical": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "垂直方向，控制相机沿垂直轴的移动（沿 y 轴平移）\n负值表示向下平移，正值表示向上平移"
-                  },
-                  "pan": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "摇摄，控制相机在水平面内的旋转（绕 y 轴旋转）\n负值表示绕y轴向左旋转，正值表示绕y轴向右旋转"
-                  },
-                  "tilt": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "俯仰，控制相机在垂直面内的旋转（绕 x 轴旋转）\n负值表示绕x轴向下旋转，正值表示绕x轴向上旋转"
-                  },
-                  "roll": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "翻滚，控制相机的翻滚（绕 z 轴旋转）\n负值表示绕z轴逆时针旋转，正值表示绕z轴顺时针旋转"
-                  },
-                  "zoom": {
-                    "type": "number",
-                    "minimum": -10,
-                    "maximum": 10,
-                    "description": "缩放，控制相机的焦距变化，影响视野距离\n负值表示焦距变长、视野范围变小，正值表示焦距变短、视野范围变大"
-                  }
-                }
-              }
-            }
-          },
           "aspect_ratio": {
             "type": "string",
             "description": "生成视频帧的宽高比（宽:高）",
