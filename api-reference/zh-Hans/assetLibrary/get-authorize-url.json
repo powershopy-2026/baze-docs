@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/interface/get-authorize-url": {
+    "/v1/asset/get-authorize-url": {
       "post": {
         "summary": "获取认证URL",
         "deprecated": false,
@@ -19,33 +19,26 @@
         "tags": [
           "interface"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "title": "邮箱",
-                    "description": "hua20128@gmail.com"
-                  },
-                  "login_style": {
-                    "type": "string",
-                    "description": "登录方式 google与github",
-                    "title": "登录方式"
-                  }
-                },
-                "required": [
-                  "email",
-                  "login_style"
-                ]
+                "properties": {}
               },
-              "example": {
-                "email": "hua20128@gmail.com",
-                "login_style": "google"
-              }
+              "examples": {}
             }
           },
           "required": true
@@ -97,7 +90,7 @@
   "servers": [
     {
       "url": "https://baze.powerbuyin.top/api",
-      "description": "正式环境"
+      "description": "测试环境"
     }
   ],
   "security": []

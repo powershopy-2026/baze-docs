@@ -11,9 +11,9 @@
     }
   ],
   "paths": {
-    "/interface/group-list": {
+    "/v1/asset/groups/list": {
       "post": {
-        "summary": "group list",
+        "summary": "组列表",
         "deprecated": false,
         "description": "",
         "tags": [
@@ -32,36 +32,23 @@
                   "page": {
                     "type": "integer"
                   },
-                  "email": {
-                    "type": "string",
-                    "description": "email"
-                  },
-                  "login_style": {
-                    "description": "Login methods: Google and GitHub",
-                    "example": "google",
-                    "type": "string"
-                  },
                   "group_type": {
                     "type": "integer",
-                    "description": "0: Virtual group, 1 real person group (default 0)"
+                    "description": "0: Virtual group, 1 real person group (default virtual group)"
                   },
                   "real_human_type": {
                     "type": "integer",
                     "description": "Real person group 1: Create, 2: Authorize (default 1)"
                   }
-                },
-                "required": [
-                  "email",
-                  "login_style"
-                ]
+                }
               },
               "example": {
                 "page_size": 20,
                 "page": 1,
                 "email": "603842915@qq.com",
                 "login_style": "github",
-                "group_type":0,
-                "real_human_type":0
+                "group_type": 1,
+                "real_human_type": 1
               }
             }
           },
@@ -164,7 +151,7 @@
   "servers": [
     {
       "url": "https://baze.powerbuyin.top/api",
-      "description": "正式环境"
+      "description": "测试环境"
     }
   ],
   "security": []

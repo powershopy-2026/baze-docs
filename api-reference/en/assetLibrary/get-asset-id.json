@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "默认模块",
     "description": "",
@@ -11,9 +11,9 @@
     }
   ],
   "paths": {
-    "/interface/get-asset-id": {
+    "/v1/asset/jobs/get-asset-id": {
       "get": {
-        "summary": "Obtain asset ID",
+        "summary": "Obtain the asset ID",
         "deprecated": false,
         "description": "",
         "tags": [
@@ -31,6 +31,18 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "",
@@ -79,6 +91,7 @@
       }
     }
   },
+  "webhooks": {},
   "components": {
     "schemas": {},
     "responses": {},
@@ -87,7 +100,7 @@
   "servers": [
     {
       "url": "https://baze.powerbuyin.top/api",
-      "description": "正式环境"
+      "description": "测试环境"
     }
   ],
   "security": []
