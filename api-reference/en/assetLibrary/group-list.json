@@ -56,8 +56,6 @@
               "example": {
                 "page_size": 20,
                 "page": 1,
-                "email": "603842915@qq.com",
-                "login_style": "github",
                 "group_type": 1,
                 "real_human_type": 1
               }
