@@ -184,7 +184,7 @@
             "enum": [
               "1k",
               "2k",
-              "4K"
+              "4k"
             ],
             "description": "生成图片的清晰度",
             "default": "1K"
