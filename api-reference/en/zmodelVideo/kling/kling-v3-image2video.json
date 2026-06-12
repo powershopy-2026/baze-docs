@@ -252,6 +252,10 @@
               "4k"
             ],
             "default": "std",
+            "x-options": [
+              { "label": "720P", "value": "std"  },
+              { "label": "1080P", "value": "pro" }
+            ],
             "description": "Video generation mode\n\n- std: Standard mode, cost-effective, output video resolution 720P.\n- pro: Expert mode (high quality), better video quality, output video resolution 1080P.\n- 4k: 4K mode, high quality (same as pro), better video quality, output video resolution 4K."
           },
           "static_mask": {

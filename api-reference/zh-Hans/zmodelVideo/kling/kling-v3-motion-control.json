@@ -203,6 +203,11 @@
               "std",
               "pro"
             ],
+            "default": "std",
+            "x-options": [
+              { "label": "720P", "value": "std"  },
+              { "label": "1080P", "value": "pro" }
+            ],
             "description": "生成视频的模式\n- std：标准模式（标准），基础模式，性价比高\n- pro：专家模式（高品质），高表现模式，生成视频质量更佳"
           },
           "watermark_info": {

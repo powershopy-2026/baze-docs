@@ -233,7 +233,18 @@
                 ]
               }
             ],
-            "default": 4,
+            "default": "auto",
+            "enum": [
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              "auto"
+            ],
             "description": "生成组图的图片数量\n\n枚举值：2 3 4 5 6 7 8 9 auto\n\n- 其中：auto 为根据传入内容智能选择生成图片的数量\n- 使用 auto 时，会占用与实际生成数量对应的并发量\n- 当 result_type 值为 single 时，当前参数无效"
           },
           "watermark_info": {

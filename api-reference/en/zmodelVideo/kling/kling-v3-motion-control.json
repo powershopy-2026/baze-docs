@@ -168,6 +168,10 @@
               "std",
               "pro"
             ],
+            "x-options": [
+              { "label": "720P", "value": "std"  },
+              { "label": "1080P", "value": "pro" }
+            ],
             "description": "Video generation mode\n- std: Standard mode, cost-effective\n- pro: Expert mode (high quality), better video quality"
           },
           "watermark_info": {
