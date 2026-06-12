@@ -59,26 +59,35 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FetchResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "任务不存在或无法查询。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "缺少或无效的 Bearer 令牌。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "code": 0,
+                  "message": "string",
+                  "request_id": "string",
+                  "data": {
+                    "task_id": "string",
+                    "task_status": "string",
+                    "task_status_msg": "string",
+                    "task_info": {
+                      "external_task_id": "string"
+                    },
+                    "task_result": {
+                      "videos": [
+                        {
+                          "id": "string",
+                          "url": "string",
+                          "watermark_url": "string",
+                          "duration": "string"
+                        }
+                      ]
+                    },
+                    "watermark_info": {
+                      "enabled": true
+                    },
+                    "final_unit_deduction": "string",
+                    "created_at": 1722769557708,
+                    "updated_at": 1722769557708
+                  }
                 }
               }
             }
