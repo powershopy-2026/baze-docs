@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/interface/group-asset-list": {
+    "/v1/asset/groups/assets": {
       "post": {
         "summary": "组资产库列表",
         "deprecated": false,
@@ -19,7 +19,18 @@
         "tags": [
           "interface"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "API token",
+            "required": false,
+            "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -51,23 +62,17 @@
                     "description": "1：审核中，2：成功，3：失败"
                   },
                   "group_id": {
-                    "type": "string",
+                    "type": [
+                      "string",
+                      "null"
+                    ],
                     "description": "组ID"
-                  },
-                  "email": {
-                    "type": "string",
-                    "description": "邮箱"
-                  },
-                  "login_style": {
-                    "type": "string",
-                    "description": "登录方式 google与github"
                   }
                 },
                 "required": [
-                  "asset_id",
-                  "group_id",
-                  "email",
-                  "login_style"
+                  "page",
+                  "page_size",
+                  "group_id"
                 ]
               },
               "example": {
@@ -211,7 +216,7 @@
   "servers": [
     {
       "url": "https://baze.powerbuyin.top/api",
-      "description": "正式环境"
+      "description": "测试环境"
     }
   ],
   "security": []
