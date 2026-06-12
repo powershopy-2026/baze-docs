@@ -120,11 +120,22 @@
               "customize",
               "intelligence"
             ],
-            "description": "Shot type\nRequired when multi_shot is true."
+            "description": "Shot type\nRequired when multi_shot is true.",
+            "x-valid-when": {
+              "multi_shot": [
+                true
+              ]
+            }
           },
           "prompt": {
             "type": "string",
-            "description": "Positive text prompt\n\n```markdown\nOmni models can achieve various capabilities through prompts with subjects, images, videos, etc.:\n- Use <<<>>> format to specify a subject, image, or video, e.g.: <<<element_1>>>, <<<image_1>>>, <<<video_1>>>\n```\n\n- Use <<<voice_1>>> to specify a voice, index matching voice_list; up to 2 voices; sound must be 'on' when specifying voices; keep syntax simple, e.g.: A man<<<voice_1>>>says: \"Hello\"\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'\n- Must not be empty when multi_shot is false or shot_type is intelligence."
+            "description": "Positive text prompt\n\n```markdown\nOmni models can achieve various capabilities through prompts with subjects, images, videos, etc.:\n- Use <<<>>> format to specify a subject, image, or video, e.g.: <<<element_1>>>, <<<image_1>>>, <<<video_1>>>\n```\n\n- Use <<<voice_1>>> to specify a voice, index matching voice_list; up to 2 voices; sound must be 'on' when specifying voices; keep syntax simple, e.g.: A man<<<voice_1>>>says: \"Hello\"\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'\n- Must not be empty when multi_shot is false or shot_type is intelligence.",
+            "maxLength": 2500,
+            "x-valid-when": {
+              "multi_shot": [
+                false
+              ]
+            }
           },
           "multi_prompt": {
             "type": "array",
@@ -153,7 +164,12 @@
             },
             "description": "Multi-shot information including prompt, duration, etc.\nDefine shot index and corresponding prompt and duration via index, prompt, duration parameters.\n- Max 6 shots, min 1 shot.\n- Max length per shot content: 512 characters.\n- Each shot duration must not exceed total task duration and must be >= 1.\n- Sum of all shot durations must equal total task duration.\n\nRequired when multi_shot is true and shot_type is customize. Format:\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```\n\nRequired when multi_shot is true and shot_type is customize.",
             "minItems": 1,
-            "maxItems": 6
+            "maxItems": 6,
+            "x-valid-when": {
+              "multi_shot": [
+                true
+              ]
+            }
           },
           "negative_prompt": {
             "type": "string",
