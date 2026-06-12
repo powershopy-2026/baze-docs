@@ -127,20 +127,6 @@
             ],
             "description": "图片参考类型。\n\n- subject（角色特征参考）, face（人物长相参考）\n- 使用 face（人物长相参考）时，上传图片需仅含 1 张人脸"
           },
-          "image_fidelity": {
-            "type": "number",
-            "minimum": 0,
-            "maximum": 1,
-            "default": 0.8,
-            "description": "生成过程中对上传图片的参考强度。"
-          },
-          "human_fidelity": {
-            "type": "number",
-            "minimum": 0,
-            "maximum": 1,
-            "default": 0.8,
-            "description": "面部参考强度，即参考图中人物五官相似度。"
-          },
           "element_list": {
             "type": "array",
             "items": {
