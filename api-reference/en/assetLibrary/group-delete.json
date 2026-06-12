@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/interface/group-delete": {
+    "/v1/asset/groups/delete": {
       "post": {
         "summary": "delete group",
         "deprecated": false,
@@ -19,7 +19,18 @@
         "tags": [
           "interface"
         ],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -28,28 +39,15 @@
                 "properties": {
                   "group_id": {
                     "type": "string",
-                    "description": "group ID"
-                  },
-                  "email": {
-                    "type": "string",
-                    "description": "email"
-                  },
-                  "login_style": {
-                    "description": "Login methods: Google and GitHub",
-                    "example": "google",
-                    "type": "string"
+                    "description": "组ID"
                   }
                 },
                 "required": [
-                  "group_id",
-                  "email",
-                  "login_style"
+                  "group_id"
                 ]
               },
               "example": {
-                "group_id": "group-20260604100609-xbxss",
-                "email": "hua20128@gmail.com",
-                "login_style": "google"
+                "group_id": "group-20260604100609-xbxss"
               }
             }
           },
@@ -102,7 +100,7 @@
   "servers": [
     {
       "url": "https://baze.powerbuyin.top/api",
-      "description": "正式环境"
+      "description": "测试环境"
     }
   ],
   "security": []

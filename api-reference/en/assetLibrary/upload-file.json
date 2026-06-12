@@ -11,9 +11,9 @@
     }
   ],
   "paths": {
-    "/interface/upload": {
+    "/v1/asset/upload": {
       "post": {
-        "summary": "Batch file upload",
+        "summary": "Batch upload files",
         "deprecated": false,
         "description": "",
         "tags": [
@@ -21,11 +21,11 @@
         ],
         "parameters": [
           {
-            "name": "Internal-Asset-Key",
+            "name": "Authorization",
             "in": "header",
             "description": "",
             "required": false,
-            "example": "8HpJQT81y8Z2ZJvsnq5z32Vpm6rUWFAm",
+            "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
             "schema": {
               "type": "string"
             }
@@ -40,30 +40,17 @@
                   "file": {
                     "format": "binary",
                     "type": "string",
-                    "description": "Files (Images: JPEG, PNG, WebP, BMP, TIFF, GIF. <30MB. Aspect ratio 0.4-2.5. 300-6000px. Videos: MP4, MOV. 480p/720p. 2-15s. ≤50MB. 24-60fps. Audio: WAV, MP3. 2-15s. ≤15MB)",
+                    "description": "file（图片：JPEG、PNG、WebP、BMP、TIFF、GIF,HEIC。< 30MB。比例 0.4-2.5。300-6000px，视频：MP4、MOV。480p/720p。2-15s。≤ 50MB。24-60fps，音频：WAV、MP3。2-15s。≤ 15MB）",
                     "example": ""
                   },
-                  "email": {
-                    "description": "email",
-                    "example": "",
-                    "type": "string"
-                  },
-                  "login_style": {
-                    "description": "google,github",
-                    "example": "",
-                    "type": "string"
-                  },
                   "group_id": {
-                    "description": "group ID",
+                    "description": "Group ID (if left blank, create a virtual group)",
                     "example": "",
                     "type": "string"
                   }
                 },
                 "required": [
-                  "file",
-                  "email",
-                  "login_style",
-                  "group_id"
+                  "file"
                 ]
               },
               "examples": {}
@@ -128,7 +115,7 @@
   "servers": [
     {
       "url": "https://baze.powerbuyin.top/api",
-      "description": "正式环境"
+      "description": "测试环境"
     }
   ],
   "security": []
