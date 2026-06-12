@@ -165,12 +165,22 @@
               "customize",
               "intelligence"
             ],
-            "description": "分镜方式\n当 multi_shot 参数为 true 时，当前参数必填"
+            "description": "分镜方式\n当 multi_shot 参数为 true 时，当前参数必填",
+            "x-valid-when": {
+              "multi_shot": [
+                true
+              ]
+            }
           },
           "prompt": {
             "type": "string",
             "description": "正向文本提示词\n\n```markdown\nOmni模型可通过Prompt与主体、图片、视频等内容实现多种能力：\n- 通过<<<>>>的格式来指定某个主体、图片或视频，如：<<<element_1>>>、<<<image_1>>>、<<<video_1>>>\n```\n\n- 不能超过 2500 个字符\n- 当 multi_shot 为 false 或 shot_type 为 intelligence 时不得为空。\n- 用 <<<voice_1>>> 来指定音色，序号同 voice_list 参数所引用音色的排列顺序\n- 一次视频生成任务至多引用 2 个音色；指定音色时，sound 参数值必须为 on\n- 语法结构越简单越好，如：男人<<<voice_1>>>说：\"你好\"\n- 当 voice_list 参数不为空且 prompt 参数中引用音色 ID 时，视频生成任务按\"有指定音色\"计量计费",
-            "maxLength": 2500
+            "maxLength": 2500,
+            "x-valid-when": {
+              "multi_shot": [
+                false
+              ]
+            }
           },
           "multi_prompt": {
             "type": "array",
@@ -199,7 +209,12 @@
             },
             "description": "各分镜信息，如提示词、时长等。\n通过 index、prompt、duration 参数定义分镜序号及相应提示词和时长。\n- 最多支持 6 个分镜，最小支持 1 个分镜。\n- 每个分镜相关内容的最大长度不超过 512。\n- 每个分镜的时长不大于当前任务的总时长，不小于 1。\n- 所有分镜的时长之和等于当前任务的总时长。\n\n当 multi_shot 为 true 且 shot_type 为 customize 时，当前参数不得为空。格式如下：\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```\n\n当 multi_shot 为 true 且 shot_type 为 customize 时必填",
             "minItems": 1,
-            "maxItems": 6
+            "maxItems": 6,
+            "x-valid-when": {
+              "multi_shot": [
+                true
+              ]
+            }
           },
           "negative_prompt": {
             "type": "string",
