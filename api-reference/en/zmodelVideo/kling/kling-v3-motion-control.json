@@ -98,26 +98,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid request or rejected by upstream.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid Bearer token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -205,8 +185,14 @@
             ],
             "default": "std",
             "x-options": [
-              { "label": "720P", "value": "std"  },
-              { "label": "1080P", "value": "pro" }
+              {
+                "label": "720P",
+                "value": "std"
+              },
+              {
+                "label": "1080P",
+                "value": "pro"
+              }
             ],
             "description": "Video generation mode\n- std: Standard mode, cost-effective\n- pro: Expert mode (high quality), better video quality"
           },
