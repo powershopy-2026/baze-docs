@@ -118,7 +118,8 @@
       "KlingRequest": {
         "type": "object",
         "required": [
-          "model_name"
+          "model_name",
+          "prompt"
         ],
         "properties": {
           "model_name": {
@@ -149,12 +150,7 @@
           "prompt": {
             "type": "string",
             "description": "文本提示词，可包含正向描述和负向描述。\n- 可将提示词模板化来满足不同的视频生成需求\n- 不能超过 2,500 个字符\n\n当 multi_shot 为 false 或 multi_shot参数为true且shot-type参数为intelligence时，当前参数不得为空。\n\n```markdown\nOmni模型可通过Prompt与主体、图片、视频等内容实现多种能力：\n- 通过<<<>>>的格式来指定某个主体、图片或视频，如：<<<element_1>>>、<<<image_1>>>、<<<video_1>>>\n```",
-            "maxLength": 2500,
-            "x-valid-when": {
-              "multi_shot": [
-                false
-              ]
-            }
+            "maxLength": 2500
           },
           "multi_prompt": {
             "type": "array",

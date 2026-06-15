@@ -118,7 +118,8 @@
       "KlingRequest": {
         "type": "object",
         "required": [
-          "model_name"
+          "model_name",
+          "prompt"
         ],
         "properties": {
           "model_name": {
@@ -149,12 +150,7 @@
           "prompt": {
             "type": "string",
             "description": "Text prompt, can include positive and negative descriptions.\n- Prompts can be templated to meet different video generation needs\n- Must not exceed 2,500 characters\n\nMust not be empty when multi_shot is false, or when multi_shot is true and shot_type is intelligence.\n\n```markdown\nOmni models can achieve various capabilities through prompts with subjects, images, videos, etc.:\n- Use <<<>>> format to specify a subject, image, or video, e.g.: <<<element_1>>>, <<<image_1>>>, <<<video_1>>>\n```",
-            "maxLength": 2500,
-            "x-valid-when": {
-              "multi_shot": [
-                false
-              ]
-            }
+            "maxLength": 2500
           },
           "multi_prompt": {
             "type": "array",

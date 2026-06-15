@@ -115,7 +115,8 @@
       "KlingRequest": {
         "type": "object",
         "required": [
-          "model_name"
+          "model_name",
+          "prompt"
         ],
         "properties": {
           "model_name": {
@@ -146,12 +147,7 @@
           "prompt": {
             "type": "string",
             "description": "正向文本提示词\n\n```markdown\nOmni模型可通过Prompt与主体、图片、视频等内容实现多种能力：\n- 通过<<<>>>的格式来指定某个主体、图片或视频，如：<<<element_1>>>、<<<image_1>>>、<<<video_1>>>\n```\n\n- 不能超过 2500 个字符\n- 用 <<<voice_1>>> 来指定音色，序号同 voice_list；至多引用 2 个音色；指定音色时 sound 必须为 on；语法结构越简单越好，如：男人<<<voice_1>>>说：\"你好\"；\n-voice_list 不为空且 prompt 引用音色 ID 时按「有指定音色」计费\n- 当 multi_shot 为 false 或 shot_type 为 intelligence 时不得为空。",
-            "maxLength": 2500,
-            "x-valid-when": {
-              "multi_shot": [
-                false
-              ]
-            }
+            "maxLength": 2500
           },
           "multi_prompt": {
             "type": "array",

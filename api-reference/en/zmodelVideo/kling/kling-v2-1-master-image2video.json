@@ -115,7 +115,8 @@
       "KlingRequest": {
         "type": "object",
         "required": [
-          "model_name"
+          "model_name",
+          "prompt"
         ],
         "properties": {
           "model_name": {
@@ -150,12 +151,7 @@
           "prompt": {
             "type": "string",
             "description": "Positive text prompt\n\n```markdown\nOmni models can achieve various capabilities through prompts with subjects, images, videos, etc.:\n- Use <<<>>> format to specify a subject, image, or video, e.g.: <<<element_1>>>, <<<image_1>>>, <<<video_1>>>\n```\n\n- Must not exceed 2500 characters\n- Must not be empty when multi_shot is false or shot_type is intelligence.\n- Use <<<voice_1>>> to specify a voice, with the index matching the order of voices referenced in voice_list\n- Up to 2 voices per video generation task; when specifying voices, sound must be 'on'\n- Keep syntax as simple as possible, e.g.: A man<<<voice_1>>>says: \"Hello\"\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'",
-            "maxLength": 2500,
-            "x-valid-when": {
-              "multi_shot": [
-                false
-              ]
-            }
+            "maxLength": 2500
           },
           "multi_prompt": {
             "type": "array",
