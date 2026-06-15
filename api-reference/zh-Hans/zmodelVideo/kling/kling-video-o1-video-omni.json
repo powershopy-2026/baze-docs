@@ -101,26 +101,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "请求无效或被上游拒绝。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "缺少或无效的 Bearer 令牌。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -301,8 +281,14 @@
             ],
             "default": "pro",
             "x-options": [
-              { "label": "720P", "value": "std"  },
-              { "label": "1080P", "value": "pro" }
+              {
+                "label": "720P",
+                "value": "std"
+              },
+              {
+                "label": "1080P",
+                "value": "pro"
+              }
             ],
             "description": "生成视频的模式\n\n- std：标准模式（标准），基础模式，性价比高，输出视频分辨率为720P。\n- pro：专家模式（高品质），高表现模式，生成视频质量更佳，输出视频分辨率为1080P。"
           },
