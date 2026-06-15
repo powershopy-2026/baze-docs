@@ -56,7 +56,6 @@
                   "value": {
                     "model_name": "kling-v2-1-master",
                     "image": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-2.png",
-                    "image_tail": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-1.png",
                     "prompt": "Camera pulls back, the girl smiles",
                     "negative_prompt": "",
                     "duration": "5",
@@ -148,11 +147,7 @@
           },
           "image": {
             "type": "string",
-            "description": "Reference image\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: Please ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix (such as data:image/png;base64,) before the Base64 string — pass the Base64 encoded string directly.\n- Correct Base64 parameter:\n\n `iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Incorrect Base64 parameter (contains data: prefix):\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- At least one of image or image_tail must be provided; both cannot be empty"
-          },
-          "image_tail": {
-            "type": "string",
-            "description": "Reference image - tail frame control\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix (such as data:image/png;base64,) before the Base64 string — pass the Base64 encoded string directly.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px\n- At least one of image or image_tail must be provided; both cannot be empty\n- image_tail and dynamic_masks/static_mask are mutually exclusive; cannot be used together"
+            "description": "Reference image\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: Please ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix (such as data:image/png;base64,) before the Base64 string — pass the Base64 encoded string directly.\n- Correct Base64 parameter:\n\n `iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Incorrect Base64 parameter (contains data: prefix):\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- image parameter is required"
           },
           "multi_shot": {
             "type": "boolean",
