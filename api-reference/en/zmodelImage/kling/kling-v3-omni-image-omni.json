@@ -167,7 +167,7 @@
               "4k"
             ],
             "description": "Generated image resolution",
-            "default": "1K"
+            "default": "1k"
           },
           "result_type": {
             "type": "string",
