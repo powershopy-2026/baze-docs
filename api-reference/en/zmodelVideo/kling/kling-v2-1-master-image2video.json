@@ -31,6 +31,18 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "Data exchange format"
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -43,9 +55,15 @@
                   "summary": "Request example",
                   "value": {
                     "model_name": "kling-v2-1-master",
-                    "image": "https://example.com/frame.png",
-                    "prompt": "Slow camera push-in",
-                    "duration": "5"
+                    "image": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-2.png",
+                    "image_tail": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-1.png",
+                    "prompt": "Camera pulls back, the girl smiles",
+                    "negative_prompt": "",
+                    "duration": "5",
+                    "mode": "pro",
+                    "sound": "off",
+                    "callback_url": "",
+                    "external_task_id": ""
                   }
                 }
               }
@@ -59,6 +77,25 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "Response example",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": {
+                        "task_id": "string",
+                        "task_info": {
+                          "external_task_id": "string"
+                        },
+                        "task_status": "submitted",
+                        "created_at": 1722769557708,
+                        "updated_at": 1722769557708
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -111,11 +148,11 @@
           },
           "image": {
             "type": "string",
-            "description": "Reference image\n- Supports image Base64 encoding or image URL (must be accessible)\n\nBase64 encoding notes:\nPlease ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n\nCorrect example:\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA`\n\nIncorrect example:\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- At least one of image or image_tail must be provided, both cannot be empty"
+            "description": "Reference image\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: Please ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix (such as data:image/png;base64,) before the Base64 string — pass the Base64 encoded string directly.\n- Correct Base64 parameter:\n\n `iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Incorrect Base64 parameter (contains data: prefix):\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- At least one of image or image_tail must be provided; both cannot be empty"
           },
           "image_tail": {
             "type": "string",
-            "description": "Reference image - tail frame control\n- Supports image Base64 encoding or image URL (must be accessible)\n\nBase64 encoding notes:\nPlease ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix such as data:image/png;base64, — provide only the Base64 encoded string itself.\n\nCorrect example:\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA`\n\nIncorrect example:\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- At least one of image or image_tail must be provided, both cannot be empty\n- image_tail, dynamic_masks/static_mask, and camera_control are mutually exclusive; cannot be used together"
+            "description": "Reference image - tail frame control\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix (such as data:image/png;base64,) before the Base64 string — pass the Base64 encoded string directly.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px\n- At least one of image or image_tail must be provided; both cannot be empty\n- image_tail and dynamic_masks/static_mask are mutually exclusive; cannot be used together"
           },
           "multi_shot": {
             "type": "boolean",
@@ -137,7 +174,7 @@
           },
           "prompt": {
             "type": "string",
-            "description": "Positive text prompt\n\n```markdown\nOmni models can achieve various capabilities through prompts with subjects, images, videos, etc.:\n- Use <<<>>> format to specify a subject, image, or video, e.g.: <<<element_1>>>, <<<image_1>>>, <<<video_1>>>\n```\n\n- Use <<<voice_1>>> to specify a voice, index matching the order in voice_list\n- Up to 2 voices per video generation task; when specifying voices, sound must be 'on'\n- Keep syntax simple, e.g.: A man<<<voice_1>>>says: \"Hello\"\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'",
+            "description": "Positive text prompt\n\n```markdown\nOmni models can achieve various capabilities through prompts with subjects, images, videos, etc.:\n- Use <<<>>> format to specify a subject, image, or video, e.g.: <<<element_1>>>, <<<image_1>>>, <<<video_1>>>\n```\n\n- Must not exceed 2500 characters\n- Must not be empty when multi_shot is false or shot_type is intelligence.\n- Use <<<voice_1>>> to specify a voice, with the index matching the order of voices referenced in voice_list\n- Up to 2 voices per video generation task; when specifying voices, sound must be 'on'\n- Keep syntax as simple as possible, e.g.: A man<<<voice_1>>>says: \"Hello\"\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'",
             "maxLength": 2500,
             "x-valid-when": {
               "multi_shot": [
@@ -170,7 +207,7 @@
                 }
               }
             },
-            "description": "Multi-shot information including prompt, duration, etc.\nDefine shot index and corresponding prompt and duration via index, prompt, duration parameters.\n- Max 6 shots, min 1 shot.\n- Max length per shot content: 512 characters.\n- Each shot duration must not exceed total task duration and must be >= 1.\n- Sum of all shot durations must equal total task duration.\n\nRequired when multi_shot is true and shot_type is customize. Format:\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```\n\nRequired when multi_shot is true and shot_type is customize.",
+            "description": "Multi-shot information including prompt, duration, etc.\nDefine shot index and corresponding prompt and duration via index, prompt, duration parameters.\n- Max 6 shots, min 1 shot.\n- Max length per shot content: 512 characters.\n- Each shot duration must not exceed total task duration and must be >= 1.\n- Sum of all shot durations must equal total task duration.\n\nWhen multi_shot is true and shot_type is customize, this parameter must not be empty. Format:\n\n```json\n\"multi_prompt\":[{ \"index\": int, \"prompt\": \"string\", \"duration\": \"5\" },{ \"index\": int, \"prompt\": \"string\",\"duration\": \"5\" }]\n```\n\nRequired when multi_shot is true and shot_type is customize.",
             "minItems": 1,
             "maxItems": 6,
             "x-valid-when": {
@@ -181,7 +218,7 @@
           },
           "negative_prompt": {
             "type": "string",
-            "description": "Negative text prompt\n- Max 2500 characters\n- Supplement negative prompt information through negative sentences in the positive prompt",
+            "description": "Negative text prompt\n- Must not exceed 2500 characters\n- It is recommended to supplement negative prompt information through negative sentences in the positive prompt",
             "maxLength": 2500
           },
           "element_list": {
@@ -199,7 +236,7 @@
                 }
               }
             },
-            "description": "Element reference list, configured based on element IDs in the element library.\n\nUse key:value format:\n\n```json\n\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]\n```",
+            "description": "Element reference list, configured based on element IDs in the element library.\n- Up to 3 reference elements\n\nElements are divided into video character elements and multi-image elements, with different applicable scopes.\n\n- Use key:value format:\n\n```json\n\"element_list\":[{ \"element_id\": long },{ \"element_id\": long }]\n```",
             "maxItems": 3
           },
           "voice_list": {
@@ -240,7 +277,7 @@
                 }
               }
             },
-            "description": "Voice list referenced during video generation.\n- Up to 2 voices per video generation task\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'\n- element_list and voice_list are mutually exclusive, cannot coexist\n\nUse key:value format:\n\n```json\n\"voice_list\":[{ \"voice_id\": \"string\" },{ \"voice_id\": \"string\" }]\n```",
+            "description": "Voice list referenced during video generation.\n- Up to 2 voices per video generation task\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'\n- element_list and voice_list are mutually exclusive; cannot coexist\n\nUse key:value format:\n\n```json\n\"voice_list\":[{ \"voice_id\": \"string\" },{ \"voice_id\": \"string\" }]\n```",
             "maxItems": 2
           },
           "sound": {
@@ -257,7 +294,7 @@
             "minimum": 0,
             "maximum": 1,
             "default": 0.5,
-            "description": "Creative freedom of video generation; higher values result in less creative freedom\nkling-v2.x models do not support this parameter"
+            "description": "Creative freedom of video generation; higher values result in less model freedom and stronger correlation with the user's input prompt\nkling-v2.x models do not support this parameter"
           },
           "mode": {
             "type": "string",
@@ -274,7 +311,7 @@
           },
           "static_mask": {
             "type": "string",
-            "description": "Static brush mask area (mask image painted by the user via motion brush)\\n`The \"motion brush\" feature includes both \"dynamic brush dynamic_masks\" and \"static brush static_mask\"`\n\n- Supports image Base64 encoding or image URL (must be accessible, same format requirements as the image field)\n- Supported image formats: .jpg / .jpeg / .png\n- Image aspect ratio must match the input image (i.e., the image field), otherwise the task will fail\n- The resolution of static_mask and dynamic_masks.mask must be identical, otherwise the task will fail"
+            "description": "Static brush mask area (mask image painted by the user via motion brush)\n`The \"motion brush\" feature includes both \"dynamic brush dynamic_masks\" and \"static brush static_mask\"`\n\n- Supports image Base64 encoding or image URL (must be accessible, same format requirements as the image field)\n- Supported image formats: .jpg / .jpeg / .png\n- Image aspect ratio must match the input image (i.e., the image field), otherwise the task will fail\n- The resolution of static_mask and dynamic_masks.mask must be identical, otherwise the task will fail"
           },
           "dynamic_masks": {
             "type": "array",
@@ -319,19 +356,8 @@
             "type": "string",
             "description": "Video duration in seconds.",
             "enum": [
-              "3",
-              "4",
               "5",
-              "6",
-              "7",
-              "8",
-              "9",
-              "10",
-              "11",
-              "12",
-              "13",
-              "14",
-              "15"
+              "10"
             ],
             "default": "5"
           },
@@ -351,7 +377,7 @@
           },
           "external_task_id": {
             "type": "string",
-            "description": "Custom task ID"
+            "description": "Custom task ID.\n- Does not override the system-generated task ID, but supports querying by this ID.\n- Must be unique per user."
           }
         }
       },
@@ -366,58 +392,62 @@
       },
       "SubmitResponse": {
         "type": "object",
-        "required": [
-          "code",
-          "message",
-          "data"
-        ],
         "properties": {
           "code": {
             "type": "integer",
-            "description": "Kling response code. 0 indicates the task has been accepted."
+            "description": "Error code; see error codes for details."
           },
           "message": {
             "type": "string",
-            "description": "Kling response message."
+            "description": "Error message."
           },
           "request_id": {
             "type": "string",
-            "description": "Upstream request identifier (if provided)."
+            "description": "Request ID, system-generated, used for request tracking and troubleshooting."
           },
           "data": {
             "type": "object",
-            "required": [
-              "task_id",
-              "task_status"
-            ],
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "Public task ID generated by this gateway. The upstream task ID is not exposed."
-              },
-              "task_status": {
-                "type": "string",
-                "description": "Initial task status.",
-                "example": "submitted"
+                "description": "Task ID, system-generated."
               },
               "task_info": {
                 "type": "object",
+                "description": "Task creation parameter information.",
                 "properties": {
                   "external_task_id": {
                     "type": "string",
-                    "description": "External task ID provided by the client, or the public task ID injected by the gateway."
+                    "description": "Client-provided custom task ID."
                   }
                 }
+              },
+              "task_status": {
+                "type": "string",
+                "description": "Task status.",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeed",
+                  "failed"
+                ],
+                "x-enum-labels": [
+                  "Submitted",
+                  "Processing",
+                  "Succeed",
+                  "Failed"
+                ],
+                "example": "submitted"
               },
               "created_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "Creation time in milliseconds."
+                "description": "Task creation time, Unix timestamp in milliseconds."
               },
               "updated_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "Update time in milliseconds."
+                "description": "Task update time, Unix timestamp in milliseconds."
               }
             }
           }

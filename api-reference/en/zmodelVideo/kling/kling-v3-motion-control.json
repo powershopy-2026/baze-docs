@@ -21,7 +21,7 @@
     "/kling/v1/videos/motion-control": {
       "post": {
         "summary": "Kling Motion Control Video Task (kling-v3)",
-        "description": "Submit a Kling native motion control task via `/kling/v1/videos/motion-control`. The request body is forwarded to the Kling official API after model mapping and public task ID injection.",
+        "description": "Submit a Kling native motion control task via `/kling/v1/videos/motion-control`.",
         "operationId": "createKlingV3MotionControl",
         "tags": [
           "Kling"
@@ -29,6 +29,18 @@
         "security": [
           {
             "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "Data exchange format"
           }
         ],
         "requestBody": {
@@ -43,10 +55,14 @@
                   "summary": "Request example",
                   "value": {
                     "model_name": "kling-v3",
-                    "image_url": "https://example.com/character.png",
-                    "video_url": "https://example.com/motion.mp4",
-                    "character_orientation": "video",
-                    "mode": "std"
+                    "image_url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-3.ng.png",
+                    "prompt": "The girl is wearing a gray loose T-shirt and denim shorts",
+                    "video_url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/dance.mp4",
+                    "keep_original_sound": "yes",
+                    "character_orientation": "image",
+                    "mode": "pro",
+                    "callback_url": "",
+                    "external_task_id": "xxx"
                   }
                 }
               }
@@ -60,6 +76,25 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "Response example",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": {
+                        "task_id": "string",
+                        "task_info": {
+                          "external_task_id": "string"
+                        },
+                        "task_status": "submitted",
+                        "created_at": 1722769557708,
+                        "updated_at": 1722769557708
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -121,11 +156,11 @@
           },
           "image_url": {
             "type": "string",
-            "description": "Reference image. The characters, background, and other elements in the generated video will be based on the reference image.\n- Video content requirements:\n  * Character proportions should match the reference action proportions; avoid using full-body actions to drive half-body characters\n  * Characters must show clear upper body or full body limbs and head, avoid occlusion\n  * Avoid extreme character orientations such as upside-down or lying flat; character proportion in frame must not be too low\n  * Supports realistic/stylized characters (including humans/humanoid animals/partial animals/characters with humanoid limb proportions)\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix (e.g., data:image/png;base64,) before the Base64 string; pass the Base64 encoded string directly.\n- Correct Base64 parameter:\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Incorrect Base64 parameter (includes data: prefix):\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions between 300px~65536px, aspect ratio between 1:2.5 ~ 2.5:1"
+            "description": "Reference image. The characters, background, and other elements in the generated video will be based on the reference image.\n- Video content requirements:\n  * Character proportions should match the reference action proportions as much as possible; avoid using full-body actions to drive half-body characters\n  * Characters must show clear upper body or full body limbs and head, avoid occlusion\n  * Avoid extreme character orientations such as upside-down or lying flat; character proportion in frame must not be too low\n  * Supports realistic/stylized characters (including humans/humanoid animals/partial animals/characters with humanoid limb proportions)\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix (e.g., data:image/png;base64,) before the Base64 string; pass the Base64 encoded string directly.\n- Correct Base64 parameter:\n\n`iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Incorrect Base64 parameter (includes data: prefix):\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions between 300px~65536px, aspect ratio between 1:2.5 ~ 2.5:1"
           },
           "video_url": {
             "type": "string",
-            "description": "Reference video URL. The character motion in the generated video will match the reference video.\n- Video content requirements:\n  * Characters must show clear upper body or full body limbs and head, avoid occlusion\n  * Recommend uploading single-person action video; for 2+ people, the largest character action will be used\n  * Real person actions recommended; some stylized characters/humanoid limb proportions may work\n  * Action video should be a single continuous shot with the character always visible; avoid cuts, camera movements, etc., otherwise content will be truncated\n  * Avoid excessively fast actions; relatively smooth actions produce better results\n- Video files support .mp4/.mov, file size must not exceed 100MB, both width and height must be between 340px~3850px; validation failures will return error codes\n- Minimum video duration is 3 seconds; maximum duration depends on character orientation reference:\n  * When character orientation matches the video character: max 30 seconds\n  * When character orientation matches the image character: max 10 seconds\n- If your action difficulty is high or speed is fast, there is a chance the result will be shorter than the uploaded video duration because the model can only extract valid action duration; minimum 3s of usable continuous action is needed. Note that consumed credits cannot be refunded; adjust action difficulty and speed accordingly\n- The system validates video content and will return error codes if issues are found"
+            "description": "Reference video URL. The character motion in the generated video will match the reference video.\n- Video content requirements:\n  * Characters must show clear upper body or full body limbs and head, avoid occlusion\n  * Recommend uploading single-person action video; for 2+ people, the largest character action will be used\n  * Real person actions recommended; some stylized characters/humanoid limb proportions may work\n  * Action video should be a single continuous shot with the character always visible; avoid cuts, camera movements, etc., otherwise content will be truncated\n  * Avoid excessively fast actions; relatively smooth actions produce better results\n- Video files support .mp4/.mov, file size must not exceed 100MB, both width and height must be between 340px~3850px; validation failures will return error codes\n- Minimum video duration is 3 seconds; maximum duration depends on character orientation reference (character_orientation):\n  * When character orientation matches the video character: max 30 seconds\n  * When character orientation matches the image character: max 10 seconds\n- If your action difficulty is high or speed is fast, there is a chance the result will be shorter than the uploaded video duration because the model can only extract valid action duration; minimum 3s of usable continuous action is needed. Note that consumed credits cannot be refunded; adjust action difficulty and speed accordingly\n- The system validates video content and will return error codes if issues are found"
           },
           "element_list": {
             "type": "array",
@@ -168,6 +203,7 @@
               "std",
               "pro"
             ],
+            "default": "std",
             "x-options": [
               { "label": "720P", "value": "std"  },
               { "label": "1080P", "value": "pro" }
@@ -190,7 +226,7 @@
           },
           "external_task_id": {
             "type": "string",
-            "description": "Custom task ID"
+            "description": "Custom task ID.\n- Does not override the system-generated task ID, but supports querying by this ID.\n- Must be unique per user."
           }
         }
       },
@@ -205,58 +241,56 @@
       },
       "SubmitResponse": {
         "type": "object",
-        "required": [
-          "code",
-          "message",
-          "data"
-        ],
         "properties": {
           "code": {
             "type": "integer",
-            "description": "Kling response code. 0 indicates the task has been accepted."
+            "description": "Error code; see error codes for details."
           },
           "message": {
             "type": "string",
-            "description": "Kling response message."
+            "description": "Error message."
           },
           "request_id": {
             "type": "string",
-            "description": "Upstream request identifier (if provided)."
+            "description": "Request ID, system-generated, used for request tracking and troubleshooting."
           },
           "data": {
             "type": "object",
-            "required": [
-              "task_id",
-              "task_status"
-            ],
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "Public task ID generated by this gateway. The upstream task ID is not exposed."
-              },
-              "task_status": {
-                "type": "string",
-                "description": "Initial task status.",
-                "example": "submitted"
+                "description": "Task ID, system-generated."
               },
               "task_info": {
                 "type": "object",
+                "description": "Task creation parameter information.",
                 "properties": {
                   "external_task_id": {
                     "type": "string",
-                    "description": "External task ID provided by the client, or the public task ID injected by the gateway."
+                    "description": "Client-provided custom task ID."
                   }
                 }
+              },
+              "task_status": {
+                "type": "string",
+                "description": "Task status. Enum values: submitted, processing, succeed, failed.",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeed",
+                  "failed"
+                ],
+                "example": "submitted"
               },
               "created_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "Creation time in milliseconds."
+                "description": "Task creation time, Unix timestamp in milliseconds."
               },
               "updated_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "Update time in milliseconds."
+                "description": "Task update time, Unix timestamp in milliseconds."
               }
             }
           }
