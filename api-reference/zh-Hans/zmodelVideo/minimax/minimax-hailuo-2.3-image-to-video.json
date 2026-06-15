@@ -253,11 +253,18 @@
               "10"
             ],
             "x-linkage": {
-              "size": {
-                "1080P": [
-                  "6"
-                ]
-              }
+              "rules": [
+                {
+                  "when": {
+                    "field": "size",
+                    "operator": "eq",
+                    "value": "1080P"
+                  },
+                  "set_options": [
+                    "6"
+                  ]
+                }
+              ]
             }
           },
           "size": {
