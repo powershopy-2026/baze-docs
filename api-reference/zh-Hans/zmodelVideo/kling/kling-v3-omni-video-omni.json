@@ -101,26 +101,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "请求无效或被上游拒绝。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "缺少或无效的 Bearer 令牌。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -138,7 +118,8 @@
       "KlingRequest": {
         "type": "object",
         "required": [
-          "model_name"
+          "model_name",
+          "prompt"
         ],
         "properties": {
           "model_name": {
@@ -169,12 +150,7 @@
           "prompt": {
             "type": "string",
             "description": "文本提示词，可包含正向描述和负向描述。\n- 可将提示词模板化来满足不同的视频生成需求\n- 不能超过 2,500 个字符\n\n当 multi_shot 为 false 或 multi_shot参数为true且shot-type参数为intelligence时，当前参数不得为空。\n\n```markdown\nOmni模型可通过Prompt与主体、图片、视频等内容实现多种能力：\n- 通过<<<>>>的格式来指定某个主体、图片或视频，如：<<<element_1>>>、<<<image_1>>>、<<<video_1>>>\n```",
-            "maxLength": 2500,
-            "x-valid-when": {
-              "multi_shot": [
-                false
-              ]
-            }
+            "maxLength": 2500
           },
           "multi_prompt": {
             "type": "array",
@@ -302,9 +278,18 @@
             ],
             "default": "pro",
             "x-options": [
-              { "label": "720P", "value": "std"  },
-              { "label": "1080P", "value": "pro" },
-              { "label": "4K", "value": "4k" }
+              {
+                "label": "720P",
+                "value": "std"
+              },
+              {
+                "label": "1080P",
+                "value": "pro"
+              },
+              {
+                "label": "4K",
+                "value": "4k"
+              }
             ],
             "description": "生成视频的模式\n\n- std：标准模式（标准），基础模式，性价比高，输出视频分辨率为720P。\n- pro：专家模式（高品质），高表现模式，生成视频质量更佳，输出视频分辨率为1080P。\n- 4k：4K模式，高表现（同pro），生成视频质量更佳，输出视频分辨率为4K。"
           },

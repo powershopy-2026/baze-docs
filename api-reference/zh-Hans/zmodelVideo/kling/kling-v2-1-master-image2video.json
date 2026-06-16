@@ -56,7 +56,6 @@
                   "value": {
                     "model_name": "kling-v2-1-master",
                     "image": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-2.png",
-                    "image_tail": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-1.png",
                     "prompt": "镜头拉远，女生微笑",
                     "negative_prompt": "",
                     "duration": "5",
@@ -99,26 +98,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "请求无效或被上游拒绝。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "缺少或无效的 Bearer 令牌。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -136,7 +115,9 @@
       "KlingRequest": {
         "type": "object",
         "required": [
-          "model_name"
+          "model_name",
+          "prompt",
+          "image"
         ],
         "properties": {
           "model_name": {
@@ -148,11 +129,7 @@
           },
           "image": {
             "type": "string",
-            "description": "参考图像\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：请确保您传递的所有图像数据参数均采用Base64编码格式。若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 正确的 Base64 编码参数：\n\n `iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 错误的 Base64 编码参数（包含 data: 前缀）：\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px，图片宽高比介于 1:2.5 ~ 2.5:1 之间\n- image 参数与 image_tail 参数至少二选一，二者不能同时为空"
-          },
-          "image_tail": {
-            "type": "string",
-            "description": "参考图像 - 尾帧控制\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px\n- image 参数与 image_tail 参数至少二选一，二者不能同时为空\n- image_tail 参数与 dynamic_masks/static_mask 参数二选一，不能同时使用"
+            "description": "参考图像\n- 支持传入图片 Base64 编码或图片 URL（确保可访问）\n- 注意：请确保您传递的所有图像数据参数均采用Base64编码格式。若您使用 Base64 方式，请不要在 Base64 编码字符串前添加任何前缀（如 data:image/png;base64,），直接传递 Base64 编码后的字符串即可。\n- 正确的 Base64 编码参数：\n\n `iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 错误的 Base64 编码参数（包含 data: 前缀）：\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- 图片格式支持 .jpg / .jpeg / .png\n- 图片文件大小不能超过 10MB，图片宽高尺寸不小于 300px，图片宽高比介于 1:2.5 ~ 2.5:1 之间\n- image 参数为必填"
           },
           "multi_shot": {
             "type": "boolean",
@@ -175,12 +152,7 @@
           "prompt": {
             "type": "string",
             "description": "正向文本提示词\n\n```markdown\nOmni模型可通过Prompt与主体、图片、视频等内容实现多种能力：\n- 通过<<<>>>的格式来指定某个主体、图片或视频，如：<<<element_1>>>、<<<image_1>>>、<<<video_1>>>\n```\n\n- 不能超过 2500 个字符\n- 当 multi_shot 为 false 或 shot_type 为 intelligence 时不得为空。\n- 用 <<<voice_1>>> 来指定音色，序号同 voice_list 参数所引用音色的排列顺序\n- 一次视频生成任务至多引用 2 个音色；指定音色时，sound 参数值必须为 on\n- 语法结构越简单越好，如：男人<<<voice_1>>>说：\"你好\"\n- 当 voice_list 参数不为空且 prompt 参数中引用音色 ID 时，视频生成任务按\"有指定音色\"计量计费",
-            "maxLength": 2500,
-            "x-valid-when": {
-              "multi_shot": [
-                false
-              ]
-            }
+            "maxLength": 2500
           },
           "multi_prompt": {
             "type": "array",
@@ -304,8 +276,14 @@
             ],
             "default": "std",
             "x-options": [
-              { "label": "720P", "value": "std"  },
-              { "label": "1080P", "value": "pro" }
+              {
+                "label": "720P",
+                "value": "std"
+              },
+              {
+                "label": "1080P",
+                "value": "pro"
+              }
             ],
             "description": "生成视频的模式\n\n- std：标准模式（标准），基础模式，性价比高，输出视频分辨率为720P。\n- pro：专家模式（高品质），高表现模式，生成视频质量更佳，输出视频分辨率为1080P。\n- 4k：4K模式，高表现（同pro），生成视频质量更佳，输出视频分辨率为4K。"
           },

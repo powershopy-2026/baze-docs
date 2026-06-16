@@ -56,7 +56,6 @@
                   "value": {
                     "model_name": "kling-v2-1-master",
                     "image": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-2.png",
-                    "image_tail": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/multi-1.png",
                     "prompt": "Camera pulls back, the girl smiles",
                     "negative_prompt": "",
                     "duration": "5",
@@ -99,26 +98,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid request or rejected by upstream.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid Bearer token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -136,7 +115,9 @@
       "KlingRequest": {
         "type": "object",
         "required": [
-          "model_name"
+          "model_name",
+          "prompt",
+          "image"
         ],
         "properties": {
           "model_name": {
@@ -148,11 +129,7 @@
           },
           "image": {
             "type": "string",
-            "description": "Reference image\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: Please ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix (such as data:image/png;base64,) before the Base64 string — pass the Base64 encoded string directly.\n- Correct Base64 parameter:\n\n `iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Incorrect Base64 parameter (contains data: prefix):\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- At least one of image or image_tail must be provided; both cannot be empty"
-          },
-          "image_tail": {
-            "type": "string",
-            "description": "Reference image - tail frame control\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: When using Base64, do not add any prefix (such as data:image/png;base64,) before the Base64 string — pass the Base64 encoded string directly.\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px\n- At least one of image or image_tail must be provided; both cannot be empty\n- image_tail and dynamic_masks/static_mask are mutually exclusive; cannot be used together"
+            "description": "Reference image\n- Supports image Base64 encoding or image URL (must be accessible)\n- Note: Please ensure all image data parameters use Base64 encoding format. When using Base64, do not add any prefix (such as data:image/png;base64,) before the Base64 string — pass the Base64 encoded string directly.\n- Correct Base64 parameter:\n\n `iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Incorrect Base64 parameter (contains data: prefix):\n\n`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA...`\n\n- Supported image formats: .jpg / .jpeg / .png\n- Image file size must not exceed 10MB, image dimensions must be at least 300px, aspect ratio between 1:2.5 ~ 2.5:1\n- image parameter is required"
           },
           "multi_shot": {
             "type": "boolean",
@@ -175,12 +152,7 @@
           "prompt": {
             "type": "string",
             "description": "Positive text prompt\n\n```markdown\nOmni models can achieve various capabilities through prompts with subjects, images, videos, etc.:\n- Use <<<>>> format to specify a subject, image, or video, e.g.: <<<element_1>>>, <<<image_1>>>, <<<video_1>>>\n```\n\n- Must not exceed 2500 characters\n- Must not be empty when multi_shot is false or shot_type is intelligence.\n- Use <<<voice_1>>> to specify a voice, with the index matching the order of voices referenced in voice_list\n- Up to 2 voices per video generation task; when specifying voices, sound must be 'on'\n- Keep syntax as simple as possible, e.g.: A man<<<voice_1>>>says: \"Hello\"\n- When voice_list is not empty and prompt references a voice ID, billing is based on 'with specified voice'",
-            "maxLength": 2500,
-            "x-valid-when": {
-              "multi_shot": [
-                false
-              ]
-            }
+            "maxLength": 2500
           },
           "multi_prompt": {
             "type": "array",
@@ -304,8 +276,14 @@
             ],
             "default": "std",
             "x-options": [
-              { "label": "720P", "value": "std"  },
-              { "label": "1080P", "value": "pro" }
+              {
+                "label": "720P",
+                "value": "std"
+              },
+              {
+                "label": "1080P",
+                "value": "pro"
+              }
             ],
             "description": "Video generation mode\n\n- std: Standard mode, cost-effective, output video resolution 720P.\n- pro: Expert mode (high quality), better video quality, output video resolution 1080P.\n- 4k: 4K mode, high quality (same as pro), better video quality, output video resolution 4K."
           },

@@ -117,11 +117,18 @@
               "1080p"
             ],
             "x-linkage": {
-              "draft": {
-                "true": [
-                  "480p"
-                ]
-              }
+              "rules": [
+                {
+                  "when": {
+                    "field": "draft",
+                    "operator": "eq",
+                    "value": true
+                  },
+                  "set_options": [
+                    "480p"
+                  ]
+                }
+              ]
             },
             "description": "视频输出规格参数。样片模式（draft=true）仅支持 480p。默认 720p。",
             "default": "720p"

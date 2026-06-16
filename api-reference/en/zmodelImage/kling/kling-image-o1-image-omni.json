@@ -91,26 +91,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid request or rejected by upstream.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid Bearer token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         }
       }
@@ -186,7 +166,7 @@
               "2k"
             ],
             "description": "Generated image resolution",
-            "default": "1K"
+            "default": "1k"
           },
           "result_type": {
             "type": "string",

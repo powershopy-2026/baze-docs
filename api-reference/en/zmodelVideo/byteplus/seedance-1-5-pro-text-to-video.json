@@ -110,11 +110,18 @@
               "1080p"
             ],
             "x-linkage": {
-              "draft": {
-                "true": [
-                  "480p"
-                ]
-              }
+              "rules": [
+                {
+                  "when": {
+                    "field": "draft",
+                    "operator": "eq",
+                    "value": true
+                  },
+                  "set_options": [
+                    "480p"
+                  ]
+                }
+              ]
             },
             "description": "Video output specification. Draft mode (draft=true) only supports 480p. Defaults to 720p.",
             "default": "720p"

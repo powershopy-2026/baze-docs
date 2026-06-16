@@ -148,8 +148,7 @@
           "resolution": {
             "type": "string",
             "enum": [
-              "1k",
-              "2k"
+              "1k"
             ],
             "default": "1k",
             "description": "Generated image resolution."
