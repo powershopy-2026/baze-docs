@@ -33,18 +33,19 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "group_name": {
-                    "description": "Group Name (for creating virtual groups)",
-                    "example": "",
-                    "type": "string"
+                    "type": "string",
+                    "description": "Group Name (for creating virtual groups)"
                   }
                 }
               },
-              "examples": {}
+              "example": {
+                "group_name": "001"
+              }
             }
           },
           "required": true
