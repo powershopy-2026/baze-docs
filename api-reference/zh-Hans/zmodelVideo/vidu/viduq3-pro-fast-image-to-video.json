@@ -235,7 +235,6 @@
           "resolution": {
             "type": "string",
             "enum": [
-              "540p",
               "720p",
               "1080p"
             ],
@@ -273,21 +272,11 @@
               { "label": "右上角", "value": 2 },
               { "label": "右下角", "value": 3 },
               { "label": "左下角", "value": 4 }
-            ],
-            "x-valid-when": {
-              "watermark": [
-                true
-              ]
-            }
+            ]
           },
           "wm_url": {
             "type": "string",
-            "description": "水印内容，此处为图片URL。不传时，使用默认水印：内容由AI生成",
-            "x-valid-when": {
-              "watermark": [
-                true
-              ]
-            }
+            "description": "水印内容，此处为图片URL。不传时，使用默认水印：内容由AI生成"
           },
           "meta_data": {
             "type": "string",

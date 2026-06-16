@@ -117,7 +117,8 @@
         "type": "object",
         "required": [
           "model_name",
-          "prompt"
+          "prompt",
+          "image"
         ],
         "properties": {
           "model_name": {
