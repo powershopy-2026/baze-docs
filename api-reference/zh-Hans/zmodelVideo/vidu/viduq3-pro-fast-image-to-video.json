@@ -235,7 +235,6 @@
           "resolution": {
             "type": "string",
             "enum": [
-              "540p",
               "720p",
               "1080p"
             ],
