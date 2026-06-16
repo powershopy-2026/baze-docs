@@ -166,7 +166,7 @@
               "2k"
             ],
             "description": "生成图片的清晰度",
-            "default": "1K"
+            "default": "1k"
           },
           "result_type": {
             "type": "string",
