@@ -36,8 +36,15 @@
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "properties": {}
+                "properties": {
+                  "group_name": {
+                    "description": "组名称（创建虚拟组使用）",
+                    "example": "",
+                    "type": "string"
+                  }
+                }
               },
+
               "examples": {}
             }
           },

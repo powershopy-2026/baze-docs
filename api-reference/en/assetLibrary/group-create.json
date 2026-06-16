@@ -36,7 +36,13 @@
             "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "properties": {}
+                "properties": {
+                  "group_name": {
+                    "description": "Group Name (for creating virtual groups)",
+                    "example": "",
+                    "type": "string"
+                  }
+                }
               },
               "examples": {}
             }

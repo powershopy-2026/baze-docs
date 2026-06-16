@@ -47,6 +47,11 @@
                     "description": "Group ID (if left blank, create a virtual group)",
                     "example": "",
                     "type": "string"
+                  },
+                  "group_name": {
+                    "description": "Group Name (for creating virtual groups)",
+                    "example": "",
+                    "type": "string"
                   }
                 },
                 "required": [

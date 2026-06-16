@@ -47,6 +47,11 @@
                     "description": "组ID（为空则创建虚拟组）",
                     "example": "",
                     "type": "string"
+                  },
+                  "group_name": {
+                    "description": "组名称（创建虚拟组使用）",
+                    "example": "",
+                    "type": "string"
                   }
                 },
                 "required": [
