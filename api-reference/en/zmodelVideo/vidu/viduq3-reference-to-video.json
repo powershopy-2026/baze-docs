@@ -349,21 +349,11 @@
                 "label": "Bottom Left",
                 "value": 4
               }
-            ],
-            "x-valid-when": {
-              "watermark": [
-                true
-              ]
-            }
+            ]
           },
           "wm_url": {
             "type": "string",
-            "description": "Watermark image URL. When not specified, the default watermark is used.",
-            "x-valid-when": {
-              "watermark": [
-                true
-              ]
-            }
+            "description": "Watermark image URL. When not specified, the default watermark is used."
           },
           "meta_data": {
             "type": "string",
