@@ -23,8 +23,8 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "官网API密钥",
-            "required": true,
+            "description": "API token值",
+            "required": false,
             "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
             "schema": {
               "type": "string"
@@ -33,19 +33,19 @@
         ],
         "requestBody": {
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
                 "type": "object",
                 "properties": {
                   "group_name": {
-                    "description": "组名称（创建虚拟组使用）",
-                    "example": "",
-                    "type": "string"
+                    "type": "string",
+                    "description": "组名称（创建虚拟组使用）"
                   }
                 }
               },
-
-              "examples": {}
+              "example": {
+                "group_name": "001"
+              }
             }
           },
           "required": true
