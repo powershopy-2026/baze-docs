@@ -33,6 +33,14 @@ jobs:
           find api-reference -name '*.json' -exec \
             sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' {} + 2>/dev/null || true
 
+          # 替换 JSON 文件中不带 -api 前缀的 URL
+          find api-reference -name '*.json' -exec \
+            sed -i 's|https://baze\.powerbuyin\.top|https://powertokens.ai|g' {} + 2>/dev/null || true
+
+          # 替换 JSON 文件中的环境描述
+          find api-reference -name '*.json' -exec \
+            sed -i 's|"description": "测试环境"|"description": "生产环境"|g' {} + 2>/dev/null || true
+
           # 替换所有文档目录中的 URL（md / mdx）
           for dir in docs zh-Hans en; do
             find "$dir" -type f \( -name '*.md' -o -name '*.mdx' \) -exec \
