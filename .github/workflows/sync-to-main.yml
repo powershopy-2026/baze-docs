@@ -1,52 +1,48 @@
-name: Sync fat-test to main
+name: Replace test URLs on main
 
 on:
   push:
-    branches: [fat-test]
+    branches: [main]
 
 jobs:
-  sync:
+  replace-urls:
     runs-on: ubuntu-latest
+    # 避免死循环：bot 自己提交的 push 不再触发替换
+    if: github.event.head_commit.author.name != 'github-actions[bot]'
     steps:
       - name: Checkout repo
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          # PAT allows pushing to protected branches and triggering downstream workflows
           token: ${{ secrets.SYNC_TOKEN }}
 
       - name: Skip if only workflow files changed
         id: check
         run: |
-          if git diff --quiet origin/main..HEAD -- \
+          if git diff --quiet HEAD~1..HEAD -- \
             ':(exclude).github/'; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Sync content with production URLs
+      - name: Replace test URLs with production URLs
         if: steps.check.outputs.skip == 'false'
         run: |
-          # Sync content directories and root config files from fat-test
-          git checkout main
-          git checkout fat-test -- \
-            api-reference/ \
-            docs/ \
-            zh-Hans/ \
-            en/ \
-            AGENTS.md \
-            docs.json \
-            .mintignore 2>/dev/null || true
-
-          # Replace test URLs with production URLs in OpenAPI specs
+          # 替换 OpenAPI JSON 中的 URL
           find api-reference -name '*.json' -exec \
-            sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' {} +
-
-          # Replace in markdown docs
-          sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' AGENTS.md 2>/dev/null || true
-          find docs -name '*.md' -exec \
             sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' {} + 2>/dev/null || true
+
+          # 替换所有文档目录中的 URL（md / mdx）
+          for dir in docs zh-Hans en; do
+            find "$dir" -type f \( -name '*.md' -o -name '*.mdx' \) -exec \
+              sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' {} + 2>/dev/null || true
+          done
+
+          # 替换根目录配置文件中的 URL
+          for f in AGENTS.md docs.json .mintignore; do
+            sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' "$f" 2>/dev/null || true
+          done
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -55,6 +51,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "sync: update from fat-test with production URLs"
+            git commit -m "sync: replace test URLs with production URLs [skip ci]"
             git push origin main
           fi
