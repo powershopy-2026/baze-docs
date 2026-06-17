@@ -1,0 +1,510 @@
+﻿# 资产库 — 快速上手
+
+资产库允许你将图片、视频、音频文件上传到 PowerTokens 平台，获取一个永久的 `asset_id`，之后在任意生成请求中直接引用，无需每次都传原始文件 URL。
+
+资产库分为三类资产，适用于不同场景：
+
+| 类型 | 说明 | 谁能用 |
+|---|---|---|
+| **官方素材库** | 由字节提供的官方素材，平台预置 | 仅授权客户可访问 |
+| **虚拟素材** | 用户自建的素材库，自由上传和管理 | 所有用户 |
+| **真人素材** | 需通过真人认证后才能上传的素材 | 完成真人认证的用户 |
+
+---
+
+## 前置准备
+
+在调用任何资产库接口之前，请完成以下步骤：
+
+1. **注册登录**：注册并登录 [powertokens.ai](https://powertokens.ai)
+2. **获取 API Key**：进入 [API Keys 管理页面](https://powertokens.ai/api-keys)，点击创建新的 Key，复制并妥善保存（页面关闭后将无法再次查看）
+3. **开通资产库**：进入 [资产库页面](https://powertokens.ai/zh-Hans/assets-library?tab=1)，阅读并同意《素材库用户协议》后方可使用
+
+> **注意：** 使用资产库**不需要充值**，开通即可免费使用。但如果需要调用 Seedance 2.0 等生成模型，则需要先充值。
+
+### 鉴权方式
+
+所有接口均通过 HTTP Header 进行鉴权，格式为：
+
+```
+Authorization: Bearer <YOUR_API_KEY>
+```
+
+每个请求都必须携带此 Header（获取资产 ID 接口除外），否则将返回 401 未授权错误。
+
+---
+
+## 支持的文件类型
+
+| 类型 | 格式 | 限制 |
+|---|---|---|
+| **图片** | JPEG、PNG、WebP、BMP、TIFF、GIF、HEIC | < 30 MB，宽高比 0.4–2.5，单边 300–6000 px |
+| **视频** | MP4、MOV | 480p 或 720p，时长 2–15 秒，≤ 50 MB，24–60 fps |
+| **音频** | WAV、MP3 | 时长 2–15 秒，≤ 15 MB |
+
+---
+
+## 一、官方素材库
+
+官方素材库由字节（ByteDance）提供，包含平台预置的高质量素材。官方素材属于虚拟资产类型（`group_type: 0`），但**仅授权客户可见**，普通用户调用接口时不会返回官方资产组。
+
+### 使用流程
+
+```
+获取资产组列表 ──→ 找到官方资产组 ──→ 获取该组下的资产列表 ──→ 使用 asset_id
+```
+
+### 1. 获取官方资产组
+
+**接口：** [`POST /v1/asset/groups/list`](https://docs.powertokens.ai/en/assetLibrary/group-list)
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "page": 1,
+    "page_size": 20,
+    "group_type": 0
+  }'
+```
+
+> 官方资产组与用户自建的虚拟资产组共用 `group_type: 0`。如果你不是授权客户，返回列表中不会包含官方资产组。
+
+### 2. 获取资产组下的素材列表
+
+拿到官方的 `group_id` 后，查询该组下的所有素材：
+
+**接口：** [`POST /v1/asset/groups/assets`](https://docs.powertokens.ai/en/assetLibrary/group-asset-list)
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/assets \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "page": 1,
+    "page_size": 12,
+    "group_id": "XXXX"
+  }'
+```
+
+响应中每个素材都包含 `asset_id`，可直接用于生成请求。
+
+支持的筛选参数：
+
+| 参数 | 类型 | 说明 |
+|---|---|---|
+| `type` | integer | 按类型过滤：1=图片，2=视频，3=音频 |
+| `status` | integer | 按状态过滤：1=审核中，2=成功，3=失败 |
+| `name` | string | 按名称模糊搜索 |
+| `asset_id` | string | 按资产 ID 精确查找 |
+
+---
+
+## 二、虚拟素材
+
+虚拟素材是用户自建的素材库，可以自由创建资产组、上传文件、管理素材。
+
+### 使用流程
+
+```
+创建资产组 ──→ 上传文件（指定 group_id）──→ 获取 task_id ──→ 轮询获取 asset_id ──→ 使用
+```
+
+### 1. 创建虚拟资产组
+
+**接口：** [`POST /v1/asset/groups/create`](https://docs.powertokens.ai/en/assetLibrary/group-create)
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/create \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "group_name": "我的项目素材"
+  }'
+```
+
+**响应：**
+
+```json
+{
+  "code": 200,
+  "data": {
+    "group_id": "XXXX"
+  },
+  "msg": ""
+}
+```
+
+### 2. 上传文件到资产组
+
+**接口：** [`POST /v1/asset/upload`](https://docs.powertokens.ai/en/assetLibrary/upload-file)
+**Content-Type：** `multipart/form-data`
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/upload \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "file=@/path/to/your-image.jpg" \
+  -F "group_id=XXXX"
+```
+
+> 也可以不传 `group_id`，改为传 `group_name`，系统会自动创建或复用同名虚拟分组。
+
+**响应：**
+
+```json
+{
+  "code": 200,
+  "data": {
+    "task_id": "XXXX"
+  },
+  "msg": ""
+}
+```
+
+### 3. 获取 Asset ID
+
+上传是异步的，用返回的 `task_id` 轮询获取永久的 `asset_id`：
+
+**接口：** [`GET /v1/asset/jobs/get-asset-id?task_id=<TASK_ID>`](https://docs.powertokens.ai/en/assetLibrary/get-asset-id)
+
+> **注意：** 此接口**不需要鉴权**，无需携带 `Authorization` Header。
+
+```bash
+curl "https://powertokens.ai/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
+```
+
+**响应：**
+
+```json
+{
+  "code": 200,
+  "data": {
+    "asset_id": "XXXX"
+  },
+  "msg": ""
+}
+```
+
+> **提示：** 如果文件仍在处理中，建议每 2–3 秒轮询一次，直到返回 `asset_id`。小图片通常几秒内完成，视频可能需要更长时间。
+
+### 4. 管理资产组
+
+**查看虚拟资产组列表：**
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "page": 1,
+    "page_size": 20,
+    "group_type": 0
+  }'
+```
+
+**重命名资产组：** [`POST /v1/asset/groups/rename`](https://docs.powertokens.ai/en/assetLibrary/group-rename)
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/rename \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "group_id": "XXXX",
+    "group_name": "新名称"
+  }'
+```
+
+**删除资产组：** [`POST /v1/asset/groups/delete`](https://docs.powertokens.ai/en/assetLibrary/group-delete)
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/delete \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "group_id": "XXXX"
+  }'
+```
+
+---
+
+## 三、真人素材
+
+真人素材需要先通过真人认证，认证通过后才能上传该真人的素材。这用于确保素材使用的合规性和授权。
+
+### 使用流程
+
+```
+获取认证链接 ──→ 完成真人认证 ──→ 获得资产组 ID ──→ 上传真人素材到该组 ──→ 获取 asset_id ──→ 使用
+```
+
+### 1. 获取真人认证链接
+
+**接口：** [`POST /v1/asset/get-authorize-url`](https://docs.powertokens.ai/en/assetLibrary/get-authorize-url)
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/get-authorize-url \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+**响应：**
+
+```json
+{
+  "code": 200,
+  "data": "https://baze.powerbuyin.top/auth/real-human-authorization?uuid=9eff6f20-87c0-4f04-a158-30c145126eee",
+  "msg": ""
+}
+```
+
+### 2. 完成真人认证
+
+在浏览器中打开返回的认证链接，按照页面提示完成真人身份验证。认证通过后，系统会自动创建一个真人资产组。
+
+### 3. 查询真人资产组，获取 group_id
+
+认证成功后，通过资产组列表接口（与「一、官方素材库」中获取资产组使用的是同一个接口）查询你的真人资产组，获取 `group_id`：
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "page": 1,
+    "page_size": 20,
+    "group_type": 1,
+    "real_human_type": 2
+  }'
+```
+
+`group_type` 和 `real_human_type` 参数说明：
+
+| 参数 | 值 | 说明 |
+|---|---|---|
+| `group_type` | `0` | 虚拟资产组（默认），官方素材也属于此类型 |
+| `group_type` | `1` | 真人资产组 |
+| `real_human_type` | `1` | 由自己创建的真人组 |
+| `real_human_type` | `2` | 通过认证授权获得的真人组 |
+
+从响应的 `list` 中找到你的真人资产组，取其 `group_id` 用于下一步上传。
+
+### 4. 上传真人素材
+
+拿到真人资产组的 `group_id` 后，上传该真人的素材：
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/upload \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "file=@/path/to/real-person-video.mp4" \
+  -F "group_id=XXXX"
+```
+
+后续步骤（获取 `asset_id`、在生成中使用）与虚拟素材相同，参见第二节的第 3 步。
+
+---
+
+## 在生成请求中使用
+
+拿到 `asset_id` 后（无论来自哪类素材），可以在任何支持媒体输入的生成请求中引用：
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/videos \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "wan-2.1-video",
+    "prompt": "春天的樱花大道，花瓣随风飘落",
+    "images": ["XXXX"]
+  }'
+```
+
+### 在 Playground 中使用
+
+在 Playground 界面中，上传的资产会出现在资产库面板里。在提示词输入区域输入 **`@`** 即可浏览并插入资产。界面会根据所选模型自动适配：
+
+- **参考图模型**（如 `wan2.7-r2v`）：可以在提示词中自由 `@` 任意数量的参考图
+- **关键帧模型**（如 `wan2.1-kf2v`）：显示两个固定槽位 —— **起始帧** 和 **结束帧** —— 每个槽位接受一张 `@` 图片
+
+---
+
+## 完整工作流 — Python
+
+以下是虚拟素材从创建分组到生成的完整示例：
+
+```python
+import requests
+import time
+
+API_KEY = "YOUR_API_KEY"
+BASE_URL = "https://powertokens.ai/api"
+HEADERS = {"Authorization": f"Bearer {API_KEY}"}
+
+
+# ── 创建虚拟资产组 ───────────────────────────────────────
+def create_group(group_name):
+    resp = requests.post(
+        f"{BASE_URL}/v1/asset/groups/create",
+        headers={**HEADERS, "Content-Type": "application/json"},
+        json={"group_name": group_name},
+    )
+    resp.raise_for_status()
+    return resp.json()["data"]["group_id"]
+
+
+# ── 上传文件 ─────────────────────────────────────────────
+def upload_asset(file_path, group_id):
+    with open(file_path, "rb") as f:
+        files = {"file": (file_path.split("/")[-1], f)}
+        data = {"group_id": group_id}
+        resp = requests.post(
+            f"{BASE_URL}/v1/asset/upload",
+            headers=HEADERS,
+            files=files,
+            data=data,
+        )
+    resp.raise_for_status()
+    return resp.json()["data"]["task_id"]
+
+
+# ── 轮询获取 asset_id（此接口不需要鉴权）─────────────────
+def get_asset_id(task_id, timeout=60, interval=3):
+    start = time.time()
+    while time.time() - start < timeout:
+        resp = requests.get(
+            f"{BASE_URL}/v1/asset/jobs/get-asset-id",
+            params={"task_id": task_id},
+        )
+        data = resp.json()
+        if data["code"] == 200 and data["data"].get("asset_id"):
+            return data["data"]["asset_id"]
+        time.sleep(interval)
+    raise TimeoutError(f"资产在 {timeout} 秒内未处理完成")
+
+
+# ── 查看资产组内素材列表 ──────────────────────────────────
+def list_group_assets(group_id, page=1, page_size=12):
+    resp = requests.post(
+        f"{BASE_URL}/v1/asset/groups/assets",
+        headers={**HEADERS, "Content-Type": "application/json"},
+        json={"page": page, "page_size": page_size, "group_id": group_id},
+    )
+    resp.raise_for_status()
+    return resp.json()["data"]
+
+
+# ── 在生成请求中使用 ──────────────────────────────────────
+def generate_video(asset_id, prompt):
+    resp = requests.post(
+        f"{BASE_URL}/v1/videos",
+        headers={**HEADERS, "Content-Type": "application/json"},
+        json={
+            "model": "wan-2.1-video",
+            "prompt": prompt,
+            "images": [asset_id],
+        },
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+# ── 运行 ────────────────────────────────────────────────
+group_id = create_group("demo-project")
+print(f"创建资产组 → group_id: {group_id}")
+
+task_id = upload_asset("start_frame.jpg", group_id)
+print(f"已上传 → task_id: {task_id}")
+
+asset_id = get_asset_id(task_id)
+print(f"处理完成 → asset_id: {asset_id}")
+
+assets = list_group_assets(group_id)
+print(f"资产组内共 {assets['total']} 个素材")
+
+result = generate_video(asset_id, "赛博朋克风格的东京夜景")
+print(f"生成任务已提交 → task_id: {result['data']['task_id']}")
+```
+
+---
+
+## 接口速查表
+
+> **Base URL：** `https://powertokens.ai/api`，请确保所有请求都包含 `/api` 前缀，不要直接拼 `powertokens.ai/v1/...`。
+
+### 资产操作
+
+#### 上传文件 — `POST /v1/asset/upload`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/upload-file)）
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/upload \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "file=@/path/to/file.jpg" \
+  -F "group_id=XXXX"
+```
+
+#### 获取资产 ID — `GET /v1/asset/jobs/get-asset-id`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/get-asset-id)）
+
+> 此接口**不需要鉴权**。
+
+```bash
+curl "https://powertokens.ai/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
+```
+
+#### 获取真人认证链接 — `POST /v1/asset/get-authorize-url`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/get-authorize-url)）
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/get-authorize-url \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+### 资产组管理
+
+#### 创建虚拟资产组 — `POST /v1/asset/groups/create`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-create)）
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/create \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"group_name": "我的项目素材"}'
+```
+
+#### 资产组列表 — `POST /v1/asset/groups/list`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-list)）
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"page": 1, "page_size": 20, "group_type": 0}'
+```
+
+#### 资产组内素材列表 — `POST /v1/asset/groups/assets`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-asset-list)）
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/assets \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"page": 1, "page_size": 12, "group_id": "XXXX"}'
+```
+
+#### 重命名资产组 — `POST /v1/asset/groups/rename`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-rename)）
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/rename \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"group_id": "XXXX", "group_name": "新名称"}'
+```
+
+#### 删除资产组 — `POST /v1/asset/groups/delete`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-delete)）
+
+```bash
+curl -X POST https://powertokens.ai/api/v1/asset/groups/delete \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"group_id": "XXXX"}'
+```
+
+---
+
+*完整 API 参考文档请访问 [docs.powertokens.ai](https://docs.powertokens.ai)*

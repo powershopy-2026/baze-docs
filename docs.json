@@ -501,7 +501,7 @@
                   {
                     "group": "asset library",
                     "pages": [
-                      "en/assetLibrary/guides",
+                      "en/assetLibrary/operation_guide",
                       "en/assetLibrary/upload-file",
                       "en/assetLibrary/group-asset-list",
                       "en/assetLibrary/group-create",
