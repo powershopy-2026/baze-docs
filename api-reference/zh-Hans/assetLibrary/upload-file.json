@@ -35,7 +35,7 @@
             "in": "header",
             "description": "注意JAVA在不填写该值会被服务器拦截",
             "required": false,
-            "value": "powertokensAi",
+            "example": "powertokensAi",
             "schema": {
               "type": "string"
             }
@@ -43,9 +43,9 @@
           {
             "name": "Content-Type",
             "in": "header",
-            "description": "",
+            "description": "multipart/form-data",
             "required": false,
-            "value": "multipart/form-data",
+            "example": "multipart/form-data",
             "schema": {
               "type": "string"
             }
