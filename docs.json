@@ -21,7 +21,8 @@
                 "pages": [
                   "zh-Hans/guides/powertokens-quickstart",
                   "zh-Hans/guides/api-key-and-model-call",
-                  "zh-Hans/guides/logs-and-usage"
+                  "zh-Hans/guides/logs-and-usage",
+                  "zh-Hans/guides/seedance2-quick-start"
                 ]
               }
             ]
@@ -284,7 +285,8 @@
                 "pages": [
                   "en/guides/powertokens-quickstart",
                   "en/guides/api-key-and-model-call",
-                  "en/guides/logs-and-usage"
+                  "en/guides/logs-and-usage",
+                  "en/guides/seedance2-quick-start"
                 ]
               }
             ]
