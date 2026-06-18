@@ -28,6 +28,7 @@
           },
           {
             "tab": "模型接口",
+            "expanded": true,
             "pages": [
               {
                 "group": "聊天模型",
