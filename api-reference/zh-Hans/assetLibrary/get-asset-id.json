@@ -24,7 +24,7 @@
             "name": "task_id",
             "in": "query",
             "description": "",
-            "required": false,
+            "required": true,
             "example": "task_2605191608220001",
             "schema": {
               "type": "string"
@@ -35,7 +35,7 @@
             "in": "header",
             "description": "注意JAVA在不填写该值会被服务器拦截",
             "required": false,
-            "example": "powertokensAi",
+            "allowEmptyValue": "powertokensAi",
             "schema": {
               "type": "string"
             }
@@ -45,7 +45,7 @@
             "in": "header",
             "description": "",
             "required": false,
-            "example": "application/json",
+            "allowEmptyValue": "application/json",
             "schema": {
               "type": "string"
             }

@@ -24,7 +24,7 @@
             "name": "task_id",
             "in": "query",
             "description": "",
-            "required": false,
+            "required": true,
             "example": "task_2605191608220001",
             "schema": {
               "type": "string"

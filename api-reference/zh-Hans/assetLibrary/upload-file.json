@@ -24,7 +24,7 @@
             "name": "Authorization",
             "in": "header",
             "description": "官方API秘钥",
-            "required": false,
+            "required": true,
             "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
             "schema": {
               "type": "string"

@@ -23,8 +23,8 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "API token值",
-            "required": false,
+            "description": "官网API密钥",
+            "required": true,
             "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
             "schema": {
               "type": "string"
