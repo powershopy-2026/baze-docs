@@ -35,7 +35,7 @@
             "in": "header",
             "description": "注意JAVA在不填写该值会被服务器拦截",
             "required": false,
-            "allowEmptyValue": "powertokensAi",
+            "value": "powertokensAi",
             "schema": {
               "type": "string"
             }
@@ -45,7 +45,7 @@
             "in": "header",
             "description": "",
             "required": false,
-            "allowEmptyValue": "application/json",
+            "value": "application/json",
             "schema": {
               "type": "string"
             }
