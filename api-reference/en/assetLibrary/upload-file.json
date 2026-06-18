@@ -24,7 +24,7 @@
             "name": "Authorization",
             "in": "header",
             "description": "Official website API key",
-            "required": false,
+            "required": true,
             "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
             "schema": {
               "type": "string"
@@ -33,7 +33,7 @@
           {
             "name": "User-Agent",
             "in": "header",
-            "description": "Note that the server will intercept the request if this value is left unfilled in JAVA",
+            "description": "Note that the server will intercept the request if this value is left unfilled in JAVA(eg:powertokensAi)",
             "required": false,
             "example": "powertokensAi",
             "schema": {
@@ -43,7 +43,7 @@
           {
             "name": "Content-Type",
             "in": "header",
-            "description": "",
+            "description": "multipart/form-data",
             "required": false,
             "example": "multipart/form-data",
             "schema": {

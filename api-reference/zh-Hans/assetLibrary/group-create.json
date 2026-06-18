@@ -33,7 +33,7 @@
           {
             "name": "User-Agent",
             "in": "header",
-            "description": "注意JAVA在不填写该值会被服务器拦截",
+            "description": "注意JAVA在不填写该值会被服务器拦截(eg:powertokensAi)",
             "required": false,
             "example": "powertokensAi",
             "schema": {
@@ -43,7 +43,7 @@
           {
             "name": "Content-Type",
             "in": "header",
-            "description": "",
+            "description": "application/json",
             "required": false,
             "example": "application/json",
             "schema": {
