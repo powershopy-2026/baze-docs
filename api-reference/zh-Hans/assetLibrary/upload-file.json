@@ -23,9 +23,29 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "官网API密钥",
-            "required": true,
+            "description": "官方API秘钥",
+            "required": false,
             "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "注意JAVA在不填写该值会被服务器拦截",
+            "required": false,
+            "example": "powertokensAi",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "multipart/form-data",
             "schema": {
               "type": "string"
             }
@@ -40,16 +60,11 @@
                   "file": {
                     "format": "binary",
                     "type": "string",
-                    "description": "文件（图片：JPEG、PNG、WebP、BMP、TIFF、GIF,HEIC。< 30MB。比例 0.4-2.5。300-6000px，视频：MP4、MOV。480p/720p。2-15s。≤ 50MB。24-60fps，音频：WAV、MP3。2-15s。≤ 15MB）",
+                    "description": "文件（图片：JPEG、PNG、WebP、BMP、TIFF、GIF。< 30MB。比例 0.4-2.5。300-6000px，视频：MP4、MOV。480p/720p。2-15s。≤ 50MB。24-60fps，音频：WAV、MP3。2-15s。≤ 15MB）",
                     "example": ""
                   },
                   "group_id": {
                     "description": "组ID（为空则创建虚拟组）",
-                    "example": "",
-                    "type": "string"
-                  },
-                  "group_name": {
-                    "description": "组名称（创建虚拟组使用）",
                     "example": "",
                     "type": "string"
                   }
@@ -58,7 +73,10 @@
                   "file"
                 ]
               },
-              "examples": {}
+              "example": {
+                "file": "",
+                "group_id": ""
+              }
             }
           },
           "required": true

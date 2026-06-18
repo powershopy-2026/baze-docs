@@ -29,6 +29,26 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "Note that the server will intercept the request if this value is left unfilled in JAVA",
+            "required": false,
+            "example": "powertokensAi",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "multipart/form-data",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
