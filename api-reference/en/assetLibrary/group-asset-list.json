@@ -233,8 +233,8 @@
   },
   "servers": [
     {
-      "url": "https://baze.powerbuyin.top/api",
-      "description": "测试环境"
+      "url": "https://powertokens.ai/api",
+      "description": "生产环境"
     }
   ],
   "security": []
