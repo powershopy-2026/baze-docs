@@ -90,7 +90,7 @@
                 },
                 "example": {
                   "code": 200,
-                  "data": "https://powertokens.ai/auth/real-human-authorization?uuid=9eff6f20-87c0-4f04-a158-30c145126eee",
+                  "data": "https://baze.powerbuyin.top/auth/real-human-authorization?uuid=9eff6f20-87c0-4f04-a158-30c145126eee",
                   "msg": ""
                 }
               }
@@ -110,8 +110,8 @@
   },
   "servers": [
     {
-      "url": "https://powertokens.ai/api",
-      "description": "生产环境"
+      "url": "https://baze.powerbuyin.top/api",
+      "description": "测试环境"
     }
   ],
   "security": []
