@@ -148,10 +148,19 @@
           "resolution": {
             "type": "string",
             "enum": [
-              "1k"
+              "1k",
+              "2k"
             ],
             "default": "1k",
-            "description": "生成图片的清晰度。"
+            "description": "生成图片的清晰度。",
+            "x-linkage": {
+              "rules": [
+                {
+                  "when": { "field": "image", "operator": "has_value" },
+                  "set_options": ["1k"]
+                }
+              ]
+            }
           },
           "n": {
             "type": "integer",

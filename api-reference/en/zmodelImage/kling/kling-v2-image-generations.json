@@ -148,10 +148,19 @@
           "resolution": {
             "type": "string",
             "enum": [
-              "1k"
+              "1k",
+              "2k"
             ],
             "default": "1k",
-            "description": "Generated image resolution."
+            "description": "Generated image resolution.",
+            "x-linkage": {
+              "rules": [
+                {
+                  "when": { "field": "image", "operator": "has_value" },
+                  "set_options": ["1k"]
+                }
+              ]
+            }
           },
           "n": {
             "type": "integer",
