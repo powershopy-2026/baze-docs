@@ -1,0 +1,64 @@
+name: Replace production URLs on fat-test
+
+on:
+  push:
+    branches: [fat-test]
+
+jobs:
+  replace-urls:
+    runs-on: ubuntu-latest
+    # 避免死循环：bot 自己提交的 push 不再触发替换
+    if: github.event.head_commit.author.name != 'github-actions[bot]'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SYNC_TOKEN }}
+
+      - name: Skip if only workflow files changed
+        id: check
+        run: |
+          if git diff --quiet HEAD~1..HEAD -- \
+            ':(exclude).github/'; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Replace production URLs with test URLs
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          # 替换 OpenAPI JSON 中的 URL（反向）
+          find api-reference -name '*.json' -exec \
+            sed -i 's|https://api\.powertokens\.ai|https://baze-api.powerbuyin.top|g' {} + 2>/dev/null || true
+
+          # 替换 JSON 文件中不带 -api 前缀的 URL（反向）
+          find api-reference -name '*.json' -exec \
+            sed -i 's|https://powertokens\.ai|https://baze.powerbuyin.top|g' {} + 2>/dev/null || true
+
+          # 替换 JSON 文件中的环境描述（反向）
+          find api-reference -name '*.json' -exec \
+            sed -i 's|"description": "生产环境"|"description": "测试环境"|g' {} + 2>/dev/null || true
+
+          # 替换所有文档目录中的 URL（md / mdx）（反向）
+          for dir in docs zh-Hans en; do
+            find "$dir" -type f \( -name '*.md' -o -name '*.mdx' \) -exec \
+              sed -i 's|https://api\.powertokens\.ai|https://baze-api.powerbuyin.top|g' {} + 2>/dev/null || true
+          done
+
+          # 替换根目录配置文件中的 URL（反向）
+          for f in AGENTS.md docs.json .mintignore; do
+            sed -i 's|https://api\.powertokens\.ai|https://baze-api.powerbuyin.top|g' "$f" 2>/dev/null || true
+          done
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "sync: replace production URLs with test URLs [skip ci]"
+            git push origin fat-test
+          fi
