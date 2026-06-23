@@ -1,0 +1,738 @@
+---
+title: Seedance 2.0 — Quick Start
+---
+PowerTokens fully supports the Seedance 2.0 video generation model series, offering two integration methods:
+
+1. **Full compatibility with the official Seedance 2.0 API**: If you're already using ByteDance's official API, simply switch the Base URL and API Key for a seamless migration with zero code changes. See the [Official Compatible Interface](#official-compatible-interface) section in this document.
+2. **OpenAI-style interface**: A unified `POST /v1/videos` endpoint for a consistent calling experience across other platform models.
+
+> **Base URL:** Both interfaces share the same Base URL: `https://baze-api.powerbuyin.top`
+
+> **This document covers both interfaces.** The official compatible interface is in the first half, and the OpenAI-style interface is in the [OpenAI-style Interface](#openai-style-interface) section.
+
+> **Important prerequisite:** Regardless of which interface you use, all image, video, and audio assets **must first be uploaded through the Asset Library to obtain an `asset_id`**, and then use the `asset_id` directly in your requests. See the Asset Preparation section for details.
+
+---
+
+## Prerequisites
+
+Before calling the Seedance 2.0 API, complete the following steps:
+
+1. **Sign up / Log in**: Register and log in at [powertokens.ai](https://powertokens.ai)
+2. **Get an API Key**: Go to the [API Keys management page](https://baze-api.powerbuyin.top-keys), create a new key, copy and store it securely
+3. **Top up**: Go to the [Billing page](https://powertokens.ai/billing) and purchase Credits (video generation is pay-per-use and requires account balance)
+4. **Enable Asset Library**: Go to the [Asset Library page](https://powertokens.ai/zh-Hans/assets-library?tab=1), read and agree to the Asset Library User Agreement (all Seedance 2.0 assets must be uploaded through the Asset Library)
+
+### Authentication
+
+All requests are authenticated via HTTP headers:
+
+```
+Authorization: <YOUR_API_KEY>
+```
+
+---
+
+## Official Compatible Interface
+
+PowerTokens is fully compatible with the official Seedance API, with request bodies, parameter names, and response structures identical to ByteDance's official API. If you're already using ByteDance's official API, simply switch the Base URL and API Key to migrate.
+
+### Migration from ByteDance Official
+
+```diff
+- https://ark.cn-beijing.volces.com
++ https://baze-api.powerbuyin.top
+```
+
+```diff
+- Authorization: <ByteDance_API_KEY>
++ Authorization: <PowerTokens_API_KEY>
+```
+
+### Base URL
+
+```
+https://baze-api.powerbuyin.top
+```
+
+> Both interfaces share the same Base URL: `https://baze-api.powerbuyin.top`, differing only in the request path.
+
+### Endpoint List
+
+| Operation | Method | Endpoint | API Reference |
+|---|---|---|---|
+| Create video generation task | `POST` | `/byteplus/api/v3/contents/generations/tasks` | [View](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-video) |
+| Query video generation task | `GET` | `/byteplus/api/v3/contents/generations/tasks/{id}` | [View](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query) |
+| List tasks | `GET` | `/byteplus/api/v3/contents/generations/tasks` | [View](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/list-video-generation-tasks) |
+| Cancel / Delete task | `DELETE` | `/byteplus/api/v3/contents/generations/tasks/{id}` | [View](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/cancel-delete-video-task) |
+
+### Asset Input Format
+
+In the official compatible interface, assets are passed into the `url` field using the `asset://<ASSET_ID>` format:
+
+```json
+{
+  "type": "image_url",
+  "image_url": {
+    "url": "asset://XXXX"
+  },
+  "role": "first_frame"
+}
+```
+
+The `url` field for images, videos, and audio supports the following three formats:
+
+| Format | Example | Description |
+|---|---|---|
+| **Asset ID** (recommended) | `asset://XXXX` | The `asset_id` obtained by uploading through the Asset Library |
+| Public URL | `https://example.com/img.jpg` | A publicly accessible file URL |
+| Base64 encoding | `data:image/png;base64,aHR0...` | Local file encoded to Base64 (not recommended for large files) |
+
+### Example: Image-to-Video (using asset_id)
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "content": [
+      {
+        "type": "text",
+        "text": "Camera slowly pushes in, girl smiles"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "asset://XXXX"
+        }
+      }
+    ],
+    "ratio": "adaptive",
+    "duration": 5,
+    "generate_audio": true,
+    "watermark": false
+  }'
+```
+
+### Example: Multimodal Reference-to-Video (reference image + reference video + reference audio)
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "content": [
+      {
+        "type": "text",
+        "text": "Your prompt"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "asset://XXXX"
+        },
+        "role": "reference_image"
+      },
+      {
+        "type": "video_url",
+        "video_url": {
+          "url": "asset://XXXX"
+        },
+        "role": "reference_video"
+      },
+      {
+        "type": "audio_url",
+        "audio_url": {
+          "url": "asset://XXXX"
+        },
+        "role": "reference_audio"
+      }
+    ],
+    "ratio": "16:9",
+    "duration": 10,
+    "generate_audio": true,
+    "watermark": false
+  }'
+```
+
+### Example: Query Task Status
+
+```bash
+curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### Example: List Tasks
+
+```bash
+curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20&filter.status=succeeded" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### Example: Cancel / Delete Task
+
+```bash
+curl -X DELETE "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### Official Compatible Interface vs OpenAI-style Interface
+
+| Dimension | Official Compatible Interface | OpenAI-style Interface |
+|---|---|---|
+| Base URL | `https://baze-api.powerbuyin.top` (same) | `https://baze-api.powerbuyin.top` (same) |
+| Create task | `POST /byteplus/api/v3/contents/generations/tasks` | `POST /v1/videos` |
+| Asset input | `"url": "asset://XXXX"` (same) | `"url": "asset://XXXX"` (same) |
+| Query task | `GET /byteplus/api/v3/.../tasks/{id}` | `GET /v1/videos/{task_id}` |
+| Task list | `GET /byteplus/api/v3/.../tasks` | Not supported |
+| Cancel / Delete task | `DELETE /byteplus/api/v3/.../tasks/{id}` | Not supported |
+| Parameter structure | Identical to ByteDance official (`content` array) | OpenAI-style (`media` array) |
+| Use case | Migration from ByteDance official, advanced features like task list / cancel | Unified calling experience across multiple platform models |
+
+> The generation quality is identical for both interfaces — choose whichever fits your needs.
+
+---
+
+## OpenAI-style Interface
+
+A unified `POST /v1/videos` endpoint for a consistent calling experience across other platform models.
+
+---
+
+## Available Models
+
+| Model | Model ID | Characteristics |
+|---|---|---|
+| **Seedance 2.0** | `dreamina-seedance-2-0-260128` | High quality, supports 1080p (image-to-video / first-last frame / multimodal reference scenarios) |
+| **Seedance 2.0 Fast** | `dreamina-seedance-2-0-fast-260128` | Fast generation, up to 720p |
+
+Both models share the same API structure and parameters, differing only in generation speed and maximum resolution.
+
+---
+
+## Supported Generation Modes
+
+| Mode | Description | Required media types | API Reference |
+|---|---|---|---|
+| **Text-to-Video** | Generate video from text only | `text` | [Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video) |
+| **Image-to-Video** | Starting frame image + text | `text` + `first_frame` | [Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video) |
+| **First-Last Frame-to-Video** | Starting frame + ending frame + text | `text` + `first_frame` + `last_frame` | [Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video) |
+| **Multimodal Reference-to-Video** | Reference image / reference video / reference audio + text | `text` + `reference_image` / `reference_video` / `reference_audio` | [Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video) |
+
+---
+
+## Asset Preparation (Must Read)
+
+**All Seedance 2.0 media assets (images, videos, audio) must first be uploaded through the Asset Library to obtain an `asset_id`. External URLs cannot be used directly.**
+
+### Workflow
+
+Just two steps — once you have the `asset_id`, you can use it directly in Seedance requests:
+
+```
+                        No auth required
+                             ↓
+① Upload asset ──→ get task_id ──→ ② Poll query ──→ get asset_id ──→ use asset://XXXX format in the url field
+```
+
+| Step | Endpoint | Input | Output | Auth |
+|---|---|---|---|---|
+| ① Upload asset | [`POST /v1/asset/upload`](https://docs.powertokens.ai/en/assetLibrary/upload-file) | File | `task_id` | Required |
+| ② Poll to get asset ID | [`GET /v1/asset/jobs/get-asset-id`](https://docs.powertokens.ai/en/assetLibrary/get-asset-id) | `task_id` | `asset_id` | **Not required** |
+
+> **Once you have the `asset_id`, you're ready to go!** Regardless of which interface you use, pass the asset using the `"url": "asset://your_asset_id"` format — no need to query asset details for a URL.
+
+### Example: Preparing a Starting Frame Image
+
+```python
+import requests
+import time
+
+API_KEY = "YOUR_API_KEY"
+BASE_URL = "https://baze-api.powerbuyin.top"
+HEADERS = {"Authorization": f"Bearer {API_KEY}"}
+
+# ① Upload asset → get task_id
+with open("start_frame.jpg", "rb") as f:
+    resp = requests.post(
+        f"{BASE_URL}/v1/asset/upload",
+        headers=HEADERS,
+        files={"file": ("start_frame.jpg", f)},
+    )
+task_id = resp.json()["data"]["task_id"]
+
+# ② Poll to get asset_id (no auth required for this endpoint)
+while True:
+    resp = requests.get(
+        f"{BASE_URL}/v1/asset/jobs/get-asset-id",
+        params={"task_id": task_id},
+    )
+    data = resp.json()
+    if data["code"] == 200 and data["data"].get("asset_id"):
+        asset_id = data["data"]["asset_id"]
+        break
+    time.sleep(3)
+
+print(f"Asset ready → asset_id: {asset_id}")
+# ✅ Directly use asset_id in the media array of the Seedance request
+```
+
+> For detailed Asset Library usage, see [Asset Library Quick Start](./资产库_快速上手.md).
+
+---
+
+## Request Parameters
+
+All generation modes share the `POST /v1/videos` endpoint, with different `type` combinations in the `media` array to distinguish modes.
+
+### Common Parameters
+
+| Parameter | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `model` | string | **Yes** | — | Model ID |
+| `media` | array | **Yes** | — | Multimodal input array, see media type table below |
+| `seconds` | string | No | `"5"` | Video duration in seconds, `"4"` to `"15"` or `"-1"` (smart selection) |
+| `size` | string | No | `"720p"` | Resolution: `480p` / `720p` (standard image-to-video / first-last frame / multimodal reference also supports `1080p`) |
+| `ratio` | string | No | See note | Aspect ratio: `16:9` / `4:3` / `1:1` / `3:4` / `9:16` / `21:9` / `adaptive`. Default `16:9` for text-to-video, `adaptive` for image-to-video |
+| `seed` | integer | No | `-1` | Random seed, range [-1, 4294967295] |
+| `watermark` | boolean | No | `false` | Whether to add watermark |
+| `generate_audio` | boolean | No | `true` | Whether to generate synchronized audio (2.0 series exclusive feature) |
+| `return_last_frame` | boolean | No | `false` | Whether to return the last frame image |
+| `safety_identifier` | string | No | — | Unique end-user identifier for compliance detection, max 64 characters |
+
+### Media Types
+
+| type | Description | Required Fields |
+|---|---|---|
+| `text` | Text prompt | `text` |
+| `first_frame` | Starting frame image | `asset_id` (obtained via Asset Library upload) |
+| `last_frame` | Ending frame image | `asset_id` (obtained via Asset Library upload) |
+| `reference_image` | Reference image | `asset_id` (obtained via Asset Library upload) |
+| `reference_video` | Reference video | `asset_id` (obtained via Asset Library upload) |
+| `reference_audio` | Reference audio | `asset_id` (obtained via Asset Library upload) |
+
+---
+
+## Usage Examples
+
+### 1. Text-to-Video ([Standard API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video))
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {
+        "type": "text",
+        "text": "A kitten running on a grassy field, bright sunshine, camera follows the motion"
+      }
+    ],
+    "seconds": "5",
+    "size": "720p",
+    "ratio": "16:9",
+    "generate_audio": true
+  }'
+```
+
+### 2. Image-to-Video ([Standard API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video))
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {
+        "type": "text",
+        "text": "Camera slowly pushes in, girl smiles"
+      },
+      {
+        "type": "first_frame",
+        "url": "asset://XXXX"
+      }
+    ],
+    "seconds": "5",
+    "size": "720p",
+    "ratio": "adaptive"
+  }'
+```
+
+> `asset://XXXX` — XXXX is the asset ID obtained after uploading through the Asset Library.
+
+### 3. First-Last Frame-to-Video ([Standard API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video))
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-fast-260128",
+    "media": [
+      {
+        "type": "text",
+        "text": "Smooth transition between the two frames"
+      },
+      {
+        "type": "first_frame",
+        "url": "asset://XXXX"
+      },
+      {
+        "type": "last_frame",
+        "url": "asset://XXXX"
+      }
+    ],
+    "seconds": "5",
+    "size": "720p",
+    "ratio": "adaptive"
+  }'
+```
+
+### 4. Multimodal Reference-to-Video ([Standard API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video))
+
+You can pass one or more of: reference image, reference video, and reference audio simultaneously:
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {
+        "type": "text",
+        "text": "Supplementary description"
+      },
+      {
+        "type": "reference_image",
+        "url": "asset://XXXX"
+      },
+      {
+        "type": "reference_video",
+        "url": "asset://XXXX"
+      },
+      {
+        "type": "reference_audio",
+        "url": "asset://XXXX"
+      }
+    ],
+    "seconds": "-1",
+    "size": "720p",
+    "ratio": "16:9",
+    "generate_audio": false
+  }'
+```
+
+---
+
+## Query Task Status ([API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/seedance/seedance-tasks-query))
+
+After submitting a generation request, a `task_id` will be returned. Video generation is asynchronous and requires polling to check the status.
+
+**Endpoint:** `GET /v1/videos/{task_id}`
+
+```bash
+curl "https://baze-api.powerbuyin.top/v1/videos/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### Task Statuses
+
+| Status | Meaning |
+|---|---|
+| `queued` | In queue |
+| `running` | Generating |
+| `succeeded` | Generation succeeded |
+| `failed` | Generation failed |
+| `cancelled` | Cancelled (only tasks in queue can be cancelled; auto-deleted after 24h) |
+| `expired` | Timed out |
+
+### Successful Response Example
+
+```json
+{
+  "id": "XXXX",
+  "model": "doubao-seedance-2-0-260128",
+  "status": "succeeded",
+  "content": {
+    "video_url": "https://ark-content-generation-cn-beijing.tos-cn-beijing.volces.com/xxx"
+  },
+  "seed": 78674,
+  "resolution": "720p",
+  "ratio": "16:9",
+  "duration": 5,
+  "framespersecond": 24,
+  "generate_audio": true,
+  "usage": {
+    "completion_tokens": 108900,
+    "total_tokens": 108900
+  }
+}
+```
+
+> **Note:** The video URL is valid for **14 days**. Please download and save it promptly. Only tasks from the last **7 days** can be queried.
+
+---
+
+## Complete Workflow — Python
+
+A complete example from asset upload to video generation:
+
+```python
+import requests
+import time
+
+API_KEY = "YOUR_API_KEY"
+BASE_URL = "https://baze-api.powerbuyin.top"
+HEADERS = {"Authorization": f"Bearer {API_KEY}"}
+
+
+def upload_and_get_asset_id(file_path):
+    """Upload asset to the Asset Library and return asset_id (usable directly in Seedance requests)"""
+    # ① Upload
+    with open(file_path, "rb") as f:
+        resp = requests.post(
+            f"{BASE_URL}/v1/asset/upload",
+            headers=HEADERS,
+            files={"file": (file_path.split("/")[-1], f)},
+        )
+    task_id = resp.json()["data"]["task_id"]
+    print(f"  Upload complete → task_id: {task_id}")
+
+    # ② Poll to get asset_id (no auth required for this endpoint)
+    for _ in range(20):
+        resp = requests.get(
+            f"{BASE_URL}/v1/asset/jobs/get-asset-id",
+            params={"task_id": task_id},
+        )
+        data = resp.json()
+        if data["code"] == 200 and data["data"].get("asset_id"):
+            asset_id = data["data"]["asset_id"]
+            print(f"  Asset ready → asset_id: {asset_id}")
+            return asset_id
+        time.sleep(3)
+    raise TimeoutError("Asset processing timed out")
+
+
+def generate_video(request_body):
+    """Submit a video generation task"""
+    resp = requests.post(
+        f"{BASE_URL}/v1/videos",
+        headers={**HEADERS, "Content-Type": "application/json"},
+        json=request_body,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def wait_for_video(task_id, timeout=300, interval=5):
+    """Poll until video generation is complete"""
+    start = time.time()
+    while time.time() - start < timeout:
+        resp = requests.get(
+            f"{BASE_URL}/v1/videos/{task_id}",
+            headers=HEADERS,
+        )
+        result = resp.json()
+        status = result.get("status")
+
+        if status == "succeeded":
+            return result
+        elif status in ("failed", "cancelled", "expired"):
+            raise RuntimeError(f"Task failed: {status} - {result.get('error')}")
+
+        print(f"  Status: {status}, waiting...")
+        time.sleep(interval)
+    raise TimeoutError(f"Video generation did not complete within {timeout} seconds")
+
+
+# ── Run: Complete Image-to-Video Workflow ───────────────────
+
+# 1. Prepare asset → get asset_id
+print("Preparing starting frame asset...")
+asset_id = upload_and_get_asset_id("start_frame.jpg")
+
+# 2. Submit generation task (directly using asset_id)
+print("Submitting video generation task...")
+task = generate_video({
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+        {"type": "text", "text": "Camera slowly pushes in, cherry blossom petals drifting in the wind"},
+        {"type": "first_frame", "url": f"asset://{asset_id}"},
+    ],
+    "seconds": "5",
+    "size": "720p",
+    "ratio": "adaptive",
+    "generate_audio": True,
+})
+task_id = task.get("task_id") or task.get("id")
+print(f"Task submitted → task_id: {task_id}")
+
+# 3. Wait for generation to complete
+print("Waiting for video generation...")
+result = wait_for_video(task_id)
+print(f"Generation succeeded! Video URL: {result['content']['video_url']}")
+```
+
+---
+
+## Model Version Comparison
+
+| Dimension | Seedance 2.0 | Seedance 2.0 Fast |
+|---|---|---|
+| Model ID | `dreamina-seedance-2-0-260128` | `dreamina-seedance-2-0-fast-260128` |
+| Generation speed | Standard | Faster |
+| Max resolution | 1080p (image-to-video / first-last frame / multimodal reference) | 720p |
+| Text-to-video resolution | 720p | 720p |
+| Duration range | 4–15 seconds or -1 (smart selection) | 4–15 seconds or -1 (smart selection) |
+| Audio sync | Supported | Supported |
+| Multimodal reference | Supported | Supported |
+
+---
+
+## API Quick Reference
+
+### Official Compatible Interface
+
+> **Base URL:** `https://baze-api.powerbuyin.top`
+
+#### Create Task — `POST /byteplus/api/v3/contents/generations/tasks` ([API Reference](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-video))
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "content": [
+      {"type": "text", "text": "Your prompt"},
+      {"type": "image_url", "image_url": {"url": "asset://XXXX"}}
+    ],
+    "ratio": "16:9", "duration": 5
+  }'
+```
+
+#### Query Task — `GET /byteplus/api/v3/contents/generations/tasks/{id}` ([API Reference](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query))
+
+```bash
+curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+#### Task List — `GET /byteplus/api/v3/contents/generations/tasks` ([API Reference](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/list-video-generation-tasks))
+
+```bash
+curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+#### Cancel / Delete Task — `DELETE /byteplus/api/v3/contents/generations/tasks/{id}` ([API Reference](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/cancel-delete-video-task))
+
+```bash
+curl -X DELETE "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### OpenAI-style Interface
+
+> **Base URL:** `https://baze-api.powerbuyin.top`
+
+#### Generation Modes — `POST /v1/videos`
+
+##### Text-to-Video ([Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video))
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [{"type": "text", "text": "Your prompt"}],
+    "seconds": "5", "size": "720p", "ratio": "16:9"
+  }'
+```
+
+##### Image-to-Video ([Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video))
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {"type": "text", "text": "Your prompt"},
+      {"type": "first_frame", "url": "asset://XXXX"}
+    ],
+    "seconds": "5", "size": "720p"
+  }'
+```
+
+##### First-Last Frame-to-Video ([Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video))
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {"type": "text", "text": "Your prompt"},
+      {"type": "first_frame", "url": "asset://XXXX"},
+      {"type": "last_frame", "url": "asset://XXXX"}
+    ],
+    "seconds": "5", "size": "720p"
+  }'
+```
+
+##### Multimodal Reference-to-Video ([Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video))
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {"type": "text", "text": "Your prompt"},
+      {"type": "reference_image", "url": "asset://XXXX"}
+    ],
+    "seconds": "5", "size": "720p"
+  }'
+```
+
+> For the Fast version, replace the model ID with `dreamina-seedance-2-0-fast-260128`.
+
+#### Task Query — `GET /v1/videos/{task_id}` ([API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/seedance/seedance-tasks-query))
+
+```bash
+curl "https://baze-api.powerbuyin.top/v1/videos/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+#### Asset Preparation (Asset Library)
+
+##### Upload Asset — `POST /v1/asset/upload` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/upload-file))
+
+```bash
+curl -X POST https://baze-api.powerbuyin.top/v1/asset/upload \
+  -H "Authorization: YOUR_API_KEY" \
+  -F "file=@/path/to/file.jpg" \
+  -F "group_id=XXXX"
+```
+
+##### Get Asset ID — `GET /v1/asset/jobs/get-asset-id` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/get-asset-id))
+
+> This endpoint **does not require authentication**. Once you have the `asset_id`, you can directly use it in Seedance requests.
+
+```bash
+curl "https://baze-api.powerbuyin.top/v1/asset/jobs/get-asset-id?task_id=XXXX"
+```
+
+---
+
+*For the complete API reference, visit [docs.powertokens.ai](https://docs.powertokens.ai)*
