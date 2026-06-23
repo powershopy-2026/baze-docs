@@ -259,6 +259,7 @@
               {
                 "group": "资产库",
                 "pages": [
+                  "zh-Hans/assetLibrary/guides",
                   "zh-Hans/assetLibrary/upload-file",
                   "zh-Hans/assetLibrary/group-asset-list",
                   "zh-Hans/assetLibrary/group-create",
