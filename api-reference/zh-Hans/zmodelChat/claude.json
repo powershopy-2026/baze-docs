@@ -139,7 +139,8 @@
               "MiniMax-M2.7",
               "MiniMax-M2.5-highspeed",
               "MiniMax-M2.7-highspeed",
-              "MiniMax-M3"
+              "MiniMax-M3",
+              "qwen3-max"
             ],
             "description": "模型名称"
           },
