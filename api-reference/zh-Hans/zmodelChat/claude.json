@@ -140,7 +140,11 @@
               "MiniMax-M2.5-highspeed",
               "MiniMax-M2.7-highspeed",
               "MiniMax-M3",
-              "qwen3-max"
+              "qwen3-max",
+              "deepseek-v3.2",
+              "qwen3.5-flash",
+              "qwen3.6-plus",
+              "qwen3-coder-plus"
             ],
             "description": "模型名称"
           },
