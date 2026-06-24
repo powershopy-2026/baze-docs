@@ -253,43 +253,24 @@
             }
           },
           "tool_choice": {
-            "description": "工具选择策略。支持：{\"type\": \"auto\"}（默认）、{\"type\": \"any\"}、{\"type\": \"none\"}、{\"type\": \"tool\", \"name\": \"tool_name\"}。",
+            "description": "工具选择策略：auto（默认，模型自行决定）、any（强制调用任意工具）、none（禁止调用工具）、tool（强制调用指定工具）。",
             "oneOf": [
               {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "auto",
-                      "any",
-                      "none"
-                    ]
-                  }
-                },
-                "required": [
-                  "type"
-                ]
+                "$ref": "#/components/schemas/ToolChoiceMode"
               },
               {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "tool"
-                    ]
-                  },
-                  "name": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "type",
-                  "name"
-                ]
+                "$ref": "#/components/schemas/ToolChoiceTool"
               }
-            ]
+            ],
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "auto": "#/components/schemas/ToolChoiceMode",
+                "any": "#/components/schemas/ToolChoiceMode",
+                "none": "#/components/schemas/ToolChoiceMode",
+                "tool": "#/components/schemas/ToolChoiceTool"
+              }
+            }
           },
           "output_config": {
             "type": "object",
@@ -377,9 +358,20 @@
           {
             "$ref": "#/components/schemas/ToolResultContentBlock"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "text": "#/components/schemas/TextContentBlock",
+            "image": "#/components/schemas/ImageContentBlock",
+            "video": "#/components/schemas/VideoContentBlock",
+            "tool_use": "#/components/schemas/ToolUseContentBlock",
+            "tool_result": "#/components/schemas/ToolResultContentBlock"
+          }
+        }
       },
       "TextContentBlock": {
+        "title": "文本",
         "type": "object",
         "required": [
           "type",
@@ -431,6 +423,7 @@
         }
       },
       "ImageContentBlock": {
+        "title": "图片",
         "type": "object",
         "required": [
           "type",
@@ -482,6 +475,7 @@
         }
       },
       "VideoContentBlock": {
+        "title": "视频",
         "type": "object",
         "required": [
           "type",
@@ -505,6 +499,7 @@
         "description": "视频内容块，需使用视觉模型。"
       },
       "ToolUseContentBlock": {
+        "title": "工具调用",
         "type": "object",
         "required": [
           "type",
@@ -539,6 +534,7 @@
         "description": "工具调用内容块（assistant 角色返回），模型发出的工具调用指令。"
       },
       "ToolResultContentBlock": {
+        "title": "工具结果",
         "type": "object",
         "required": [
           "type",
@@ -603,66 +599,114 @@
         },
         "description": "提示缓存元数据。在内容块上标记后，该块之前的所有内容会被缓存。"
       },
+      "ToolChoiceMode": {
+        "title": "模式选择",
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["auto", "any", "none"],
+            "description": "工具选择模式：auto（模型自行决定）、any（强制调用任意工具）、none（禁止调用工具）。"
+          }
+        }
+      },
+      "ToolChoiceTool": {
+        "title": "指定工具",
+        "type": "object",
+        "required": ["type", "name"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["tool"],
+            "description": "固定为 tool。"
+          },
+          "name": {
+            "type": "string",
+            "description": "强制调用的工具名称。"
+          }
+        }
+      },
+      "ResponseTextBlock": {
+        "title": "文本",
+        "type": "object",
+        "required": ["type", "text"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["text"],
+            "description": "固定为 text。"
+          },
+          "text": {
+            "type": "string",
+            "description": "模型生成的文本回复。"
+          }
+        }
+      },
+      "ResponseThinkingBlock": {
+        "title": "思考过程",
+        "type": "object",
+        "required": ["type", "thinking", "signature"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["thinking"],
+            "description": "固定为 thinking。"
+          },
+          "thinking": {
+            "type": "string",
+            "description": "模型在生成最终回复前的思考过程。"
+          },
+          "signature": {
+            "type": "string",
+            "description": "当前固定为空字符串。"
+          }
+        }
+      },
+      "ResponseToolUseBlock": {
+        "title": "工具调用",
+        "type": "object",
+        "required": ["type", "id", "name", "input"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["tool_use"],
+            "description": "固定为 tool_use。"
+          },
+          "id": {
+            "type": "string",
+            "description": "工具调用的唯一标识，用于在后续 tool_result 中关联结果。"
+          },
+          "name": {
+            "type": "string",
+            "description": "被调用的工具名称。"
+          },
+          "input": {
+            "type": "object",
+            "description": "工具调用的入参。"
+          }
+        }
+      },
       "ResponseContentBlock": {
         "oneOf": [
           {
-            "type": "object",
-            "required": ["type", "text"],
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": ["text"],
-                "description": "固定为 text。"
-              },
-              "text": {
-                "type": "string",
-                "description": "模型生成的文本回复。"
-              }
-            }
+            "$ref": "#/components/schemas/ResponseTextBlock"
           },
           {
-            "type": "object",
-            "required": ["type", "thinking", "signature"],
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": ["thinking"],
-                "description": "固定为 thinking。"
-              },
-              "thinking": {
-                "type": "string",
-                "description": "模型在生成最终回复前的思考过程。"
-              },
-              "signature": {
-                "type": "string",
-                "description": "当前固定为空字符串。"
-              }
-            }
+            "$ref": "#/components/schemas/ResponseThinkingBlock"
           },
           {
-            "type": "object",
-            "required": ["type", "id", "name", "input"],
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": ["tool_use"],
-                "description": "固定为 tool_use。"
-              },
-              "id": {
-                "type": "string",
-                "description": "工具调用的唯一标识，用于在后续 tool_result 中关联结果。"
-              },
-              "name": {
-                "type": "string",
-                "description": "被调用的工具名称。"
-              },
-              "input": {
-                "type": "object",
-                "description": "工具调用的入参。"
-              }
-            }
+            "$ref": "#/components/schemas/ResponseToolUseBlock"
           }
-        ]
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "text": "#/components/schemas/ResponseTextBlock",
+            "thinking": "#/components/schemas/ResponseThinkingBlock",
+            "tool_use": "#/components/schemas/ResponseToolUseBlock"
+          }
+        }
       },
       "UsageStats": {
         "type": "object",
