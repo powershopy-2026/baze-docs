@@ -17,8 +17,8 @@ If you need to choose the endpoint first, see [Text model protocols and endpoint
 | Goal | OpenClaw provider api | Base URL | Model scope |
 | --- | --- | --- | --- |
 | OpenAI-compatible text models | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | Text models that support `/v1/chat/completions` |
-| Anthropic-path models | `anthropic-messages` | `https://baze-api.powerbuyin.top` | Recommended Zhipu, MiniMax, and Qwen models |
-| OpenAI-compatible preferred models | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | BytePlus, DeepSeek, and other text models not recommended for Anthropic provider |
+| Anthropic-path models | `anthropic-messages` | `https://baze-api.powerbuyin.top` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
+| OpenAI-compatible preferred models | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
 
 ## OpenAI-compatible provider example
 
@@ -100,6 +100,15 @@ For the Claude/Anthropic path, set `api` to `anthropic-messages` and use the bas
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 128000,
             maxTokens: 32000
+          },
+          {
+            id: "deepseek-v3-2-251201",
+            name: "deepseek-v3-2-251201",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
           }
         ]
       }
@@ -109,7 +118,8 @@ For the Claude/Anthropic path, set `api` to `anthropic-messages` and use the bas
     defaults: {
       models: {
         "powertokens-anthropic/glm-5.2": { alias: "powertokens-claude-glm" },
-        "powertokens-anthropic/MiniMax-M3": { alias: "powertokens-claude-minimax" }
+        "powertokens-anthropic/MiniMax-M3": { alias: "powertokens-claude-minimax" },
+        "powertokens-anthropic/deepseek-v3-2-251201": { alias: "powertokens-claude-deepseek" }
       }
     }
   }
@@ -123,21 +133,15 @@ Recommended Anthropic tool-workflow models:
 | Zhipu | `glm-4.5-air`, `glm-4.7`, `glm-4.7-flash`, `glm-5`, `glm-5-turbo`, `glm-5.2` |
 | MiniMax | `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`, `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M3` |
 | Alibaba Qwen | `qwen3-coder-plus`, `qwen3-max`, `qwen3.5-flash`, `qwen3.6-plus` |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` |
+| BytePlus Seed | `seed-1-6-250915`, `seed-1-8-251228`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-2-0-pro-260328` |
 
 ## Models not recommended for Anthropic provider
 
 Use these with `openai-completions`, not `anthropic-messages`, even if model discovery declares `anthropic`:
 
 ```text
-deepseek-v3-2-251201
-deepseek-v3.2
-gpt-oss-120b-250805
-seed-1-6-250915
 seed-1-6-flash-250715
-seed-1-8-251228
-seed-2-0-lite-260228
-seed-2-0-mini-260215
-seed-2-0-pro-260328
 ```
 
 ## Apply and verify

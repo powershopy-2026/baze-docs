@@ -28,6 +28,12 @@ Claude Code 通过 Anthropic Messages 协议工作。接入 `powertokens 平台`
 | 阿里 Qwen | `qwen3-max` | 可选通用推理模型 |
 | 阿里 Qwen | `qwen3.5-flash` | 可选轻量模型 |
 | 阿里 Qwen | `qwen3.6-plus` | 可选均衡模型 |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` | 可选文本模型；已通过 opencode Anthropic 工具链复测 |
+| BytePlus Seed | `seed-1-6-250915` | 可选文本模型 |
+| BytePlus Seed | `seed-1-8-251228` | 可选文本模型 |
+| BytePlus Seed | `seed-2-0-lite-260228` | 可选轻量模型 |
+| BytePlus Seed | `seed-2-0-mini-260215` | 可选轻量模型 |
+| BytePlus Seed | `seed-2-0-pro-260328` | 可选高强度文本模型 |
 
 ## 准备工作
 
@@ -135,5 +141,4 @@ curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
 
 | 模型 | 原因 |
 | --- | --- |
-| `deepseek-v3.2` | 不建议作为依赖 streaming 的 Claude Code 默认模型 |
-| `deepseek-v3-2-251201`, `gpt-oss-120b-250805`, Seed 系列 | 优先走 OpenAI-compatible provider；Claude Code 场景需单独验收 |
+| `seed-1-6-flash-250715` | 上游不支持 `/v1/messages`，请走 OpenAI-compatible provider |

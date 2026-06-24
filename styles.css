@@ -1,0 +1,48 @@
+:root {
+  --docs-shell-max-width: 64rem;
+  --docs-shell-gap: 2.5rem;
+  --docs-toc-width: 18rem;
+  --docs-sans-font: Inter, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html,
+body {
+  font-family: var(--docs-sans-font);
+  letter-spacing: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+#header h1,
+#content :where(h1, h2, h3, h4, h5, h6, p, li, th, td, blockquote) {
+  font-family: var(--docs-sans-font);
+}
+
+#content-container > .max-w-5xl {
+  max-width: var(--docs-shell-max-width);
+  gap: var(--docs-shell-gap);
+}
+
+#content-side-layout {
+  max-width: var(--docs-toc-width);
+  flex-basis: var(--docs-toc-width);
+}
+
+#content table th,
+#content table td {
+  vertical-align: top;
+}
+
+@media (min-width: 1280px) and (max-width: 1679px) {
+  #content-side-layout {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1680px) {
+  :root {
+    --docs-shell-max-width: 78rem;
+  }
+}

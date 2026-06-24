@@ -32,15 +32,13 @@ description: "面向平台开发者，说明文本模型在 Chat Completions、A
 | `qwen3-max` | 可用 | 建议 | 可用 | 适合通用推理与审查 |
 | `qwen3.5-flash` | 可用 | 建议 | 可用 | Responses 可能返回 reasoning summary |
 | `qwen3.6-plus` | 可用 | 建议 | 可用 | Responses 可能返回 reasoning summary |
-| `deepseek-v3-2-251201` | 可用 | 需单独验收 | 可用 | 优先走 Chat Completions 或 Responses |
-| `deepseek-v3.2` | 可用；依赖 streaming 的工具需单独验收 | 不建议默认使用 | 不支持 | 不建议作为生态工具默认模型 |
-| `gpt-oss-120b-250805` | 可用 | 需单独验收 | 需确认权限 | 优先走 Chat Completions |
-| `seed-1-6-250915` | 可用 | 需单独验收 | 可用 | 优先走 Chat Completions 或 Responses |
-| `seed-1-6-flash-250715` | 可用 | 需单独验收 | 可用 | 优先走 Chat Completions 或 Responses |
-| `seed-1-8-251228` | 可用 | 需单独验收 | 可用 | 优先走 Chat Completions 或 Responses |
-| `seed-2-0-lite-260228` | 可用 | 需单独验收 | 可用 | 优先走 Chat Completions 或 Responses |
-| `seed-2-0-mini-260215` | 可用 | 需单独验收 | 可用 | 优先走 Chat Completions 或 Responses |
-| `seed-2-0-pro-260328` | 可用 | 需单独验收 | 可用 | 优先走 Chat Completions 或 Responses |
+| `deepseek-v3-2-251201` | 可用 | 建议 | 可用 | 已通过 opencode Anthropic provider 工具链复测 |
+| `seed-1-6-250915` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
+| `seed-1-6-flash-250715` | 可用 | 不支持 | 可用 | 上游不支持 `/v1/messages`，优先走 Chat Completions 或 Responses |
+| `seed-1-8-251228` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
+| `seed-2-0-lite-260228` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
+| `seed-2-0-mini-260215` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
+| `seed-2-0-pro-260328` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
 
 ## 生态工具建议
 
@@ -56,15 +54,6 @@ description: "面向平台开发者，说明文本模型在 Chat Completions、A
 ## 已知边界
 
 - GLM 系列当前不作为 `/v1/responses` 路径模型。
-- `deepseek-v3.2` 不建议作为依赖 streaming 的生态工具默认模型。
-- BytePlus、Seed 和 `gpt-oss-120b-250805` 的 Anthropic 工具链需要单独验收，默认优先走 Chat Completions。
-- `gpt-oss-120b-250805` 使用 Responses 前需确认权限。
+- `seed-1-6-flash-250715` 上游不支持 `/v1/messages`；其他 Seed 模型已通过 opencode Anthropic provider 复测。
+- `deepseek-v3-2-251201` 已通过 opencode Anthropic provider 工具链复测。
 - Responses 路径下，部分 MiniMax、Qwen、Seed 模型会返回 reasoning 或 reasoning summary；调用方需从 `output[]` 提取文本。
-
-## 验收要求
-
-上线前至少验证：
-
-1. 目标端点最小请求返回可见文本。
-2. 目标生态工具完成一次真实任务。
-3. 失败请求保留 `x-oneapi-request-id`。
