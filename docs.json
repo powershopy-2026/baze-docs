@@ -170,6 +170,7 @@
                     "group": "聊天模型",
                     "pages": [
                       "zh-Hans/zmodelChat/claude",
+                      "zh-Hans/zmodelChat/responses",
                       {
                         "group": "MiniMax",
                         "pages": [
