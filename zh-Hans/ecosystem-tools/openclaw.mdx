@@ -17,8 +17,8 @@ OpenClaw 通过 provider 管理模型。接入 `powertokens 平台` 时，请先
 | 目标 | OpenClaw provider api | Base URL | 模型范围 |
 | --- | --- | --- | --- |
 | OpenAI-compatible 文本模型 | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | 支持 `/v1/chat/completions` 的文本模型 |
-| Claude/Anthropic 路径模型 | `anthropic-messages` | `https://baze-api.powerbuyin.top` | 智谱、MiniMax、Qwen 推荐模型 |
-| OpenAI-compatible 优先模型 | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | BytePlus、DeepSeek 等不建议走 Anthropic provider 的文本模型 |
+| Claude/Anthropic 路径模型 | `anthropic-messages` | `https://baze-api.powerbuyin.top` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
+| OpenAI-compatible 优先模型 | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
 
 ## OpenAI-compatible provider 示例
 
@@ -100,6 +100,15 @@ OpenClaw 通过 provider 管理模型。接入 `powertokens 平台` 时，请先
             cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
             contextWindow: 128000,
             maxTokens: 32000
+          },
+          {
+            id: "deepseek-v3-2-251201",
+            name: "deepseek-v3-2-251201",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
           }
         ]
       }
@@ -109,7 +118,8 @@ OpenClaw 通过 provider 管理模型。接入 `powertokens 平台` 时，请先
     defaults: {
       models: {
         "powertokens-anthropic/glm-5.2": { alias: "powertokens-claude-glm" },
-        "powertokens-anthropic/MiniMax-M3": { alias: "powertokens-claude-minimax" }
+        "powertokens-anthropic/MiniMax-M3": { alias: "powertokens-claude-minimax" },
+        "powertokens-anthropic/deepseek-v3-2-251201": { alias: "powertokens-claude-deepseek" }
       }
     }
   }
@@ -123,21 +133,15 @@ Anthropic 工具链推荐模型：
 | 智谱 | `glm-4.5-air`, `glm-4.7`, `glm-4.7-flash`, `glm-5`, `glm-5-turbo`, `glm-5.2` |
 | MiniMax | `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`, `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M3` |
 | 阿里 Qwen | `qwen3-coder-plus`, `qwen3-max`, `qwen3.5-flash`, `qwen3.6-plus` |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` |
+| BytePlus Seed | `seed-1-6-250915`, `seed-1-8-251228`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-2-0-pro-260328` |
 
 ## 不建议走 Anthropic provider 的模型
 
 这些模型可以作为 `openai-completions` provider 模型接入。即使模型发现中声明了 `anthropic`，当前也不建议放进 `anthropic-messages` provider：
 
 ```text
-deepseek-v3-2-251201
-deepseek-v3.2
-gpt-oss-120b-250805
-seed-1-6-250915
 seed-1-6-flash-250715
-seed-1-8-251228
-seed-2-0-lite-260228
-seed-2-0-mini-260215
-seed-2-0-pro-260328
 ```
 
 ## 应用并验证

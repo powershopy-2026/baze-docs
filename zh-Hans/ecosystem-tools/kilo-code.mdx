@@ -17,8 +17,8 @@ Kilo Code 可以通过两条路径接入 `powertokens 平台`：
 | 目标 | Kilo Code provider | Base URL | 模型范围 |
 | --- | --- | --- | --- |
 | 使用 OpenAI-compatible 文本模型 | OpenAI Compatible 或 OpenAI (Compatible) | `https://baze-api.powerbuyin.top/v1` | 支持 `/v1/chat/completions` 的文本模型 |
-| 使用 Claude/Anthropic 路径模型 | Anthropic，并启用 custom base URL | `https://baze-api.powerbuyin.top/v1` | 智谱、MiniMax、Qwen 推荐模型 |
-| 使用 OpenAI-compatible 优先模型 | OpenAI Compatible | `https://baze-api.powerbuyin.top/v1` | BytePlus、DeepSeek 等不建议走 Anthropic provider 的文本模型 |
+| 使用 Claude/Anthropic 路径模型 | Anthropic，并启用 custom base URL | `https://baze-api.powerbuyin.top/v1` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
+| 使用 OpenAI-compatible 优先模型 | OpenAI Compatible | `https://baze-api.powerbuyin.top/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
 
 ## OpenAI Compatible 配置
 
@@ -70,6 +70,8 @@ Anthropic 工具链推荐模型：
 | 智谱 | `glm-4.5-air`, `glm-4.7`, `glm-4.7-flash`, `glm-5`, `glm-5-turbo`, `glm-5.2` |
 | MiniMax | `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`, `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M3` |
 | 阿里 Qwen | `qwen3-coder-plus`, `qwen3-max`, `qwen3.5-flash`, `qwen3.6-plus` |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` |
+| BytePlus Seed | `seed-1-6-250915`, `seed-1-8-251228`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-2-0-pro-260328` |
 
 用平台接口验证 Anthropic 路径时，curl 需要写完整接口路径：
 
@@ -94,8 +96,7 @@ curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
 
 | 上游渠道 | 模型 |
 | --- | --- |
-| BytePlus | `deepseek-v3-2-251201`, `gpt-oss-120b-250805`, `seed-1-6-250915`, `seed-1-6-flash-250715`, `seed-1-8-251228`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-2-0-pro-260328` |
-| 阿里 | `deepseek-v3.2` |
+| BytePlus | `seed-1-6-flash-250715` |
 
 ## 验证建议
 

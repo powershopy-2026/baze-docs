@@ -32,15 +32,13 @@ description: "A concise guide for platform developers choosing Chat Completions,
 | `qwen3-max` | Available | Recommended | Available | Good for general reasoning and review |
 | `qwen3.5-flash` | Available | Recommended | Available | Responses may include reasoning summary |
 | `qwen3.6-plus` | Available | Recommended | Available | Responses may include reasoning summary |
-| `deepseek-v3-2-251201` | Available | Validate separately | Available | Prefer Chat Completions or Responses |
-| `deepseek-v3.2` | Available; streaming-dependent tools need separate validation | Not a default recommendation | Not supported | Do not use as an ecosystem-tool default |
-| `gpt-oss-120b-250805` | Available | Validate separately | Confirm access | Prefer Chat Completions |
-| `seed-1-6-250915` | Available | Validate separately | Available | Prefer Chat Completions or Responses |
-| `seed-1-6-flash-250715` | Available | Validate separately | Available | Prefer Chat Completions or Responses |
-| `seed-1-8-251228` | Available | Validate separately | Available | Prefer Chat Completions or Responses |
-| `seed-2-0-lite-260228` | Available | Validate separately | Available | Prefer Chat Completions or Responses |
-| `seed-2-0-mini-260215` | Available | Validate separately | Available | Prefer Chat Completions or Responses |
-| `seed-2-0-pro-260328` | Available | Validate separately | Available | Prefer Chat Completions or Responses |
+| `deepseek-v3-2-251201` | Available | Recommended | Available | Passed opencode Anthropic-provider tool-workflow validation |
+| `seed-1-6-250915` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
+| `seed-1-6-flash-250715` | Available | Not supported | Available | The upstream provider does not support `/v1/messages`; prefer Chat Completions or Responses |
+| `seed-1-8-251228` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
+| `seed-2-0-lite-260228` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
+| `seed-2-0-mini-260215` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
+| `seed-2-0-pro-260328` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
 
 ## Ecosystem tool guidance
 
@@ -56,15 +54,6 @@ description: "A concise guide for platform developers choosing Chat Completions,
 ## Known boundaries
 
 - GLM models are not currently Responses-path models.
-- `deepseek-v3.2` is not recommended as the default for streaming-dependent ecosystem tools.
-- BytePlus, Seed, and `gpt-oss-120b-250805` need separate validation for Anthropic tool workflows. Prefer Chat Completions by default.
-- Confirm Responses access before using `gpt-oss-120b-250805`.
+- `seed-1-6-flash-250715` is not supported by its upstream provider on `/v1/messages`; other Seed models passed opencode Anthropic-provider validation.
+- `deepseek-v3-2-251201` passed opencode Anthropic-provider tool-workflow validation.
 - In Responses, some MiniMax, Qwen, and Seed models return reasoning or reasoning summary. Extract user-visible text from `output[]`.
-
-## Validation
-
-Before rollout, verify:
-
-1. The target endpoint returns visible text.
-2. The target ecosystem tool completes one real task.
-3. Failed requests keep the `x-oneapi-request-id`.

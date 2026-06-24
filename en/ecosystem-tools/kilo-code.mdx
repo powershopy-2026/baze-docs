@@ -17,8 +17,8 @@ If you need to choose the endpoint first, see [Text model protocols and endpoint
 | Goal | Kilo Code provider | Base URL | Model scope |
 | --- | --- | --- | --- |
 | Use OpenAI-compatible text models | OpenAI Compatible or OpenAI (Compatible) | `https://baze-api.powerbuyin.top/v1` | Text models that support `/v1/chat/completions` |
-| Use Anthropic-path models | Anthropic with custom base URL | `https://baze-api.powerbuyin.top/v1` | Recommended Zhipu, MiniMax, and Qwen models |
-| Use OpenAI-compatible preferred models | OpenAI Compatible | `https://baze-api.powerbuyin.top/v1` | BytePlus, DeepSeek, and other text models not recommended for Anthropic provider |
+| Use Anthropic-path models | Anthropic with custom base URL | `https://baze-api.powerbuyin.top/v1` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
+| Use OpenAI-compatible preferred models | OpenAI Compatible | `https://baze-api.powerbuyin.top/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
 
 ## OpenAI Compatible setup
 
@@ -70,6 +70,8 @@ Recommended Anthropic tool-workflow models:
 | Zhipu | `glm-4.5-air`, `glm-4.7`, `glm-4.7-flash`, `glm-5`, `glm-5-turbo`, `glm-5.2` |
 | MiniMax | `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`, `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M3` |
 | Alibaba Qwen | `qwen3-coder-plus`, `qwen3-max`, `qwen3.5-flash`, `qwen3.6-plus` |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` |
+| BytePlus Seed | `seed-1-6-250915`, `seed-1-8-251228`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-2-0-pro-260328` |
 
 When you verify the Anthropic path with curl, use the full endpoint path:
 
@@ -94,8 +96,7 @@ Use these models through OpenAI Compatible, not through the Anthropic provider, 
 
 | Upstream provider | Models |
 | --- | --- |
-| BytePlus | `deepseek-v3-2-251201`, `gpt-oss-120b-250805`, `seed-1-6-250915`, `seed-1-6-flash-250715`, `seed-1-8-251228`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-2-0-pro-260328` |
-| Alibaba | `deepseek-v3.2` |
+| BytePlus | `seed-1-6-flash-250715` |
 
 ## Validation checklist
 

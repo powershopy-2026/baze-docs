@@ -48,7 +48,6 @@
                   {
                     "group": "阿里巴巴",
                     "pages": [
-                      "zh-Hans/zmodelChat/ali/deepseek-v3.2",
                       "zh-Hans/zmodelChat/ali/qwen3.5-flash",
                       "zh-Hans/zmodelChat/ali/qwen3.6-plus",
                       "zh-Hans/zmodelChat/ali/qwen3-coder-plus",
@@ -58,53 +57,13 @@
                   {
                     "group": "字节",
                     "pages": [
-                      "zh-Hans/zmodelChat/claude",
-                      "zh-Hans/zmodelChat/responses",
-                      {
-                        "group": "MiniMax",
-                        "pages": [
-                          "zh-Hans/zmodelChat/minimax/miniMax-M2.5",
-                          "zh-Hans/zmodelChat/minimax/miniMax-M2.5-highspeed",
-                          "zh-Hans/zmodelChat/minimax/miniMax-M2.7",
-                          "zh-Hans/zmodelChat/minimax/miniMax-M2.7-highspeed",
-                          "zh-Hans/zmodelChat/minimax/miniMax-M3"
-                        ]
-                      },
-                      {
-                        "group": "阿里巴巴",
-                        "pages": [
-                          "zh-Hans/zmodelChat/ali/deepseek-v3.2",
-                          "zh-Hans/zmodelChat/ali/qwen3.5-flash",
-                          "zh-Hans/zmodelChat/ali/qwen3.6-plus",
-                          "zh-Hans/zmodelChat/ali/qwen3-coder-plus",
-                          "zh-Hans/zmodelChat/ali/qwen3-max"
-                        ]
-                      },
-                      {
-                        "group": "字节",
-                        "pages": [
-                          "zh-Hans/zmodelChat/byteplus/deepseek-v3-2-251201",
-                          "zh-Hans/zmodelChat/byteplus/gpt-oss-120b-250805",
-                          "zh-Hans/zmodelChat/byteplus/seed-1-6-250915",
-                          "zh-Hans/zmodelChat/byteplus/seed-1-6-flash-250715",
-                          "zh-Hans/zmodelChat/byteplus/seed-1-8-251228",
-                          "zh-Hans/zmodelChat/byteplus/seed-2-0-lite-260228",
-                          "zh-Hans/zmodelChat/byteplus/seed-2-0-mini-260215",
-                          "zh-Hans/zmodelChat/byteplus/seed-2-0-pro-260328"
-                        ]
-                      },
-                      {
-                        "group": "智谱",
-                        "pages": [
-                          "zh-Hans/zmodelChat/zhipu/glm-4.5-air",
-                          "zh-Hans/zmodelChat/zhipu/glm-4.7",
-                          "zh-Hans/zmodelChat/zhipu/glm-4.7-flash",
-                          "zh-Hans/zmodelChat/zhipu/glm-5",
-                          "zh-Hans/zmodelChat/zhipu/glm-5.1",
-                          "zh-Hans/zmodelChat/zhipu/glm-5.2",
-                          "zh-Hans/zmodelChat/zhipu/glm-5-turbo"
-                        ]
-                      }
+                      "zh-Hans/zmodelChat/byteplus/deepseek-v3-2-251201",
+                      "zh-Hans/zmodelChat/byteplus/seed-1-6-250915",
+                      "zh-Hans/zmodelChat/byteplus/seed-1-6-flash-250715",
+                      "zh-Hans/zmodelChat/byteplus/seed-1-8-251228",
+                      "zh-Hans/zmodelChat/byteplus/seed-2-0-lite-260228",
+                      "zh-Hans/zmodelChat/byteplus/seed-2-0-mini-260215",
+                      "zh-Hans/zmodelChat/byteplus/seed-2-0-pro-260328"
                     ]
                   },
                   {
@@ -366,7 +325,6 @@
                   {
                     "group": "Alibaba",
                     "pages": [
-                      "en/zmodelChat/ali/deepseek-v3.2",
                       "en/zmodelChat/ali/qwen3.5-flash",
                       "en/zmodelChat/ali/qwen3.6-plus",
                       "en/zmodelChat/ali/qwen3-coder-plus",
@@ -376,53 +334,13 @@
                   {
                     "group": "BytePlus",
                     "pages": [
-                      "en/zmodelChat/claude",
-                      "en/zmodelChat/responses",
-                      {
-                        "group": "MiniMax",
-                        "pages": [
-                          "en/zmodelChat/minimax/miniMax-M2.5",
-                          "en/zmodelChat/minimax/miniMax-M2.5-highspeed",
-                          "en/zmodelChat/minimax/miniMax-M2.7",
-                          "en/zmodelChat/minimax/miniMax-M2.7-highspeed",
-                          "en/zmodelChat/minimax/miniMax-M3"
-                        ]
-                      },
-                      {
-                        "group": "Alibaba",
-                        "pages": [
-                          "en/zmodelChat/ali/deepseek-v3.2",
-                          "en/zmodelChat/ali/qwen3.5-flash",
-                          "en/zmodelChat/ali/qwen3.6-plus",
-                          "en/zmodelChat/ali/qwen3-coder-plus",
-                          "en/zmodelChat/ali/qwen3-max"
-                        ]
-                      },
-                      {
-                        "group": "BytePlus",
-                        "pages": [
-                          "en/zmodelChat/byteplus/deepseek-v3-2-251201",
-                          "en/zmodelChat/byteplus/gpt-oss-120b-250805",
-                          "en/zmodelChat/byteplus/seed-1-6-250915",
-                          "en/zmodelChat/byteplus/seed-1-6-flash-250715",
-                          "en/zmodelChat/byteplus/seed-1-8-251228",
-                          "en/zmodelChat/byteplus/seed-2-0-lite-260228",
-                          "en/zmodelChat/byteplus/seed-2-0-mini-260215",
-                          "en/zmodelChat/byteplus/seed-2-0-pro-260328"
-                        ]
-                      },
-                      {
-                        "group": "Zhipu",
-                        "pages": [
-                          "en/zmodelChat/zhipu/glm-4.5-air",
-                          "en/zmodelChat/zhipu/glm-4.7",
-                          "en/zmodelChat/zhipu/glm-4.7-flash",
-                          "en/zmodelChat/zhipu/glm-5",
-                          "en/zmodelChat/zhipu/glm-5.1",
-                          "en/zmodelChat/zhipu/glm-5.2",
-                          "en/zmodelChat/zhipu/glm-5-turbo"
-                        ]
-                      }
+                      "en/zmodelChat/byteplus/deepseek-v3-2-251201",
+                      "en/zmodelChat/byteplus/seed-1-6-250915",
+                      "en/zmodelChat/byteplus/seed-1-6-flash-250715",
+                      "en/zmodelChat/byteplus/seed-1-8-251228",
+                      "en/zmodelChat/byteplus/seed-2-0-lite-260228",
+                      "en/zmodelChat/byteplus/seed-2-0-mini-260215",
+                      "en/zmodelChat/byteplus/seed-2-0-pro-260328"
                     ]
                   },
                   {

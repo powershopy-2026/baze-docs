@@ -28,6 +28,12 @@ Use the following model IDs with Claude Code. For coding-agent workflows, prefer
 | Alibaba Qwen | `qwen3-max` | Optional general reasoning model |
 | Alibaba Qwen | `qwen3.5-flash` | Optional lightweight model |
 | Alibaba Qwen | `qwen3.6-plus` | Optional balanced model |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` | Optional text model; passed opencode Anthropic-provider tool validation |
+| BytePlus Seed | `seed-1-6-250915` | Optional text model |
+| BytePlus Seed | `seed-1-8-251228` | Optional text model |
+| BytePlus Seed | `seed-2-0-lite-260228` | Optional lightweight model |
+| BytePlus Seed | `seed-2-0-mini-260215` | Optional lightweight model |
+| BytePlus Seed | `seed-2-0-pro-260328` | Optional heavier text model |
 
 ## Prepare your environment
 
@@ -133,5 +139,4 @@ The following models may declare `anthropic` in model discovery, but current eco
 
 | Model | Reason |
 | --- | --- |
-| `deepseek-v3.2` | Not recommended as the default for streaming-dependent Claude Code workflows |
-| `deepseek-v3-2-251201`, `gpt-oss-120b-250805`, Seed models | Prefer an OpenAI-compatible provider; validate Claude Code separately |
+| `seed-1-6-flash-250715` | The upstream provider does not support `/v1/messages`; use an OpenAI-compatible provider |

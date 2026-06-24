@@ -97,6 +97,9 @@ OpenAI-compatible 路径默认使用 `glm-5.2`；MiniMax 场景使用 `MiniMax-M
         },
         "MiniMax-M3": {
           "name": "MiniMax-M3"
+        },
+        "deepseek-v3-2-251201": {
+          "name": "deepseek-v3-2-251201"
         }
       }
     }
@@ -104,7 +107,7 @@ OpenAI-compatible 路径默认使用 `glm-5.2`；MiniMax 场景使用 `MiniMax-M
 }
 ```
 
-Anthropic 路径推荐优先使用 `glm-5.2`；MiniMax 场景推荐使用 `MiniMax-M3`。不要把 BytePlus、Seed、`gpt-oss-120b-250805` 或 `deepseek-v3.2` 作为 opencode Anthropic provider 的默认模型。
+Anthropic 路径默认优先使用 `glm-5.2`；MiniMax 场景推荐使用 `MiniMax-M3`。`deepseek-v3-2-251201` 已通过 opencode Anthropic provider 工具链复测；Seed 系列中除 `seed-1-6-flash-250715` 外，也已通过复测，可按真实任务选择。不要把 `seed-1-6-flash-250715` 作为 opencode Anthropic provider 的默认模型。
 
 ## 验证
 
@@ -151,6 +154,6 @@ Reply with ok and print the active model name.
 - `supported_endpoint_types` 里带 `openai` 不代表该模型适合 opencode 文本代理；请排除图片、语音、视频和任务型模型。
 - `MiniMax-M3` 等 reasoning 模型可能返回思考内容或消耗额外输出 token，请用真实任务确认展示效果。
 - `supported_endpoint_types` 里带 `anthropic` 不代表该模型适合 opencode Anthropic provider；opencode 会携带工具参数并使用流式输出，需要按端到端行为筛选模型。
-- `deepseek-v3.2` 当前不建议作为 opencode 默认模型；如必须使用，请先完成 streaming 和工具链验收。
-- BytePlus、Seed 和 `gpt-oss-120b-250805` 请优先走 OpenAI-compatible provider；Anthropic provider 需单独验收。
+- `deepseek-v3-2-251201` 已通过 opencode Anthropic provider 带工具任务复测。
+- `seed-1-6-flash-250715` 上游不支持 `/v1/messages`；请优先走 OpenAI-compatible provider。
 - 不要把真实 API Key 写入 `.opencode/opencode.json` 或提交到仓库。
