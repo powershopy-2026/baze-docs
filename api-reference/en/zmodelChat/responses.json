@@ -1,0 +1,1480 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Responses API",
+    "version": "1.0.0",
+    "description": "Call models through an OpenAI Responses API-compatible format. The public unified API is `/v1/responses`; it supports plain text input, message arrays, multi-turn context, streaming output, reasoning controls, and the tool capabilities currently exposed by each upstream provider. This page documents the platform API view and does not represent the full upstream capability set. Fields not listed here are not promised as public platform API capabilities.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "baze platform API base URL"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Responses",
+      "description": "OpenAI Responses API-compatible endpoint"
+    }
+  ],
+  "paths": {
+    "/v1/responses": {
+      "post": {
+        "summary": "Create response",
+        "description": "Create a model response through a Responses API-compatible format. `input` can be a string or a message array. For multi-turn context, pass the previous response `previous_response_id`, or pass messages, reasoning items, or tool call items from the previous `output` back into `input`.\n\nPublic fields: `model`, `input`, `instructions`, `previous_response_id`, `conversation`, `stream`, `store`, `tools`, `tool_choice`, `temperature`, `top_p`, `enable_thinking`, `reasoning`, and `ocr_options`. Whether a field takes effect depends on the model and upstream provider capabilities.",
+        "operationId": "createResponse",
+        "tags": [
+          "Responses"
+        ],
+        "parameters": [
+          {
+            "name": "x-dashscope-session-cache",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "enable"
+              ]
+            },
+            "description": "Optional upstream session cache switch. It only takes effect when the current model and upstream provider support it."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateResponseRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "Basic request",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": "What can you do?"
+                  }
+                },
+                "streaming": {
+                  "summary": "Streaming output",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": "Briefly introduce artificial intelligence.",
+                    "stream": true
+                  }
+                },
+                "multi_turn": {
+                  "summary": "Continue from a previous response",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": "Do you still remember my name?",
+                    "previous_response_id": "f75c28fb-4064-48ed-90da-4d2cc4362xxx"
+                  }
+                },
+                "built_in_tools": {
+                  "summary": "Call a built-in tool",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": "Search the Alibaba Cloud official website and extract key information from the homepage.",
+                    "tools": [
+                      {
+                        "type": "web_search"
+                      },
+                      {
+                        "type": "web_extractor"
+                      }
+                    ]
+                  }
+                },
+                "function_call": {
+                  "summary": "Custom Function Call",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": [
+                      {
+                        "role": "user",
+                        "content": "What is the weather in Beijing today?"
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "name": "get_current_weather",
+                        "description": "Query the weather for a specified city.",
+                        "parameters": {
+                          "type": "object",
+                          "properties": {
+                            "location": {
+                              "type": "string",
+                              "description": "City name, such as Beijing or Hangzhou."
+                            }
+                          },
+                          "required": [
+                            "location"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The call succeeded. Non-streaming mode returns a complete Response object; streaming mode returns an SSE event stream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObject"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStreamEvent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request parameters are invalid, or the upstream provider rejected the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Parameter error",
+                    "value": {
+                      "error": {
+                        "message": "input is required",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": "input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, for example because the token is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "A rate limit was triggered or the account quota is insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "The current account quota is insufficient. Try again later.",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal error occurred while the server processed the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "The upstream provider returned an abnormal response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The upstream provider is temporarily unavailable, or the current model has no available provider channel.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "CreateResponseRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "MiniMax-M2.5",
+              "MiniMax-M2.5-highspeed",
+              "MiniMax-M2.7",
+              "MiniMax-M2.7-highspeed",
+              "MiniMax-M3",
+              "qwen3-coder-plus",
+              "qwen3-max",
+              "qwen3.5-flash",
+              "qwen3.6-plus",
+              "deepseek-v3-2-251201",
+              "seed-1-6-250915",
+              "seed-1-6-flash-250715",
+              "seed-1-8-251228",
+              "seed-2-0-lite-260228",
+              "seed-2-0-mini-260215",
+              "seed-2-0-pro-260328"
+            ],
+            "description": "Model name. Use a model that is publicly exposed by the platform API and supports the Responses API. Whether a model supports tools, OCR, or thinking mode depends on the current provider channel.",
+            "example": "qwen3.6-plus"
+          },
+          "input": {
+            "description": "Model input. Pass a plain text string or a message array arranged in conversation order. For multi-turn tool calls, pass back `message`, `function_call`, `function_call_output`, or `reasoning` items from the previous response.",
+            "oneOf": [
+              {
+                "title": "Plain text input",
+                "type": "string",
+                "description": "Plain text input."
+              },
+              {
+                "title": "Message array input",
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseInputItem"
+                }
+              }
+            ]
+          },
+          "instructions": {
+            "type": "string",
+            "description": "System instructions inserted at the start of the context. When you use `previous_response_id`, the previous turn's `instructions` are not automatically passed into this turn."
+          },
+          "previous_response_id": {
+            "type": "string",
+            "description": "The previous response `id`. Use it to create a multi-turn conversation. The server combines the previous input and output as context. Do not use it together with `conversation`."
+          },
+          "conversation": {
+            "type": "string",
+            "description": "Conversation ID for the current response. Conversation history is passed as context, and this input and output are added to the conversation after the response completes. Do not use it together with `previous_response_id`."
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "Whether to enable streaming output. When set to `true`, the endpoint returns an SSE event stream.",
+            "default": false
+          },
+          "store": {
+            "type": "boolean",
+            "description": "Whether to store this response. When set to `false`, this response cannot be used later as context through `previous_response_id`.",
+            "default": true
+          },
+          "tools": {
+            "type": "array",
+            "description": "Array of tools the model can call while generating the response. You can mix built-in tools and custom `function` tools. Whether a tool takes effect depends on model and upstream provider support.",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            }
+          },
+          "tool_choice": {
+            "description": "Controls how the model chooses tools. String mode supports `auto`, `none`, and `required`; object mode restricts the model to a given tool list.",
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "none",
+                  "required"
+                ]
+              },
+              {
+                "$ref": "#/components/schemas/AllowedToolsChoice"
+              }
+            ],
+            "default": "auto"
+          },
+          "temperature": {
+            "type": "number",
+            "description": "Sampling temperature. It controls output randomness. Avoid setting both `temperature` and `top_p`.",
+            "minimum": 0,
+            "maximum": 2,
+            "exclusiveMaximum": true
+          },
+          "top_p": {
+            "type": "number",
+            "description": "Nucleus sampling probability threshold. It controls output diversity. Avoid setting both `temperature` and `top_p`.",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 1
+          },
+          "enable_thinking": {
+            "type": "boolean",
+            "deprecated": true,
+            "description": "Whether to enable thinking mode. This is not a standard OpenAI field; prefer `reasoning.effort` instead."
+          },
+          "reasoning": {
+            "$ref": "#/components/schemas/ReasoningConfig"
+          },
+          "ocr_options": {
+            "type": "object",
+            "description": "Custom OCR task parameters. Use only with models that support OCR. The custom task result is returned through `ocr_result` in the response content.",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseInputItem": {
+        "title": "Message array item",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/EasyInputMessage"
+          },
+          {
+            "$ref": "#/components/schemas/ResponseOutputMessage"
+          },
+          {
+            "$ref": "#/components/schemas/FunctionCallInputItem"
+          },
+          {
+            "$ref": "#/components/schemas/FunctionCallOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/ReasoningInputItem"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "message": "#/components/schemas/ResponseOutputMessage",
+            "function_call": "#/components/schemas/FunctionCallInputItem",
+            "function_call_output": "#/components/schemas/FunctionCallOutputItem",
+            "reasoning": "#/components/schemas/ReasoningInputItem"
+          }
+        }
+      },
+      "EasyInputMessage": {
+        "title": "Basic message",
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant",
+              "system",
+              "developer"
+            ],
+            "description": "Message role."
+          },
+          "content": {
+            "description": "Message content. Pass a text string or a structured content array. The `system` and `developer` roles only support `input_text`; the `user` role supports `input_text`, `input_image`, and `input_file`; the `assistant` role supports `output_text`.",
+            "oneOf": [
+              {
+                "title": "Text content",
+                "type": "string"
+              },
+              {
+                "title": "Structured content array",
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/InputContentItem"
+                }
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "message"
+            ],
+            "description": "Optional. Fixed to `message`."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InputContentItem": {
+        "title": "Structured content item",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InputTextContent"
+          },
+          {
+            "$ref": "#/components/schemas/InputImageContent"
+          },
+          {
+            "$ref": "#/components/schemas/InputFileContent"
+          },
+          {
+            "$ref": "#/components/schemas/OutputTextContent"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "input_text": "#/components/schemas/InputTextContent",
+            "input_image": "#/components/schemas/InputImageContent",
+            "input_file": "#/components/schemas/InputFileContent",
+            "output_text": "#/components/schemas/OutputTextContent"
+          }
+        }
+      },
+      "InputTextContent": {
+        "title": "Text input",
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_text"
+            ],
+            "description": "Text input."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InputImageContent": {
+        "title": "Image input",
+        "type": "object",
+        "required": [
+          "type",
+          "image_url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_image"
+            ],
+            "description": "Image input. Use only with the `user` role."
+          },
+          "image_url": {
+            "type": "string",
+            "description": "Public image URL."
+          }
+        },
+        "additionalProperties": false
+      },
+      "InputFileContent": {
+        "title": "File input",
+        "type": "object",
+        "required": [
+          "type",
+          "file_url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_file"
+            ],
+            "description": "File input. Use only with the `user` role. This document only lists PDF and image file capabilities, and they depend on models that support OCR."
+          },
+          "file_url": {
+            "type": "string",
+            "description": "Public file URL. PDF files can be up to 50 pages or 100 MB; image files can be up to 20 MB."
+          }
+        },
+        "additionalProperties": false
+      },
+      "OutputTextContent": {
+        "title": "Assistant output text",
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "output_text"
+            ],
+            "description": "Assistant reply text."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content."
+          },
+          "annotations": {
+            "type": "array",
+            "description": "Text annotations.",
+            "items": {
+              "type": "object"
+            }
+          },
+          "logprobs": {
+            "type": "object",
+            "nullable": true,
+            "description": "Token log probability information. This is usually `null` currently."
+          },
+          "ocr_result": {
+            "description": "Custom OCR task result. Returned only when you use a model that supports OCR with `ocr_options`.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResponseOutputMessage": {
+        "title": "Assistant output message",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "role",
+          "status",
+          "content"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "message"
+            ],
+            "description": "Fixed to `message`."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique output message ID from the previous response."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "Fixed to `assistant`."
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OutputTextContent"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FunctionCallInputItem": {
+        "title": "Function call",
+        "type": "object",
+        "required": [
+          "type",
+          "name",
+          "arguments",
+          "call_id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function_call"
+            ],
+            "description": "Fixed to `function_call`."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique Function Call ID, usually from the previous response."
+          },
+          "name": {
+            "type": "string",
+            "description": "Tool function name."
+          },
+          "arguments": {
+            "type": "string",
+            "description": "Tool call arguments as a JSON string."
+          },
+          "call_id": {
+            "type": "string",
+            "description": "Tool call identifier. It must match the `call_id` returned by the model."
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FunctionCallOutputItem": {
+        "title": "Function call output",
+        "type": "object",
+        "required": [
+          "type",
+          "call_id",
+          "output"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function_call_output"
+            ],
+            "description": "Fixed to `function_call_output`. It must immediately follow the corresponding `function_call` message."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique Function Call Output ID."
+          },
+          "call_id": {
+            "type": "string",
+            "description": "Tool call identifier. It must match the `call_id` returned by the model."
+          },
+          "output": {
+            "type": "string",
+            "description": "Execution result of the tool function."
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReasoningInputItem": {
+        "title": "Reasoning content",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "summary"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "reasoning"
+            ],
+            "description": "Fixed to `reasoning`."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique reasoning content ID from the previous response."
+          },
+          "summary": {
+            "type": "array",
+            "description": "Reasoning summary content.",
+            "items": {
+              "$ref": "#/components/schemas/ReasoningSummary"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReasoningSummary": {
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "summary_text"
+            ],
+            "description": "Fixed to `summary_text`."
+          },
+          "text": {
+            "type": "string",
+            "description": "Summary text."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemStatus": {
+        "type": "string",
+        "enum": [
+          "in_progress",
+          "completed",
+          "incomplete"
+        ],
+        "description": "Output item status."
+      },
+      "ReasoningConfig": {
+        "type": "object",
+        "description": "Controls the model thinking effort. When set, the model may generate `reasoning` output items before the reply.",
+        "properties": {
+          "effort": {
+            "type": "string",
+            "enum": [
+              "none",
+              "minimal",
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "Thinking effort level. `none` disables thinking; `medium` balances speed and depth; `high` focuses on complex problems."
+          }
+        },
+        "additionalProperties": false
+      },
+      "Tool": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/BuiltInTool"
+          },
+          {
+            "$ref": "#/components/schemas/FileSearchTool"
+          },
+          {
+            "$ref": "#/components/schemas/McpTool"
+          },
+          {
+            "$ref": "#/components/schemas/FunctionTool"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "web_search": "#/components/schemas/BuiltInTool",
+            "web_extractor": "#/components/schemas/BuiltInTool",
+            "code_interpreter": "#/components/schemas/BuiltInTool",
+            "web_search_image": "#/components/schemas/BuiltInTool",
+            "image_search": "#/components/schemas/BuiltInTool",
+            "file_search": "#/components/schemas/FileSearchTool",
+            "mcp": "#/components/schemas/McpTool",
+            "function": "#/components/schemas/FunctionTool"
+          }
+        }
+      },
+      "BuiltInTool": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "web_search",
+              "web_extractor",
+              "code_interpreter",
+              "web_search_image",
+              "image_search"
+            ],
+            "description": "Built-in tool type. `web_extractor` must be used together with `web_search`; some tools require the model to support thinking mode."
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileSearchTool": {
+        "type": "object",
+        "required": [
+          "type",
+          "vector_store_ids"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "file_search"
+            ],
+            "description": "Knowledge base search tool."
+          },
+          "vector_store_ids": {
+            "type": "array",
+            "description": "Knowledge base ID to retrieve from. Currently only one knowledge base ID is supported.",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "McpTool": {
+        "type": "object",
+        "required": [
+          "type",
+          "server_protocol",
+          "server_label",
+          "server_url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "mcp"
+            ],
+            "description": "MCP tool."
+          },
+          "server_protocol": {
+            "type": "string",
+            "description": "Protocol used to communicate with the MCP service, such as `sse`."
+          },
+          "server_label": {
+            "type": "string",
+            "description": "MCP service label."
+          },
+          "server_description": {
+            "type": "string",
+            "description": "MCP service description."
+          },
+          "server_url": {
+            "type": "string",
+            "description": "MCP service endpoint URL."
+          },
+          "headers": {
+            "type": "object",
+            "description": "Request headers passed to the MCP service, such as `Authorization`.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FunctionTool": {
+        "type": "object",
+        "required": [
+          "type",
+          "name",
+          "description"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "Custom function tool."
+          },
+          "name": {
+            "type": "string",
+            "description": "Tool name. Only letters, numbers, underscores, and hyphens are allowed, up to 64 tokens."
+          },
+          "description": {
+            "type": "string",
+            "description": "Tool description that helps the model decide when and how to call the tool."
+          },
+          "parameters": {
+            "type": "object",
+            "description": "JSON Schema for tool parameters. Empty means the tool has no input parameters."
+          }
+        },
+        "additionalProperties": false
+      },
+      "AllowedToolsChoice": {
+        "type": "object",
+        "required": [
+          "type",
+          "mode",
+          "tools"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "allowed_tools"
+            ],
+            "description": "Fixed to `allowed_tools`."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "required"
+            ],
+            "description": "Tool choice mode."
+          },
+          "tools": {
+            "type": "array",
+            "description": "List of tools the model is allowed to choose from.",
+            "items": {
+              "$ref": "#/components/schemas/AllowedToolReference"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AllowedToolReference": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Allowed tool type, such as `function`."
+          },
+          "name": {
+            "type": "string",
+            "description": "Allowed tool name."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseObject": {
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "object",
+          "status",
+          "model",
+          "output"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for this response. It can be used as `previous_response_id`."
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "Unix timestamp for this request, in seconds."
+          },
+          "object": {
+            "type": "string",
+            "enum": [
+              "response"
+            ],
+            "description": "Fixed to `response`."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed",
+              "in_progress",
+              "cancelled",
+              "queued",
+              "incomplete"
+            ],
+            "description": "Response generation status."
+          },
+          "model": {
+            "type": "string",
+            "description": "Model ID used to generate the response."
+          },
+          "output": {
+            "type": "array",
+            "description": "Array of output items generated by the model. Item types and order depend on the model response and tool calls.",
+            "items": {
+              "$ref": "#/components/schemas/ResponseOutputItem"
+            }
+          },
+          "parallel_tool_calls": {
+            "type": "boolean",
+            "description": "Whether tools are called in parallel."
+          },
+          "tool_choice": {
+            "description": "Echoes the tool choice strategy from the request."
+          },
+          "tools": {
+            "type": "array",
+            "description": "Echoes the tool configuration from the request.",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/ResponseUsage"
+          },
+          "error": {
+            "type": "object",
+            "nullable": true,
+            "description": "Error object when generation fails; usually `null` on success."
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResponseOutputItem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/MessageOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/ReasoningOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/FunctionCallInputItem"
+          },
+          {
+            "$ref": "#/components/schemas/WebSearchCallOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/GenericToolCallOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/FileSearchCallOutputItem"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "message": "#/components/schemas/MessageOutputItem",
+            "reasoning": "#/components/schemas/ReasoningOutputItem",
+            "function_call": "#/components/schemas/FunctionCallInputItem",
+            "web_search_call": "#/components/schemas/WebSearchCallOutputItem",
+            "code_interpreter_call": "#/components/schemas/GenericToolCallOutputItem",
+            "web_extractor_call": "#/components/schemas/GenericToolCallOutputItem",
+            "web_search_image_call": "#/components/schemas/GenericToolCallOutputItem",
+            "image_search_call": "#/components/schemas/GenericToolCallOutputItem",
+            "mcp_call": "#/components/schemas/GenericToolCallOutputItem",
+            "file_search_call": "#/components/schemas/FileSearchCallOutputItem"
+          }
+        }
+      },
+      "MessageOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "role",
+          "status",
+          "content"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique output item ID."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "message"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OutputTextContent"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "ReasoningOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "summary"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique output item ID."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "reasoning"
+            ]
+          },
+          "summary": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReasoningSummary"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          }
+        },
+        "additionalProperties": true
+      },
+      "WebSearchCallOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique output item ID."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "web_search_call"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "action": {
+            "type": "object",
+            "description": "Search action and source information.",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "GenericToolCallOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique output item ID."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "code_interpreter_call",
+              "web_extractor_call",
+              "web_search_image_call",
+              "image_search_call",
+              "mcp_call"
+            ],
+            "description": "Tool call output type."
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tool or MCP method name."
+          },
+          "arguments": {
+            "type": "string",
+            "description": "Tool call arguments, usually as a JSON string."
+          },
+          "output": {
+            "description": "Tool call result."
+          }
+        },
+        "additionalProperties": true
+      },
+      "FileSearchCallOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique output item ID."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "file_search_call"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "queries": {
+            "type": "array",
+            "description": "Knowledge base search queries.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "results": {
+            "type": "array",
+            "description": "Knowledge base search results.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "score": {
+                  "type": "number",
+                  "description": "Relevance score."
+                },
+                "filename": {
+                  "type": "string",
+                  "description": "Matched filename."
+                },
+                "text": {
+                  "type": "string",
+                  "description": "Matched text snippet."
+                },
+                "file_id": {
+                  "type": "string",
+                  "description": "File ID."
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResponseUsage": {
+        "type": "object",
+        "description": "Token usage statistics. When tools, cache, OCR, or multimodal input are enabled, extra detail fields may be returned.",
+        "properties": {
+          "input_tokens": {
+            "type": "integer",
+            "description": "Input token count."
+          },
+          "output_tokens": {
+            "type": "integer",
+            "description": "Output token count."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total token count."
+          },
+          "input_tokens_details": {
+            "type": "object",
+            "description": "Input token details, such as cache hits, text tokens, or image tokens.",
+            "properties": {
+              "cached_tokens": {
+                "type": "integer",
+                "description": "Number of cached tokens hit."
+              },
+              "text_tokens": {
+                "type": "integer",
+                "description": "Text input token count."
+              },
+              "image_tokens": {
+                "type": "integer",
+                "description": "Image input token count."
+              }
+            },
+            "additionalProperties": true
+          },
+          "output_tokens_details": {
+            "type": "object",
+            "description": "Output token details.",
+            "properties": {
+              "reasoning_tokens": {
+                "type": "integer",
+                "description": "Reasoning token count."
+              },
+              "text_tokens": {
+                "type": "integer",
+                "description": "Text output token count."
+              }
+            },
+            "additionalProperties": true
+          },
+          "x_details": {
+            "type": "array",
+            "description": "Billing detail array.",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "x_tools": {
+            "type": "object",
+            "description": "Built-in tool call statistics, such as `{\"web_search\": {\"count\": 1}}`.",
+            "additionalProperties": true
+          },
+          "plugins": {
+            "type": "object",
+            "description": "Built-in tool call statistics, usually consistent with `x_tools`.",
+            "additionalProperties": true
+          },
+          "prompt_tokens_details": {
+            "type": "object",
+            "description": "Input cache details returned after session cache is enabled.",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResponseStreamEvent": {
+        "type": "object",
+        "description": "A single SSE JSON event in streaming output. Clients should process events by `sequence_number` until `response.completed` is received.",
+        "required": [
+          "type",
+          "sequence_number"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "response.created",
+              "response.in_progress",
+              "response.output_item.added",
+              "response.content_part.added",
+              "response.output_text.delta",
+              "response.output_text.done",
+              "response.content_part.done",
+              "response.output_item.done",
+              "response.reasoning_summary_text.delta",
+              "response.reasoning_summary_text.done",
+              "response.web_search_call.in_progress",
+              "response.web_search_call.searching",
+              "response.web_search_call.completed",
+              "response.code_interpreter_call.in_progress",
+              "response.code_interpreter_call.interpreting",
+              "response.code_interpreter_call.completed",
+              "response.mcp_call_arguments.delta",
+              "response.mcp_call_arguments.done",
+              "response.mcp_call.completed",
+              "response.file_search_call.in_progress",
+              "response.file_search_call.searching",
+              "response.file_search_call.completed",
+              "response.completed"
+            ],
+            "description": "Event type. `web_extractor`, `web_search_image`, and `image_search` tool calls are delivered through the generic `response.output_item.added` and `response.output_item.done` events."
+          },
+          "sequence_number": {
+            "type": "integer",
+            "description": "Event sequence number, starting from 0."
+          },
+          "response": {
+            "$ref": "#/components/schemas/ResponseObject"
+          },
+          "item": {
+            "$ref": "#/components/schemas/ResponseOutputItem"
+          },
+          "part": {
+            "$ref": "#/components/schemas/OutputTextContent"
+          },
+          "delta": {
+            "type": "string",
+            "description": "Delta text or MCP argument fragment."
+          },
+          "text": {
+            "type": "string",
+            "description": "Complete text content."
+          },
+          "arguments": {
+            "type": "string",
+            "description": "Complete MCP call arguments."
+          },
+          "item_id": {
+            "type": "string",
+            "description": "Unique output item ID used to associate multiple events for the same output item."
+          },
+          "output_index": {
+            "type": "integer",
+            "description": "Index of the output item in the `output` array."
+          },
+          "content_index": {
+            "type": "integer",
+            "description": "Index of the content block in the `content` array."
+          },
+          "summary_index": {
+            "type": "integer",
+            "description": "Index in the reasoning summary array."
+          },
+          "logprobs": {
+            "type": "array",
+            "description": "Log probability information for delta text. This is usually an empty array currently.",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Error message."
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type, such as `invalid_request_error`, `api_error`, or an upstream-compatible error type."
+              },
+              "code": {
+                "type": "string",
+                "description": "Error code."
+              },
+              "param": {
+                "type": "string",
+                "description": "Associated request parameter."
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,142 @@
+---
+title: "Claude Code setup guide"
+description: "Connect Claude Code to the powertokens platform through the Anthropic Messages-compatible path."
+---
+
+Claude Code uses the Anthropic Messages protocol. To use it with the `powertokens platform`, point Claude Code at `https://baze-api.powerbuyin.top` and choose a text model available through the Anthropic Messages path. The recommended platform default is `glm-5.2`; the recommended MiniMax coding-agent path is `MiniMax-M3`.
+
+If you need to choose the endpoint first, see [Text model protocols and endpoints](/en/ecosystem-tools/text-model-protocols).
+
+## Available models
+
+Use the following model IDs with Claude Code. For coding-agent workflows, prefer `glm-5.2` or `MiniMax-M3`.
+
+| Upstream provider | Model ID | Recommended use |
+| --- | --- | --- |
+| Zhipu | `glm-4.5-air` | Lightweight coding help |
+| Zhipu | `glm-4.7` | General development tasks |
+| Zhipu | `glm-4.7-flash` | Fast lightweight coding tasks |
+| Zhipu | `glm-5` | Deeper reasoning and edits |
+| Zhipu | `glm-5-turbo` | Faster coding tasks |
+| Zhipu | `glm-5.2` | Heavier reasoning; configure manually if it is not shown in model discovery |
+| MiniMax | `MiniMax-M2.5` | General agentic coding |
+| MiniMax | `MiniMax-M2.5-highspeed` | Latency-sensitive tasks |
+| MiniMax | `MiniMax-M2.7` | General development and longer tasks |
+| MiniMax | `MiniMax-M2.7-highspeed` | Faster long tasks |
+| MiniMax | `MiniMax-M3` | Complex coding-agent work |
+| Alibaba Qwen | `qwen3-coder-plus` | Optional coding model |
+| Alibaba Qwen | `qwen3-max` | Optional general reasoning model |
+| Alibaba Qwen | `qwen3.5-flash` | Optional lightweight model |
+| Alibaba Qwen | `qwen3.6-plus` | Optional balanced model |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` | Optional text model; passed opencode Anthropic-provider tool validation |
+| BytePlus Seed | `seed-1-6-250915` | Optional text model |
+| BytePlus Seed | `seed-1-8-251228` | Optional text model |
+| BytePlus Seed | `seed-2-0-lite-260228` | Optional lightweight model |
+| BytePlus Seed | `seed-2-0-mini-260215` | Optional lightweight model |
+| BytePlus Seed | `seed-2-0-pro-260328` | Optional heavier text model |
+
+## Prepare your environment
+
+Install or update Claude Code:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude --version
+```
+
+Clear old Anthropic environment variables before switching providers:
+
+```bash
+unset ANTHROPIC_BASE_URL
+unset ANTHROPIC_API_KEY
+unset ANTHROPIC_AUTH_TOKEN
+unset ANTHROPIC_MODEL
+```
+
+## Configure Claude Code
+
+Add this to user-level `~/.claude/settings.json` or project-level `.claude/settings.json`:
+
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://baze-api.powerbuyin.top",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_POWERTOKENS_API_KEY",
+    "ANTHROPIC_MODEL": "glm-5.2",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-5-turbo",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.2",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "MiniMax-M3",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "glm-5.2",
+    "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY": "1"
+  }
+}
+```
+
+Claude Code should use `ANTHROPIC_AUTH_TOKEN` so the client sends a bearer token. Do not set both `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_API_KEY`; Claude Code gives `ANTHROPIC_AUTH_TOKEN` precedence. If your runtime explicitly requires `x-api-key` auth, replace `ANTHROPIC_AUTH_TOKEN` with `ANTHROPIC_API_KEY`.
+
+## Start and verify
+
+Run Claude Code from your project:
+
+```bash
+claude
+```
+
+Inside the session, check:
+
+```text
+/status
+/model
+```
+
+If the model picker does not show platform models, set `ANTHROPIC_MODEL` manually to one of the IDs above. Some discovery flows only show model IDs that begin with `claude` or `anthropic`; manual model IDs still work when the gateway accepts them.
+
+Verify that Claude Code reads the configuration in non-interactive mode:
+
+```bash
+claude -p --model glm-5.2 "Reply exactly: ok"
+```
+
+Then verify tool use with a local file:
+
+```bash
+printf "powertokens-compat-ok\n" > compat.txt
+claude -p --model glm-5.2 --tools=Read --allowedTools=Read \
+  "Use the Read tool to read compat.txt. Reply exactly with the file contents."
+rm compat.txt
+```
+
+You can also verify the same model directly through the platform API.
+
+```bash
+curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  --data '{
+    "model": "glm-5.2",
+    "max_tokens": 64,
+    "messages": [
+      {"role": "user", "content": "Reply with ok."}
+    ],
+    "stream": false
+  }'
+```
+
+## Model choice
+
+| Scenario | Suggested model |
+| --- | --- |
+| Default coding agent | `glm-5.2` |
+| Small edits | `glm-5-turbo` |
+| Complex code review | `glm-5.2` or `MiniMax-M3` |
+| Parallel subagents | `glm-5.2` as main model and `glm-5-turbo` as the lightweight model |
+| MiniMax coding-agent path | `MiniMax-M3` |
+
+## Not default recommendations
+
+The following models may declare `anthropic` in model discovery, but current ecosystem-tool validation does not recommend them as Claude Code defaults:
+
+| Model | Reason |
+| --- | --- |
+| `seed-1-6-flash-250715` | The upstream provider does not support `/v1/messages`; use an OpenAI-compatible provider |

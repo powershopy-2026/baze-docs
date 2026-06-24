@@ -1,0 +1,59 @@
+---
+title: "Text model protocols and endpoints"
+description: "A concise guide for platform developers choosing Chat Completions, Anthropic Messages, or Responses for text models."
+---
+
+`supported_endpoint_types` is a discovery signal, not an end-to-end tool guarantee. Choose models by endpoint, streaming behavior, tool calling, and output structure.
+
+## Endpoint selection
+
+| Endpoint | Use it when | Typical tools |
+| --- | --- | --- |
+| `POST /v1/chat/completions` | OpenAI-compatible providers, text chat, default coding-agent path | opencode OpenAI-compatible, Kilo OpenAI Compatible, Hermes custom endpoint, OpenClaw `openai-completions` |
+| `POST /v1/messages` | Claude/Anthropic providers and Claude Messages request shape | Claude Code, Kilo Anthropic, opencode Anthropic, OpenClaw `anthropic-messages` |
+| `POST /v1/responses` | A tool or SDK explicitly calls OpenAI Responses API, such as `responses.create` | OpenAI Responses SDK, Agents SDK, Responses runtime |
+
+## Model matrix
+
+| Model | Chat Completions | Anthropic Messages | Responses | Recommendation |
+| --- | --- | --- | --- | --- |
+| `glm-4.5-air` | Available | Recommended | Not supported | Use with OpenAI-compatible or Anthropic tools |
+| `glm-4.7` | Available | Recommended | Not supported | Use with OpenAI-compatible or Anthropic tools |
+| `glm-4.7-flash` | Available | Recommended | Not supported | Good for lightweight tasks |
+| `glm-5` | Available | Recommended | Not supported | Good for reasoning tasks |
+| `glm-5-turbo` | Available | Recommended | Not supported | Good lightweight model |
+| `glm-5.2` | Available | Recommended | Not supported | Recommended Anthropic-tool default |
+| `MiniMax-M2.5` | Available | Recommended | Available | Increase `max_output_tokens` for Responses |
+| `MiniMax-M2.5-highspeed` | Available | Recommended | Available | Increase `max_output_tokens` for Responses |
+| `MiniMax-M2.7` | Available | Recommended | Available | Increase `max_output_tokens` for Responses |
+| `MiniMax-M2.7-highspeed` | Available | Recommended | Available | Increase `max_output_tokens` for Responses |
+| `MiniMax-M3` | Available | Recommended | Available | Recommended MiniMax tool model |
+| `qwen3-coder-plus` | Available | Recommended | Available | Good for coding and tool workflows |
+| `qwen3-max` | Available | Recommended | Available | Good for general reasoning and review |
+| `qwen3.5-flash` | Available | Recommended | Available | Responses may include reasoning summary |
+| `qwen3.6-plus` | Available | Recommended | Available | Responses may include reasoning summary |
+| `deepseek-v3-2-251201` | Available | Recommended | Available | Passed opencode Anthropic-provider tool-workflow validation |
+| `seed-1-6-250915` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
+| `seed-1-6-flash-250715` | Available | Not supported | Available | The upstream provider does not support `/v1/messages`; prefer Chat Completions or Responses |
+| `seed-1-8-251228` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
+| `seed-2-0-lite-260228` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
+| `seed-2-0-mini-260215` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
+| `seed-2-0-pro-260328` | Available | Recommended | Available | Use with OpenAI-compatible, Anthropic, or Responses |
+
+## Ecosystem tool guidance
+
+| Tool | Preferred endpoint | Suggested models |
+| --- | --- | --- |
+| Claude Code | `/v1/messages` | `glm-5.2`, `MiniMax-M3` |
+| opencode | `/v1/chat/completions` | `glm-5.2`, `MiniMax-M3` |
+| Kilo Code | `/v1/chat/completions` or `/v1/messages` | `glm-5.2`, `MiniMax-M3` |
+| Hermes Agent | `/v1/chat/completions` | `glm-5.2`, `MiniMax-M3`, `seed-2-0-pro-260328` |
+| OpenClaw | `/v1/chat/completions` or `/v1/messages` | `glm-5.2`, `MiniMax-M3` |
+| OpenAI Responses SDK / Agents SDK | `/v1/responses` | Qwen, MiniMax, Seed, `deepseek-v3-2-251201` |
+
+## Known boundaries
+
+- GLM models are not currently Responses-path models.
+- `seed-1-6-flash-250715` is not supported by its upstream provider on `/v1/messages`; other Seed models passed opencode Anthropic-provider validation.
+- `deepseek-v3-2-251201` passed opencode Anthropic-provider tool-workflow validation.
+- In Responses, some MiniMax, Qwen, and Seed models return reasoning or reasoning summary. Extract user-visible text from `output[]`.

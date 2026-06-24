@@ -1,0 +1,116 @@
+---
+title: "Kilo Code setup guide"
+description: "Connect Kilo Code to the powertokens platform through OpenAI Compatible or Anthropic provider settings."
+---
+
+Kilo Code can connect to the `powertokens platform` through two provider paths:
+
+- OpenAI Compatible provider for text models that work through `/v1/chat/completions`.
+- Anthropic provider with a custom base URL for Anthropic-path models validated as default tool-workflow choices.
+
+Choose the path by protocol support. OpenAI-compatible support does not mean the same model can also be used through the Anthropic provider.
+
+If you need to choose the endpoint first, see [Text model protocols and endpoints](/en/ecosystem-tools/text-model-protocols).
+
+## Choose a path
+
+| Goal | Kilo Code provider | Base URL | Model scope |
+| --- | --- | --- | --- |
+| Use OpenAI-compatible text models | OpenAI Compatible or OpenAI (Compatible) | `https://baze-api.powerbuyin.top/v1` | Text models that support `/v1/chat/completions` |
+| Use Anthropic-path models | Anthropic with custom base URL | `https://baze-api.powerbuyin.top/v1` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
+| Use OpenAI-compatible preferred models | OpenAI Compatible | `https://baze-api.powerbuyin.top/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
+
+## OpenAI Compatible setup
+
+Create a provider profile in Kilo Code:
+
+| Field | Value |
+| --- | --- |
+| **API Provider** | **OpenAI Compatible** or **OpenAI (Compatible)** |
+| **Base URL** | `https://baze-api.powerbuyin.top/v1` |
+| **API Key** | Your `powertokens platform` API key |
+| **Model** | For example `glm-5.2`, `MiniMax-M3`, or `seed-2-0-pro-260328` |
+| **Max output tokens** | Set for your task and selected model |
+| **Context window** | Set conservatively if you are unsure |
+| **Image support** | Enable only when the model and the platform API publicly support image input |
+
+Verify the same path with:
+
+```bash
+curl -X POST "https://baze-api.powerbuyin.top/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
+  --data '{
+    "model": "glm-5.2",
+    "messages": [
+      {"role": "user", "content": "Reply with ok."}
+    ],
+    "stream": false
+  }'
+```
+
+## Anthropic provider setup
+
+Use Kilo Code's Anthropic provider when you want the Claude/Anthropic path:
+
+| Field | Value |
+| --- | --- |
+| **API Provider** | **Anthropic** |
+| **Use custom base URL** | Enabled |
+| **Custom base URL** | `https://baze-api.powerbuyin.top/v1` |
+| **Anthropic API Key** | Your `powertokens platform` API key |
+| **Model** | One of the recommended model IDs below |
+
+Kilo Code's Anthropic provider appends `/messages` to **Custom base URL**. Set the field to the version path `https://baze-api.powerbuyin.top/v1` so the final request reaches the platform's `/v1/messages` endpoint.
+
+Recommended Anthropic tool-workflow models:
+
+| Upstream provider | Models |
+| --- | --- |
+| Zhipu | `glm-4.5-air`, `glm-4.7`, `glm-4.7-flash`, `glm-5`, `glm-5-turbo`, `glm-5.2` |
+| MiniMax | `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`, `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M3` |
+| Alibaba Qwen | `qwen3-coder-plus`, `qwen3-max`, `qwen3.5-flash`, `qwen3.6-plus` |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` |
+| BytePlus Seed | `seed-1-6-250915`, `seed-1-8-251228`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-2-0-pro-260328` |
+
+When you verify the Anthropic path with curl, use the full endpoint path:
+
+```bash
+curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_POWERTOKENS_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  --data '{
+    "model": "glm-5.2",
+    "max_tokens": 64,
+    "messages": [
+      {"role": "user", "content": "Reply with ok."}
+    ],
+    "stream": false
+  }'
+```
+
+## Models not recommended for Anthropic provider
+
+Use these models through OpenAI Compatible, not through the Anthropic provider, even if model discovery declares `anthropic`:
+
+| Upstream provider | Models |
+| --- | --- |
+| BytePlus | `seed-1-6-flash-250715` |
+
+## Validation checklist
+
+1. Send a tiny prompt that only asks for `ok`.
+2. Run one real code-edit task and confirm Kilo Code can read files, propose edits, and finish.
+3. If you enabled streaming, validate a long response.
+4. Validate tool calling, image input, and caching separately before relying on them.
+
+## Troubleshooting
+
+| Symptom | Action |
+| --- | --- |
+| `Invalid API Key` | Check the key and provider path |
+| `Model Not Found` | Check the exact model ID; enter `glm-5.2` manually if discovery does not list it |
+| Anthropic provider tool workflow fails | The model is not currently suitable for Kilo Code Anthropic-provider workflows; use OpenAI Compatible |
+| Anthropic provider returns an empty response | Do not use that model as the Anthropic-provider default until you validate it; use OpenAI Compatible first |
+| Tool output or fields differ from upstream docs | Check whether the field is publicly supported by the platform |

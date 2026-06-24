@@ -1,0 +1,179 @@
+---
+title: "OpenClaw 接入指南"
+description: "按 provider 选择 OpenAI-compatible 或 Anthropic 路径，把 OpenClaw 接入 powertokens 平台。"
+---
+
+OpenClaw 通过 provider 管理模型。接入 `powertokens 平台` 时，请先选择协议路径，再写 provider 配置：
+
+- OpenAI-compatible 路径：使用 `openai-completions`，base URL 为 `https://baze-api.powerbuyin.top/v1`。
+- Anthropic 路径：使用 `anthropic-messages`，base URL 为 `https://baze-api.powerbuyin.top`。
+
+不要把 OpenClaw 的官方 OpenAI/Codex runtime、Claude CLI 复用和普通 OpenAI-compatible proxy 混为一类。这里描述的是 `powertokens 平台` 作为自定义 provider 的接入方式。
+
+如果你需要先判断模型应走哪个端点，请先看 [文本模型协议与端点支持说明](/zh-Hans/ecosystem-tools/text-model-protocols)。
+
+## 路径选择
+
+| 目标 | OpenClaw provider api | Base URL | 模型范围 |
+| --- | --- | --- | --- |
+| OpenAI-compatible 文本模型 | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | 支持 `/v1/chat/completions` 的文本模型 |
+| Claude/Anthropic 路径模型 | `anthropic-messages` | `https://baze-api.powerbuyin.top` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
+| OpenAI-compatible 优先模型 | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
+
+## OpenAI-compatible provider 示例
+
+把下面的 provider 加到 OpenClaw 的 `models.providers` 配置中。实际写入位置可以是全局配置，也可以是对应 agent 的 `models.json`。
+
+```json5
+{
+  models: {
+    mode: "merge",
+    providers: {
+      powertokens: {
+        baseUrl: "https://baze-api.powerbuyin.top/v1",
+        apiKey: "YOUR_POWERTOKENS_API_KEY",
+        api: "openai-completions",
+        models: [
+          {
+            id: "glm-5.2",
+            name: "glm-5.2",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
+          },
+          {
+            id: "seed-2-0-pro-260328",
+            name: "seed-2-0-pro-260328",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
+          }
+        ]
+      }
+    }
+  },
+  agents: {
+    defaults: {
+      models: {
+        "powertokens/glm-5.2": { alias: "powertokens-glm" },
+        "powertokens/seed-2-0-pro-260328": { alias: "powertokens-seed-pro" }
+      }
+    }
+  }
+}
+```
+
+生产环境不要把真实 API Key 明文提交到仓库。请使用 OpenClaw 支持的 env、SecretRef 或本机安全配置方式管理密钥。
+
+## Anthropic provider 示例
+
+如果要使用 Claude/Anthropic 路径，把 provider 的 `api` 改为 `anthropic-messages`，并使用不带 `/v1/messages` 的 base URL。
+
+```json5
+{
+  models: {
+    mode: "merge",
+    providers: {
+      "powertokens-anthropic": {
+        baseUrl: "https://baze-api.powerbuyin.top",
+        apiKey: "YOUR_POWERTOKENS_API_KEY",
+        api: "anthropic-messages",
+        models: [
+          {
+            id: "glm-5.2",
+            name: "glm-5.2",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
+          },
+          {
+            id: "MiniMax-M3",
+            name: "MiniMax-M3",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
+          },
+          {
+            id: "deepseek-v3-2-251201",
+            name: "deepseek-v3-2-251201",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
+          }
+        ]
+      }
+    }
+  },
+  agents: {
+    defaults: {
+      models: {
+        "powertokens-anthropic/glm-5.2": { alias: "powertokens-claude-glm" },
+        "powertokens-anthropic/MiniMax-M3": { alias: "powertokens-claude-minimax" },
+        "powertokens-anthropic/deepseek-v3-2-251201": { alias: "powertokens-claude-deepseek" }
+      }
+    }
+  }
+}
+```
+
+Anthropic 工具链推荐模型：
+
+| 上游渠道 | 模型 |
+| --- | --- |
+| 智谱 | `glm-4.5-air`, `glm-4.7`, `glm-4.7-flash`, `glm-5`, `glm-5-turbo`, `glm-5.2` |
+| MiniMax | `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`, `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M3` |
+| 阿里 Qwen | `qwen3-coder-plus`, `qwen3-max`, `qwen3.5-flash`, `qwen3.6-plus` |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` |
+| BytePlus Seed | `seed-1-6-250915`, `seed-1-8-251228`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-2-0-pro-260328` |
+
+## 不建议走 Anthropic provider 的模型
+
+这些模型可以作为 `openai-completions` provider 模型接入。即使模型发现中声明了 `anthropic`，当前也不建议放进 `anthropic-messages` provider：
+
+```text
+seed-1-6-flash-250715
+```
+
+## 应用并验证
+
+按你的 OpenClaw 安装方式应用配置后，执行：
+
+```bash
+openclaw doctor
+openclaw models list
+openclaw models status --json
+openclaw gateway restart
+```
+
+然后在 TUI 或已连接的渠道中选择新模型，发送一个小任务：
+
+```text
+Reply with ok, then list the active model name.
+```
+
+如果 OpenClaw 报模型不可用，请检查：
+
+- provider ID 和模型引用是否使用 `provider/model` 格式。
+- `models.providers.*.api` 是否与平台路径一致。
+- `baseUrl` 是否没有多写或少写 `/v1`。
+- API Key 是否按 OpenClaw 的密钥机制正确注入。
+- 模型是否属于 OpenAI-compatible 或 Anthropic 路径的正确清单。
+
+## 能力边界
+
+- `openai-completions` 只覆盖 Chat Completions 语义，不等于 OpenClaw 的官方 OpenAI/Codex runtime。
+- `anthropic-messages` 只适合已跑通 `/v1/messages` 的模型。
+- OpenClaw 的工具、媒体、缓存、reasoning 和开发者角色兼容性可能受 provider 配置影响，需要按真实任务验收。
+- 如果 `anthropic-messages` 路径在真实任务中不稳定，请改走 `openai-completions` 并记录 request id 供平台排查。
+- 如果模型只支持文本，请把 `input` 保持为 `["text"]`，不要声明图片能力。
+- 不要把上游渠道未通过平台公开的字段写进 OpenClaw 配置示例。

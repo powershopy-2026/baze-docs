@@ -1,0 +1,59 @@
+---
+title: "文本模型协议与端点支持说明"
+description: "面向平台开发者，说明文本模型在 Chat Completions、Anthropic Messages 与 Responses 三类端点下的支持边界。"
+---
+
+`supported_endpoint_types` 是模型发现声明，不等于生态工具端到端可用。选择模型时同时确认端点、streaming、tool calling 和输出结构。
+
+## 端点选择
+
+| 端点 | 何时使用 | 典型工具 |
+| --- | --- | --- |
+| `POST /v1/chat/completions` | OpenAI-compatible provider、普通文本对话、默认代码代理路径 | opencode OpenAI-compatible、Kilo OpenAI Compatible、Hermes custom endpoint、OpenClaw `openai-completions` |
+| `POST /v1/messages` | Claude/Anthropic provider、Claude Messages 请求格式 | Claude Code、Kilo Anthropic、opencode Anthropic、OpenClaw `anthropic-messages` |
+| `POST /v1/responses` | 工具或 SDK 明确调用 OpenAI Responses API，例如 `responses.create` | OpenAI Responses SDK、Agents SDK、Responses runtime |
+
+## 模型协议矩阵
+
+| 模型 | Chat Completions | Anthropic Messages | Responses | 建议 |
+| --- | --- | --- | --- | --- |
+| `glm-4.5-air` | 可用 | 建议 | 不支持 | 可用于 OpenAI-compatible 或 Anthropic 工具 |
+| `glm-4.7` | 可用 | 建议 | 不支持 | 可用于 OpenAI-compatible 或 Anthropic 工具 |
+| `glm-4.7-flash` | 可用 | 建议 | 不支持 | 适合轻量任务 |
+| `glm-5` | 可用 | 建议 | 不支持 | 适合推理任务 |
+| `glm-5-turbo` | 可用 | 建议 | 不支持 | 适合作为轻量模型 |
+| `glm-5.2` | 可用 | 建议 | 不支持 | Anthropic 工具链默认推荐 |
+| `MiniMax-M2.5` | 可用 | 建议 | 可用 | Responses 需提高 `max_output_tokens` |
+| `MiniMax-M2.5-highspeed` | 可用 | 建议 | 可用 | Responses 需提高 `max_output_tokens` |
+| `MiniMax-M2.7` | 可用 | 建议 | 可用 | Responses 需提高 `max_output_tokens` |
+| `MiniMax-M2.7-highspeed` | 可用 | 建议 | 可用 | Responses 需提高 `max_output_tokens` |
+| `MiniMax-M3` | 可用 | 建议 | 可用 | MiniMax 工具链默认推荐 |
+| `qwen3-coder-plus` | 可用 | 建议 | 可用 | 适合代码与工具链任务 |
+| `qwen3-max` | 可用 | 建议 | 可用 | 适合通用推理与审查 |
+| `qwen3.5-flash` | 可用 | 建议 | 可用 | Responses 可能返回 reasoning summary |
+| `qwen3.6-plus` | 可用 | 建议 | 可用 | Responses 可能返回 reasoning summary |
+| `deepseek-v3-2-251201` | 可用 | 建议 | 可用 | 已通过 opencode Anthropic provider 工具链复测 |
+| `seed-1-6-250915` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
+| `seed-1-6-flash-250715` | 可用 | 不支持 | 可用 | 上游不支持 `/v1/messages`，优先走 Chat Completions 或 Responses |
+| `seed-1-8-251228` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
+| `seed-2-0-lite-260228` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
+| `seed-2-0-mini-260215` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
+| `seed-2-0-pro-260328` | 可用 | 建议 | 可用 | 可用于 OpenAI-compatible、Anthropic 或 Responses |
+
+## 生态工具建议
+
+| 工具 | 优先端点 | 推荐模型 |
+| --- | --- | --- |
+| Claude Code | `/v1/messages` | `glm-5.2`, `MiniMax-M3` |
+| opencode | `/v1/chat/completions` | `glm-5.2`, `MiniMax-M3` |
+| Kilo Code | `/v1/chat/completions` 或 `/v1/messages` | `glm-5.2`, `MiniMax-M3` |
+| Hermes Agent | `/v1/chat/completions` | `glm-5.2`, `MiniMax-M3`, `seed-2-0-pro-260328` |
+| OpenClaw | `/v1/chat/completions` 或 `/v1/messages` | `glm-5.2`, `MiniMax-M3` |
+| OpenAI Responses SDK / Agents SDK | `/v1/responses` | Qwen、MiniMax、Seed、`deepseek-v3-2-251201` |
+
+## 已知边界
+
+- GLM 系列当前不作为 `/v1/responses` 路径模型。
+- `seed-1-6-flash-250715` 上游不支持 `/v1/messages`；其他 Seed 模型已通过 opencode Anthropic provider 复测。
+- `deepseek-v3-2-251201` 已通过 opencode Anthropic provider 工具链复测。
+- Responses 路径下，部分 MiniMax、Qwen、Seed 模型会返回 reasoning 或 reasoning summary；调用方需从 `output[]` 提取文本。

@@ -1,0 +1,132 @@
+---
+title: "Hermes Agent 接入指南"
+description: "通过 OpenAI-compatible endpoint，把 Hermes Agent 接入 powertokens 平台。"
+---
+
+Hermes Agent 支持自定义 OpenAI-compatible endpoint。接入 `powertokens 平台` 时，当前稳定路径是把 Hermes 指向平台的 `/v1/chat/completions` 兼容接口。
+
+平台的 `/v1/messages` Anthropic Messages 接口本身可用，但 Hermes Agent 版本之间的 provider 路由差异较大。以 Hermes Agent v0.10.0 为例，主聊天链路即使配置 `api_mode: anthropic_messages`，实测仍可能请求 `/chat/completions`，并把 `glm-5.2` 归一化为 `glm-5-2`。因此，本页把 `anthropic_messages` 作为需要按版本复核的配置方向，不把它写成稳定接入承诺。
+
+如果你需要先判断模型应走哪个端点，请先看 [文本模型协议与端点支持说明](/zh-Hans/ecosystem-tools/text-model-protocols)。
+
+## 路径选择
+
+| 目标 | Hermes 配置方向 | Base URL | 模型范围 |
+| --- | --- | --- | --- |
+| 快速接入文本模型 | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | OpenAI-compatible 文本模型 |
+| 复核 Anthropic Messages 路径 | 仅在当前 Hermes 版本确认会请求 `/v1/messages` 后使用 `api_mode: anthropic_messages` | `https://baze-api.powerbuyin.top` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
+| 使用 OpenAI-compatible 优先模型 | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
+
+## OpenAI-compatible endpoint
+
+使用 Hermes 的模型配置入口：
+
+```bash
+hermes model
+```
+
+按交互提示选择自定义 endpoint，并填写：
+
+| 字段 | 填写 |
+| --- | --- |
+| Endpoint type | Custom endpoint 或 OpenAI-compatible endpoint |
+| URL | `https://baze-api.powerbuyin.top/v1` |
+| API key | 你的 `powertokens 平台` API Key |
+| Model | 例如 `glm-5.2`、`MiniMax-M3`、`seed-2-0-pro-260328` |
+
+如果你的 Hermes 版本要求完整 chat completions 地址，而不是 base URL，请使用：
+
+```text
+https://baze-api.powerbuyin.top/v1/chat/completions
+```
+
+## anthropic_messages 版本复核
+
+只有在你的 Hermes 版本确认会把该配置发送到 `POST /v1/messages` 时，才把协议模式设为 `anthropic_messages`。下面是字段口径示例，请按你安装版本的配置文件格式写入。
+
+```yaml
+provider: powertokens-anthropic
+api_mode: anthropic_messages
+base_url: https://baze-api.powerbuyin.top
+api_key: ${POWERTOKENS_API_KEY}
+model: glm-5.2
+```
+
+配置后先查看 Hermes 的请求 dump 或调试日志，确认最终请求 URL 是 `https://baze-api.powerbuyin.top/v1/messages`。如果实际请求仍然落到 `/chat/completions`，请不要把该路径作为 Hermes Agent 稳定配置使用。
+
+## 推荐模型
+
+| 路径 | 推荐模型 | 说明 |
+| --- | --- | --- |
+| OpenAI-compatible | `glm-5.2` | 代码任务默认选择 |
+| OpenAI-compatible | `seed-2-0-pro-260328` | BytePlus 文本路径 |
+| `anthropic_messages` 版本复核 | `glm-5.2` | 仅在 Hermes 实际请求 `/v1/messages` 后使用 |
+| `anthropic_messages` 版本复核 | `MiniMax-M3` | 仅在 Hermes 实际请求 `/v1/messages` 后使用 |
+| `anthropic_messages` 版本复核 | `deepseek-v3-2-251201` | 仅在 Hermes 实际请求 `/v1/messages` 后使用 |
+
+Anthropic 工具链推荐模型：
+
+```text
+glm-4.5-air
+glm-4.7
+glm-4.7-flash
+glm-5
+glm-5-turbo
+glm-5.2
+MiniMax-M2.5
+MiniMax-M2.5-highspeed
+MiniMax-M2.7
+MiniMax-M2.7-highspeed
+MiniMax-M3
+qwen3-coder-plus
+qwen3-max
+qwen3.5-flash
+qwen3.6-plus
+deepseek-v3-2-251201
+seed-1-6-250915
+seed-1-8-251228
+seed-2-0-lite-260228
+seed-2-0-mini-260215
+seed-2-0-pro-260328
+```
+
+## 验证 OpenAI-compatible 路径
+
+```bash
+curl -X POST "https://baze-api.powerbuyin.top/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
+  --data '{
+    "model": "glm-5.2",
+    "messages": [
+      {"role": "user", "content": "Reply with ok."}
+    ],
+    "stream": false
+  }'
+```
+
+## 验证 anthropic_messages 路径
+
+```bash
+curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_POWERTOKENS_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  --data '{
+    "model": "MiniMax-M3",
+    "max_tokens": 64,
+    "messages": [
+      {"role": "user", "content": "Reply with ok."}
+    ],
+    "stream": false
+  }'
+```
+
+## 能力边界
+
+- Hermes 的 custom endpoint 稳定覆盖 `/v1/chat/completions`，不代表主聊天链路已经使用 Anthropic Messages。
+- `api_mode: anthropic_messages` 只适用于当前 Hermes 版本实测会请求 `/v1/messages` 的配置。
+- 工具调用、终端控制、长上下文、缓存和流式输出需要用真实 Hermes 任务单独验收。
+- 如果 `anthropic_messages` 路径在真实任务中不稳定，请改走 OpenAI-compatible endpoint 并保留失败请求的 request id。
+- 不要把 MiniMax 官方字段直接写入平台示例；本页只描述 `powertokens 平台` 公开稳定的统一接口。
+- 如果 provider 配置里同时存在多个同名模型，请确认 Hermes 实际选中的 provider 和模型 ID。

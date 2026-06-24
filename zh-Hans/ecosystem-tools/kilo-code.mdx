@@ -1,0 +1,116 @@
+---
+title: "Kilo Code 接入指南"
+description: "通过 OpenAI Compatible 或 Anthropic provider，把 Kilo Code 接入 powertokens 平台。"
+---
+
+Kilo Code 可以通过两条路径接入 `powertokens 平台`：
+
+- OpenAI Compatible provider：适合所有已跑通 `/v1/chat/completions` 的文本模型。
+- Anthropic provider：适合已完成工具链验证、推荐作为默认选择的 Anthropic 路径模型。
+
+优先按你的模型能力选择路径。不要把 OpenAI-compatible 支持理解为所有模型都能用于 Anthropic provider。
+
+如果你需要先判断模型应走哪个端点，请先看 [文本模型协议与端点支持说明](/zh-Hans/ecosystem-tools/text-model-protocols)。
+
+## 路径选择
+
+| 目标 | Kilo Code provider | Base URL | 模型范围 |
+| --- | --- | --- | --- |
+| 使用 OpenAI-compatible 文本模型 | OpenAI Compatible 或 OpenAI (Compatible) | `https://baze-api.powerbuyin.top/v1` | 支持 `/v1/chat/completions` 的文本模型 |
+| 使用 Claude/Anthropic 路径模型 | Anthropic，并启用 custom base URL | `https://baze-api.powerbuyin.top/v1` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
+| 使用 OpenAI-compatible 优先模型 | OpenAI Compatible | `https://baze-api.powerbuyin.top/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
+
+## OpenAI Compatible 配置
+
+在 Kilo Code 的 provider 设置中新增配置：
+
+| 字段 | 填写 |
+| --- | --- |
+| **API Provider** | **OpenAI Compatible** 或 **OpenAI (Compatible)** |
+| **Base URL** | `https://baze-api.powerbuyin.top/v1` |
+| **API Key** | 你的 `powertokens 平台` API Key |
+| **Model** | 例如 `glm-5.2`、`MiniMax-M3`、`seed-2-0-pro-260328` |
+| **Max output tokens** | 按模型和任务需要设置 |
+| **Context window** | 按模型公开上下文能力设置；不确定时先保守填写 |
+| **Image support** | 仅在模型和平台接口都公开支持图像输入时开启 |
+
+最小验证请求可以用同一个接口口径：
+
+```bash
+curl -X POST "https://baze-api.powerbuyin.top/v1/chat/completions" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
+  --data '{
+    "model": "glm-5.2",
+    "messages": [
+      {"role": "user", "content": "Reply with ok."}
+    ],
+    "stream": false
+  }'
+```
+
+## Anthropic provider 配置
+
+如果你要使用 Kilo Code 的 Anthropic provider，请启用 custom base URL，并填写：
+
+| 字段 | 填写 |
+| --- | --- |
+| **API Provider** | **Anthropic** |
+| **Use custom base URL** | 开启 |
+| **Custom base URL** | `https://baze-api.powerbuyin.top/v1` |
+| **Anthropic API Key** | 你的 `powertokens 平台` API Key |
+| **Model** | 选择或手动填写下方推荐模型之一 |
+
+Kilo Code 的 Anthropic provider 会在 **Custom base URL** 后拼接 `/messages`。因此 **Custom base URL** 需要填到版本路径 `https://baze-api.powerbuyin.top/v1`，最终请求才会落到平台的 `/v1/messages`。
+
+Anthropic 工具链推荐模型：
+
+| 上游渠道 | 模型 |
+| --- | --- |
+| 智谱 | `glm-4.5-air`, `glm-4.7`, `glm-4.7-flash`, `glm-5`, `glm-5-turbo`, `glm-5.2` |
+| MiniMax | `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`, `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M3` |
+| 阿里 Qwen | `qwen3-coder-plus`, `qwen3-max`, `qwen3.5-flash`, `qwen3.6-plus` |
+| BytePlus DeepSeek | `deepseek-v3-2-251201` |
+| BytePlus Seed | `seed-1-6-250915`, `seed-1-8-251228`, `seed-2-0-lite-260228`, `seed-2-0-mini-260215`, `seed-2-0-pro-260328` |
+
+用平台接口验证 Anthropic 路径时，curl 需要写完整接口路径：
+
+```bash
+curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: YOUR_POWERTOKENS_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  --data '{
+    "model": "glm-5.2",
+    "max_tokens": 64,
+    "messages": [
+      {"role": "user", "content": "Reply with ok."}
+    ],
+    "stream": false
+  }'
+```
+
+## 不建议走 Anthropic provider 的模型
+
+以下模型即使在模型发现中声明了 `anthropic`，当前也只建议走 Kilo Code 的 OpenAI Compatible provider，不建议填入 Anthropic provider：
+
+| 上游渠道 | 模型 |
+| --- | --- |
+| BytePlus | `seed-1-6-flash-250715` |
+
+## 验证建议
+
+1. 先用 Kilo Code 发送一个只要求返回 `ok` 的小任务。
+2. 再执行一次真实代码修改任务，确认模型能稳定读写文件、生成补丁并收敛。
+3. 如果你启用了流式输出，额外验证长输出不会中断。
+4. 如果任务依赖工具调用、图片输入或缓存，请单独验收这些能力。
+
+## 常见问题
+
+| 现象 | 处理 |
+| --- | --- |
+| `Invalid API Key` | 检查 API Key 是否来自 `powertokens 平台`，以及 provider 是否选对 |
+| `Model Not Found` | 确认模型 ID 完全一致；`glm-5.2` 如未出现在模型选择器中，请手动填写 |
+| Anthropic provider 工具链请求失败 | 该模型当前不适合 Kilo Code Anthropic provider，请改走 OpenAI Compatible provider |
+| Anthropic provider 空响应 | 该模型当前不建议作为 Anthropic provider 默认模型；请先改走 OpenAI Compatible provider 验证 |
+| 输出字段或工具调用行为不符合预期 | 先确认平台公开支持该字段；不要直接套用上游渠道私有字段 |
