@@ -1,0 +1,174 @@
+---
+title: "OpenClaw setup guide"
+description: "Choose an OpenAI-compatible or Anthropic provider path for the powertokens platform."
+---
+
+OpenClaw manages models through providers. When you connect it to the `powertokens platform`, choose the protocol path first:
+
+- OpenAI-compatible path: use `openai-completions` with `https://baze-api.powerbuyin.top/v1`.
+- Anthropic path: use `anthropic-messages` with `https://baze-api.powerbuyin.top`.
+
+Do not conflate OpenClaw's official OpenAI/Codex runtime, Claude CLI reuse, and a regular OpenAI-compatible proxy. This guide covers the `powertokens platform` as a custom provider.
+
+If you need to choose the endpoint first, see [Text model protocols and endpoints](/en/ecosystem-tools/text-model-protocols).
+
+## Choose a path
+
+| Goal | OpenClaw provider api | Base URL | Model scope |
+| --- | --- | --- | --- |
+| OpenAI-compatible text models | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | Text models that support `/v1/chat/completions` |
+| Anthropic-path models | `anthropic-messages` | `https://baze-api.powerbuyin.top` | Recommended Zhipu, MiniMax, and Qwen models |
+| OpenAI-compatible preferred models | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | BytePlus, DeepSeek, and other text models not recommended for Anthropic provider |
+
+## OpenAI-compatible provider example
+
+Add a provider like this to OpenClaw `models.providers`. The actual location can be global config or the target agent's `models.json`.
+
+```json5
+{
+  models: {
+    mode: "merge",
+    providers: {
+      powertokens: {
+        baseUrl: "https://baze-api.powerbuyin.top/v1",
+        apiKey: "YOUR_POWERTOKENS_API_KEY",
+        api: "openai-completions",
+        models: [
+          {
+            id: "glm-5.2",
+            name: "glm-5.2",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
+          },
+          {
+            id: "seed-2-0-pro-260328",
+            name: "seed-2-0-pro-260328",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
+          }
+        ]
+      }
+    }
+  },
+  agents: {
+    defaults: {
+      models: {
+        "powertokens/glm-5.2": { alias: "powertokens-glm" },
+        "powertokens/seed-2-0-pro-260328": { alias: "powertokens-seed-pro" }
+      }
+    }
+  }
+}
+```
+
+Do not commit a real API key. Use OpenClaw-supported environment, SecretRef, or local secret configuration for production.
+
+## Anthropic provider example
+
+For the Claude/Anthropic path, set `api` to `anthropic-messages` and use the base URL without `/v1/messages`.
+
+```json5
+{
+  models: {
+    mode: "merge",
+    providers: {
+      "powertokens-anthropic": {
+        baseUrl: "https://baze-api.powerbuyin.top",
+        apiKey: "YOUR_POWERTOKENS_API_KEY",
+        api: "anthropic-messages",
+        models: [
+          {
+            id: "glm-5.2",
+            name: "glm-5.2",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
+          },
+          {
+            id: "MiniMax-M3",
+            name: "MiniMax-M3",
+            reasoning: false,
+            input: ["text"],
+            cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+            contextWindow: 128000,
+            maxTokens: 32000
+          }
+        ]
+      }
+    }
+  },
+  agents: {
+    defaults: {
+      models: {
+        "powertokens-anthropic/glm-5.2": { alias: "powertokens-claude-glm" },
+        "powertokens-anthropic/MiniMax-M3": { alias: "powertokens-claude-minimax" }
+      }
+    }
+  }
+}
+```
+
+Recommended Anthropic tool-workflow models:
+
+| Upstream provider | Models |
+| --- | --- |
+| Zhipu | `glm-4.5-air`, `glm-4.7`, `glm-4.7-flash`, `glm-5`, `glm-5-turbo`, `glm-5.2` |
+| MiniMax | `MiniMax-M2.5`, `MiniMax-M2.5-highspeed`, `MiniMax-M2.7`, `MiniMax-M2.7-highspeed`, `MiniMax-M3` |
+| Alibaba Qwen | `qwen3-coder-plus`, `qwen3-max`, `qwen3.5-flash`, `qwen3.6-plus` |
+
+## Models not recommended for Anthropic provider
+
+Use these with `openai-completions`, not `anthropic-messages`, even if model discovery declares `anthropic`:
+
+```text
+deepseek-v3-2-251201
+deepseek-v3.2
+gpt-oss-120b-250805
+seed-1-6-250915
+seed-1-6-flash-250715
+seed-1-8-251228
+seed-2-0-lite-260228
+seed-2-0-mini-260215
+seed-2-0-pro-260328
+```
+
+## Apply and verify
+
+After applying config for your OpenClaw installation, run:
+
+```bash
+openclaw doctor
+openclaw models list
+openclaw models status --json
+openclaw gateway restart
+```
+
+Then select the new model in TUI or a connected channel and send:
+
+```text
+Reply with ok, then list the active model name.
+```
+
+If the model is unavailable, check:
+
+- The model reference uses `provider/model`.
+- `models.providers.*.api` matches the platform path.
+- `baseUrl` has the correct `/v1` shape for the selected protocol.
+- The API key is injected through the OpenClaw secret mechanism you use.
+- The model is in the correct OpenAI-compatible or Anthropic-path list.
+
+## Boundaries
+
+- `openai-completions` covers Chat Completions semantics. It is not the same as OpenClaw's official OpenAI/Codex runtime.
+- `anthropic-messages` only applies to models that work through `/v1/messages`.
+- OpenClaw tools, media, caching, reasoning, and developer-role compatibility may depend on provider metadata. Validate with real tasks.
+- If the `anthropic-messages` path is unstable in real tasks, switch to `openai-completions` and keep the request id for platform debugging.
+- Keep `input: ["text"]` for text-only models. Do not declare image support unless the model and platform API support it.
