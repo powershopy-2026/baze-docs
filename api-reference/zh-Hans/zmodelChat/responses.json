@@ -275,10 +275,12 @@
             "description": "模型输入。可传入纯文本字符串，也可传入按对话顺序排列的消息数组。多轮工具调用时，可把上一轮响应中的 `message`、`function_call`、`function_call_output` 或 `reasoning` 项传回。",
             "oneOf": [
               {
+                "title": "纯文本输入",
                 "type": "string",
                 "description": "纯文本输入。"
               },
               {
+                "title": "消息数组输入",
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ResponseInputItem"
@@ -363,6 +365,7 @@
         "additionalProperties": false
       },
       "ResponseInputItem": {
+        "title": "消息数组项",
         "oneOf": [
           {
             "$ref": "#/components/schemas/EasyInputMessage"
@@ -391,6 +394,7 @@
         }
       },
       "EasyInputMessage": {
+        "title": "普通消息",
         "type": "object",
         "required": [
           "role",
@@ -411,9 +415,11 @@
             "description": "消息内容。可传入文本字符串，也可传入结构化内容数组。`system` 和 `developer` 角色仅支持 `input_text`；`user` 角色支持 `input_text`、`input_image`、`input_file`；`assistant` 角色支持 `output_text`。",
             "oneOf": [
               {
+                "title": "文本内容",
                 "type": "string"
               },
               {
+                "title": "结构化内容数组",
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/InputContentItem"
@@ -432,6 +438,7 @@
         "additionalProperties": false
       },
       "InputContentItem": {
+        "title": "结构化内容项",
         "oneOf": [
           {
             "$ref": "#/components/schemas/InputTextContent"
@@ -457,6 +464,7 @@
         }
       },
       "InputTextContent": {
+        "title": "文本输入",
         "type": "object",
         "required": [
           "type",
@@ -478,6 +486,7 @@
         "additionalProperties": false
       },
       "InputImageContent": {
+        "title": "图片输入",
         "type": "object",
         "required": [
           "type",
@@ -499,6 +508,7 @@
         "additionalProperties": false
       },
       "InputFileContent": {
+        "title": "文件输入",
         "type": "object",
         "required": [
           "type",
@@ -520,6 +530,7 @@
         "additionalProperties": false
       },
       "OutputTextContent": {
+        "title": "助手输出文本",
         "type": "object",
         "required": [
           "type",
@@ -557,6 +568,7 @@
         "additionalProperties": true
       },
       "ResponseOutputMessage": {
+        "title": "助手输出消息",
         "type": "object",
         "required": [
           "type",
@@ -597,6 +609,7 @@
         "additionalProperties": false
       },
       "FunctionCallInputItem": {
+        "title": "函数调用",
         "type": "object",
         "required": [
           "type",
@@ -635,6 +648,7 @@
         "additionalProperties": false
       },
       "FunctionCallOutputItem": {
+        "title": "函数调用结果",
         "type": "object",
         "required": [
           "type",
@@ -668,6 +682,7 @@
         "additionalProperties": false
       },
       "ReasoningInputItem": {
+        "title": "推理内容",
         "type": "object",
         "required": [
           "type",
