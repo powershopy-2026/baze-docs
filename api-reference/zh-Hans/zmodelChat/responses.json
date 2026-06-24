@@ -1,0 +1,1447 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Responses API",
+    "version": "1.0.0",
+    "description": "通过 OpenAI Responses API 兼容格式调用千问模型。公开统一接口为 `/v1/responses`，可使用纯文本输入、消息数组、多轮上下文、流式输出、推理强度控制和当前渠道公开的工具能力。该页面是阿里千问渠道的接口视图，不代表完整上游能力集；未列出的 OpenAI Responses API 字段不会作为平台接口公开能力承诺。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Responses",
+      "description": "OpenAI Responses API 兼容接口"
+    }
+  ],
+  "paths": {
+    "/v1/responses": {
+      "post": {
+        "summary": "创建响应",
+        "description": "使用 Responses API 兼容格式创建模型响应。`input` 可传入字符串或消息数组；需要多轮上下文时可传入上一轮响应的 `previous_response_id`，也可把上一轮 `output` 中的消息、推理或工具调用项放回 `input`。\n\n公开字段：`model`、`input`、`instructions`、`previous_response_id`、`conversation`、`stream`、`store`、`tools`、`tool_choice`、`temperature`、`top_p`、`enable_thinking`、`reasoning`、`ocr_options`。字段是否生效取决于模型和上游渠道能力。",
+        "operationId": "createResponse",
+        "tags": [
+          "Responses"
+        ],
+        "parameters": [
+          {
+            "name": "x-dashscope-session-cache",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "enable"
+              ]
+            },
+            "description": "可选的上游会话缓存开关。仅在当前模型和上游渠道支持时生效。"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateResponseRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "基础调用",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": "What can you do?"
+                  }
+                },
+                "streaming": {
+                  "summary": "流式输出",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": "请简要介绍人工智能。",
+                    "stream": true
+                  }
+                },
+                "multi_turn": {
+                  "summary": "使用上一轮响应继续对话",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": "你还记得我的名字吗？",
+                    "previous_response_id": "f75c28fb-4064-48ed-90da-4d2cc4362xxx"
+                  }
+                },
+                "built_in_tools": {
+                  "summary": "调用内置工具",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": "搜索阿里云官网并提取首页关键信息。",
+                    "tools": [
+                      {
+                        "type": "web_search"
+                      },
+                      {
+                        "type": "web_extractor"
+                      }
+                    ]
+                  }
+                },
+                "function_call": {
+                  "summary": "自定义 Function Call",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "input": [
+                      {
+                        "role": "user",
+                        "content": "北京今天天气怎么样？"
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "name": "get_current_weather",
+                        "description": "查询指定城市的天气。",
+                        "parameters": {
+                          "type": "object",
+                          "properties": {
+                            "location": {
+                              "type": "string",
+                              "description": "城市名称，例如北京、杭州。"
+                            }
+                          },
+                          "required": [
+                            "location"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功。非流式模式返回完整 Response 对象；流式模式返回 SSE 事件流。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseObject"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseStreamEvent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法，或上游渠道拒绝请求。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "input is required",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": "input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游渠道返回异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游渠道暂不可用，或当前模型暂无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "CreateResponseRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "模型名称。请使用平台接口已公开的千问模型；具体模型是否支持 Responses API、工具、OCR 或思考模式，取决于当前渠道能力。",
+            "example": "qwen3.6-plus"
+          },
+          "input": {
+            "description": "模型输入。可传入纯文本字符串，也可传入按对话顺序排列的消息数组。多轮工具调用时，可把上一轮响应中的 `message`、`function_call`、`function_call_output` 或 `reasoning` 项传回。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "纯文本输入。"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ResponseInputItem"
+                }
+              }
+            ]
+          },
+          "instructions": {
+            "type": "string",
+            "description": "系统指令，插入到上下文起始位置。使用 `previous_response_id` 时，上一轮的 `instructions` 不会自动传入本轮上下文。"
+          },
+          "previous_response_id": {
+            "type": "string",
+            "description": "上一轮响应的 `id`。用于创建多轮对话，服务端会把上一轮输入和输出组合为上下文。不能与 `conversation` 同时使用。"
+          },
+          "conversation": {
+            "type": "string",
+            "description": "当前响应所属的会话 ID。会话历史会作为上下文传入，本次输入和输出会在响应完成后添加到会话中。不能与 `previous_response_id` 同时使用。"
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "是否启用流式输出。设置为 `true` 时返回 SSE 事件流。",
+            "default": false
+          },
+          "store": {
+            "type": "boolean",
+            "description": "是否存储本次响应。设为 `false` 时，该响应不能通过 `previous_response_id` 作为后续上下文使用。",
+            "default": true
+          },
+          "tools": {
+            "type": "array",
+            "description": "模型生成响应时可调用的工具数组。可混合使用内置工具和自定义 `function` 工具。工具是否生效取决于模型和上游渠道支持情况。",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            }
+          },
+          "tool_choice": {
+            "description": "控制模型如何选择工具。字符串模式支持 `auto`、`none`、`required`；对象模式用于限制模型只能在给定工具列表中选择。",
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "none",
+                  "required"
+                ]
+              },
+              {
+                "$ref": "#/components/schemas/AllowedToolsChoice"
+              }
+            ],
+            "default": "auto"
+          },
+          "temperature": {
+            "type": "number",
+            "description": "采样温度，控制输出随机性。建议不要同时设置 `temperature` 和 `top_p`。",
+            "minimum": 0,
+            "maximum": 2,
+            "exclusiveMaximum": true
+          },
+          "top_p": {
+            "type": "number",
+            "description": "核采样概率阈值，控制输出多样性。建议不要同时设置 `temperature` 和 `top_p`。",
+            "minimum": 0,
+            "exclusiveMinimum": true,
+            "maximum": 1
+          },
+          "enable_thinking": {
+            "type": "boolean",
+            "deprecated": true,
+            "description": "是否开启思考模式。该字段不是 OpenAI 标准字段，建议使用 `reasoning.effort` 替代。"
+          },
+          "reasoning": {
+            "$ref": "#/components/schemas/ReasoningConfig"
+          },
+          "ocr_options": {
+            "type": "object",
+            "description": "OCR 定制任务参数，仅适用于支持 OCR 的模型。定制任务结果会通过响应内容中的 `ocr_result` 返回。",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseInputItem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/EasyInputMessage"
+          },
+          {
+            "$ref": "#/components/schemas/ResponseOutputMessage"
+          },
+          {
+            "$ref": "#/components/schemas/FunctionCallInputItem"
+          },
+          {
+            "$ref": "#/components/schemas/FunctionCallOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/ReasoningInputItem"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "message": "#/components/schemas/ResponseOutputMessage",
+            "function_call": "#/components/schemas/FunctionCallInputItem",
+            "function_call_output": "#/components/schemas/FunctionCallOutputItem",
+            "reasoning": "#/components/schemas/ReasoningInputItem"
+          }
+        }
+      },
+      "EasyInputMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant",
+              "system",
+              "developer"
+            ],
+            "description": "消息角色。"
+          },
+          "content": {
+            "description": "消息内容。可传入文本字符串，也可传入结构化内容数组。`system` 和 `developer` 角色仅支持 `input_text`；`user` 角色支持 `input_text`、`input_image`、`input_file`；`assistant` 角色支持 `output_text`。",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/InputContentItem"
+                }
+              }
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "message"
+            ],
+            "description": "可选，固定为 `message`。"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InputContentItem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/InputTextContent"
+          },
+          {
+            "$ref": "#/components/schemas/InputImageContent"
+          },
+          {
+            "$ref": "#/components/schemas/InputFileContent"
+          },
+          {
+            "$ref": "#/components/schemas/OutputTextContent"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "input_text": "#/components/schemas/InputTextContent",
+            "input_image": "#/components/schemas/InputImageContent",
+            "input_file": "#/components/schemas/InputFileContent",
+            "output_text": "#/components/schemas/OutputTextContent"
+          }
+        }
+      },
+      "InputTextContent": {
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_text"
+            ],
+            "description": "文本输入。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本内容。"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InputImageContent": {
+        "type": "object",
+        "required": [
+          "type",
+          "image_url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_image"
+            ],
+            "description": "图片输入，仅用于 `user` 角色。"
+          },
+          "image_url": {
+            "type": "string",
+            "description": "图片公网 URL。"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InputFileContent": {
+        "type": "object",
+        "required": [
+          "type",
+          "file_url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_file"
+            ],
+            "description": "文件输入，仅用于 `user` 角色。当前文档来源仅列出 PDF 和图片文件能力，且依赖支持 OCR 的模型。"
+          },
+          "file_url": {
+            "type": "string",
+            "description": "文件公网 URL。PDF 文件最大 50 页或 100 MB；图片文件最大 20 MB。"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OutputTextContent": {
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "output_text"
+            ],
+            "description": "助手回复文本。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本内容。"
+          },
+          "annotations": {
+            "type": "array",
+            "description": "文本标注信息。",
+            "items": {
+              "type": "object"
+            }
+          },
+          "logprobs": {
+            "type": "object",
+            "nullable": true,
+            "description": "Token 对数概率信息。当前通常为 `null`。"
+          },
+          "ocr_result": {
+            "description": "OCR 定制任务结果。仅在使用支持 OCR 的模型和 `ocr_options` 时返回。",
+            "nullable": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResponseOutputMessage": {
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "role",
+          "status",
+          "content"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "message"
+            ],
+            "description": "固定为 `message`。"
+          },
+          "id": {
+            "type": "string",
+            "description": "输出消息的唯一标识，来自上一轮响应。"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "固定为 `assistant`。"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OutputTextContent"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FunctionCallInputItem": {
+        "type": "object",
+        "required": [
+          "type",
+          "name",
+          "arguments",
+          "call_id"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function_call"
+            ],
+            "description": "固定为 `function_call`。"
+          },
+          "id": {
+            "type": "string",
+            "description": "Function Call 的唯一标识，通常来自上一轮响应。"
+          },
+          "name": {
+            "type": "string",
+            "description": "工具函数名称。"
+          },
+          "arguments": {
+            "type": "string",
+            "description": "工具调用参数，JSON 字符串格式。"
+          },
+          "call_id": {
+            "type": "string",
+            "description": "工具调用标识符，需与模型返回的 `call_id` 一致。"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FunctionCallOutputItem": {
+        "type": "object",
+        "required": [
+          "type",
+          "call_id",
+          "output"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function_call_output"
+            ],
+            "description": "固定为 `function_call_output`。必须紧跟对应的 `function_call` 消息。"
+          },
+          "id": {
+            "type": "string",
+            "description": "Function Call Output 的唯一标识。"
+          },
+          "call_id": {
+            "type": "string",
+            "description": "工具调用标识符，需与模型返回的 `call_id` 一致。"
+          },
+          "output": {
+            "type": "string",
+            "description": "工具函数的执行结果。"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReasoningInputItem": {
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "summary"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "reasoning"
+            ],
+            "description": "固定为 `reasoning`。"
+          },
+          "id": {
+            "type": "string",
+            "description": "思考内容的唯一标识，来自上一轮响应。"
+          },
+          "summary": {
+            "type": "array",
+            "description": "思考摘要内容。",
+            "items": {
+              "$ref": "#/components/schemas/ReasoningSummary"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReasoningSummary": {
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "summary_text"
+            ],
+            "description": "固定为 `summary_text`。"
+          },
+          "text": {
+            "type": "string",
+            "description": "摘要文本。"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemStatus": {
+        "type": "string",
+        "enum": [
+          "in_progress",
+          "completed",
+          "incomplete"
+        ],
+        "description": "输出项状态。"
+      },
+      "ReasoningConfig": {
+        "type": "object",
+        "description": "控制模型的思考强度。设置后，模型可能在回复前生成 `reasoning` 类型输出项。",
+        "properties": {
+          "effort": {
+            "type": "string",
+            "enum": [
+              "none",
+              "minimal",
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "思考强度档位。`none` 表示关闭思考；`medium` 平衡速度与深度；`high` 侧重复杂问题。"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Tool": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/BuiltInTool"
+          },
+          {
+            "$ref": "#/components/schemas/FileSearchTool"
+          },
+          {
+            "$ref": "#/components/schemas/McpTool"
+          },
+          {
+            "$ref": "#/components/schemas/FunctionTool"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "web_search": "#/components/schemas/BuiltInTool",
+            "web_extractor": "#/components/schemas/BuiltInTool",
+            "code_interpreter": "#/components/schemas/BuiltInTool",
+            "web_search_image": "#/components/schemas/BuiltInTool",
+            "image_search": "#/components/schemas/BuiltInTool",
+            "file_search": "#/components/schemas/FileSearchTool",
+            "mcp": "#/components/schemas/McpTool",
+            "function": "#/components/schemas/FunctionTool"
+          }
+        }
+      },
+      "BuiltInTool": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "web_search",
+              "web_extractor",
+              "code_interpreter",
+              "web_search_image",
+              "image_search"
+            ],
+            "description": "内置工具类型。`web_extractor` 需要配合 `web_search` 使用；部分工具需要模型支持思考模式。"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileSearchTool": {
+        "type": "object",
+        "required": [
+          "type",
+          "vector_store_ids"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "file_search"
+            ],
+            "description": "知识库搜索工具。"
+          },
+          "vector_store_ids": {
+            "type": "array",
+            "description": "要检索的知识库 ID。当前仅支持传入一个知识库 ID。",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "McpTool": {
+        "type": "object",
+        "required": [
+          "type",
+          "server_protocol",
+          "server_label",
+          "server_url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "mcp"
+            ],
+            "description": "MCP 工具。"
+          },
+          "server_protocol": {
+            "type": "string",
+            "description": "与 MCP 服务通信的协议，例如 `sse`。"
+          },
+          "server_label": {
+            "type": "string",
+            "description": "MCP 服务标签。"
+          },
+          "server_description": {
+            "type": "string",
+            "description": "MCP 服务描述。"
+          },
+          "server_url": {
+            "type": "string",
+            "description": "MCP 服务端点 URL。"
+          },
+          "headers": {
+            "type": "object",
+            "description": "传给 MCP 服务的请求头，例如 `Authorization`。",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FunctionTool": {
+        "type": "object",
+        "required": [
+          "type",
+          "name",
+          "description"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "自定义函数工具。"
+          },
+          "name": {
+            "type": "string",
+            "description": "工具名称。仅允许字母、数字、下划线和短划线，最长 64 个 Token。"
+          },
+          "description": {
+            "type": "string",
+            "description": "工具描述，帮助模型判断何时以及如何调用该工具。"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "工具参数的 JSON Schema。为空时表示该工具没有入参。"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AllowedToolsChoice": {
+        "type": "object",
+        "required": [
+          "type",
+          "mode",
+          "tools"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "allowed_tools"
+            ],
+            "description": "固定为 `allowed_tools`。"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "required"
+            ],
+            "description": "工具选择模式。"
+          },
+          "tools": {
+            "type": "array",
+            "description": "允许模型选择的工具列表。",
+            "items": {
+              "$ref": "#/components/schemas/AllowedToolReference"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AllowedToolReference": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "允许调用的工具类型，例如 `function`。"
+          },
+          "name": {
+            "type": "string",
+            "description": "允许调用的工具名称。"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseObject": {
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "object",
+          "status",
+          "model",
+          "output"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "本次响应的唯一标识符，可用于 `previous_response_id`。"
+          },
+          "created_at": {
+            "type": "integer",
+            "description": "本次请求的 Unix 时间戳（秒）。"
+          },
+          "object": {
+            "type": "string",
+            "enum": [
+              "response"
+            ],
+            "description": "固定为 `response`。"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "failed",
+              "in_progress",
+              "cancelled",
+              "queued",
+              "incomplete"
+            ],
+            "description": "响应生成状态。"
+          },
+          "model": {
+            "type": "string",
+            "description": "用于生成响应的模型 ID。"
+          },
+          "output": {
+            "type": "array",
+            "description": "模型生成的输出项数组。数组中的元素类型和顺序取决于模型响应和工具调用情况。",
+            "items": {
+              "$ref": "#/components/schemas/ResponseOutputItem"
+            }
+          },
+          "parallel_tool_calls": {
+            "type": "boolean",
+            "description": "是否并行调用工具。"
+          },
+          "tool_choice": {
+            "description": "回显请求中的工具选择策略。"
+          },
+          "tools": {
+            "type": "array",
+            "description": "回显请求中的工具配置。",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/ResponseUsage"
+          },
+          "error": {
+            "type": "object",
+            "nullable": true,
+            "description": "生成失败时的错误对象；成功时通常为 `null`。"
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResponseOutputItem": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/MessageOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/ReasoningOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/FunctionCallInputItem"
+          },
+          {
+            "$ref": "#/components/schemas/WebSearchCallOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/GenericToolCallOutputItem"
+          },
+          {
+            "$ref": "#/components/schemas/FileSearchCallOutputItem"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "message": "#/components/schemas/MessageOutputItem",
+            "reasoning": "#/components/schemas/ReasoningOutputItem",
+            "function_call": "#/components/schemas/FunctionCallInputItem",
+            "web_search_call": "#/components/schemas/WebSearchCallOutputItem",
+            "code_interpreter_call": "#/components/schemas/GenericToolCallOutputItem",
+            "web_extractor_call": "#/components/schemas/GenericToolCallOutputItem",
+            "web_search_image_call": "#/components/schemas/GenericToolCallOutputItem",
+            "image_search_call": "#/components/schemas/GenericToolCallOutputItem",
+            "mcp_call": "#/components/schemas/GenericToolCallOutputItem",
+            "file_search_call": "#/components/schemas/FileSearchCallOutputItem"
+          }
+        }
+      },
+      "MessageOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "role",
+          "status",
+          "content"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "输出项唯一标识。"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "message"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OutputTextContent"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "ReasoningOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "summary"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "输出项唯一标识。"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "reasoning"
+            ]
+          },
+          "summary": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReasoningSummary"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          }
+        },
+        "additionalProperties": true
+      },
+      "WebSearchCallOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "输出项唯一标识。"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "web_search_call"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "action": {
+            "type": "object",
+            "description": "搜索动作和来源信息。",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "GenericToolCallOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "输出项唯一标识。"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "code_interpreter_call",
+              "web_extractor_call",
+              "web_search_image_call",
+              "image_search_call",
+              "mcp_call"
+            ],
+            "description": "工具调用输出类型。"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "name": {
+            "type": "string",
+            "description": "工具或 MCP 方法名称。"
+          },
+          "arguments": {
+            "type": "string",
+            "description": "工具调用参数，通常为 JSON 字符串。"
+          },
+          "output": {
+            "description": "工具调用结果。"
+          }
+        },
+        "additionalProperties": true
+      },
+      "FileSearchCallOutputItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "输出项唯一标识。"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "file_search_call"
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/ItemStatus"
+          },
+          "queries": {
+            "type": "array",
+            "description": "知识库搜索查询。",
+            "items": {
+              "type": "string"
+            }
+          },
+          "results": {
+            "type": "array",
+            "description": "知识库搜索结果。",
+            "items": {
+              "type": "object",
+              "properties": {
+                "score": {
+                  "type": "number",
+                  "description": "相关性分数。"
+                },
+                "filename": {
+                  "type": "string",
+                  "description": "命中文件名。"
+                },
+                "text": {
+                  "type": "string",
+                  "description": "命中文本片段。"
+                },
+                "file_id": {
+                  "type": "string",
+                  "description": "文件 ID。"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResponseUsage": {
+        "type": "object",
+        "description": "Token 用量统计。启用工具、缓存、OCR 或多模态输入时，可能返回额外明细字段。",
+        "properties": {
+          "input_tokens": {
+            "type": "integer",
+            "description": "输入 Token 数。"
+          },
+          "output_tokens": {
+            "type": "integer",
+            "description": "输出 Token 数。"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "总 Token 数。"
+          },
+          "input_tokens_details": {
+            "type": "object",
+            "description": "输入 Token 明细，例如缓存命中、文本或图像 Token。",
+            "properties": {
+              "cached_tokens": {
+                "type": "integer",
+                "description": "命中缓存的 Token 数。"
+              },
+              "text_tokens": {
+                "type": "integer",
+                "description": "文本输入 Token 数。"
+              },
+              "image_tokens": {
+                "type": "integer",
+                "description": "图像输入 Token 数。"
+              }
+            },
+            "additionalProperties": true
+          },
+          "output_tokens_details": {
+            "type": "object",
+            "description": "输出 Token 明细。",
+            "properties": {
+              "reasoning_tokens": {
+                "type": "integer",
+                "description": "思考过程 Token 数。"
+              },
+              "text_tokens": {
+                "type": "integer",
+                "description": "文本输出 Token 数。"
+              }
+            },
+            "additionalProperties": true
+          },
+          "x_details": {
+            "type": "array",
+            "description": "计费明细数组。",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "x_tools": {
+            "type": "object",
+            "description": "内置工具调用统计，例如 `{\"web_search\": {\"count\": 1}}`。",
+            "additionalProperties": true
+          },
+          "plugins": {
+            "type": "object",
+            "description": "内置工具调用统计，通常与 `x_tools` 内容一致。",
+            "additionalProperties": true
+          },
+          "prompt_tokens_details": {
+            "type": "object",
+            "description": "启用会话缓存后返回的输入缓存详情。",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ResponseStreamEvent": {
+        "type": "object",
+        "description": "流式输出中的单个 SSE JSON 事件。客户端应按 `sequence_number` 顺序处理事件，直到收到 `response.completed`。",
+        "required": [
+          "type",
+          "sequence_number"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "response.created",
+              "response.in_progress",
+              "response.output_item.added",
+              "response.content_part.added",
+              "response.output_text.delta",
+              "response.output_text.done",
+              "response.content_part.done",
+              "response.output_item.done",
+              "response.reasoning_summary_text.delta",
+              "response.reasoning_summary_text.done",
+              "response.web_search_call.in_progress",
+              "response.web_search_call.searching",
+              "response.web_search_call.completed",
+              "response.code_interpreter_call.in_progress",
+              "response.code_interpreter_call.interpreting",
+              "response.code_interpreter_call.completed",
+              "response.mcp_call_arguments.delta",
+              "response.mcp_call_arguments.done",
+              "response.mcp_call.completed",
+              "response.file_search_call.in_progress",
+              "response.file_search_call.searching",
+              "response.file_search_call.completed",
+              "response.completed"
+            ],
+            "description": "事件类型。`web_extractor`、`web_search_image` 和 `image_search` 工具调用通过通用的 `response.output_item.added` 和 `response.output_item.done` 事件传递。"
+          },
+          "sequence_number": {
+            "type": "integer",
+            "description": "事件序号，从 0 开始递增。"
+          },
+          "response": {
+            "$ref": "#/components/schemas/ResponseObject"
+          },
+          "item": {
+            "$ref": "#/components/schemas/ResponseOutputItem"
+          },
+          "part": {
+            "$ref": "#/components/schemas/OutputTextContent"
+          },
+          "delta": {
+            "type": "string",
+            "description": "增量文本或 MCP 参数片段。"
+          },
+          "text": {
+            "type": "string",
+            "description": "完整文本内容。"
+          },
+          "arguments": {
+            "type": "string",
+            "description": "完整 MCP 调用参数。"
+          },
+          "item_id": {
+            "type": "string",
+            "description": "输出项唯一标识，用于关联同一输出项的多个事件。"
+          },
+          "output_index": {
+            "type": "integer",
+            "description": "输出项在 `output` 数组中的索引。"
+          },
+          "content_index": {
+            "type": "integer",
+            "description": "内容块在 `content` 数组中的索引。"
+          },
+          "summary_index": {
+            "type": "integer",
+            "description": "思考摘要数组索引。"
+          },
+          "logprobs": {
+            "type": "array",
+            "description": "增量文本的对数概率信息。当前通常为空数组。",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "错误消息。"
+              },
+              "type": {
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
+              },
+              "code": {
+                "type": "string",
+                "description": "错误代码。"
+              },
+              "param": {
+                "type": "string",
+                "description": "关联的请求参数。"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}
