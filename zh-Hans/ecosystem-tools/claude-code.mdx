@@ -1,0 +1,139 @@
+---
+title: "Claude Code 接入指南"
+description: "通过 Anthropic Messages 兼容路径，把 Claude Code 接入 powertokens 平台。"
+---
+
+Claude Code 通过 Anthropic Messages 协议工作。接入 `powertokens 平台` 时，你需要把 Claude Code 指向平台接口 `https://baze-api.powerbuyin.top`，并选择可用于 Anthropic Messages 路径的文本模型。平台默认推荐 `glm-5.2`，MiniMax 代码代理路径推荐 `MiniMax-M3`。
+
+如果你需要先判断模型应走哪个端点，请先看 [文本模型协议与端点支持说明](/zh-Hans/ecosystem-tools/text-model-protocols)。
+
+## 可用模型
+
+以下模型可作为 Claude Code 的模型 ID 配置。代码代理场景优先使用 `glm-5.2` 或 `MiniMax-M3`。
+
+| 上游渠道 | 模型 ID | 推荐用途 |
+| --- | --- | --- |
+| 智谱 | `glm-4.5-air` | 日常代码问答、轻量编辑 |
+| 智谱 | `glm-4.7` | 常规开发任务 |
+| 智谱 | `glm-4.7-flash` | 快速问答与轻量代码任务 |
+| 智谱 | `glm-5` | 复杂推理与代码修改 |
+| 智谱 | `glm-5-turbo` | 速度优先的代码任务 |
+| 智谱 | `glm-5.2` | 高强度推理任务；如果模型选择器未显示，请手动配置模型 ID |
+| MiniMax | `MiniMax-M2.5` | 通用代码代理任务 |
+| MiniMax | `MiniMax-M2.5-highspeed` | 延迟敏感任务 |
+| MiniMax | `MiniMax-M2.7` | 通用开发与长任务 |
+| MiniMax | `MiniMax-M2.7-highspeed` | 速度优先的长任务 |
+| MiniMax | `MiniMax-M3` | 复杂代码代理任务 |
+| 阿里 Qwen | `qwen3-coder-plus` | 可选代码模型 |
+| 阿里 Qwen | `qwen3-max` | 可选通用推理模型 |
+| 阿里 Qwen | `qwen3.5-flash` | 可选轻量模型 |
+| 阿里 Qwen | `qwen3.6-plus` | 可选均衡模型 |
+
+## 准备工作
+
+1. 安装或更新 Claude Code。
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude --version
+```
+
+2. 准备一个 `powertokens 平台` API Key。
+
+3. 清理旧的 Anthropic 环境变量，避免 Claude Code 仍然连到旧上游渠道。
+
+```bash
+unset ANTHROPIC_BASE_URL
+unset ANTHROPIC_API_KEY
+unset ANTHROPIC_AUTH_TOKEN
+unset ANTHROPIC_MODEL
+```
+
+## 配置 Claude Code
+
+在用户级 `~/.claude/settings.json` 或项目级 `.claude/settings.json` 写入配置。项目级配置更适合团队共享默认模型；用户级配置更适合个人本机使用。
+
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://baze-api.powerbuyin.top",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_POWERTOKENS_API_KEY",
+    "ANTHROPIC_MODEL": "glm-5.2",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-5-turbo",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-5.2",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "MiniMax-M3",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "glm-5.2",
+    "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY": "1"
+  }
+}
+```
+
+Claude Code 推荐使用 `ANTHROPIC_AUTH_TOKEN`，由客户端发送 Bearer token。不要同时设置 `ANTHROPIC_AUTH_TOKEN` 和 `ANTHROPIC_API_KEY`；Claude Code 会优先使用 `ANTHROPIC_AUTH_TOKEN`。如果你的运行环境明确要求 `x-api-key` 鉴权，再把 `ANTHROPIC_AUTH_TOKEN` 改成 `ANTHROPIC_API_KEY`。
+
+## 启动并验证
+
+进入你的项目目录后运行：
+
+```bash
+claude
+```
+
+在 Claude Code 会话中执行：
+
+```text
+/status
+/model
+```
+
+如果模型选择器没有列出平台模型，请先确认 `ANTHROPIC_MODEL` 已设置为上表中的模型 ID。部分工具只会自动展示以 `claude` 或 `anthropic` 开头的发现结果，手动模型配置仍然有效。
+
+使用非交互模式验证 Claude Code 是否读取到配置：
+
+```bash
+claude -p --model glm-5.2 "Reply exactly: ok"
+```
+
+再用本地文件验证工具调用：
+
+```bash
+printf "powertokens-compat-ok\n" > compat.txt
+claude -p --model glm-5.2 --tools=Read --allowedTools=Read \
+  "Use the Read tool to read compat.txt. Reply exactly with the file contents."
+rm compat.txt
+```
+
+你也可以用平台接口直接验证同一个模型。
+
+```bash
+curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  --data '{
+    "model": "glm-5.2",
+    "max_tokens": 64,
+    "messages": [
+      {"role": "user", "content": "Reply with ok."}
+    ],
+    "stream": false
+  }'
+```
+
+## 模型选择建议
+
+| 场景 | 建议模型 |
+| --- | --- |
+| 默认代码代理 | `glm-5.2` |
+| 快速小改动 | `glm-5-turbo` |
+| 复杂代码审查 | `glm-5.2` 或 `MiniMax-M3` |
+| 多子任务并发 | `glm-5.2` 作为主模型，`glm-5-turbo` 作为轻量模型 |
+| MiniMax 代码代理路径 | `MiniMax-M3` |
+
+## 当前不作为默认模型
+
+以下模型虽然在模型发现中可能声明 `anthropic`，但当前生态工具端到端验收仍不建议作为 Claude Code 默认模型：
+
+| 模型 | 原因 |
+| --- | --- |
+| `deepseek-v3.2` | 不建议作为依赖 streaming 的 Claude Code 默认模型 |
+| `deepseek-v3-2-251201`, `gpt-oss-120b-250805`, Seed 系列 | 优先走 OpenAI-compatible provider；Claude Code 场景需单独验收 |

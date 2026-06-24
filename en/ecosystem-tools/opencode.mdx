@@ -1,0 +1,156 @@
+---
+title: "opencode setup guide"
+description: "Connect opencode to the powertokens platform through an OpenAI-compatible custom provider."
+---
+
+opencode manages models through `provider` configuration. When connecting to the `powertokens platform`, start with an OpenAI-compatible custom provider that points opencode at the platform `/v1/chat/completions` compatible endpoint.
+
+This page is for opencode text-agent workflows. Some image, speech, and video task models in `/v1/models` also declare `openai`, but that does not mean they are text Chat Completions models for opencode.
+
+If you need to choose the endpoint first, see [Text model protocols and endpoints](/en/ecosystem-tools/text-model-protocols).
+
+## Choose a path
+
+| Goal | opencode provider | Base URL | Recommended model |
+| --- | --- | --- | --- |
+| Recommended text path | custom provider + `@ai-sdk/openai-compatible` | `https://baze-api.powerbuyin.top/v1` | `glm-5.2` |
+| MiniMax text path | custom provider + `@ai-sdk/openai-compatible` | `https://baze-api.powerbuyin.top/v1` | `MiniMax-M3` |
+| Claude/Anthropic path | `@ai-sdk/anthropic` custom provider | `https://baze-api.powerbuyin.top/v1` | Use only when you need to validate `/v1/messages` |
+
+## Prepare the API key
+
+Store the `powertokens platform` API key in an environment variable:
+
+```bash
+export POWERTOKENS_API_KEY="YOUR_POWERTOKENS_API_KEY"
+```
+
+You can also run `/connect` in the opencode TUI and save credentials there. The provider ID in `opencode.json` must match the provider ID used by `/connect`.
+
+## OpenAI-compatible provider example
+
+Create or update `.opencode/opencode.json` in your project:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "powertokens/glm-5.2",
+  "small_model": "powertokens/glm-4.5-air",
+  "provider": {
+    "powertokens": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "powertokens",
+      "options": {
+        "baseURL": "https://baze-api.powerbuyin.top/v1",
+        "apiKey": "{env:POWERTOKENS_API_KEY}"
+      },
+      "models": {
+        "glm-4.5-air": {
+          "name": "glm-4.5-air"
+        },
+        "glm-5.2": {
+          "name": "glm-5.2"
+        },
+        "MiniMax-M3": {
+          "name": "MiniMax-M3"
+        },
+        "deepseek-v3-2-251201": {
+          "name": "deepseek-v3-2-251201"
+        }
+      }
+    }
+  }
+}
+```
+
+This path uses the platform `POST /v1/chat/completions` endpoint.
+
+## Model choice
+
+Use `glm-5.2` as the OpenAI-compatible default. Use `MiniMax-M3` for MiniMax scenarios. When you need BytePlus or Seed text models, prefer the OpenAI-compatible provider.
+
+Do not add `image-generation`, `openai-video`, TTS, Kling, Vidu, or Wan task models to an opencode text provider. For the full text model matrix, see [Text model protocols and endpoints](/en/ecosystem-tools/text-model-protocols).
+
+## Anthropic provider example
+
+For Claude/Anthropic Messages, configure a separate `@ai-sdk/anthropic` custom provider. This path uses the platform `/v1/messages` endpoint; validate the current opencode version and target model end to end before relying on it.
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "powertokens-anthropic/glm-5.2",
+  "small_model": "powertokens-anthropic/glm-5-turbo",
+  "provider": {
+    "powertokens-anthropic": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "powertokens Anthropic",
+      "options": {
+        "baseURL": "https://baze-api.powerbuyin.top/v1",
+        "apiKey": "{env:POWERTOKENS_API_KEY}"
+      },
+      "models": {
+        "glm-5.2": {
+          "name": "glm-5.2"
+        },
+        "glm-5-turbo": {
+          "name": "glm-5-turbo"
+        },
+        "MiniMax-M3": {
+          "name": "MiniMax-M3"
+        }
+      }
+    }
+  }
+}
+```
+
+Use `glm-5.2` as the default Anthropic-path model. Use `MiniMax-M3` for MiniMax-path validation. Do not use BytePlus, Seed, `gpt-oss-120b-250805`, or `deepseek-v3.2` as opencode Anthropic-provider defaults.
+
+## Verify
+
+First confirm opencode can read the provider and models:
+
+```bash
+opencode models powertokens
+opencode models powertokens-anthropic
+```
+
+Then verify the OpenAI-compatible path in non-interactive mode:
+
+```bash
+opencode run --model powertokens/glm-5.2 "Reply exactly: ok"
+```
+
+You can also validate the same OpenAI-compatible path with a MiniMax text model:
+
+```bash
+opencode run --model powertokens/MiniMax-M3 "Reply exactly: ok"
+```
+
+Start opencode:
+
+```bash
+opencode
+```
+
+In the TUI, run:
+
+```text
+/models
+```
+
+Select `powertokens/glm-5.2` or `powertokens-anthropic/glm-5.2`, then send:
+
+```text
+Reply with ok and print the active model name.
+```
+
+## Capability boundaries
+
+- The opencode `@ai-sdk/openai-compatible` provider covers text Chat Completions semantics only.
+- A model declaring `openai` in `supported_endpoint_types` is not automatically suitable for opencode text-agent use; exclude image, speech, video, and task models.
+- Reasoning models such as `MiniMax-M3` may return thinking content or consume extra output tokens. Validate the display behavior with real tasks.
+- A model declaring `anthropic` in `supported_endpoint_types` is not automatically suitable for the opencode Anthropic provider. opencode sends tool metadata and uses streaming output, so validate the full tool workflow.
+- `deepseek-v3.2` is not recommended as the default opencode model. If you must use it, validate streaming and tool workflows first.
+- Prefer the OpenAI-compatible provider for BytePlus, Seed, and `gpt-oss-120b-250805`. Validate the Anthropic provider separately.
+- Do not write a real API key into `.opencode/opencode.json` or commit it to your repository.

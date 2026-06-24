@@ -316,6 +316,17 @@
                 ]
               }
             ]
+          },
+          {
+            "tab": "生态工具",
+            "pages": [
+              "zh-Hans/ecosystem-tools/text-model-protocols",
+              "zh-Hans/ecosystem-tools/opencode",
+              "zh-Hans/ecosystem-tools/claude-code",
+              "zh-Hans/ecosystem-tools/kilo-code",
+              "zh-Hans/ecosystem-tools/hermes-agent",
+              "zh-Hans/ecosystem-tools/openclaw"
+            ]
           }
         ]
       },
@@ -622,6 +633,17 @@
                   "en/assetLibrary/get-authorize-url"
                 ]
               }
+            ]
+          },
+          {
+            "tab": "Ecosystem tools",
+            "pages": [
+              "en/ecosystem-tools/text-model-protocols",
+              "en/ecosystem-tools/opencode",
+              "en/ecosystem-tools/claude-code",
+              "en/ecosystem-tools/kilo-code",
+              "en/ecosystem-tools/hermes-agent",
+              "en/ecosystem-tools/openclaw"
             ]
           }
         ]
