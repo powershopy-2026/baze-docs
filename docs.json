@@ -309,6 +309,8 @@
               {
                 "group": "Chat Models",
                 "pages": [
+                  "en/zmodelChat/claude",
+                  "en/zmodelChat/responses",
                   {
                     "group": "MiniMax",
                     "pages": [
