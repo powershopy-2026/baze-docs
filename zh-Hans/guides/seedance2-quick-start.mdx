@@ -1,0 +1,738 @@
+---
+title: Seedance 2.0 — 快速上手
+---
+PowerTokens 完整支持 Seedance 2.0 系列视频生成模型，提供两种接入方式：
+
+1. **完全兼容 Seedance 2.0 官方接口**：如果你已在使用字节官方 API，只需更换 Base URL 和 API Key 即可无缝迁移，零改造成本。详见本文档「[官方兼容接口](#官方兼容接口)」章节
+2. **OpenAI 风格接口**：统一的 `POST /v1/videos` 端点，与平台其他模型保持一致的调用体验
+
+> **Base URL：** 两种接口共用同一个 Base URL：`https://api.powertokens.ai`
+
+> **本文档同时覆盖两种接口。** 官方兼容接口在前半部分，OpenAI 风格接口在「[OpenAI 风格接口](#openai-风格接口)」章节。
+
+> **重要前提：** 无论使用哪种接口，所有图片、视频、音频素材**必须先通过资产库上传并获取 `asset_id`**，然后在请求中直接使用 `asset_id`。详见「素材准备」章节。
+
+---
+
+## 前置准备
+
+在调用 Seedance 2.0 接口之前，请完成以下步骤：
+
+1. **注册登录**：注册并登录 [powertokens.ai](https://powertokens.ai)
+2. **获取 API Key**：进入 [API Keys 管理页面](https://api.powertokens.ai-keys)，创建新的 Key，复制并妥善保存
+3. **充值**：进入 [充值页面](https://powertokens.ai/billing)，购买 Credits（视频生成按量计费，需要账户有余额）
+4. **开通资产库**：进入 [资产库页面](https://powertokens.ai/zh-Hans/assets-library?tab=1)，阅读并同意《素材库用户协议》（Seedance 2.0 的所有素材必须通过资产库上传）
+
+### 鉴权方式
+
+所有请求通过 HTTP Header 鉴权：
+
+```
+Authorization: <YOUR_API_KEY>
+```
+
+---
+
+## 官方兼容接口
+
+PowerTokens 完全兼容 Seedance 官方 API，请求体、参数名、响应结构与字节官方一致。如果你已在使用字节官方 API，只需替换 Base URL 和 API Key 即可迁移。
+
+### 从字节官方迁移
+
+```diff
+- https://ark.cn-beijing.volces.com
++ https://api.powertokens.ai
+```
+
+```diff
+- Authorization: <字节_API_KEY>
++ Authorization: <PowerTokens_API_KEY>
+```
+
+### Base URL
+
+```
+https://api.powertokens.ai
+```
+
+> 两种接口共用同一个 Base URL：`https://api.powertokens.ai`，区别在于请求路径不同。
+
+### 接口列表
+
+| 操作 | 方法 | 接口 | API 文档 |
+|---|---|---|---|
+| 创建视频生成任务 | `POST` | `/byteplus/api/v3/contents/generations/tasks` | [查看](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-video) |
+| 查询视频生成任务 | `GET` | `/byteplus/api/v3/contents/generations/tasks/{id}` | [查看](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query) |
+| 查询任务列表 | `GET` | `/byteplus/api/v3/contents/generations/tasks` | [查看](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/list-video-generation-tasks) |
+| 取消/删除任务 | `DELETE` | `/byteplus/api/v3/contents/generations/tasks/{id}` | [查看](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/cancel-delete-video-task) |
+
+### 素材传入方式
+
+官方兼容接口中，素材通过 `asset://<ASSET_ID>` 格式传入 `url` 字段：
+
+```json
+{
+  "type": "image_url",
+  "image_url": {
+    "url": "asset://XXXX"
+  },
+  "role": "first_frame"
+}
+```
+
+图片、视频、音频的 `url` 字段均支持以下三种格式：
+
+| 格式 | 示例 | 说明 |
+|---|---|---|
+| **素材 ID**（推荐） | `asset://XXXX` | 通过资产库上传获得的 asset_id |
+| 公网 URL | `https://example.com/img.jpg` | 公开可访问的文件地址 |
+| Base64 编码 | `data:image/png;base64,aHR0...` | 本地文件转 Base64（大文件不推荐） |
+
+### 示例：图生视频（使用 asset_id）
+
+```bash
+curl -X POST https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "content": [
+      {
+        "type": "text",
+        "text": "镜头缓慢推进，女孩微笑"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "asset://XXXX"
+        }
+      }
+    ],
+    "ratio": "adaptive",
+    "duration": 5,
+    "generate_audio": true,
+    "watermark": false
+  }'
+```
+
+### 示例：多模态参考生视频（参考图 + 参考视频 + 参考音频）
+
+```bash
+curl -X POST https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "content": [
+      {
+        "type": "text",
+        "text": "你的提示词"
+      },
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "asset://XXXX"
+        },
+        "role": "reference_image"
+      },
+      {
+        "type": "video_url",
+        "video_url": {
+          "url": "asset://XXXX"
+        },
+        "role": "reference_video"
+      },
+      {
+        "type": "audio_url",
+        "audio_url": {
+          "url": "asset://XXXX"
+        },
+        "role": "reference_audio"
+      }
+    ],
+    "ratio": "16:9",
+    "duration": 10,
+    "generate_audio": true,
+    "watermark": false
+  }'
+```
+
+### 示例：查询任务状态
+
+```bash
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### 示例：查询任务列表
+
+```bash
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20&filter.status=succeeded" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### 示例：取消/删除任务
+
+```bash
+curl -X DELETE "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### 官方兼容接口 vs OpenAI 风格接口
+
+| 维度 | 官方兼容接口 | OpenAI 风格接口 |
+|---|---|---|
+| Base URL | `https://api.powertokens.ai`（相同） | `https://api.powertokens.ai`（相同） |
+| 创建任务 | `POST /byteplus/api/v3/contents/generations/tasks` | `POST /v1/videos` |
+| 素材传入 | `"url": "asset://XXXX"`（相同） | `"url": "asset://XXXX"`（相同） |
+| 查询任务 | `GET /byteplus/api/v3/.../tasks/{id}` | `GET /v1/videos/{task_id}` |
+| 任务列表 | `GET /byteplus/api/v3/.../tasks` | 不支持 |
+| 取消/删除任务 | `DELETE /byteplus/api/v3/.../tasks/{id}` | 不支持 |
+| 参数结构 | 与字节官方一致（`content` 数组） | OpenAI 风格（`media` 数组） |
+| 适用场景 | 从字节官方迁移，需要任务列表/取消等高级功能 | 统一调用平台多种模型 |
+
+> 两种接口的生成效果完全一致，选择适合你的即可。
+
+---
+
+## OpenAI 风格接口
+
+统一的 `POST /v1/videos` 端点，与平台其他模型保持一致的调用体验。
+
+---
+
+## 可用模型
+
+| 模型 | 模型 ID | 特点 |
+|---|---|---|
+| **Seedance 2.0** | `dreamina-seedance-2-0-260128` | 高质量，支持 1080p（图生视频/首尾帧/多模态参考场景） |
+| **Seedance 2.0 Fast** | `dreamina-seedance-2-0-fast-260128` | 快速生成，最高 720p |
+
+两个模型共享相同的接口结构和参数，区别在于生成速度和最大分辨率。
+
+---
+
+## 支持的生成模式
+
+| 模式 | 说明 | 所需 media 类型 | API 文档 |
+|---|---|---|---|
+| **文生视频** | 纯文本生成视频 | `text` | [标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video) |
+| **图生视频** | 起始帧图片 + 文本 | `text` + `first_frame` | [标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video) |
+| **首尾帧生视频** | 起始帧 + 结束帧 + 文本 | `text` + `first_frame` + `last_frame` | [标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video) |
+| **多模态参考生视频** | 参考图/参考视频/参考音频 + 文本 | `text` + `reference_image` / `reference_video` / `reference_audio` | [标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video) |
+
+---
+
+## 素材准备（必读）
+
+**Seedance 2.0 的所有媒体素材（图片、视频、音频）必须先通过资产库上传获取 `asset_id`，不能直接传入外部 URL。**
+
+### 流程
+
+只需两步，拿到 `asset_id` 即可直接用于 Seedance 请求：
+
+```
+                              不需要鉴权
+                                  ↓
+① 上传素材 ──→ 得到 task_id ──→ ② 轮询查询 ──→ 得到 asset_id ──→ 以 asset://XXXX 格式填入 url 字段
+```
+
+| 步骤 | 接口 | 输入 | 输出 | 鉴权 |
+|---|---|---|---|---|
+| ① 上传素材 | [`POST /v1/asset/upload`](https://docs.powertokens.ai/en/assetLibrary/upload-file) | 文件 | `task_id` | 需要 |
+| ② 轮询获取资产 ID | [`GET /v1/asset/jobs/get-asset-id`](https://docs.powertokens.ai/en/assetLibrary/get-asset-id) | `task_id` | `asset_id` | **不需要** |
+
+> **拿到 `asset_id` 后就可以直接用了！** 无论哪种接口，都通过 `"url": "asset://你的asset_id"` 格式传入素材，无需再查询素材详情获取 URL。
+
+### 示例：准备一张起始帧图片
+
+```python
+import requests
+import time
+
+API_KEY = "YOUR_API_KEY"
+BASE_URL = "https://api.powertokens.ai"
+HEADERS = {"Authorization": f"Bearer {API_KEY}"}
+
+# ① 上传素材 → 得到 task_id
+with open("start_frame.jpg", "rb") as f:
+    resp = requests.post(
+        f"{BASE_URL}/v1/asset/upload",
+        headers=HEADERS,
+        files={"file": ("start_frame.jpg", f)},
+    )
+task_id = resp.json()["data"]["task_id"]
+
+# ② 轮询获取 asset_id（此接口不需要鉴权）
+while True:
+    resp = requests.get(
+        f"{BASE_URL}/v1/asset/jobs/get-asset-id",
+        params={"task_id": task_id},
+    )
+    data = resp.json()
+    if data["code"] == 200 and data["data"].get("asset_id"):
+        asset_id = data["data"]["asset_id"]
+        break
+    time.sleep(3)
+
+print(f"素材已就绪 → asset_id: {asset_id}")
+# ✅ 直接将 asset_id 填入 Seedance 请求的 media 数组中使用
+```
+
+> 详细的资产库使用说明请参考 [资产库快速上手](./资产库_快速上手.md)。
+
+---
+
+## 请求参数说明
+
+所有生成模式共用 `POST /v1/videos` 端点，通过 `media` 数组中的不同 `type` 组合来区分模式。
+
+### 公共参数
+
+| 参数 | 类型 | 必填 | 默认值 | 说明 |
+|---|---|---|---|---|
+| `model` | string | **是** | — | 模型 ID |
+| `media` | array | **是** | — | 多模态输入数组，见下方 media 类型表 |
+| `seconds` | string | 否 | `"5"` | 视频时长（秒），`"4"` 至 `"15"` 或 `"-1"`（智能选择） |
+| `size` | string | 否 | `"720p"` | 分辨率：`480p` / `720p`（标准版图生视频/首尾帧/多模态参考还支持 `1080p`） |
+| `ratio` | string | 否 | 见说明 | 画面比例：`16:9` / `4:3` / `1:1` / `3:4` / `9:16` / `21:9` / `adaptive`。文生视频默认 `16:9`，图生视频默认 `adaptive` |
+| `seed` | integer | 否 | `-1` | 随机种子，范围 [-1, 4294967295] |
+| `watermark` | boolean | 否 | `false` | 是否添加水印 |
+| `generate_audio` | boolean | 否 | `true` | 是否生成同步音效（2.0 系列专属功能） |
+| `return_last_frame` | boolean | 否 | `false` | 是否返回最后一帧图片 |
+| `safety_identifier` | string | 否 | — | 终端用户唯一标识，用于合规检测，不超过 64 字符 |
+
+### media 类型
+
+| type | 说明 | 必需字段 |
+|---|---|---|
+| `text` | 文本提示词 | `text` |
+| `first_frame` | 起始帧图片 | `asset_id`（通过资产库上传获得） |
+| `last_frame` | 结束帧图片 | `asset_id`（通过资产库上传获得） |
+| `reference_image` | 参考图片 | `asset_id`（通过资产库上传获得） |
+| `reference_video` | 参考视频 | `asset_id`（通过资产库上传获得） |
+| `reference_audio` | 参考音频 | `asset_id`（通过资产库上传获得） |
+
+---
+
+## 使用示例
+
+### 1. 文生视频（[标准版 API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video)）
+
+```bash
+curl -X POST https://api.powertokens.ai/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {
+        "type": "text",
+        "text": "一只小猫在草地上奔跑，阳光明媚，镜头跟随运动"
+      }
+    ],
+    "seconds": "5",
+    "size": "720p",
+    "ratio": "16:9",
+    "generate_audio": true
+  }'
+```
+
+### 2. 图生视频（[标准版 API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video)）
+
+```bash
+curl -X POST https://api.powertokens.ai/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {
+        "type": "text",
+        "text": "镜头缓慢推进，女孩微笑"
+      },
+      {
+        "type": "first_frame",
+        "url": "asset://XXXX"
+      }
+    ],
+    "seconds": "5",
+    "size": "720p",
+    "ratio": "adaptive"
+  }'
+```
+
+> `asset://XXXX` 中的 XXXX 为通过资产库上传后获得的资产 ID。
+
+### 3. 首尾帧生视频（[标准版 API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video)）
+
+```bash
+curl -X POST https://api.powertokens.ai/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-fast-260128",
+    "media": [
+      {
+        "type": "text",
+        "text": "两个画面之间平滑过渡"
+      },
+      {
+        "type": "first_frame",
+        "url": "asset://XXXX"
+      },
+      {
+        "type": "last_frame",
+        "url": "asset://XXXX"
+      }
+    ],
+    "seconds": "5",
+    "size": "720p",
+    "ratio": "adaptive"
+  }'
+```
+
+### 4. 多模态参考生视频（[标准版 API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video)）
+
+可以同时传入参考图、参考视频、参考音频中的一种或多种：
+
+```bash
+curl -X POST https://api.powertokens.ai/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {
+        "type": "text",
+        "text": "补充描述"
+      },
+      {
+        "type": "reference_image",
+        "url": "asset://XXXX"
+      },
+      {
+        "type": "reference_video",
+        "url": "asset://XXXX"
+      },
+      {
+        "type": "reference_audio",
+        "url": "asset://XXXX"
+      }
+    ],
+    "seconds": "-1",
+    "size": "720p",
+    "ratio": "16:9",
+    "generate_audio": false
+  }'
+```
+
+---
+
+## 查询任务状态（[API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/seedance/seedance-tasks-query)）
+
+提交生成请求后会返回 `task_id`，视频生成是异步的，需要轮询查询状态。
+
+**接口：** `GET /v1/videos/{task_id}`
+
+```bash
+curl "https://api.powertokens.ai/v1/videos/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### 任务状态说明
+
+| 状态 | 含义 |
+|---|---|
+| `queued` | 排队中 |
+| `running` | 生成中 |
+| `succeeded` | 生成成功 |
+| `failed` | 生成失败 |
+| `cancelled` | 已取消（仅排队中的任务可取消，24h 后自动删除） |
+| `expired` | 已超时 |
+
+### 成功响应示例
+
+```json
+{
+  "id": "XXXX",
+  "model": "doubao-seedance-2-0-260128",
+  "status": "succeeded",
+  "content": {
+    "video_url": "https://ark-content-generation-cn-beijing.tos-cn-beijing.volces.com/xxx"
+  },
+  "seed": 78674,
+  "resolution": "720p",
+  "ratio": "16:9",
+  "duration": 5,
+  "framespersecond": 24,
+  "generate_audio": true,
+  "usage": {
+    "completion_tokens": 108900,
+    "total_tokens": 108900
+  }
+}
+```
+
+> **注意：** 视频 URL 有效期为 **14 天**，请及时下载保存。仅可查询最近 **7 天**内的任务。
+
+---
+
+## 完整工作流 — Python
+
+从素材上传到视频生成的完整示例：
+
+```python
+import requests
+import time
+
+API_KEY = "YOUR_API_KEY"
+BASE_URL = "https://api.powertokens.ai"
+HEADERS = {"Authorization": f"Bearer {API_KEY}"}
+
+
+def upload_and_get_asset_id(file_path):
+    """上传素材到资产库，返回 asset_id（可直接用于 Seedance 请求）"""
+    # ① 上传
+    with open(file_path, "rb") as f:
+        resp = requests.post(
+            f"{BASE_URL}/v1/asset/upload",
+            headers=HEADERS,
+            files={"file": (file_path.split("/")[-1], f)},
+        )
+    task_id = resp.json()["data"]["task_id"]
+    print(f"  上传完成 → task_id: {task_id}")
+
+    # ② 轮询获取 asset_id（此接口不需要鉴权）
+    for _ in range(20):
+        resp = requests.get(
+            f"{BASE_URL}/v1/asset/jobs/get-asset-id",
+            params={"task_id": task_id},
+        )
+        data = resp.json()
+        if data["code"] == 200 and data["data"].get("asset_id"):
+            asset_id = data["data"]["asset_id"]
+            print(f"  素材就绪 → asset_id: {asset_id}")
+            return asset_id
+        time.sleep(3)
+    raise TimeoutError("素材处理超时")
+
+
+def generate_video(request_body):
+    """提交视频生成任务"""
+    resp = requests.post(
+        f"{BASE_URL}/v1/videos",
+        headers={**HEADERS, "Content-Type": "application/json"},
+        json=request_body,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def wait_for_video(task_id, timeout=300, interval=5):
+    """轮询等待视频生成完成"""
+    start = time.time()
+    while time.time() - start < timeout:
+        resp = requests.get(
+            f"{BASE_URL}/v1/videos/{task_id}",
+            headers=HEADERS,
+        )
+        result = resp.json()
+        status = result.get("status")
+
+        if status == "succeeded":
+            return result
+        elif status in ("failed", "cancelled", "expired"):
+            raise RuntimeError(f"任务失败: {status} - {result.get('error')}")
+
+        print(f"  状态: {status}，等待中...")
+        time.sleep(interval)
+    raise TimeoutError(f"视频生成在 {timeout} 秒内未完成")
+
+
+# ── 运行：图生视频完整流程 ────────────────────────────────
+
+# 1. 准备素材 → 拿到 asset_id
+print("准备起始帧素材...")
+asset_id = upload_and_get_asset_id("start_frame.jpg")
+
+# 2. 提交生成任务（直接使用 asset_id）
+print("提交视频生成任务...")
+task = generate_video({
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+        {"type": "text", "text": "镜头缓慢推进，樱花花瓣随风飘落"},
+        {"type": "first_frame", "url": f"asset://{asset_id}"},
+    ],
+    "seconds": "5",
+    "size": "720p",
+    "ratio": "adaptive",
+    "generate_audio": True,
+})
+task_id = task.get("task_id") or task.get("id")
+print(f"任务已提交 → task_id: {task_id}")
+
+# 3. 等待生成完成
+print("等待视频生成...")
+result = wait_for_video(task_id)
+print(f"生成成功！视频地址: {result['content']['video_url']}")
+```
+
+---
+
+## 两个模型版本对比
+
+| 维度 | Seedance 2.0 | Seedance 2.0 Fast |
+|---|---|---|
+| 模型 ID | `dreamina-seedance-2-0-260128` | `dreamina-seedance-2-0-fast-260128` |
+| 生成速度 | 标准 | 更快 |
+| 最大分辨率 | 1080p（图生视频/首尾帧/多模态参考） | 720p |
+| 文生视频分辨率 | 720p | 720p |
+| 时长范围 | 4–15 秒 或 -1（智能选择） | 4–15 秒 或 -1（智能选择） |
+| 音频同步 | 支持 | 支持 |
+| 多模态参考 | 支持 | 支持 |
+
+---
+
+## 接口速查表
+
+### 官方兼容接口
+
+> **Base URL：** `https://api.powertokens.ai`
+
+#### 创建任务 — `POST /byteplus/api/v3/contents/generations/tasks`（[API 文档](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-video)）
+
+```bash
+curl -X POST https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "content": [
+      {"type": "text", "text": "你的提示词"},
+      {"type": "image_url", "image_url": {"url": "asset://XXXX"}}
+    ],
+    "ratio": "16:9", "duration": 5
+  }'
+```
+
+#### 查询任务 — `GET /byteplus/api/v3/contents/generations/tasks/{id}`（[API 文档](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query)）
+
+```bash
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+#### 任务列表 — `GET /byteplus/api/v3/contents/generations/tasks`（[API 文档](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/list-video-generation-tasks)）
+
+```bash
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+#### 取消/删除任务 — `DELETE /byteplus/api/v3/contents/generations/tasks/{id}`（[API 文档](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/cancel-delete-video-task)）
+
+```bash
+curl -X DELETE "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+### OpenAI 风格接口
+
+> **Base URL：** `https://api.powertokens.ai`
+
+#### 生成模式 — `POST /v1/videos`
+
+##### 文生视频（[标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video)）
+
+```bash
+curl -X POST https://api.powertokens.ai/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [{"type": "text", "text": "你的提示词"}],
+    "seconds": "5", "size": "720p", "ratio": "16:9"
+  }'
+```
+
+##### 图生视频（[标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video)）
+
+```bash
+curl -X POST https://api.powertokens.ai/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {"type": "text", "text": "你的提示词"},
+      {"type": "first_frame", "url": "asset://XXXX"}
+    ],
+    "seconds": "5", "size": "720p"
+  }'
+```
+
+##### 首尾帧生视频（[标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video)）
+
+```bash
+curl -X POST https://api.powertokens.ai/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {"type": "text", "text": "你的提示词"},
+      {"type": "first_frame", "url": "asset://XXXX"},
+      {"type": "last_frame", "url": "asset://XXXX"}
+    ],
+    "seconds": "5", "size": "720p"
+  }'
+```
+
+##### 多模态参考生视频（[标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video)）
+
+```bash
+curl -X POST https://api.powertokens.ai/v1/videos \
+  -H "Authorization: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "dreamina-seedance-2-0-260128",
+    "media": [
+      {"type": "text", "text": "你的提示词"},
+      {"type": "reference_image", "url": "asset://XXXX"}
+    ],
+    "seconds": "5", "size": "720p"
+  }'
+```
+
+> Fast 版请将模型 ID 替换为 `dreamina-seedance-2-0-fast-260128`。
+
+#### 任务查询 — `GET /v1/videos/{task_id}`（[API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/seedance/seedance-tasks-query)）
+
+```bash
+curl "https://api.powertokens.ai/v1/videos/XXXX" \
+  -H "Authorization: YOUR_API_KEY"
+```
+
+#### 素材准备（资产库）
+
+##### 上传素材 — `POST /v1/asset/upload`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/upload-file)）
+
+```bash
+curl -X POST https://api.powertokens.ai/v1/asset/upload \
+  -H "Authorization: YOUR_API_KEY" \
+  -F "file=@/path/to/file.jpg" \
+  -F "group_id=XXXX"
+```
+
+##### 获取资产 ID — `GET /v1/asset/jobs/get-asset-id`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/get-asset-id)）
+
+> 此接口**不需要鉴权**。拿到 `asset_id` 后即可直接用于 Seedance 请求。
+
+```bash
+curl "https://api.powertokens.ai/v1/asset/jobs/get-asset-id?task_id=XXXX"
+```
+
+---
+
+*完整 API 参考文档请访问 [docs.powertokens.ai](https://docs.powertokens.ai)*

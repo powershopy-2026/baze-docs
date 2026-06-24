@@ -17,157 +17,46 @@
             "tab": "指南",
             "pages": [
               {
-                "group": "模型接口",
-                "expanded": true,
+                "group": "入门",
                 "pages": [
+                  "zh-Hans/guides/powertokens-quickstart",
+                  "zh-Hans/guides/api-key-and-model-call",
+                  "zh-Hans/guides/logs-and-usage",
+                  "zh-Hans/guides/seedance2-quick-start"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "模型接口",
+            "expanded": true,
+            "pages": [
+              {
+                "group": "聊天模型",
+                "pages": [
+                  "zh-Hans/zmodelChat/claude",
                   {
-                    "group": "图像模型",
+                    "group": "MiniMax",
                     "pages": [
-                      {
-                        "group": "MiniMax",
-                        "pages": [
-                          "zh-Hans/zmodelImage/minimax/image01-image-to-image",
-                          "zh-Hans/zmodelImage/minimax/image01-text-to-image"
-                        ]
-                      },
-                      {
-                        "group": "阿里巴巴",
-                        "pages": [
-                          "zh-Hans/zmodelImage/ali/qwen-edit",
-                          "zh-Hans/zmodelImage/ali/qwen-text-to-image",
-                          "zh-Hans/zmodelImage/ali/wan-edit",
-                          "zh-Hans/zmodelImage/ali/wan-text-to-image"
-                        ]
-                      },
-                      {
-                        "group": "字节",
-                        "pages": [
-                          "zh-Hans/zmodelImage/byteplus/seedream-4-0-text-to-image",
-                          "zh-Hans/zmodelImage/byteplus/seedream-4-0-image-to-image",
-                          "zh-Hans/zmodelImage/byteplus/seedream-4-5-text-to-image",
-                          "zh-Hans/zmodelImage/byteplus/seedream-4-5-image-to-image",
-                          "zh-Hans/zmodelImage/byteplus/seedream-5-0-text-to-image",
-                          "zh-Hans/zmodelImage/byteplus/seedream-5-0-image-to-image"
-                        ]
-                      },
-                      {
-                        "group": "Kling",
-                        "pages": [
-                          "zh-Hans/zmodelImage/kling/kling-v2-image-generations",
-                          "zh-Hans/zmodelImage/kling/kling-v2-new-image-generations",
-                          "zh-Hans/zmodelImage/kling/kling-v3-image-generations",
-                          "zh-Hans/zmodelImage/kling/image-generations-status",
-                          "zh-Hans/zmodelImage/kling/kling-image-o1-image-omni",
-                          "zh-Hans/zmodelImage/kling/kling-v3-omni-image-omni",
-                          "zh-Hans/zmodelImage/kling/omni-image-status",
-                          "zh-Hans/zmodelImage/kling/multi-image2image",
-                          "zh-Hans/zmodelImage/kling/multi-image2image-status"
-                        ]
-                      },
-                      {
-                        "group": "Vidu",
-                        "pages": [
-                          "zh-Hans/zmodelImage/vidu/vidu-reference-to-image",
-                          "zh-Hans/zmodelImage/vidu/vidu-query-task-status"
-                        ]
-                      }
+                      "zh-Hans/zmodelChat/minimax/miniMax-M2.5",
+                      "zh-Hans/zmodelChat/minimax/miniMax-M2.5-highspeed",
+                      "zh-Hans/zmodelChat/minimax/miniMax-M2.7",
+                      "zh-Hans/zmodelChat/minimax/miniMax-M2.7-highspeed",
+                      "zh-Hans/zmodelChat/minimax/miniMax-M3"
                     ]
                   },
                   {
-                    "group": "视频模型",
+                    "group": "阿里巴巴",
                     "pages": [
-                      {
-                        "group": "MiniMax",
-                        "pages": [
-                          "zh-Hans/zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
-                        ]
-                      },
-                      {
-                        "group": "阿里巴巴",
-                        "pages": [
-                          "zh-Hans/zmodelVideo/ali/reference-to-video",
-                          "zh-Hans/zmodelVideo/ali/text-to-video",
-                          "zh-Hans/zmodelVideo/ali/video-first-last-frame",
-                          "zh-Hans/zmodelVideo/ali/video-first-last-frame2",
-                          "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
-                          "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
-                          "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation"
-                        ]
-                      },
-                      {
-                        "group": "字节",
-                        "pages": [
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
-                          "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
-                          {
-                            "group": "字节API兼容",
-                            "pages": [
-                              "zh-Hans/zmodelVideo/byteplus/seedance/seedance-video",
-                              "zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query",
-                              "zh-Hans/zmodelVideo/byteplus/seedance/list-video-generation-tasks",
-                              "zh-Hans/zmodelVideo/byteplus/seedance/cancel-delete-video-task"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "group": "Kling",
-                        "pages": [
-                          "zh-Hans/zmodelVideo/kling/kling-v2-1-master-text2video",
-                          "zh-Hans/zmodelVideo/kling/kling-v2-5-turbo-text2video",
-                          "zh-Hans/zmodelVideo/kling/kling-v3-text2video",
-                          "zh-Hans/zmodelVideo/kling/kling-v2-1-master-image2video",
-                          "zh-Hans/zmodelVideo/kling/kling-v2-5-turbo-image2video",
-                          "zh-Hans/zmodelVideo/kling/kling-v3-image2video",
-                          "zh-Hans/zmodelVideo/kling/kling-v3-motion-control",
-                          "zh-Hans/zmodelVideo/kling/kling-v3-omni-video-omni",
-                          "zh-Hans/zmodelVideo/kling/kling-video-o1-video-omni",
-                          "zh-Hans/zmodelVideo/kling/text2video-status",
-                          "zh-Hans/zmodelVideo/kling/image2video-status",
-                          "zh-Hans/zmodelVideo/kling/video-omni-status",
-                          "zh-Hans/zmodelVideo/kling/motion-control-status"
-                        ]
-                      },
-                      {
-                        "group": "Vidu",
-                        "pages": [
-                          "zh-Hans/zmodelVideo/vidu/viduq3-turbo-text-to-video",
-                          "zh-Hans/zmodelVideo/vidu/viduq3-pro-text-to-video",
-                          "zh-Hans/zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
-                          "zh-Hans/zmodelVideo/vidu/viduq3-turbo-image-to-video",
-                          "zh-Hans/zmodelVideo/vidu/viduq3-pro-image-to-video",
-                          "zh-Hans/zmodelVideo/vidu/viduq3-turbo-reference-to-video",
-                          "zh-Hans/zmodelVideo/vidu/viduq3-reference-to-video",
-                          "zh-Hans/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
-                          "zh-Hans/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
-                          "zh-Hans/zmodelVideo/vidu/vidu-query-task-status"
-                        ]
-                      },
-                      "zh-Hans/zmodelVideo/minimax/download-video-file",
-                      "zh-Hans/zmodelVideo/minimax/query-video-status"
+                      "zh-Hans/zmodelChat/ali/deepseek-v3.2",
+                      "zh-Hans/zmodelChat/ali/qwen3.5-flash",
+                      "zh-Hans/zmodelChat/ali/qwen3.6-plus",
+                      "zh-Hans/zmodelChat/ali/qwen3-coder-plus",
+                      "zh-Hans/zmodelChat/ali/qwen3-max"
                     ]
                   },
                   {
-                    "group": "聊天模型",
+                    "group": "字节",
                     "pages": [
                       "zh-Hans/zmodelChat/claude",
                       "zh-Hans/zmodelChat/responses",
@@ -219,48 +108,207 @@
                     ]
                   },
                   {
-                    "group": "音频模型",
+                    "group": "智谱",
                     "pages": [
+                      "zh-Hans/zmodelChat/zhipu/glm-4.5-air",
+                      "zh-Hans/zmodelChat/zhipu/glm-4.7",
+                      "zh-Hans/zmodelChat/zhipu/glm-4.7-flash",
+                      "zh-Hans/zmodelChat/zhipu/glm-5",
+                      "zh-Hans/zmodelChat/zhipu/glm-5.1",
+                      "zh-Hans/zmodelChat/zhipu/glm-5.2",
+                      "zh-Hans/zmodelChat/zhipu/glm-5-turbo"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "图像模型",
+                "pages": [
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "zh-Hans/zmodelImage/minimax/image01-image-to-image",
+                      "zh-Hans/zmodelImage/minimax/image01-text-to-image"
+                    ]
+                  },
+                  {
+                    "group": "阿里巴巴",
+                    "pages": [
+                      "zh-Hans/zmodelImage/ali/qwen-edit",
+                      "zh-Hans/zmodelImage/ali/qwen-text-to-image",
+                      "zh-Hans/zmodelImage/ali/wan-edit",
+                      "zh-Hans/zmodelImage/ali/wan-text-to-image"
+                    ]
+                  },
+                  {
+                    "group": "字节",
+                    "pages": [
+                      "zh-Hans/zmodelImage/byteplus/seedream-4-0-text-to-image",
+                      "zh-Hans/zmodelImage/byteplus/seedream-4-0-image-to-image",
+                      "zh-Hans/zmodelImage/byteplus/seedream-4-5-text-to-image",
+                      "zh-Hans/zmodelImage/byteplus/seedream-4-5-image-to-image",
+                      "zh-Hans/zmodelImage/byteplus/seedream-5-0-text-to-image",
+                      "zh-Hans/zmodelImage/byteplus/seedream-5-0-image-to-image"
+                    ]
+                  },
+                  {
+                    "group": "Kling",
+                    "pages": [
+                      "zh-Hans/zmodelImage/kling/kling-v2-image-generations",
+                      "zh-Hans/zmodelImage/kling/kling-v2-new-image-generations",
+                      "zh-Hans/zmodelImage/kling/kling-v3-image-generations",
+                      "zh-Hans/zmodelImage/kling/image-generations-status",
+                      "zh-Hans/zmodelImage/kling/kling-image-o1-image-omni",
+                      "zh-Hans/zmodelImage/kling/kling-v3-omni-image-omni",
+                      "zh-Hans/zmodelImage/kling/omni-image-status",
+                      "zh-Hans/zmodelImage/kling/multi-image2image",
+                      "zh-Hans/zmodelImage/kling/multi-image2image-status"
+                    ]
+                  },
+                  {
+                    "group": "Vidu",
+                    "pages": [
+                      "zh-Hans/zmodelImage/vidu/vidu-reference-to-image",
+                      "zh-Hans/zmodelImage/vidu/vidu-query-task-status"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "视频模型",
+                "pages": [
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
+                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
+                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
+                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
+                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
+                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
+                    ]
+                  },
+                  {
+                    "group": "阿里巴巴",
+                    "pages": [
+                      "zh-Hans/zmodelVideo/ali/reference-to-video",
+                      "zh-Hans/zmodelVideo/ali/text-to-video",
+                      "zh-Hans/zmodelVideo/ali/video-first-last-frame",
+                      "zh-Hans/zmodelVideo/ali/video-first-last-frame2",
+                      "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
+                      "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
+                      "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation"
+                    ]
+                  },
+                  {
+                    "group": "字节",
+                    "pages": [
+                      "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
                       {
-                        "group": "MiniMax",
+                        "group": "字节API兼容",
                         "pages": [
-                          "zh-Hans/zmodelAudio/minimax/speech-2.6-hd",
-                          "zh-Hans/zmodelAudio/minimax/speech-2.6-turbo",
-                          "zh-Hans/zmodelAudio/minimax/speech-2.8-hd",
-                          "zh-Hans/zmodelAudio/minimax/speech-2.8-turbo",
-                          "zh-Hans/zmodelAudio/minimax/speech-02-hd",
-                          "zh-Hans/zmodelAudio/minimax/speech-02-turbo"
-                        ]
-                      },
-                      {
-                        "group": "阿里巴巴",
-                        "pages": [
-                          "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash"
-                        ]
-                      },
-                      {
-                        "group": "Vidu",
-                        "pages": [
-                          "zh-Hans/zmodelAudio/vidu/vidu-text-to-audio",
-                          "zh-Hans/zmodelAudio/vidu/vidu-timing-to-audio",
-                          "zh-Hans/zmodelAudio/vidu/vidu-query-task-status"
+                          "zh-Hans/zmodelVideo/byteplus/seedance/seedance-video",
+                          "zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query",
+                          "zh-Hans/zmodelVideo/byteplus/seedance/list-video-generation-tasks",
+                          "zh-Hans/zmodelVideo/byteplus/seedance/cancel-delete-video-task"
                         ]
                       }
                     ]
                   },
                   {
-                    "group": "资产库",
+                    "group": "Kling",
                     "pages": [
-                      "zh-Hans/assetLibrary/upload-file",
-                      "zh-Hans/assetLibrary/group-asset-list",
-                      "zh-Hans/assetLibrary/group-create",
-                      "zh-Hans/assetLibrary/group-delete",
-                      "zh-Hans/assetLibrary/group-list",
-                      "zh-Hans/assetLibrary/group-rename",
-                      "zh-Hans/assetLibrary/get-asset-id",
-                      "zh-Hans/assetLibrary/get-authorize-url"
+                      "zh-Hans/zmodelVideo/kling/kling-v2-1-master-text2video",
+                      "zh-Hans/zmodelVideo/kling/kling-v2-5-turbo-text2video",
+                      "zh-Hans/zmodelVideo/kling/kling-v3-text2video",
+                      "zh-Hans/zmodelVideo/kling/kling-v2-1-master-image2video",
+                      "zh-Hans/zmodelVideo/kling/kling-v2-5-turbo-image2video",
+                      "zh-Hans/zmodelVideo/kling/kling-v3-image2video",
+                      "zh-Hans/zmodelVideo/kling/kling-v3-motion-control",
+                      "zh-Hans/zmodelVideo/kling/kling-v3-omni-video-omni",
+                      "zh-Hans/zmodelVideo/kling/kling-video-o1-video-omni",
+                      "zh-Hans/zmodelVideo/kling/text2video-status",
+                      "zh-Hans/zmodelVideo/kling/image2video-status",
+                      "zh-Hans/zmodelVideo/kling/video-omni-status",
+                      "zh-Hans/zmodelVideo/kling/motion-control-status"
+                    ]
+                  },
+                  {
+                    "group": "Vidu",
+                    "pages": [
+                      "zh-Hans/zmodelVideo/vidu/viduq3-turbo-text-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq3-pro-text-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq3-turbo-image-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq3-pro-image-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq3-turbo-reference-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq3-reference-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
+                      "zh-Hans/zmodelVideo/vidu/vidu-query-task-status"
+                    ]
+                  },
+                  "zh-Hans/zmodelVideo/minimax/download-video-file",
+                  "zh-Hans/zmodelVideo/minimax/query-video-status"
+                ]
+              },
+              {
+                "group": "音频模型",
+                "pages": [
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "zh-Hans/zmodelAudio/minimax/speech-2.6-hd",
+                      "zh-Hans/zmodelAudio/minimax/speech-2.6-turbo",
+                      "zh-Hans/zmodelAudio/minimax/speech-2.8-hd",
+                      "zh-Hans/zmodelAudio/minimax/speech-2.8-turbo",
+                      "zh-Hans/zmodelAudio/minimax/speech-02-hd",
+                      "zh-Hans/zmodelAudio/minimax/speech-02-turbo"
+                    ]
+                  },
+                  {
+                    "group": "阿里巴巴",
+                    "pages": [
+                      "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash"
+                    ]
+                  },
+                  {
+                    "group": "Vidu",
+                    "pages": [
+                      "zh-Hans/zmodelAudio/vidu/vidu-text-to-audio",
+                      "zh-Hans/zmodelAudio/vidu/vidu-timing-to-audio",
+                      "zh-Hans/zmodelAudio/vidu/vidu-query-task-status"
                     ]
                   }
+                ]
+              },
+              {
+                "group": "资产库",
+                "pages": [
+                  "zh-Hans/assetLibrary/operation_guide",
+                  "zh-Hans/assetLibrary/upload-file",
+                  "zh-Hans/assetLibrary/group-asset-list",
+                  "zh-Hans/assetLibrary/group-create",
+                  "zh-Hans/assetLibrary/group-delete",
+                  "zh-Hans/assetLibrary/group-list",
+                  "zh-Hans/assetLibrary/group-rename",
+                  "zh-Hans/assetLibrary/get-asset-id",
+                  "zh-Hans/assetLibrary/get-authorize-url"
                 ]
               }
             ]
@@ -274,157 +322,44 @@
             "tab": "Guides",
             "pages": [
               {
-                "group": "Model APIs",
-                "expanded": true,
+                "group": "Get started",
+                "pages": [
+                  "en/guides/powertokens-quickstart",
+                  "en/guides/api-key-and-model-call",
+                  "en/guides/logs-and-usage",
+                  "en/guides/seedance2-quick-start"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Model APIs",
+            "pages": [
+              {
+                "group": "Chat Models",
                 "pages": [
                   {
-                    "group": "Image Models",
+                    "group": "MiniMax",
                     "pages": [
-                      {
-                        "group": "MiniMax",
-                        "pages": [
-                          "en/zmodelImage/minimax/image01-image-to-image",
-                          "en/zmodelImage/minimax/image01-text-to-image"
-                        ]
-                      },
-                      {
-                        "group": "Alibaba",
-                        "pages": [
-                          "en/zmodelImage/ali/qwen-edit",
-                          "en/zmodelImage/ali/qwen-text-to-image",
-                          "en/zmodelImage/ali/wan-edit",
-                          "en/zmodelImage/ali/wan-text-to-image"
-                        ]
-                      },
-                      {
-                        "group": "BytePlus",
-                        "pages": [
-                          "en/zmodelImage/byteplus/seedream-4-0-text-to-image",
-                          "en/zmodelImage/byteplus/seedream-4-0-image-to-image",
-                          "en/zmodelImage/byteplus/seedream-4-5-text-to-image",
-                          "en/zmodelImage/byteplus/seedream-4-5-image-to-image",
-                          "en/zmodelImage/byteplus/seedream-5-0-text-to-image",
-                          "en/zmodelImage/byteplus/seedream-5-0-image-to-image"
-                        ]
-                      },
-                      {
-                        "group": "Kling",
-                        "pages": [
-                          "en/zmodelImage/kling/kling-v2-image-generations",
-                          "en/zmodelImage/kling/kling-v2-new-image-generations",
-                          "en/zmodelImage/kling/kling-v3-image-generations",
-                          "en/zmodelImage/kling/image-generations-status",
-                          "en/zmodelImage/kling/kling-image-o1-image-omni",
-                          "en/zmodelImage/kling/kling-v3-omni-image-omni",
-                          "en/zmodelImage/kling/omni-image-status",
-                          "en/zmodelImage/kling/multi-image2image",
-                          "en/zmodelImage/kling/multi-image2image-status"
-                        ]
-                      },
-                      {
-                        "group": "Vidu",
-                        "pages": [
-                          "en/zmodelImage/vidu/vidu-reference-to-image",
-                          "en/zmodelImage/vidu/vidu-query-task-status"
-                        ]
-                      }
+                      "en/zmodelChat/minimax/miniMax-M2.5",
+                      "en/zmodelChat/minimax/miniMax-M2.5-highspeed",
+                      "en/zmodelChat/minimax/miniMax-M2.7",
+                      "en/zmodelChat/minimax/miniMax-M2.7-highspeed",
+                      "en/zmodelChat/minimax/miniMax-M3"
                     ]
                   },
                   {
-                    "group": "Video Models",
+                    "group": "Alibaba",
                     "pages": [
-                      {
-                        "group": "MiniMax",
-                        "pages": [
-                          "en/zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
-                          "en/zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
-                          "en/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
-                          "en/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
-                          "en/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
-                          "en/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
-                        ]
-                      },
-                      {
-                        "group": "Alibaba",
-                        "pages": [
-                          "en/zmodelVideo/ali/reference-to-video",
-                          "en/zmodelVideo/ali/text-to-video",
-                          "en/zmodelVideo/ali/video-first-last-frame",
-                          "en/zmodelVideo/ali/video-first-last-frame2",
-                          "en/zmodelVideo/ali/wan2.7-i2v-image-to-video",
-                          "en/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
-                          "en/zmodelVideo/ali/wan2.7-i2v-video-continuation"
-                        ]
-                      },
-                      {
-                        "group": "BytePlus",
-                        "pages": [
-                          "en/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
-                          "en/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
-                          "en/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
-                          "en/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
-                          "en/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
-                          "en/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
-                          "en/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
-                          "en/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
-                          "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
-                          {
-                            "group": "BytePlus API Compat",
-                            "pages": [
-                              "en/zmodelVideo/byteplus/seedance/seedance-video",
-                              "en/zmodelVideo/byteplus/seedance/seedance-tasks-query",
-                              "en/zmodelVideo/byteplus/seedance/list-video-generation-tasks",
-                              "en/zmodelVideo/byteplus/seedance/cancel-delete-video-task"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "group": "Kling",
-                        "pages": [
-                          "en/zmodelVideo/kling/kling-v2-1-master-text2video",
-                          "en/zmodelVideo/kling/kling-v2-5-turbo-text2video",
-                          "en/zmodelVideo/kling/kling-v3-text2video",
-                          "en/zmodelVideo/kling/kling-v2-1-master-image2video",
-                          "en/zmodelVideo/kling/kling-v2-5-turbo-image2video",
-                          "en/zmodelVideo/kling/kling-v3-image2video",
-                          "en/zmodelVideo/kling/kling-v3-motion-control",
-                          "en/zmodelVideo/kling/kling-v3-omni-video-omni",
-                          "en/zmodelVideo/kling/kling-video-o1-video-omni",
-                          "en/zmodelVideo/kling/text2video-status",
-                          "en/zmodelVideo/kling/image2video-status",
-                          "en/zmodelVideo/kling/video-omni-status",
-                          "en/zmodelVideo/kling/motion-control-status"
-                        ]
-                      },
-                      {
-                        "group": "Vidu",
-                        "pages": [
-                          "en/zmodelVideo/vidu/viduq3-turbo-text-to-video",
-                          "en/zmodelVideo/vidu/viduq3-pro-text-to-video",
-                          "en/zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
-                          "en/zmodelVideo/vidu/viduq3-turbo-image-to-video",
-                          "en/zmodelVideo/vidu/viduq3-pro-image-to-video",
-                          "en/zmodelVideo/vidu/viduq3-turbo-reference-to-video",
-                          "en/zmodelVideo/vidu/viduq3-reference-to-video",
-                          "en/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
-                          "en/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
-                          "en/zmodelVideo/vidu/vidu-query-task-status"
-                        ]
-                      },
-                      "en/zmodelVideo/minimax/download-video-file",
-                      "en/zmodelVideo/minimax/query-video-status"
+                      "en/zmodelChat/ali/deepseek-v3.2",
+                      "en/zmodelChat/ali/qwen3.5-flash",
+                      "en/zmodelChat/ali/qwen3.6-plus",
+                      "en/zmodelChat/ali/qwen3-coder-plus",
+                      "en/zmodelChat/ali/qwen3-max"
                     ]
                   },
                   {
-                    "group": "Chat Models",
+                    "group": "BytePlus",
                     "pages": [
                       "en/zmodelChat/claude",
                       "en/zmodelChat/responses",
@@ -476,49 +411,207 @@
                     ]
                   },
                   {
-                    "group": "Audio Models",
+                    "group": "Zhipu",
                     "pages": [
+                      "en/zmodelChat/zhipu/glm-4.5-air",
+                      "en/zmodelChat/zhipu/glm-4.7",
+                      "en/zmodelChat/zhipu/glm-4.7-flash",
+                      "en/zmodelChat/zhipu/glm-5",
+                      "en/zmodelChat/zhipu/glm-5.1",
+                      "en/zmodelChat/zhipu/glm-5.2",
+                      "en/zmodelChat/zhipu/glm-5-turbo"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Image Models",
+                "pages": [
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "en/zmodelImage/minimax/image01-image-to-image",
+                      "en/zmodelImage/minimax/image01-text-to-image"
+                    ]
+                  },
+                  {
+                    "group": "Alibaba",
+                    "pages": [
+                      "en/zmodelImage/ali/qwen-edit",
+                      "en/zmodelImage/ali/qwen-text-to-image",
+                      "en/zmodelImage/ali/wan-edit",
+                      "en/zmodelImage/ali/wan-text-to-image"
+                    ]
+                  },
+                  {
+                    "group": "BytePlus",
+                    "pages": [
+                      "en/zmodelImage/byteplus/seedream-4-0-text-to-image",
+                      "en/zmodelImage/byteplus/seedream-4-0-image-to-image",
+                      "en/zmodelImage/byteplus/seedream-4-5-text-to-image",
+                      "en/zmodelImage/byteplus/seedream-4-5-image-to-image",
+                      "en/zmodelImage/byteplus/seedream-5-0-text-to-image",
+                      "en/zmodelImage/byteplus/seedream-5-0-image-to-image"
+                    ]
+                  },
+                  {
+                    "group": "Kling",
+                    "pages": [
+                      "en/zmodelImage/kling/kling-v2-image-generations",
+                      "en/zmodelImage/kling/kling-v2-new-image-generations",
+                      "en/zmodelImage/kling/kling-v3-image-generations",
+                      "en/zmodelImage/kling/image-generations-status",
+                      "en/zmodelImage/kling/kling-image-o1-image-omni",
+                      "en/zmodelImage/kling/kling-v3-omni-image-omni",
+                      "en/zmodelImage/kling/omni-image-status",
+                      "en/zmodelImage/kling/multi-image2image",
+                      "en/zmodelImage/kling/multi-image2image-status"
+                    ]
+                  },
+                  {
+                    "group": "Vidu",
+                    "pages": [
+                      "en/zmodelImage/vidu/vidu-reference-to-image",
+                      "en/zmodelImage/vidu/vidu-query-task-status"
+                    ]
+                  }
+                ]
+              },
+              {
+                "group": "Video Models",
+                "pages": [
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "en/zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
+                      "en/zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
+                      "en/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
+                      "en/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
+                      "en/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
+                      "en/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
+                    ]
+                  },
+                  {
+                    "group": "Alibaba",
+                    "pages": [
+                      "en/zmodelVideo/ali/reference-to-video",
+                      "en/zmodelVideo/ali/text-to-video",
+                      "en/zmodelVideo/ali/video-first-last-frame",
+                      "en/zmodelVideo/ali/video-first-last-frame2",
+                      "en/zmodelVideo/ali/wan2.7-i2v-image-to-video",
+                      "en/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
+                      "en/zmodelVideo/ali/wan2.7-i2v-video-continuation"
+                    ]
+                  },
+                  {
+                    "group": "BytePlus",
+                    "pages": [
+                      "en/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
+                      "en/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
+                      "en/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
+                      "en/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
+                      "en/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
+                      "en/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
+                      "en/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
+                      "en/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
                       {
-                        "group": "MiniMax",
+                        "group": "BytePlus API Compat",
                         "pages": [
-                          "en/zmodelAudio/minimax/speech-2.6-hd",
-                          "en/zmodelAudio/minimax/speech-2.6-turbo",
-                          "en/zmodelAudio/minimax/speech-2.8-hd",
-                          "en/zmodelAudio/minimax/speech-2.8-turbo",
-                          "en/zmodelAudio/minimax/speech-02-hd",
-                          "en/zmodelAudio/minimax/speech-02-turbo"
-                        ]
-                      },
-                      {
-                        "group": "Alibaba",
-                        "pages": [
-                          "en/zmodelAudio/ali/qwen3-tts-instruct-flash"
-                        ]
-                      },
-                      {
-                        "group": "Vidu",
-                        "pages": [
-                          "en/zmodelAudio/vidu/vidu-text-to-audio",
-                          "en/zmodelAudio/vidu/vidu-timing-to-audio",
-                          "en/zmodelAudio/vidu/vidu-query-task-status"
+                          "en/zmodelVideo/byteplus/seedance/seedance-video",
+                          "en/zmodelVideo/byteplus/seedance/seedance-tasks-query",
+                          "en/zmodelVideo/byteplus/seedance/list-video-generation-tasks",
+                          "en/zmodelVideo/byteplus/seedance/cancel-delete-video-task"
                         ]
                       }
                     ]
                   },
                   {
-                    "group": "asset library",
+                    "group": "Kling",
                     "pages": [
-                      "en/assetLibrary/guides",
-                      "en/assetLibrary/upload-file",
-                      "en/assetLibrary/group-asset-list",
-                      "en/assetLibrary/group-create",
-                      "en/assetLibrary/group-delete",
-                      "en/assetLibrary/group-list",
-                      "en/assetLibrary/group-rename",
-                      "en/assetLibrary/get-asset-id",
-                      "en/assetLibrary/get-authorize-url"
+                      "en/zmodelVideo/kling/kling-v2-1-master-text2video",
+                      "en/zmodelVideo/kling/kling-v2-5-turbo-text2video",
+                      "en/zmodelVideo/kling/kling-v3-text2video",
+                      "en/zmodelVideo/kling/kling-v2-1-master-image2video",
+                      "en/zmodelVideo/kling/kling-v2-5-turbo-image2video",
+                      "en/zmodelVideo/kling/kling-v3-image2video",
+                      "en/zmodelVideo/kling/kling-v3-motion-control",
+                      "en/zmodelVideo/kling/kling-v3-omni-video-omni",
+                      "en/zmodelVideo/kling/kling-video-o1-video-omni",
+                      "en/zmodelVideo/kling/text2video-status",
+                      "en/zmodelVideo/kling/image2video-status",
+                      "en/zmodelVideo/kling/video-omni-status",
+                      "en/zmodelVideo/kling/motion-control-status"
+                    ]
+                  },
+                  {
+                    "group": "Vidu",
+                    "pages": [
+                      "en/zmodelVideo/vidu/viduq3-turbo-text-to-video",
+                      "en/zmodelVideo/vidu/viduq3-pro-text-to-video",
+                      "en/zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
+                      "en/zmodelVideo/vidu/viduq3-turbo-image-to-video",
+                      "en/zmodelVideo/vidu/viduq3-pro-image-to-video",
+                      "en/zmodelVideo/vidu/viduq3-turbo-reference-to-video",
+                      "en/zmodelVideo/vidu/viduq3-reference-to-video",
+                      "en/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
+                      "en/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
+                      "en/zmodelVideo/vidu/vidu-query-task-status"
+                    ]
+                  },
+                  "en/zmodelVideo/minimax/download-video-file",
+                  "en/zmodelVideo/minimax/query-video-status"
+                ]
+              },
+              {
+                "group": "Audio Models",
+                "pages": [
+                  {
+                    "group": "MiniMax",
+                    "pages": [
+                      "en/zmodelAudio/minimax/speech-2.6-hd",
+                      "en/zmodelAudio/minimax/speech-2.6-turbo",
+                      "en/zmodelAudio/minimax/speech-2.8-hd",
+                      "en/zmodelAudio/minimax/speech-2.8-turbo",
+                      "en/zmodelAudio/minimax/speech-02-hd",
+                      "en/zmodelAudio/minimax/speech-02-turbo"
+                    ]
+                  },
+                  {
+                    "group": "Alibaba",
+                    "pages": [
+                      "en/zmodelAudio/ali/qwen3-tts-instruct-flash"
+                    ]
+                  },
+                  {
+                    "group": "Vidu",
+                    "pages": [
+                      "en/zmodelAudio/vidu/vidu-text-to-audio",
+                      "en/zmodelAudio/vidu/vidu-timing-to-audio",
+                      "en/zmodelAudio/vidu/vidu-query-task-status"
                     ]
                   }
+                ]
+              },
+              {
+                "group": "asset library",
+                "pages": [
+                  "en/assetLibrary/operation_guide",
+                  "en/assetLibrary/upload-file",
+                  "en/assetLibrary/group-asset-list",
+                  "en/assetLibrary/group-create",
+                  "en/assetLibrary/group-delete",
+                  "en/assetLibrary/group-list",
+                  "en/assetLibrary/group-rename",
+                  "en/assetLibrary/get-asset-id",
+                  "en/assetLibrary/get-authorize-url"
                 ]
               }
             ]
@@ -550,10 +643,5 @@
     }
   },
   "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
   }
 }
