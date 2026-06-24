@@ -6,7 +6,7 @@ PowerTokens 完整支持 Seedance 2.0 系列视频生成模型，提供两种接
 1. **完全兼容 Seedance 2.0 官方接口**：如果你已在使用字节官方 API，只需更换 Base URL 和 API Key 即可无缝迁移，零改造成本。详见本文档「[官方兼容接口](#官方兼容接口)」章节
 2. **OpenAI 风格接口**：统一的 `POST /v1/videos` 端点，与平台其他模型保持一致的调用体验
 
-> **Base URL：** 两种接口共用同一个 Base URL：`https://baze-api.powerbuyin.top`
+> **Base URL：** 两种接口共用同一个 Base URL：`https://api.powertokens.ai`
 
 > **本文档同时覆盖两种接口。** 官方兼容接口在前半部分，OpenAI 风格接口在「[OpenAI 风格接口](#openai-风格接口)」章节。
 
@@ -19,7 +19,7 @@ PowerTokens 完整支持 Seedance 2.0 系列视频生成模型，提供两种接
 在调用 Seedance 2.0 接口之前，请完成以下步骤：
 
 1. **注册登录**：注册并登录 [powertokens.ai](https://powertokens.ai)
-2. **获取 API Key**：进入 [API Keys 管理页面](https://baze-api.powerbuyin.top-keys)，创建新的 Key，复制并妥善保存
+2. **获取 API Key**：进入 [API Keys 管理页面](https://api.powertokens.ai-keys)，创建新的 Key，复制并妥善保存
 3. **充值**：进入 [充值页面](https://powertokens.ai/billing)，购买 Credits（视频生成按量计费，需要账户有余额）
 4. **开通资产库**：进入 [资产库页面](https://powertokens.ai/zh-Hans/assets-library?tab=1)，阅读并同意《素材库用户协议》（Seedance 2.0 的所有素材必须通过资产库上传）
 
@@ -41,7 +41,7 @@ PowerTokens 完全兼容 Seedance 官方 API，请求体、参数名、响应结
 
 ```diff
 - https://ark.cn-beijing.volces.com
-+ https://baze-api.powerbuyin.top
++ https://api.powertokens.ai
 ```
 
 ```diff
@@ -52,10 +52,10 @@ PowerTokens 完全兼容 Seedance 官方 API，请求体、参数名、响应结
 ### Base URL
 
 ```
-https://baze-api.powerbuyin.top
+https://api.powertokens.ai
 ```
 
-> 两种接口共用同一个 Base URL：`https://baze-api.powerbuyin.top`，区别在于请求路径不同。
+> 两种接口共用同一个 Base URL：`https://api.powertokens.ai`，区别在于请求路径不同。
 
 ### 接口列表
 
@@ -91,7 +91,7 @@ https://baze-api.powerbuyin.top
 ### 示例：图生视频（使用 asset_id）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks \
+curl -X POST https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -118,7 +118,7 @@ curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generation
 ### 示例：多模态参考生视频（参考图 + 参考视频 + 参考音频）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks \
+curl -X POST https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -160,21 +160,21 @@ curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generation
 ### 示例：查询任务状态
 
 ```bash
-curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 ### 示例：查询任务列表
 
 ```bash
-curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20&filter.status=succeeded" \
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20&filter.status=succeeded" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 ### 示例：取消/删除任务
 
 ```bash
-curl -X DELETE "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+curl -X DELETE "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
@@ -182,7 +182,7 @@ curl -X DELETE "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generat
 
 | 维度 | 官方兼容接口 | OpenAI 风格接口 |
 |---|---|---|
-| Base URL | `https://baze-api.powerbuyin.top`（相同） | `https://baze-api.powerbuyin.top`（相同） |
+| Base URL | `https://api.powertokens.ai`（相同） | `https://api.powertokens.ai`（相同） |
 | 创建任务 | `POST /byteplus/api/v3/contents/generations/tasks` | `POST /v1/videos` |
 | 素材传入 | `"url": "asset://XXXX"`（相同） | `"url": "asset://XXXX"`（相同） |
 | 查询任务 | `GET /byteplus/api/v3/.../tasks/{id}` | `GET /v1/videos/{task_id}` |
@@ -251,7 +251,7 @@ import requests
 import time
 
 API_KEY = "YOUR_API_KEY"
-BASE_URL = "https://baze-api.powerbuyin.top"
+BASE_URL = "https://api.powertokens.ai"
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 # ① 上传素材 → 得到 task_id
@@ -279,7 +279,7 @@ print(f"素材已就绪 → asset_id: {asset_id}")
 # ✅ 直接将 asset_id 填入 Seedance 请求的 media 数组中使用
 ```
 
-> 详细的资产库使用说明请参考 [资产库快速上手](/zh-Hans/assetLibrary/operation_guide)。
+> 详细的资产库使用说明请参考 [资产库快速上手](./资产库_快速上手.md)。
 
 ---
 
@@ -320,7 +320,7 @@ print(f"素材已就绪 → asset_id: {asset_id}")
 ### 1. 文生视频（[标准版 API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video)）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -341,7 +341,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ### 2. 图生视频（[标准版 API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video)）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -367,7 +367,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ### 3. 首尾帧生视频（[标准版 API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast 版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video)）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -397,7 +397,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 可以同时传入参考图、参考视频、参考音频中的一种或多种：
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -436,7 +436,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 **接口：** `GET /v1/videos/{task_id}`
 
 ```bash
-curl "https://baze-api.powerbuyin.top/v1/videos/XXXX" \
+curl "https://api.powertokens.ai/v1/videos/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
@@ -487,7 +487,7 @@ import requests
 import time
 
 API_KEY = "YOUR_API_KEY"
-BASE_URL = "https://baze-api.powerbuyin.top"
+BASE_URL = "https://api.powertokens.ai"
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 
@@ -598,12 +598,12 @@ print(f"生成成功！视频地址: {result['content']['video_url']}")
 
 ### 官方兼容接口
 
-> **Base URL：** `https://baze-api.powerbuyin.top`
+> **Base URL：** `https://api.powertokens.ai`
 
 #### 创建任务 — `POST /byteplus/api/v3/contents/generations/tasks`（[API 文档](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-video)）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks \
+curl -X POST https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -619,34 +619,34 @@ curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generation
 #### 查询任务 — `GET /byteplus/api/v3/contents/generations/tasks/{id}`（[API 文档](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query)）
 
 ```bash
-curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 #### 任务列表 — `GET /byteplus/api/v3/contents/generations/tasks`（[API 文档](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/list-video-generation-tasks)）
 
 ```bash
-curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20" \
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 #### 取消/删除任务 — `DELETE /byteplus/api/v3/contents/generations/tasks/{id}`（[API 文档](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/cancel-delete-video-task)）
 
 ```bash
-curl -X DELETE "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+curl -X DELETE "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 ### OpenAI 风格接口
 
-> **Base URL：** `https://baze-api.powerbuyin.top`
+> **Base URL：** `https://api.powertokens.ai`
 
 #### 生成模式 — `POST /v1/videos`
 
 ##### 文生视频（[标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video)）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -659,7 +659,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ##### 图生视频（[标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video)）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -675,7 +675,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ##### 首尾帧生视频（[标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video)）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -692,7 +692,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ##### 多模态参考生视频（[标准版](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video)）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -710,7 +710,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 #### 任务查询 — `GET /v1/videos/{task_id}`（[API 文档](https://docs.powertokens.ai/en/zmodelVideo/byteplus/seedance/seedance-tasks-query)）
 
 ```bash
-curl "https://baze-api.powerbuyin.top/v1/videos/XXXX" \
+curl "https://api.powertokens.ai/v1/videos/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
@@ -719,7 +719,7 @@ curl "https://baze-api.powerbuyin.top/v1/videos/XXXX" \
 ##### 上传素材 — `POST /v1/asset/upload`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/upload-file)）
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/asset/upload \
+curl -X POST https://api.powertokens.ai/v1/asset/upload \
   -H "Authorization: YOUR_API_KEY" \
   -F "file=@/path/to/file.jpg" \
   -F "group_id=XXXX"
@@ -730,7 +730,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/asset/upload \
 > 此接口**不需要鉴权**。拿到 `asset_id` 后即可直接用于 Seedance 请求。
 
 ```bash
-curl "https://baze-api.powerbuyin.top/v1/asset/jobs/get-asset-id?task_id=XXXX"
+curl "https://api.powertokens.ai/v1/asset/jobs/get-asset-id?task_id=XXXX"
 ```
 
 ---

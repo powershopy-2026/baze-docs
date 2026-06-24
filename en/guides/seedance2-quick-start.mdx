@@ -6,7 +6,7 @@ PowerTokens fully supports the Seedance 2.0 video generation model series, offer
 1. **Full compatibility with the official Seedance 2.0 API**: If you're already using ByteDance's official API, simply switch the Base URL and API Key for a seamless migration with zero code changes. See the [Official Compatible Interface](#official-compatible-interface) section in this document.
 2. **OpenAI-style interface**: A unified `POST /v1/videos` endpoint for a consistent calling experience across other platform models.
 
-> **Base URL:** Both interfaces share the same Base URL: `https://baze-api.powerbuyin.top`
+> **Base URL:** Both interfaces share the same Base URL: `https://api.powertokens.ai`
 
 > **This document covers both interfaces.** The official compatible interface is in the first half, and the OpenAI-style interface is in the [OpenAI-style Interface](#openai-style-interface) section.
 
@@ -19,7 +19,7 @@ PowerTokens fully supports the Seedance 2.0 video generation model series, offer
 Before calling the Seedance 2.0 API, complete the following steps:
 
 1. **Sign up / Log in**: Register and log in at [powertokens.ai](https://powertokens.ai)
-2. **Get an API Key**: Go to the [API Keys management page](https://baze-api.powerbuyin.top-keys), create a new key, copy and store it securely
+2. **Get an API Key**: Go to the [API Keys management page](https://api.powertokens.ai-keys), create a new key, copy and store it securely
 3. **Top up**: Go to the [Billing page](https://powertokens.ai/billing) and purchase Credits (video generation is pay-per-use and requires account balance)
 4. **Enable Asset Library**: Go to the [Asset Library page](https://powertokens.ai/zh-Hans/assets-library?tab=1), read and agree to the Asset Library User Agreement (all Seedance 2.0 assets must be uploaded through the Asset Library)
 
@@ -41,7 +41,7 @@ PowerTokens is fully compatible with the official Seedance API, with request bod
 
 ```diff
 - https://ark.cn-beijing.volces.com
-+ https://baze-api.powerbuyin.top
++ https://api.powertokens.ai
 ```
 
 ```diff
@@ -52,10 +52,10 @@ PowerTokens is fully compatible with the official Seedance API, with request bod
 ### Base URL
 
 ```
-https://baze-api.powerbuyin.top
+https://api.powertokens.ai
 ```
 
-> Both interfaces share the same Base URL: `https://baze-api.powerbuyin.top`, differing only in the request path.
+> Both interfaces share the same Base URL: `https://api.powertokens.ai`, differing only in the request path.
 
 ### Endpoint List
 
@@ -91,7 +91,7 @@ The `url` field for images, videos, and audio supports the following three forma
 ### Example: Image-to-Video (using asset_id)
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks \
+curl -X POST https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -118,7 +118,7 @@ curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generation
 ### Example: Multimodal Reference-to-Video (reference image + reference video + reference audio)
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks \
+curl -X POST https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -160,21 +160,21 @@ curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generation
 ### Example: Query Task Status
 
 ```bash
-curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 ### Example: List Tasks
 
 ```bash
-curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20&filter.status=succeeded" \
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20&filter.status=succeeded" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 ### Example: Cancel / Delete Task
 
 ```bash
-curl -X DELETE "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+curl -X DELETE "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
@@ -182,7 +182,7 @@ curl -X DELETE "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generat
 
 | Dimension | Official Compatible Interface | OpenAI-style Interface |
 |---|---|---|
-| Base URL | `https://baze-api.powerbuyin.top` (same) | `https://baze-api.powerbuyin.top` (same) |
+| Base URL | `https://api.powertokens.ai` (same) | `https://api.powertokens.ai` (same) |
 | Create task | `POST /byteplus/api/v3/contents/generations/tasks` | `POST /v1/videos` |
 | Asset input | `"url": "asset://XXXX"` (same) | `"url": "asset://XXXX"` (same) |
 | Query task | `GET /byteplus/api/v3/.../tasks/{id}` | `GET /v1/videos/{task_id}` |
@@ -251,7 +251,7 @@ import requests
 import time
 
 API_KEY = "YOUR_API_KEY"
-BASE_URL = "https://baze-api.powerbuyin.top"
+BASE_URL = "https://api.powertokens.ai"
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 # ① Upload asset → get task_id
@@ -279,7 +279,7 @@ print(f"Asset ready → asset_id: {asset_id}")
 # ✅ Directly use asset_id in the media array of the Seedance request
 ```
 
-> For detailed Asset Library usage, see [Asset Library Quick Start](/en/assetLibrary/operation_guide).
+> For detailed Asset Library usage, see [Asset Library Quick Start](./资产库_快速上手.md).
 
 ---
 
@@ -320,7 +320,7 @@ All generation modes share the `POST /v1/videos` endpoint, with different `type`
 ### 1. Text-to-Video ([Standard API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video))
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -341,7 +341,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ### 2. Image-to-Video ([Standard API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video))
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -367,7 +367,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ### 3. First-Last Frame-to-Video ([Standard API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video))
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -397,7 +397,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 You can pass one or more of: reference image, reference video, and reference audio simultaneously:
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -436,7 +436,7 @@ After submitting a generation request, a `task_id` will be returned. Video gener
 **Endpoint:** `GET /v1/videos/{task_id}`
 
 ```bash
-curl "https://baze-api.powerbuyin.top/v1/videos/XXXX" \
+curl "https://api.powertokens.ai/v1/videos/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
@@ -487,7 +487,7 @@ import requests
 import time
 
 API_KEY = "YOUR_API_KEY"
-BASE_URL = "https://baze-api.powerbuyin.top"
+BASE_URL = "https://api.powertokens.ai"
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 
@@ -598,12 +598,12 @@ print(f"Generation succeeded! Video URL: {result['content']['video_url']}")
 
 ### Official Compatible Interface
 
-> **Base URL:** `https://baze-api.powerbuyin.top`
+> **Base URL:** `https://api.powertokens.ai`
 
 #### Create Task — `POST /byteplus/api/v3/contents/generations/tasks` ([API Reference](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-video))
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks \
+curl -X POST https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -619,34 +619,34 @@ curl -X POST https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generation
 #### Query Task — `GET /byteplus/api/v3/contents/generations/tasks/{id}` ([API Reference](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query))
 
 ```bash
-curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 #### Task List — `GET /byteplus/api/v3/contents/generations/tasks` ([API Reference](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/list-video-generation-tasks))
 
 ```bash
-curl "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20" \
+curl "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks?page_num=1&page_size=20" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 #### Cancel / Delete Task — `DELETE /byteplus/api/v3/contents/generations/tasks/{id}` ([API Reference](https://docs.powertokens.ai/zh-Hans/zmodelVideo/byteplus/seedance/cancel-delete-video-task))
 
 ```bash
-curl -X DELETE "https://baze-api.powerbuyin.top/byteplus/api/v3/contents/generations/tasks/XXXX" \
+curl -X DELETE "https://api.powertokens.ai/byteplus/api/v3/contents/generations/tasks/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
 ### OpenAI-style Interface
 
-> **Base URL:** `https://baze-api.powerbuyin.top`
+> **Base URL:** `https://api.powertokens.ai`
 
 #### Generation Modes — `POST /v1/videos`
 
 ##### Text-to-Video ([Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video))
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -659,7 +659,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ##### Image-to-Video ([Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video))
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -675,7 +675,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ##### First-Last Frame-to-Video ([Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video))
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -692,7 +692,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 ##### Multimodal Reference-to-Video ([Standard](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video) · [Fast](https://docs.powertokens.ai/en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video))
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/videos \
+curl -X POST https://api.powertokens.ai/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -710,7 +710,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/videos \
 #### Task Query — `GET /v1/videos/{task_id}` ([API Reference](https://docs.powertokens.ai/en/zmodelVideo/byteplus/seedance/seedance-tasks-query))
 
 ```bash
-curl "https://baze-api.powerbuyin.top/v1/videos/XXXX" \
+curl "https://api.powertokens.ai/v1/videos/XXXX" \
   -H "Authorization: YOUR_API_KEY"
 ```
 
@@ -719,7 +719,7 @@ curl "https://baze-api.powerbuyin.top/v1/videos/XXXX" \
 ##### Upload Asset — `POST /v1/asset/upload` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/upload-file))
 
 ```bash
-curl -X POST https://baze-api.powerbuyin.top/v1/asset/upload \
+curl -X POST https://api.powertokens.ai/v1/asset/upload \
   -H "Authorization: YOUR_API_KEY" \
   -F "file=@/path/to/file.jpg" \
   -F "group_id=XXXX"
@@ -730,7 +730,7 @@ curl -X POST https://baze-api.powerbuyin.top/v1/asset/upload \
 > This endpoint **does not require authentication**. Once you have the `asset_id`, you can directly use it in Seedance requests.
 
 ```bash
-curl "https://baze-api.powerbuyin.top/v1/asset/jobs/get-asset-id?task_id=XXXX"
+curl "https://api.powertokens.ai/v1/asset/jobs/get-asset-id?task_id=XXXX"
 ```
 
 ---
