@@ -3,25 +3,25 @@
   "info": {
     "title": "Claude Messages API",
     "version": "1.0.0",
-    "description": "Fully compatible with Claude Messages API format\nSupports multi-turn conversations and single queries\nSupports text, image, and other multimodal content"
+    "description": "Calls models through a Claude Messages API-compatible format.<br />Supports multi-turn conversations and single queries.<br />Supports text, image, and other multimodal content."
   },
   "servers": [
     {
-      "url": "https://api.powertokens.ai",
+      "url": "https://baze-api.powerbuyin.top",
       "description": "Current gateway instance"
     }
   ],
   "tags": [
     {
       "name": "Claude Messages",
-      "description": "Native Claude-compatible messages"
+      "description": "Claude-compatible messages exposed through the platform API"
     }
   ],
   "paths": {
     "/v1/messages": {
       "post": {
         "summary": "Claude Messages API",
-        "description": "Fully compatible with Claude Messages API format\nSupports multi-turn conversations and single queries\nSupports text, image, and other multimodal content",
+        "description": "Calls models through a Claude Messages API-compatible format.<br />Supports multi-turn conversations and single queries.<br />Supports text, image, and other multimodal content.",
         "operationId": "createClaudeMessage",
         "tags": [
           "Claude Messages"
@@ -35,7 +35,7 @@
               "type": "string",
               "default": "2023-06-01"
             },
-            "description": "API version header\nSpecifies the Claude API version to use"
+            "description": "API version header\nSpecifies the Claude API version to use."
           },
           {
             "name": "anthropic-beta",
@@ -44,7 +44,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Optional Claude beta feature header, forwarded when provided."
+            "description": "Optional Claude beta feature header. The platform forwards it when provided."
           }
         ],
         "requestBody": {
@@ -56,7 +56,7 @@
               },
               "examples": {
                 "glmBasic": {
-                  "summary": "GLM Claude Request",
+                  "summary": "GLM Claude request",
                   "value": {
                     "model": "glm-4.7",
                     "messages": [
@@ -139,13 +139,23 @@
               "MiniMax-M2.7",
               "MiniMax-M2.5-highspeed",
               "MiniMax-M2.7-highspeed",
-              "MiniMax-M3"
+              "MiniMax-M3",
+              "qwen3-max",
+              "qwen3.5-flash",
+              "qwen3.6-plus",
+              "qwen3-coder-plus",
+              "deepseek-v3-2-251201",
+              "seed-1-6-250915",
+              "seed-1-8-251228",
+              "seed-2-0-lite-260228",
+              "seed-2-0-mini-260215",
+              "seed-2-0-pro-260328"
             ],
-            "description": "Model name"
+            "description": "Model name."
           },
           "messages": {
             "type": "array",
-            "description": "Message list\nAn array of messages that the model will use to generate the next reply. Each message contains `role` and `content` fields.",
+            "description": "Message list\nThe model uses these messages to generate the next reply. Each message contains `role` and `content` fields.",
             "items": {
               "$ref": "#/components/schemas/ClaudeMessage"
             }
@@ -153,10 +163,10 @@
           "max_tokens": {
             "type": "integer",
             "minimum": 1,
-            "description": "Maximum tokens to generate\nThe maximum number of tokens to generate before stopping. The model may stop before reaching this limit.\nDifferent models have different maximum values; refer to the model documentation."
+            "description": "Maximum generated tokens\nThe maximum number of tokens to generate before stopping. The model may stop before it reaches this limit.\nDifferent models have different maximum values; refer to the model documentation.\n`max_tokens` does not limit the length of the thinking process. When extended thinking is enabled, thinking tokens are controlled separately by `thinking.budget_tokens`."
           },
           "system": {
-            "description": "System prompt\nUsed to set Claude's role, personality, goals, and instructions.",
+            "description": "System prompt used to set the model role or behavior. Pass `system` as a top-level parameter; the `messages` array does not accept a `system` role. Passing a string is equivalent to one `type=\"text\"` content block. Use the array form when you need explicit cache breakpoints in the system prompt.",
             "oneOf": [
               {
                 "type": "string"
@@ -171,23 +181,131 @@
           },
           "temperature": {
             "type": "number",
-            "description": "Temperature parameter, range 0-1\nControls output randomness:\nLow values (e.g., 0.2): more deterministic, more conservative\nHigh values (e.g., 0.8): more random, more creative"
+            "description": "Temperature parameter, range [0, 2).\nControls output randomness. Higher values make generation more random.\nThis differs from Anthropic's official [0.0, 1.0] range; confirm the value when migrating from Anthropic."
           },
           "top_p": {
             "type": "number",
-            "description": "Nucleus sampling parameter, range 0-1\nUses nucleus sampling. It is recommended to use either temperature or top_p, not both."
+            "description": "Nucleus sampling probability threshold. It controls output diversity. Both `temperature` and `top_p` affect diversity; set only one of them when possible."
           },
           "stop_sequences": {
             "type": "array",
-            "description": "Stop sequences\nCustom text sequences that will cause the model to stop generating when encountered.",
+            "description": "Stop sequences\nCustom text sequences that stop generation when encountered. After a match, the response `stop_reason` remains `end_turn`, and the matched sequence is not returned in the response.",
             "items": {
               "type": "string"
             }
           },
+          "top_k": {
+            "type": "integer",
+            "description": "Size of the candidate set used during sampling."
+          },
+          "thinking": {
+            "type": "object",
+            "description": "Extended thinking configuration. When enabled, the model reasons before generating the reply to improve answer quality. Some models do not support thinking mode.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "enabled",
+                  "disabled"
+                ],
+                "description": "Allowed values: `enabled` to enable thinking mode, or `disabled` to disable thinking mode."
+              },
+              "budget_tokens": {
+                "type": "integer",
+                "description": "Maximum tokens available to the thinking process. This does not overlap with `max_tokens`: this parameter limits thinking, while `max_tokens` limits the final reply. Effective when `type` is `enabled`."
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "enum": [
+              "high",
+              "max"
+            ],
+            "description": "Controls the model reasoning effort. The default is `max`. Supported models: `deepseek-v4-pro` and `deepseek-v4-flash`. `low` or `medium` maps to `high`; `xhigh` maps to `max`."
+          },
+          "tools": {
+            "type": "array",
+            "description": "Tool definition array for Function Call scenarios.",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "input_schema"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Tool name."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Tool capability description."
+                },
+                "input_schema": {
+                  "type": "object",
+                  "description": "JSON Schema definition for the tool input parameters."
+                }
+              }
+            }
+          },
+          "tool_choice": {
+            "description": "Tool choice strategy: `auto` (default, the model decides), `any` (force a tool call), `none` (disallow tool calls), or `tool` (force a specific tool).",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ToolChoiceMode"
+              },
+              {
+                "$ref": "#/components/schemas/ToolChoiceTool"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "auto": "#/components/schemas/ToolChoiceMode",
+                "any": "#/components/schemas/ToolChoiceMode",
+                "none": "#/components/schemas/ToolChoiceMode",
+                "tool": "#/components/schemas/ToolChoiceTool"
+              }
+            }
+          },
+          "output_config": {
+            "type": "object",
+            "description": "Structured output configuration. When enabled, the model outputs a JSON string that conforms to the JSON Schema. The deepseek/glm series supports strict structured output with schema constraints. Other models use normal JSON mode, which requires the word 'JSON' in `system` or `messages`.",
+            "properties": {
+              "format": {
+                "type": "object",
+                "description": "Output format definition.",
+                "required": [
+                  "type",
+                  "schema"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "json_schema"
+                    ],
+                    "description": "The value is fixed to `json_schema`."
+                  },
+                  "schema": {
+                    "type": "object",
+                    "description": "JSON Schema object following the standard JSON Schema specification. Include fields such as `type`, `properties`, `required`, and `additionalProperties`."
+                  }
+                }
+              }
+            },
+            "required": [
+              "format"
+            ]
+          },
           "stream": {
             "type": "boolean",
-            "description": "Whether to enable streaming output",
-            "default": true
+            "description": "Whether to enable streaming output.",
+            "default": false
           }
         },
         "additionalProperties": true
@@ -205,10 +323,10 @@
               "user",
               "assistant"
             ],
-            "description": "Input: `user` (user message) or `assistant` (AI reply, for multi-turn conversations)"
+            "description": "Message role: `user` for user messages, or `assistant` for AI replies in multi-turn conversations. Arrange the message array in alternating `user` / `assistant` turns."
           },
           "content": {
-            "description": "Input: the message content to send",
+            "description": "Message content. Pass a plain text string or a structured content array with `text`, `image`, `video`, `tool_use`, or `tool_result` blocks. A string `content` is equivalent to one `type=\"text\"` content block.",
             "oneOf": [
               {
                 "type": "string"
@@ -224,6 +342,59 @@
         }
       },
       "ContentBlock": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TextContentBlock"
+          },
+          {
+            "$ref": "#/components/schemas/ImageContentBlock"
+          },
+          {
+            "$ref": "#/components/schemas/VideoContentBlock"
+          },
+          {
+            "$ref": "#/components/schemas/ToolUseContentBlock"
+          },
+          {
+            "$ref": "#/components/schemas/ToolResultContentBlock"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "text": "#/components/schemas/TextContentBlock",
+            "image": "#/components/schemas/ImageContentBlock",
+            "video": "#/components/schemas/VideoContentBlock",
+            "tool_use": "#/components/schemas/ToolUseContentBlock",
+            "tool_result": "#/components/schemas/ToolResultContentBlock"
+          }
+        }
+      },
+      "TextContentBlock": {
+        "title": "Text",
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "Fixed to `text`."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text content."
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        }
+      },
+      "ImageSource": {
         "type": "object",
         "required": [
           "type"
@@ -231,17 +402,166 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "Claude content block type."
+            "enum": [
+              "url",
+              "base64"
+            ],
+            "description": "Image source type: `url` for a public image URL, or `base64` for Base64-encoded data."
           },
-          "text": {
+          "url": {
             "type": "string",
-            "description": "Text content for `text` blocks."
+            "description": "Public image URL. Required when `type` is `url`."
+          },
+          "media_type": {
+            "type": "string",
+            "description": "Image MIME type, such as `image/jpeg`. Required when `type` is `base64`."
+          },
+          "data": {
+            "type": "string",
+            "description": "Base64-encoded image data. Required when `type` is `base64`."
+          }
+        }
+      },
+      "ImageContentBlock": {
+        "title": "Image",
+        "type": "object",
+        "required": [
+          "type",
+          "source"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image"
+            ],
+            "description": "Fixed to `image`."
+          },
+          "source": {
+            "$ref": "#/components/schemas/ImageSource"
           },
           "cache_control": {
             "$ref": "#/components/schemas/CacheControl"
           }
         },
-        "additionalProperties": true
+        "description": "Image content block. Use a vision-capable model."
+      },
+      "VideoSource": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "url",
+              "base64"
+            ],
+            "description": "Video source type: `url` for a public video URL, or `base64` for Base64-encoded data."
+          },
+          "url": {
+            "type": "string",
+            "description": "Public video URL. Required when `type` is `url`."
+          },
+          "media_type": {
+            "type": "string",
+            "description": "Video MIME type, such as `video/mp4`. Required when `type` is `base64`."
+          },
+          "data": {
+            "type": "string",
+            "description": "Base64-encoded video data. Required when `type` is `base64`."
+          }
+        }
+      },
+      "VideoContentBlock": {
+        "title": "Video",
+        "type": "object",
+        "required": [
+          "type",
+          "source"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "video"
+            ],
+            "description": "Fixed to `video`."
+          },
+          "source": {
+            "$ref": "#/components/schemas/VideoSource"
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        },
+        "description": "Video content block. Use a vision-capable model."
+      },
+      "ToolUseContentBlock": {
+        "title": "Tool call",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "name",
+          "input"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "tool_use"
+            ],
+            "description": "Fixed to `tool_use`."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique tool call ID used to associate a later `tool_result`."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the tool being called."
+          },
+          "input": {
+            "type": "object",
+            "description": "Tool call input. Its structure is determined by the corresponding tool `input_schema` in `tools`."
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        },
+        "description": "Tool call content block returned by the `assistant` role. It contains the tool call instruction emitted by the model."
+      },
+      "ToolResultContentBlock": {
+        "title": "Tool result",
+        "type": "object",
+        "required": [
+          "type",
+          "tool_use_id",
+          "content"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "tool_result"
+            ],
+            "description": "Fixed to `tool_result`."
+          },
+          "tool_use_id": {
+            "type": "string",
+            "description": "The `id` from the corresponding `tool_use` block."
+          },
+          "content": {
+            "type": "string",
+            "description": "Content returned by the tool execution."
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        },
+        "description": "Tool result content block for the `user` role. Use it to pass tool execution results back to the model."
       },
       "TextBlock": {
         "type": "object",
@@ -255,11 +575,11 @@
             "enum": [
               "text"
             ],
-            "description": "System text block type."
+            "description": "Fixed to `text`."
           },
           "text": {
             "type": "string",
-            "description": "System instruction text."
+            "description": "System prompt text."
           },
           "cache_control": {
             "$ref": "#/components/schemas/CacheControl"
@@ -271,15 +591,235 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "Prompt cache control type."
+            "enum": [
+              "ephemeral"
+            ],
+            "description": "Fixed to `ephemeral`. Marks an explicit cache breakpoint. After a cache hit, the second and later requests are billed as cache reads."
           }
         },
-        "description": "Prompt cache metadata"
+        "description": "Prompt cache metadata. When marked on a content block, all content before that block is cached."
+      },
+      "ToolChoiceMode": {
+        "title": "Mode selection",
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "any",
+              "none"
+            ],
+            "description": "Tool choice mode: `auto` (the model decides), `any` (force a tool call), or `none` (disallow tool calls)."
+          }
+        }
+      },
+      "ToolChoiceTool": {
+        "title": "Specific tool",
+        "type": "object",
+        "required": [
+          "type",
+          "name"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "tool"
+            ],
+            "description": "Fixed to `tool`."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the tool to force."
+          }
+        }
+      },
+      "ResponseTextBlock": {
+        "title": "Text",
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "Fixed to `text`."
+          },
+          "text": {
+            "type": "string",
+            "description": "Text reply generated by the model."
+          }
+        }
+      },
+      "ResponseThinkingBlock": {
+        "title": "Thinking process",
+        "type": "object",
+        "required": [
+          "type",
+          "thinking",
+          "signature"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "thinking"
+            ],
+            "description": "Fixed to `thinking`."
+          },
+          "thinking": {
+            "type": "string",
+            "description": "The model thinking process before it generates the final reply."
+          },
+          "signature": {
+            "type": "string",
+            "description": "Currently fixed to an empty string."
+          }
+        }
+      },
+      "ResponseToolUseBlock": {
+        "title": "Tool call",
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "name",
+          "input"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "tool_use"
+            ],
+            "description": "Fixed to `tool_use`."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique tool call ID used to associate a later `tool_result`."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the tool being called."
+          },
+          "input": {
+            "type": "object",
+            "description": "Tool call input."
+          }
+        }
+      },
+      "ResponseContentBlock": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ResponseTextBlock"
+          },
+          {
+            "$ref": "#/components/schemas/ResponseThinkingBlock"
+          },
+          {
+            "$ref": "#/components/schemas/ResponseToolUseBlock"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "text": "#/components/schemas/ResponseTextBlock",
+            "thinking": "#/components/schemas/ResponseThinkingBlock",
+            "tool_use": "#/components/schemas/ResponseToolUseBlock"
+          }
+        }
+      },
+      "UsageStats": {
+        "type": "object",
+        "description": "Token usage statistics. In streaming calls, the `usage` in the `message_start` event only includes `input_tokens` and `output_tokens`; all four fields are returned in the `message_delta` event.",
+        "properties": {
+          "input_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens."
+          },
+          "output_tokens": {
+            "type": "integer",
+            "description": "Number of output tokens."
+          },
+          "cache_creation_input_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens consumed to create the cache."
+          },
+          "cache_read_input_tokens": {
+            "type": "integer",
+            "description": "Number of input tokens read from cache."
+          }
+        }
       },
       "ClaudeMessagesResponse": {
         "type": "object",
-        "description": "Claude-compatible message response returned by the upstream provider.",
-        "additionalProperties": true
+        "required": [
+          "id",
+          "type",
+          "role",
+          "model",
+          "content",
+          "stop_reason",
+          "stop_sequence",
+          "usage"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique message ID."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "message"
+            ],
+            "description": "Fixed to `message`."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "Fixed to `assistant`."
+          },
+          "model": {
+            "type": "string",
+            "description": "Model name used for generation."
+          },
+          "content": {
+            "type": "array",
+            "description": "Content array.",
+            "items": {
+              "$ref": "#/components/schemas/ResponseContentBlock"
+            }
+          },
+          "stop_reason": {
+            "type": "string",
+            "enum": [
+              "end_turn",
+              "max_tokens",
+              "tool_use"
+            ],
+            "description": "Stop reason: `end_turn` for normal completion, `max_tokens` when the token limit is reached, or `tool_use` for a tool call."
+          },
+          "stop_sequence": {
+            "type": "string",
+            "nullable": true,
+            "description": "Fixed to `null`."
+          },
+          "usage": {
+            "$ref": "#/components/schemas/UsageStats"
+          }
+        },
+        "description": "Claude-compatible message response."
       },
       "ClaudeErrorResponse": {
         "type": "object",
