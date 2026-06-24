@@ -2,6 +2,7 @@
   --docs-shell-max-width: 64rem;
   --docs-shell-gap: 2.5rem;
   --docs-toc-width: 18rem;
+  --docs-api-panel-width: 24rem;
   --docs-sans-font: Inter, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC", -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -20,6 +21,14 @@ body {
   font-family: var(--docs-sans-font);
 }
 
+#header p {
+  max-width: 52rem;
+  margin-top: 0.55rem;
+  color: rgb(75 85 99);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
 #content-container > .max-w-5xl {
   max-width: var(--docs-shell-max-width);
   gap: var(--docs-shell-gap);
@@ -28,6 +37,7 @@ body {
 #content-side-layout {
   max-width: var(--docs-toc-width);
   flex-basis: var(--docs-toc-width);
+  flex-shrink: 0;
 }
 
 #content table th,
@@ -35,8 +45,104 @@ body {
   vertical-align: top;
 }
 
+#content > span:not(h2 ~ span) {
+  display: block;
+  max-width: 54rem;
+  margin: 0 !important;
+  padding: 0.38rem 1.05rem 0.38rem 1.1rem;
+  border-left: 3px solid rgb(34 197 94 / 0.42);
+  background: linear-gradient(
+    90deg,
+    rgb(34 197 94 / 0.055),
+    rgb(34 197 94 / 0) 72%
+  );
+  color: rgb(75 85 99);
+  font-size: 0.95rem;
+  line-height: 1.72;
+}
+
+#content > span:not(h2 ~ span):first-child {
+  padding-top: 0.95rem;
+  border-top-left-radius: 0.5rem;
+}
+
+#content > span:not(h2 ~ span):has(+ h2) {
+  margin-bottom: 2.35rem !important;
+  padding-bottom: 0.95rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+#content > span:not(h2 ~ span):has(+ h2) + h2 {
+  margin-top: 0;
+}
+
+.dark #header p {
+  color: rgb(209 213 219 / 0.86);
+}
+
+.dark #content > span:not(h2 ~ span) {
+  border-left-color: rgb(74 222 128 / 0.36);
+  background: linear-gradient(
+    90deg,
+    rgb(34 197 94 / 0.095),
+    rgb(34 197 94 / 0) 72%
+  );
+  color: rgb(209 213 219 / 0.86);
+}
+
+#content-side-layout:has(.code-group) {
+  max-width: var(--docs-api-panel-width);
+  flex-basis: var(--docs-api-panel-width);
+}
+
+#content-side-layout:has(.code-group) > * {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100%;
+}
+
+#content-side-layout:has(.code-group) .code-group {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+#content-side-layout:has(.code-group) .code-group > * {
+  min-width: 0 !important;
+}
+
+.code-group .overflow-x-auto {
+  overflow-x: hidden !important;
+}
+
+.code-group :where(.whitespace-pre, pre, code) {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 auto !important;
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.code-group .line {
+  white-space: pre-wrap !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+@media (min-width: 1280px) {
+  #content-container > .max-w-5xl {
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  #content-container > .max-w-5xl:has(#content-side-layout .code-group) {
+    max-width: calc(100vw - 24rem);
+  }
+}
+
 @media (min-width: 1280px) and (max-width: 1679px) {
-  #content-side-layout {
+  #content-side-layout:not(:has(.code-group)) {
     display: none !important;
   }
 }
@@ -44,5 +150,10 @@ body {
 @media (min-width: 1680px) {
   :root {
     --docs-shell-max-width: 78rem;
+    --docs-api-panel-width: 28rem;
+  }
+
+  #content-container > .max-w-5xl:has(#content-side-layout .code-group) {
+    max-width: 88rem;
   }
 }
