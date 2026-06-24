@@ -371,6 +371,7 @@
         }
       },
       "TextContentBlock": {
+        "title": "文本",
         "type": "object",
         "required": [
           "type",
@@ -422,6 +423,7 @@
         }
       },
       "ImageContentBlock": {
+        "title": "图片",
         "type": "object",
         "required": [
           "type",
@@ -473,6 +475,7 @@
         }
       },
       "VideoContentBlock": {
+        "title": "视频",
         "type": "object",
         "required": [
           "type",
@@ -496,6 +499,7 @@
         "description": "视频内容块，需使用视觉模型。"
       },
       "ToolUseContentBlock": {
+        "title": "工具调用",
         "type": "object",
         "required": [
           "type",
@@ -530,6 +534,7 @@
         "description": "工具调用内容块（assistant 角色返回），模型发出的工具调用指令。"
       },
       "ToolResultContentBlock": {
+        "title": "工具结果",
         "type": "object",
         "required": [
           "type",
@@ -595,6 +600,7 @@
         "description": "提示缓存元数据。在内容块上标记后，该块之前的所有内容会被缓存。"
       },
       "ToolChoiceMode": {
+        "title": "模式选择",
         "type": "object",
         "required": ["type"],
         "properties": {
@@ -606,6 +612,7 @@
         }
       },
       "ToolChoiceTool": {
+        "title": "指定工具",
         "type": "object",
         "required": ["type", "name"],
         "properties": {
@@ -621,6 +628,7 @@
         }
       },
       "ResponseTextBlock": {
+        "title": "文本",
         "type": "object",
         "required": ["type", "text"],
         "properties": {
@@ -636,6 +644,7 @@
         }
       },
       "ResponseThinkingBlock": {
+        "title": "思考过程",
         "type": "object",
         "required": ["type", "thinking", "signature"],
         "properties": {
@@ -655,6 +664,7 @@
         }
       },
       "ResponseToolUseBlock": {
+        "title": "工具调用",
         "type": "object",
         "required": ["type", "id", "name", "input"],
         "properties": {
