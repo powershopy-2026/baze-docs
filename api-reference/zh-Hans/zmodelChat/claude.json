@@ -141,10 +141,15 @@
               "MiniMax-M2.7-highspeed",
               "MiniMax-M3",
               "qwen3-max",
-              "deepseek-v3.2",
               "qwen3.5-flash",
               "qwen3.6-plus",
-              "qwen3-coder-plus"
+              "qwen3-coder-plus",
+              "deepseek-v3-2-251201",
+              "seed-1-6-250915",
+              "seed-1-8-251228",
+              "seed-2-0-lite-260228",
+              "seed-2-0-mini-260215",
+              "seed-2-0-pro-260328"
             ],
             "description": "模型名称"
           },
@@ -158,10 +163,10 @@
           "max_tokens": {
             "type": "integer",
             "minimum": 1,
-            "description": "最大生成token数\n生成停止前的最大token数量。模型可能会在达到此限制前停止。\n不同模型有不同的最大值，请参考模型文档。"
+            "description": "最大生成token数\n生成停止前的最大token数量。模型可能会在达到此限制前停止。\n不同模型有不同的最大值，请参考模型文档。\nmax_tokens 不限制思考过程的长度。开启深度思考时，思考部分的 Token 数由 thinking.budget_tokens 单独控制。"
           },
           "system": {
-            "description": "系统提示词\n系统提示词用于设置Claude的角色、个性、目标和指令。",
+            "description": "系统提示词，用于设定模型的角色或行为。system 通过顶层参数传入，messages 数组中不接受 system 角色。传入字符串等价于单个 type=\"text\" 的内容块。当需要为系统提示词标记显式缓存断点时，必须传入数组形式。",
             "oneOf": [
               {
                 "type": "string"
@@ -176,23 +181,150 @@
           },
           "temperature": {
             "type": "number",
-            "description": "温度参数，范围 0-1\n控制输出的随机性：\n低值（如0.2）：更确定、更保守\n高值（如0.8）：更随机、更有创意"
+            "description": "温度参数，范围 [0, 2)\n控制输出的随机性：值越大，生成结果越随机。\n与 Anthropic 官方的 [0.0, 1.0] 范围不同，从 Anthropic 迁移时请确认该参数取值。"
           },
           "top_p": {
             "type": "number",
-            "description": "核采样参数，范围 0-1\n使用nucleus sampling。建议使用 temperature 或 top_p 其中之一，不要同时使用。"
+            "description": "核采样的概率阈值，控制生成文本的多样性。temperature 与 top_p 均可控制生成文本的多样性，建议只设置其中一个值。"
           },
           "stop_sequences": {
             "type": "array",
-            "description": "停止序列\n自定义文本序列，遇到这些序列时模型将停止生成。",
+            "description": "停止序列\n自定义文本序列，遇到这些序列时模型将停止生成。命中后，响应的 stop_reason 仍为 end_turn，响应不会回填命中的序列。",
             "items": {
               "type": "string"
             }
           },
+          "top_k": {
+            "type": "integer",
+            "description": "生成过程中采样候选集的大小。"
+          },
+          "thinking": {
+            "type": "object",
+            "description": "深度思考配置。开启后，模型会在生成回复前先进行推理，以提升回答准确度。部分模型不支持思考模式。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "enabled",
+                  "disabled"
+                ],
+                "description": "可选值：enabled（开启思考模式）、disabled（关闭思考模式）。"
+              },
+              "budget_tokens": {
+                "type": "integer",
+                "description": "思考过程可使用的最大 Token 数，与 max_tokens 互不重叠：本参数限制思考，max_tokens 限制最终回复。当 type 为 enabled 时生效。"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "enum": [
+              "high",
+              "max"
+            ],
+            "description": "控制模型的推理强度。默认为 max。支持的模型：deepseek-v4-pro、deepseek-v4-flash。设为 low 或 medium 时会映射为 high，设为 xhigh 时会映射为 max。"
+          },
+          "tools": {
+            "type": "array",
+            "description": "工具定义数组，用于 Function Call 场景。",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "input_schema"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "工具名称。"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "工具的功能描述。"
+                },
+                "input_schema": {
+                  "type": "object",
+                  "description": "工具输入参数的 JSON Schema 定义。"
+                }
+              }
+            }
+          },
+          "tool_choice": {
+            "description": "工具选择策略。支持：{\"type\": \"auto\"}（默认）、{\"type\": \"any\"}、{\"type\": \"none\"}、{\"type\": \"tool\", \"name\": \"tool_name\"}。",
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "auto",
+                      "any",
+                      "none"
+                    ]
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "tool"
+                    ]
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "name"
+                ]
+              }
+            ]
+          },
+          "output_config": {
+            "type": "object",
+            "description": "结构化输出配置。开启后，模型将输出符合 JSON Schema 的 JSON 字符串。deepseek/glm 系列支持严格结构化输出（按 Schema 强约束），其他模型为普通 JSON 模式（需在 system 或 messages 中包含 'JSON' 关键词）。",
+            "properties": {
+              "format": {
+                "type": "object",
+                "description": "输出格式定义。",
+                "required": [
+                  "type",
+                  "schema"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "json_schema"
+                    ],
+                    "description": "取值固定为 json_schema。"
+                  },
+                  "schema": {
+                    "type": "object",
+                    "description": "JSON Schema 对象，遵循标准 JSON Schema 规范。需包含 type、properties、required、additionalProperties 等字段。"
+                  }
+                }
+              }
+            },
+            "required": [
+              "format"
+            ]
+          },
           "stream": {
             "type": "boolean",
             "description": "是否启用流式输出",
-            "default": true
+            "default": false
           }
         },
         "additionalProperties": true
@@ -210,10 +342,10 @@
               "user",
               "assistant"
             ],
-            "description": "输入：user（用户消息）或 assistant（AI回复，用于多轮对话）"
+            "description": "消息角色：user（用户消息）或 assistant（AI 回复，用于多轮对话）。消息数组按 user / assistant 交替轮次排列。"
           },
           "content": {
-            "description": "输入：你想说的话",
+            "description": "消息内容。可以是纯文本字符串，也可以是结构化内容数组（text/image/video/tool_use/tool_result 块）。content 为字符串时，等价于单个 type=\"text\" 的内容块。",
             "oneOf": [
               {
                 "type": "string"
@@ -229,6 +361,48 @@
         }
       },
       "ContentBlock": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TextContentBlock"
+          },
+          {
+            "$ref": "#/components/schemas/ImageContentBlock"
+          },
+          {
+            "$ref": "#/components/schemas/VideoContentBlock"
+          },
+          {
+            "$ref": "#/components/schemas/ToolUseContentBlock"
+          },
+          {
+            "$ref": "#/components/schemas/ToolResultContentBlock"
+          }
+        ]
+      },
+      "TextContentBlock": {
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "固定为 text。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本内容。"
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        }
+      },
+      "ImageSource": {
         "type": "object",
         "required": [
           "type"
@@ -236,17 +410,162 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "Claude 内容块类型。"
+            "enum": [
+              "url",
+              "base64"
+            ],
+            "description": "图片来源类型：url（公网图片地址）、base64（Base64 编码）。"
           },
-          "text": {
+          "url": {
             "type": "string",
-            "description": "`text` 块的文本。"
+            "description": "图片的公网地址。当 type 为 url 时必填。"
+          },
+          "media_type": {
+            "type": "string",
+            "description": "图片的 MIME 类型，如 image/jpeg。当 type 为 base64 时必填。"
+          },
+          "data": {
+            "type": "string",
+            "description": "Base64 编码的图片数据。当 type 为 base64 时必填。"
+          }
+        }
+      },
+      "ImageContentBlock": {
+        "type": "object",
+        "required": [
+          "type",
+          "source"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image"
+            ],
+            "description": "固定为 image。"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ImageSource"
           },
           "cache_control": {
             "$ref": "#/components/schemas/CacheControl"
           }
         },
-        "additionalProperties": true
+        "description": "图片内容块，需使用视觉模型。"
+      },
+      "VideoSource": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "url",
+              "base64"
+            ],
+            "description": "视频来源类型：url（公网视频地址）、base64（Base64 编码）。"
+          },
+          "url": {
+            "type": "string",
+            "description": "视频的公网地址。当 type 为 url 时必填。"
+          },
+          "media_type": {
+            "type": "string",
+            "description": "视频的 MIME 类型，如 video/mp4。当 type 为 base64 时必填。"
+          },
+          "data": {
+            "type": "string",
+            "description": "Base64 编码的视频数据。当 type 为 base64 时必填。"
+          }
+        }
+      },
+      "VideoContentBlock": {
+        "type": "object",
+        "required": [
+          "type",
+          "source"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "video"
+            ],
+            "description": "固定为 video。"
+          },
+          "source": {
+            "$ref": "#/components/schemas/VideoSource"
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        },
+        "description": "视频内容块，需使用视觉模型。"
+      },
+      "ToolUseContentBlock": {
+        "type": "object",
+        "required": [
+          "type",
+          "id",
+          "name",
+          "input"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "tool_use"
+            ],
+            "description": "固定为 tool_use。"
+          },
+          "id": {
+            "type": "string",
+            "description": "工具调用的唯一标识，用于在后续 tool_result 中关联结果。"
+          },
+          "name": {
+            "type": "string",
+            "description": "被调用的工具名称。"
+          },
+          "input": {
+            "type": "object",
+            "description": "工具调用的入参，结构由 tools 中对应工具的 input_schema 决定。"
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        },
+        "description": "工具调用内容块（assistant 角色返回），模型发出的工具调用指令。"
+      },
+      "ToolResultContentBlock": {
+        "type": "object",
+        "required": [
+          "type",
+          "tool_use_id",
+          "content"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "tool_result"
+            ],
+            "description": "固定为 tool_result。"
+          },
+          "tool_use_id": {
+            "type": "string",
+            "description": "对应 tool_use 信息中的 id。"
+          },
+          "content": {
+            "type": "string",
+            "description": "工具执行返回的内容。"
+          },
+          "cache_control": {
+            "$ref": "#/components/schemas/CacheControl"
+          }
+        },
+        "description": "工具结果内容块（user 角色），工具执行结果回传给模型。"
       },
       "TextBlock": {
         "type": "object",
@@ -260,11 +579,11 @@
             "enum": [
               "text"
             ],
-            "description": "系统文本块类型。"
+            "description": "固定为 text。"
           },
           "text": {
             "type": "string",
-            "description": "系统指令文本。"
+            "description": "系统提示词文本。"
           },
           "cache_control": {
             "$ref": "#/components/schemas/CacheControl"
@@ -276,15 +595,158 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "提示缓存控制类型。"
+            "enum": [
+              "ephemeral"
+            ],
+            "description": "固定为 ephemeral，标记显式缓存断点。命中后第二次及之后的请求按缓存读取计费。"
           }
         },
-        "description": "提示缓存元数据"
+        "description": "提示缓存元数据。在内容块上标记后，该块之前的所有内容会被缓存。"
+      },
+      "ResponseContentBlock": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": ["type", "text"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["text"],
+                "description": "固定为 text。"
+              },
+              "text": {
+                "type": "string",
+                "description": "模型生成的文本回复。"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["type", "thinking", "signature"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["thinking"],
+                "description": "固定为 thinking。"
+              },
+              "thinking": {
+                "type": "string",
+                "description": "模型在生成最终回复前的思考过程。"
+              },
+              "signature": {
+                "type": "string",
+                "description": "当前固定为空字符串。"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": ["type", "id", "name", "input"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["tool_use"],
+                "description": "固定为 tool_use。"
+              },
+              "id": {
+                "type": "string",
+                "description": "工具调用的唯一标识，用于在后续 tool_result 中关联结果。"
+              },
+              "name": {
+                "type": "string",
+                "description": "被调用的工具名称。"
+              },
+              "input": {
+                "type": "object",
+                "description": "工具调用的入参。"
+              }
+            }
+          }
+        ]
+      },
+      "UsageStats": {
+        "type": "object",
+        "description": "Token 用量统计。流式调用中，message_start 事件的 usage 仅包含 input_tokens 和 output_tokens；完整 4 个字段在 message_delta 事件中返回。",
+        "properties": {
+          "input_tokens": {
+            "type": "integer",
+            "description": "输入 Token 数量。"
+          },
+          "output_tokens": {
+            "type": "integer",
+            "description": "输出 Token 数量。"
+          },
+          "cache_creation_input_tokens": {
+            "type": "integer",
+            "description": "缓存创建消耗的输入 Token 数量。"
+          },
+          "cache_read_input_tokens": {
+            "type": "integer",
+            "description": "缓存读取消耗的输入 Token 数量。"
+          }
+        }
       },
       "ClaudeMessagesResponse": {
         "type": "object",
-        "description": "上游提供商返回的 Claude 兼容消息响应。",
-        "additionalProperties": true
+        "required": [
+          "id",
+          "type",
+          "role",
+          "model",
+          "content",
+          "stop_reason",
+          "stop_sequence",
+          "usage"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "消息的唯一标识。"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "message"
+            ],
+            "description": "固定为 message。"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "固定为 assistant。"
+          },
+          "model": {
+            "type": "string",
+            "description": "使用的模型名称。"
+          },
+          "content": {
+            "type": "array",
+            "description": "内容数组。",
+            "items": {
+              "$ref": "#/components/schemas/ResponseContentBlock"
+            }
+          },
+          "stop_reason": {
+            "type": "string",
+            "enum": [
+              "end_turn",
+              "max_tokens",
+              "tool_use"
+            ],
+            "description": "停止原因：end_turn（正常结束）、max_tokens（达到 Token 上限）、tool_use（工具调用）。"
+          },
+          "stop_sequence": {
+            "type": "string",
+            "nullable": true,
+            "description": "固定为 null。"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/UsageStats"
+          }
+        },
+        "description": "Claude 兼容消息响应。"
       },
       "ClaudeErrorResponse": {
         "type": "object",
