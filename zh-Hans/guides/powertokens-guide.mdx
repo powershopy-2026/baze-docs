@@ -1,1 +1,749 @@
-1232131
+---
+title: 'PowerTokens 新用户快速入门'
+description: '完成注册、充值，并按推荐路径接入 PowerTokens。包含 API Key 创建、模型调用、日志和用量统计的完整图文指南。'
+mode: custom
+icon: 'bolt'
+iconType: 'solid'
+---
+
+export function GuideAssets() {
+  React.useEffect(() => {
+    // Inject CSS
+    const style = document.createElement('style');
+    style.textContent = `:root {
+    --primary: #16A34A;
+    --primary-light: #22c55e;
+    --primary-dark: #15803D;
+    --accent: #0ea5e9;
+    --success: #16A34A;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --bg: #ffffff;
+    --bg-card: #f8fafc;
+    --bg-card-hover: #f0fdf4;
+    --bg-code: #1e293b;
+    --text: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border: #e2e8f0;
+    --border-light: #cbd5e1;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-lg: 0 4px 12px rgba(0,0,0,.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-lg: 16px;
+    --transition: 0.2s ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── Layout ─── */
+  .layout { display: flex; max-width: 1280px; margin: 0 auto; position: relative; }
+
+  /* ─── Top Stepper ─── */
+  .stepper {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0; margin-bottom: 32px;
+  }
+  .stepper-inner {
+    max-width: 900px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center;
+    gap: 0;
+  }
+  .stepper .step-item {
+    display: flex; align-items: center; gap: 0;
+    cursor: pointer; text-decoration: none;
+    transition: all .2s ease;
+  }
+  .stepper .step-item:hover .step-label { color: var(--text); }
+  .stepper .step-circle {
+    width: 36px; height: 36px; min-width: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .82rem; font-weight: 700;
+    background: #f1f5f9; color: var(--text-muted);
+    border: 2px solid #e2e8f0;
+    transition: all .3s ease;
+  }
+  .stepper .step-item.active .step-circle {
+  background: #16A34A; color: #fff;
+    border-color: #16A34A;
+    box-shadow: 0 0 0 4px rgba(22,163,74,.15);
+  }
+  .stepper .step-item.done .step-circle {
+    background: #dcfce7; color: #15803D;
+    border-color: #bbf7d0;
+  }
+  .stepper .step-dash {
+    width: 32px; height: 2px;
+    background: #e2e8f0; margin: 0 4px;
+    transition: background .3s ease;
+  }
+  .stepper .step-item.done .step-dash,
+  .stepper .step-item.done + .step-item .step-dash:first-child { display: none; }
+  .stepper .step-item.done + .step-dash,
+  .step-dash.done { background: #bbf7d0; }
+  .stepper .step-label {
+    font-size: .78rem; font-weight: 500; color: var(--text-muted);
+    white-space: nowrap; transition: color .2s;
+    margin-left: 10px;
+  }
+  .stepper .step-item.active .step-label {
+    color: #15803D; font-weight: 700;
+  }
+  .stepper .step-item.done .step-label { color: #15803D; }
+  /* ─── Mobile stepper ─── */
+  @media (max-width: 768px) {
+    .stepper { padding: 10px 8px; }
+    .stepper .step-circle { width: 28px; height: 28px; min-width: 28px; font-size: .7rem; }
+    .stepper .step-label { font-size: .65rem; margin-left: 5px; }
+    .stepper .step-dash { width: 16px; }
+  }
+
+  /* ─── Main Content ─── */
+  .main { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ─── Hero ─── */
+  .hero { margin-bottom: 48px; padding-top: 60px; }
+  .hero .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 20px;
+    font-size: .8rem; font-weight: 500;
+    background: #f0fdf4; color: #15803D;
+    border: 1px solid #bbf7d0; margin-bottom: 16px;
+  }
+  .hero .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: #16A34A; animation: pulse-dot 2s ease-in-out infinite; }
+  @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+  .hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800;
+    letter-spacing: -.02em; line-height: 1.2; margin-bottom: 12px;
+    color: var(--text);
+  }
+  .hero h1 span { color: #16A34A; }
+  .hero .subtitle { font-size: 1.05rem; color: var(--text-secondary); max-width: 600px; line-height: 1.7; }
+
+  /* ─── Step Cards ─── */
+  .step-section { margin-bottom: 12px; scroll-margin-top: 24px; }
+  .step-section .step-header {
+    display: flex; align-items: flex-start; gap: 14px;
+    cursor: pointer; padding: 20px 24px;
+    background: var(--bg-card); border-radius: var(--radius);
+    border: 1px solid var(--border); transition: var(--transition); user-select: none;
+  }
+  .step-section .step-header:hover {
+    background: var(--bg-card-hover); border-color: #22c55e;
+    box-shadow: var(--shadow-lg);
+  }
+  .step-section .step-number {
+    width: 38px; height: 38px; min-width: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1.1rem;
+    background: #16A34A; color: #fff;
+  }
+  .step-section.open .step-number { background: #15803D; }
+  .step-section .step-info { flex: 1; }
+  .step-section .step-info h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 2px; color: var(--text); }
+  .step-section .step-info p { color: var(--text-secondary); font-size: .85rem; }
+  .step-section .step-arrow {
+    font-size: 1.2rem; color: var(--text-muted);
+    transition: transform var(--transition); min-width: 20px; text-align: center;
+  }
+  .step-section.open .step-arrow { transform: rotate(180deg); color: #16A34A; }
+  .step-section .step-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height .4s ease, margin .2s;
+  }
+  .step-section.open .step-body { max-height: 8000px; margin-top: 12px; }
+  .step-section .step-content {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px;
+  }
+
+  /* ─── Cards Grid ─── */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+    transition: var(--transition);
+  }
+  .card:hover { background: var(--bg-card-hover); border-color: #22c55e; box-shadow: var(--shadow-lg); }
+  .card .card-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; margin-bottom: 10px;
+    background: #f0fdf4; color: #16A34A;
+  }
+  .card h4 { font-size: .95rem; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+  .card p { font-size: .82rem; color: var(--text-secondary); line-height: 1.6; }
+
+  /* ─── Screenshot ─── */
+  .screenshot-wrap {
+    margin: 20px 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #f1f5f9;
+    cursor: zoom-in;
+    transition: var(--transition);
+  }
+  .screenshot-wrap:hover { border-color: var(--border-light); box-shadow: var(--shadow-lg); }
+  .screenshot-wrap .screenshot-img { display: block; width: 100%; height: auto; }
+  .screenshot-caption {
+    margin-top: 8px; text-align: center;
+    font-size: .78rem; color: var(--text-muted);
+  }
+
+  /* ─── Lightbox ─── */
+  .lightbox {
+    display: none;
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,.9); backdrop-filter: blur(4px);
+    cursor: zoom-out;
+    align-items: center; justify-content: center;
+    padding: 40px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 92vw; max-height: 88vh;
+    border-radius: var(--radius);
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    object-fit: contain;
+    animation: lightboxIn .3s ease;
+  }
+  @keyframes lightboxIn { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: scale(1); } }
+  .lightbox .lb-close {
+    position: fixed; top: 20px; right: 24px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2);
+    color: #fff; font-size: 1.2rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--transition); z-index: 10000;
+  }
+  .lightbox .lb-close:hover { background: rgba(255,255,255,.25); }
+  .lightbox .lb-nav {
+    position: fixed; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2);
+    color: #fff; font-size: 1.1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: var(--transition); z-index: 10000;
+  }
+  .lightbox .lb-nav:hover { background: rgba(255,255,255,.25); }
+  .lightbox .lb-prev { left: 20px; }
+  .lightbox .lb-next { right: 20px; }
+  .lightbox .lb-counter {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,.7); font-size: .8rem;
+    background: rgba(0,0,0,.5); padding: 4px 14px;
+    border-radius: 20px; z-index: 10000;
+  }
+
+  /* ─── Code Blocks ─── */
+  .code-block-wrapper {
+    margin: 16px 0; border-radius: var(--radius-sm); overflow: hidden;
+    border: 1px solid var(--border); background: var(--bg-code);
+  }
+  .code-block-wrapper .code-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px; background: rgba(255,255,255,.05);
+    font-size: .78rem; color: #94a3b8;
+  }
+  .code-block-wrapper .code-header .lang-tag {
+    font-family: 'SF Mono', 'JetBrains Mono', monospace;
+    font-size: .72rem; padding: 2px 8px; border-radius: 4px;
+    background: rgba(34,197,94,.2); color: #4ade80;
+  }
+  .copy-btn {
+    background: none; border: 1px solid #334155; color: #94a3b8;
+    padding: 3px 10px; border-radius: 4px; font-size: .72rem;
+    cursor: pointer; transition: var(--transition);
+  }
+  .copy-btn:hover { color: #e2e8f0; border-color: #64748b; }
+  .copy-btn.copied { color: #4ade80; border-color: #4ade80; }
+  pre {
+    padding: 16px; overflow-x: auto;
+    font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: .82rem; line-height: 1.7; color: #c9d1d9; margin: 0;
+  }
+  pre::-webkit-scrollbar { height: 6px; }
+  pre::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
+
+  .kw  { color: #ff7b72; }
+  .str { color: #a5d6ff; }
+  .cm  { color: #8b949e; font-style: italic; }
+  .fn  { color: #d2a8ff; }
+  .num { color: #79c0ff; }
+  .op  { color: #ff7b72; }
+  .var { color: #ffa657; }
+  .url { color: #7ee787; }
+
+  /* ─── Info Boxes ─── */
+  .info-box { margin: 16px 0; padding: 14px 18px; border-radius: var(--radius-sm); border-left: 3px solid; display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; line-height: 1.6; }
+  .info-box .info-icon { font-size: 1.1rem; min-width: 22px; text-align: center; }
+  .info-box.tip { background: #f0fdf4; border-color: #16A34A; color: #166534; }
+  .info-box.warning-box { background: #fffbeb; border-color: #f59e0b; color: #92400e; }
+  .info-box.info { background: #eff6ff; border-color: #0ea5e9; color: #1e40af; }
+  .info-box.danger { background: #fef2f2; border-color: #ef4444; color: #991b1b; }
+
+  /* ─── Table ─── */
+  .styled-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: .88rem; }
+  .styled-table th { text-align: left; padding: 10px 14px; background: #f0fdf4; color: #15803D; font-weight: 600; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; border-bottom: 2px solid var(--border); }
+  .styled-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+  .styled-table tbody tr:hover td { background: #f8fafc; }
+
+  /* ─── Timeline ─── */
+  .timeline { position: relative; padding-left: 24px; margin: 20px 0; }
+  .timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #16A34A, #0ea5e9, transparent); }
+  .timeline .tl-item { position: relative; margin-bottom: 20px; padding-left: 20px; }
+  .timeline .tl-item::before { content: ''; position: absolute; left: -19px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: #16A34A; box-shadow: 0 0 0 3px #dcfce7; }
+  .timeline .tl-item h4 { font-size: .95rem; font-weight: 600; margin-bottom: 2px; }
+  .timeline .tl-item p { font-size: .85rem; color: var(--text-secondary); }
+
+  /* ─── Tags ─── */
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .72rem; font-weight: 500; margin: 2px 4px 2px 0; }
+  .tag.api { background: #f0fdf4; color: #15803D; }
+  .tag.model { background: #eff6ff; color: #1e40af; }
+  .tag.billing { background: #f0fdf4; color: #166534; }
+  .tag.security { background: #fef2f2; color: #991b1b; }
+
+  /* ─── Footer ─── */
+  .guide-footer { margin-top: 56px; padding: 32px 0 0; border-top: 1px solid var(--border); }
+  .guide-footer .footer-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .guide-footer .footer-card {
+    padding: 18px; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); text-decoration: none; transition: var(--transition);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .guide-footer .footer-card:hover { background: var(--bg-card-hover); border-color: #22c55e; }
+  .guide-footer .footer-card .fc-info { flex: 1; }
+  .guide-footer .footer-card .fc-label { font-size: .72rem; color: var(--text-muted); margin-bottom: 2px; }
+  .guide-footer .footer-card .fc-title { font-size: .9rem; font-weight: 600; color: var(--text); }
+  .guide-footer .footer-card.next { text-align: right; }
+  .guide-footer .help-section { text-align: center; padding: 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); }
+  .guide-footer .help-section h3 { margin-bottom: 10px; font-size: 1rem; }
+  .guide-footer .help-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .guide-footer .help-link {
+    display: inline-flex; align-items: center; gap: 5px; padding: 7px 16px;
+    border-radius: 20px; border: 1px solid var(--border);
+    color: var(--text-secondary); text-decoration: none;
+    font-size: .82rem; transition: var(--transition);
+  }
+  .guide-footer .help-link:hover { border-color: #16A34A; color: #15803D; background: #f0fdf4; }
+
+  /* ─── Mobile ─── */
+  @media (max-width: 640px) {
+    .main { padding: 20px 16px 48px; }
+    .hero h1 { font-size: 1.4rem; }
+    .step-section .step-header { padding: 14px 18px; }
+    .step-section .step-content { padding: 18px; }
+    .lightbox { padding: 16px; }
+  }`;
+    document.head.appendChild(style);
+
+    // Inject JS (deferred to next tick for DOM readiness)
+    const script = document.createElement('script');
+    script.textContent = `setTimeout(function() { // ─── Screenshot Gallery ───
+  const gallery = [
+    { src: 'https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/billing.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=823267ea233b777624128a1cc7091b46', alt: 'Billing 充值页面', caption: 'Billing 页面 — 选择套餐并完成充值' },
+    { src: 'https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/api-keys.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=52c9167e3aa320c38026aefa36dbf1c6', alt: 'API Keys 管理页面', caption: 'API Keys 管理页面 — 查看、创建和管理你的密钥' },
+    { src: 'https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/create-api-key.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=c7c43bb034be2f4b4d20b5e8c1dcf896', alt: '创建 API Key 表单', caption: '创建 API Key 表单 — 配置名称、额度、重置周期和过期时间' },
+    { src: 'https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/models.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=538fe2a57a55b45bc0036e65c7c8de93', alt: 'Models 模型市场', caption: 'Models 模型市场 — 浏览 LLM、图像、视频和音频模型' },
+    { src: 'https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/playground.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=92f35ed4aa49eef98702d425f085dad9', alt: 'Playground 调试界面', caption: 'Playground — 无需编写代码即可调试 Prompt 和参数' },
+    { src: 'https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/logs.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=196792cb1b6b2303798651f0b6951f49', alt: 'Logs 调用日志页面', caption: 'Logs 页面 — 查看请求时间、模型名称、参数和错误信息' },
+    { src: 'https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/dashboard.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=c73d6636e35e04304e4c4e21400f123d', alt: 'Dashboard 用量统计页面', caption: 'Dashboard — 按模型和 Key 维度查看 Credits 消耗与请求统计' }
+  ];
+  let currentIndex = 0;
+
+  function openLightbox(index) {
+    currentIndex = index;
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    const counter = document.getElementById('lb-counter');
+    img.src = gallery[index].src;
+    img.alt = gallery[index].alt;
+    counter.textContent = (index + 1) + ' / ' + gallery.length + ' — ' + gallery[index].caption;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function navLightbox(dir) {
+    currentIndex = (currentIndex + dir + gallery.length) % gallery.length;
+    const img = document.getElementById('lightbox-img');
+    const counter = document.getElementById('lb-counter');
+    img.style.opacity = '0';
+    setTimeout(() => {
+      img.src = gallery[currentIndex].src;
+      img.alt = gallery[currentIndex].alt;
+      counter.textContent = (currentIndex + 1) + ' / ' + gallery.length + ' — ' + gallery[currentIndex].caption;
+      img.style.opacity = '1';
+    }, 150);
+  }
+
+  function toggleSidebar() {} // removed
+
+  function toggleStep(header) { header.parentElement.classList.toggle('open'); }
+
+  function copyCode(btn, codeId) {
+    const pre = document.getElementById(codeId);
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = '已复制 ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '📋 复制'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // ─── Stepper scroll tracking ───
+  const stepItems = document.querySelectorAll('.stepper .step-item');
+  const stepDashes = document.querySelectorAll('.stepper .step-dash');
+  const stepIds = Array.from(stepItems).map(el => el.dataset.step);
+
+  // Click handler: expand accordion + scroll
+  stepItems.forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.dataset.step;
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      // Find the nearest parent step-section and expand it
+      let section = target.closest('.step-section') || target;
+      if (section.classList.contains('step-section') && !section.classList.contains('open')) {
+        section.classList.add('open');
+      }
+
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  window.addEventListener('scroll', () => {
+    let current = stepIds[0];
+    for (const id of stepIds) {
+      const el = document.getElementById(id);
+      if (el && scrollY >= el.offsetTop - 120) current = id;
+    }
+    const currentIdx = stepIds.indexOf(current);
+    stepItems.forEach((item, i) => {
+      item.classList.remove('active', 'done');
+      if (i < currentIdx) item.classList.add('done');
+      if (i === currentIdx) item.classList.add('active');
+    });
+    stepDashes.forEach((dash, i) => {
+      dash.classList.toggle('done', i < currentIdx);
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    const lb = document.getElementById('lightbox');
+    if (lb.classList.contains('open')) {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navLightbox(-1);
+      if (e.key === 'ArrowRight') navLightbox(1);
+      return;
+    }
+  });
+
+  // Remove Mintlify-injected line numbers
+  (function() {
+    document.querySelectorAll('.code-block-wrapper pre').forEach(function(pre) {
+      Array.from(pre.childNodes).forEach(function(node) {
+        if (node.nodeType === 3) node.textContent = node.textContent.replace(/^\\d+\\|\\s*/gm, '');
+      });
+    });
+  })(); }, 0);`;
+    document.body.appendChild(script);
+
+    return () => {
+      style.remove();
+      script.remove();
+    };
+  }, []);
+  return null;
+}
+
+<div dangerouslySetInnerHTML={{ __html: `<!-- ─── Top Stepper ─── -->
+<nav class="stepper" id="stepper">
+  <div class="stepper-inner">
+    <a class="step-item active" href="#hero" data-step="hero">
+      <span class="step-circle">1</span>
+      <span class="step-label">注册充值</span>
+    </a>
+    <span class="step-dash"></span>
+    <a class="step-item" href="#step2" data-step="step2">
+      <span class="step-circle">2</span>
+      <span class="step-label">创建密钥</span>
+    </a>
+    <span class="step-dash"></span>
+    <a class="step-item" href="#step2-3" data-step="step2-3">
+      <span class="step-circle">3</span>
+      <span class="step-label">调用模型</span>
+    </a>
+    <span class="step-dash"></span>
+    <a class="step-item" href="#step2-4" data-step="step2-4">
+      <span class="step-circle">4</span>
+      <span class="step-label">Playground</span>
+    </a>
+    <span class="step-dash"></span>
+    <a class="step-item" href="#step3" data-step="step3">
+      <span class="step-circle">5</span>
+      <span class="step-label">日志用量</span>
+    </a>
+  </div>
+</nav>
+
+  <!-- ─── Lightbox ─── -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lb-close" onclick="closeLightbox()" aria-label="关闭">✕</button>
+    <button class="lb-nav lb-prev" onclick="event.stopPropagation();navLightbox(-1)" aria-label="上一张">◀</button>
+    <button class="lb-nav lb-next" onclick="event.stopPropagation();navLightbox(1)" aria-label="下一张">▶</button>
+    <img src="" alt="" id="lightbox-img" />
+    <div class="lb-counter" id="lb-counter"></div>
+  </div>
+
+  <!-- ─── Main Content ─── -->
+  <main class="main">
+
+    <!-- ═══ HERO ═══ -->
+    <section class="hero" id="hero">
+      <div class="badge">
+        <span class="dot"></span> 快速入门指南 · 预计 10 分钟
+      </div>
+      <h1>PowerTokens<br><span>新用户快速入门</span></h1>
+      <p class="subtitle">
+        PowerTokens 为生成式 AI 应用提供<strong>统一接口</strong>。你可以通过同一个平台接入聊天、图像、视频和音频模型，并在控制台管理 Credits、API Key、调用日志和用量统计。
+      </p>
+    </section>
+
+    <!-- ═══ Overview Cards ═══ -->
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">👤</div>
+        <h4>1. 注册账号并充值 Credits</h4>
+        <p>通过 Google、GitHub 或邮箱注册，进入 Dashboard 完成首次充值。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔑</div>
+        <h4>2. 创建 API Key 并调用模型</h4>
+        <p>在 API Keys 页面创建密钥，配置额度限制。浏览模型市场，通过 OpenAI 兼容接口调用。</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h4>3. 查看调用日志和用量统计</h4>
+        <p>在 Logs 页面查看每次请求的详情，在 Dashboard 监控 Credits 消耗。</p>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 1 ═══ -->
+    <div class="step-section" id="step1">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">1</div>
+        <div class="step-info">
+          <h2>注册 & 充值</h2>
+          <p>创建 PowerTokens 账号并充值 Credits，为后续操作做好准备</p>
+        </div>
+        <div class="step-arrow">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-content">
+          <div class="timeline">
+            <div class="tl-item">
+              <h4>访问官网并注册</h4>
+              <p>打开 <strong>powertokens.ai</strong>，点击 Sign Up，使用 Google、GitHub 或邮箱注册账号。</p>
+            </div>
+            <div class="tl-item">
+              <h4>进入 Billing 页面充值</h4>
+              <p>登录后进入 <strong>Dashboard → Billing</strong>，选择合适的 Credits 套餐并完成支付。</p>
+              <div class="screenshot-wrap" onclick="event.stopPropagation();openLightbox(0)">
+                <img class="screenshot-img" src="https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/billing.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=823267ea233b777624128a1cc7091b46" alt="Billing 充值页面" loading="lazy" />
+              </div>
+              <div class="screenshot-caption">Billing 页面 — 选择套餐并完成充值</div>
+            </div>
+            <div class="tl-item">
+              <h4>充值到账</h4>
+              <p>充值完成后 Credits 会立即到账，可在 Dashboard 顶部查看余额。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 2 ═══ -->
+    <div class="step-section" id="step2">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">2</div>
+        <div class="step-info">
+          <h2>创建 API Key & 调用模型</h2>
+          <p>创建密钥、浏览模型市场，并通过 API 或 Playground 调用模型</p>
+        </div>
+        <div class="step-arrow">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-content">
+
+          <!-- 2.1 -->
+          <h3 id="step2-1" style="font-size:1.05rem;font-weight:700;margin-bottom:12px;color:var(--text)">🔑 创建 API Key</h3>
+
+          <p style="margin-bottom:12px;color:var(--text-secondary)">在左侧导航栏点击 <strong>API Keys</strong>，进入密钥管理页面。</p>
+
+          <div class="screenshot-wrap" onclick="event.stopPropagation();openLightbox(1)">
+            <img class="screenshot-img" src="https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/api-keys.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=52c9167e3aa320c38026aefa36dbf1c6" alt="API Keys 管理页面" loading="lazy" />
+          </div>
+          <div class="screenshot-caption">API Keys 管理页面 — 查看、创建和管理你的密钥</div>
+
+          <p style="margin-top:16px;color:var(--text-secondary)">点击 <strong>Create API Key</strong>，填写：</p>
+
+          <table class="styled-table">
+            <thead>
+              <tr><th>字段</th><th>说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Name</strong></td><td>密钥名称，如 <code style="background:#f0fdf4;padding:2px 6px;border-radius:4px;font-size:.82rem;color:#15803D">my-app-key</code></td></tr>
+              <tr><td><strong>Credit Limit</strong></td><td>该密钥的 Credits 使用上限（可选）</td></tr>
+              <tr><td><strong>Reset Period</strong></td><td>额度重置周期（可选）</td></tr>
+              <tr><td><strong>Expiration</strong></td><td>过期时间（可选）</td></tr>
+            </tbody>
+          </table>
+
+          <div class="screenshot-wrap" onclick="event.stopPropagation();openLightbox(2)">
+            <img class="screenshot-img" src="https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/create-api-key.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=c7c43bb034be2f4b4d20b5e8c1dcf896" alt="创建 API Key 表单" loading="lazy" />
+          </div>
+
+          <div class="info-box danger">
+            <span class="info-icon">⚠️</span>
+            <div><strong>重要提示</strong><br>创建后请<strong>立即复制并安全保存</strong> API Key。关闭弹窗后将无法再次查看完整密钥内容。</div>
+          </div>
+
+          <!-- 2.2 -->
+          <h3 id="step2-2" style="font-size:1.05rem;font-weight:700;margin:24px 0 12px;color:var(--text)">🌐 浏览模型市场</h3>
+
+          <p style="color:var(--text-secondary);margin-bottom:12px">进入 <strong>Models</strong> 页面，浏览可用的 LLM、图像、视频和音频模型。点击模型查看详情和支持的参数。</p>
+
+          <div class="screenshot-wrap" onclick="event.stopPropagation();openLightbox(3)">
+            <img class="screenshot-img" src="https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/models.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=538fe2a57a55b45bc0036e65c7c8de93" alt="Models 模型市场" loading="lazy" />
+          </div>
+
+          <div class="info-box info">
+            <span class="info-icon">📌</span>
+            <div><strong>注意事项</strong><br>在发起正式接入前，请根据目标模型页面确认<strong>可用参数、请求字段和返回格式</strong>。不同模型支持的参数可能有所不同。</div>
+          </div>
+
+          <!-- 2.3 -->
+          <h3 id="step2-3" style="font-size:1.05rem;font-weight:700;margin:24px 0 12px;color:var(--text)">📋 API 调用示例</h3>
+
+          <p style="color:var(--text-secondary);margin-bottom:8px">使用 OpenAI 兼容的 Chat Completions 接口调用模型：</p>
+
+          <table class="styled-table">
+            <thead>
+              <tr><th>参数</th><th>值</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Method</strong></td><td><code style="background:#f0fdf4;padding:2px 6px;border-radius:4px;font-size:.82rem">POST</code></td></tr>
+              <tr><td><strong>URL</strong></td><td><code style="background:#f0fdf4;padding:2px 6px;border-radius:4px;font-size:.82rem">https://baze-api.powerbuyin.top/v1/chat/completions</code></td></tr>
+              <tr><td><strong>Authorization</strong></td><td><code style="background:#f0fdf4;padding:2px 6px;border-radius:4px;font-size:.82rem">Bearer &lt;your-api-key&gt;</code></td></tr>
+              <tr><td><strong>Content-Type</strong></td><td><code style="background:#f0fdf4;padding:2px 6px;border-radius:4px;font-size:.82rem">application/json</code></td></tr>
+            </tbody>
+          </table>
+
+          <div class="code-block-wrapper">
+            <div class="code-header">
+              <span class="lang-tag">bash</span>
+              <button class="copy-btn" onclick="copyCode(this, 'curl-code')">📋 复制</button>
+            </div>
+            <pre id="curl-code"><span class="kw">curl</span> <span class="op">\\</span>
+  <span class="op">--request</span> POST <span class="op">\\</span>
+  <span class="op">--url</span> <span class="url">https://baze-api.powerbuyin.top/v1/chat/completions</span> <span class="op">\\</span>
+  <span class="op">--header</span> <span class="str">'Authorization: Bearer &lt;your-api-key&gt;'</span> <span class="op">\\</span>
+  <span class="op">--header</span> <span class="str">'Content-Type: application/json'</span> <span class="op">\\</span>
+  <span class="op">--data</span> <span class="str">'{
+  "model": "MiniMax-M3",
+  "messages": [
+    {"role": "system", "content": "You are a concise assistant."},
+    {"role": "user", "content": "Describe Paris in one sentence."}
+  ],
+  "temperature": 0.3
+}'</span></pre>
+          </div>
+
+          <div class="info-box tip">
+            <span class="info-icon">💡</span>
+            <div><strong>提示</strong><br>端点 URL 遵循 OpenAI 格式，可直接使用 OpenAI SDK，仅需替换 <code style="background:#dcfce7;padding:1px 5px;border-radius:3px">base_url</code> 即可接入。</div>
+          </div>
+
+          <!-- 2.4 -->
+          <h3 id="step2-4" style="font-size:1.05rem;font-weight:700;margin:24px 0 12px;color:var(--text)">🎮 使用 Playground 调试模型</h3>
+
+          <p style="color:var(--text-secondary);margin-bottom:12px">无需编写代码即可测试模型。进入 <strong>Playground</strong> 页面，选择模型、输入 Prompt、调整参数并查看实时响应。</p>
+
+          <div class="screenshot-wrap" onclick="event.stopPropagation();openLightbox(4)">
+            <img class="screenshot-img" src="https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/playground.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=92f35ed4aa49eef98702d425f085dad9" alt="Playground 调试界面" loading="lazy" />
+          </div>
+
+          <div class="info-box tip">
+            <span class="info-icon">💡</span>
+            <div>Playground 非常适合<strong>快速验证 Prompt 和参数效果</strong>，调试满意后可直接将参数复制到代码中。</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STEP 3 ═══ -->
+    <div class="step-section" id="step3">
+      <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">3</div>
+        <div class="step-info">
+          <h2>日志 & 用量统计</h2>
+          <p>查看 API 调用日志和 Credits 消耗统计</p>
+        </div>
+        <div class="step-arrow">▾</div>
+      </div>
+      <div class="step-body">
+        <div class="step-content">
+
+          <h3 style="font-size:1rem;font-weight:700;margin-bottom:8px">📜 调用日志</h3>
+          <p style="color:var(--text-secondary);margin-bottom:12px">在 <strong>Logs</strong> 页面可以查看所有 API 调用记录，包括请求时间、模型名称、请求参数和错误信息。</p>
+
+          <div class="screenshot-wrap" onclick="event.stopPropagation();openLightbox(5)">
+            <img class="screenshot-img" src="https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/logs.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=196792cb1b6b2303798651f0b6951f49" alt="Logs 调用日志页面" loading="lazy" />
+          </div>
+
+          <h3 style="font-size:1rem;font-weight:700;margin:20px 0 8px">📊 用量统计</h3>
+          <p style="color:var(--text-secondary);margin-bottom:12px">进入 <strong>Dashboard</strong>，按模型和 Key 维度查看 Credits 消耗趋势和请求统计。</p>
+
+          <div class="screenshot-wrap" onclick="event.stopPropagation();openLightbox(6)">
+            <img class="screenshot-img" src="https://mintcdn.com/limeng/eG-MIjQm-sRke4-z/images/guides/powertokens-quickstart/dashboard.png?fit=max&auto=format&n=eG-MIjQm-sRke4-z&q=85&s=c73d6636e35e04304e4c4e21400f123d" alt="Dashboard 用量统计页面" loading="lazy" />
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Footer ═══ -->
+    <div class="guide-footer" id="help">
+      <div class="help-section">
+        <h3>💬 需要帮助？</h3>
+        <div class="help-links">
+          <a class="help-link" href="https://docs.powertokens.ai" target="_blank">📖 官方文档</a>
+          <a class="help-link" href="https://discord.gg/powertokens" target="_blank">💬 Discord 社区</a>
+          <a class="help-link" href="mailto:support@powertokens.ai">📧 联系支持</a>
+        </div>
+      </div>
+    </div>
+
+  </main>` }} />
+<GuideAssets />
