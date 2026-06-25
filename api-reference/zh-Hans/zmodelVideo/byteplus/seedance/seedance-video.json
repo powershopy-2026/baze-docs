@@ -212,7 +212,8 @@
               "seedance-1-0-pro-250528",
               "seedance-1-0-pro-fast-251015",
               "dreamina-seedance-2-0-260128",
-              "dreamina-seedance-2-0-fast-260128"
+              "dreamina-seedance-2-0-fast-260128",
+              "dreamina-seedance-2-0-mini"
             ],
             "description": "您需要调用的模型的 ID （Model ID）"
           },
@@ -311,7 +312,7 @@
               "1080p",
               "4k"
             ],
-            "description": "> Seedance 2.0 系列、Seedance 1.5 pro 默认值：`720p`\n> Seedance 1.0 pro & pro-fast 默认值：`1080p`\n\n视频分辨率，枚举值：\n\n* 480p\n* 720p\n* 1080p：Seedance 2.0 fast 不支持\n* 4k：仅 Seedance 2.0 支持\n\n```说明\n- 相较于一般的 8bit 位深，Seedance 2.0 输出的 4k 视频采用 10bit 位深编码，能够完整保留丰富的色彩层次与平滑的渐变过渡，满足专业影视制作与 HDR 视频内容的要求。\n- 4k 视频采用 H.265 (HEVC) 编码格式输出，部分播放器/浏览器可能无法直接播放。```"
+            "description": "> Seedance 2.0 系列、Seedance 1.5 pro 默认值：`720p`\n> Seedance 1.0 pro & pro-fast 默认值：`1080p`\n\n视频分辨率，枚举值：\n\n* 480p\n* 720p\n* 1080p：Seedance 2.0 Fast 和 Seedance 2.0 Mini 不支持。\n* 4k：仅 Seedance 2.0 支持\n\n```说明\n- 相较于一般的 8bit 位深，Seedance 2.0 输出的 4k 视频采用 10bit 位深编码，能够完整保留丰富的色彩层次与平滑的渐变过渡，满足专业影视制作与 HDR 视频内容的要求。\n- 4k 视频采用 H.265 (HEVC) 编码格式输出，部分播放器/浏览器可能无法直接播放。```"
           },
           "ratio": {
             "type": "string",
