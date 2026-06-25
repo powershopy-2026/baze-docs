@@ -217,7 +217,8 @@
               "seedance-1-0-pro-250528",
               "seedance-1-0-pro-fast-251015",
               "dreamina-seedance-2-0-260128",
-              "dreamina-seedance-2-0-fast-260128"
+              "dreamina-seedance-2-0-fast-260128",
+              "dreamina-seedance-2-0-mini"
             ],
             "description": "ID of the model you need to call. You can activate a model service and query the model ID.\n\nYou can also use an endpoint ID to call a model for advanced capabilities such as rate limiting, billing type (prepaid/postpaid), runtime status query, monitoring, and security."
           },
@@ -316,7 +317,7 @@
               "1080p",
               "4k"
             ],
-            "description": "> Default value for Seedance 2.0 series and Seedance 1.5 Pro: 720p\n> Default value for Seedance 1.0 Pro & Pro Fast: 1080p\n\nVideo resolution. Valid values:\n\n* 480p\n* 720p\n* 1080p: Not supported by Seedance 2.0 Fast.\n* 4k: Only supported by Seedance 2.0 series.\n\n```Note\n- Compared to standard 8-bit depth, the 4K videos output by Seedance 2.0 use 10-bit depth encoding, which fully preserves rich color gradations and smooth transitions, meeting the requirements of professional video production and HDR video content.\n- 4K videos are output in H.265 (HEVC) encoding format, which may not be playable directly in some players/browsers.```"
+            "description": "> Default value for Seedance 2.0 series and Seedance 1.5 Pro: 720p\n> Default value for Seedance 1.0 Pro & Pro Fast: 1080p\n\nVideo resolution. Valid values:\n\n* 480p\n* 720p\n* 1080p: Not supported by Seedance 2.0 Fast and Seedance 2.0 Mini.\n* 4k: Only supported by Seedance 2.0 series.\n\n```Note\n- Compared to standard 8-bit depth, the 4K videos output by Seedance 2.0 use 10-bit depth encoding, which fully preserves rich color gradations and smooth transitions, meeting the requirements of professional video production and HDR video content.\n- 4K videos are output in H.265 (HEVC) encoding format, which may not be playable directly in some players/browsers.```"
           },
           "ratio": {
             "type": "string",

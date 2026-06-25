@@ -219,6 +219,10 @@
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-text-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-image-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-first-last-frame-to-video",
+                      "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-multimodal-reference-to-video",
                       {
                         "group": "字节API兼容",
                         "pages": [
@@ -522,6 +526,10 @@
                       "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
                       "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
                       "en/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-text-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-image-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-first-last-frame-to-video",
+                      "en/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-multimodal-reference-to-video",
                       {
                         "group": "BytePlus API Compat",
                         "pages": [
