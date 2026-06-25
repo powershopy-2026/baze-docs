@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Seedance 2.0 Mini Text-to-Video",
-        "description": "Applicable to the `dreamina-seedance-2-0-mini` model.",
+        "description": "Applicable to the `dreamina-seedance-2-0-mini-260615` model.",
         "operationId": "seedance20MiniTextToVideoEn",
         "tags": [
           "Seedance Video"
@@ -41,7 +41,7 @@
                 "text_to_video": {
                   "summary": "Basic text-to-video",
                   "value": {
-                    "model": "dreamina-seedance-2-0-mini",
+                    "model": "dreamina-seedance-2-0-mini-260615",
                     "media": [
                       {
                         "type": "text",
@@ -91,9 +91,9 @@
           "model": {
             "type": "string",
             "enum": [
-              "dreamina-seedance-2-0-mini"
+              "dreamina-seedance-2-0-mini-260615"
             ],
-            "description": "Video generation model name. Fixed to `dreamina-seedance-2-0-mini`."
+            "description": "Video generation model name. Fixed to `dreamina-seedance-2-0-mini-260615`."
           },
           "media": {
             "type": "array",

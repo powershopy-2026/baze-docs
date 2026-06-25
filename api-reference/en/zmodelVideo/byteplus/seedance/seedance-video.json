@@ -218,7 +218,7 @@
               "seedance-1-0-pro-fast-251015",
               "dreamina-seedance-2-0-260128",
               "dreamina-seedance-2-0-fast-260128",
-              "dreamina-seedance-2-0-mini"
+              "dreamina-seedance-2-0-mini-260615"
             ],
             "description": "ID of the model you need to call. You can activate a model service and query the model ID.\n\nYou can also use an endpoint ID to call a model for advanced capabilities such as rate limiting, billing type (prepaid/postpaid), runtime status query, monitoring, and security."
           },
