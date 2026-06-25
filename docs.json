@@ -69,6 +69,13 @@
                     ]
                   },
                   {
+                    "group": "DeepSeek",
+                    "pages": [
+                      "zh-Hans/zmodelChat/deepseek/deepseek-v4-flash",
+                      "zh-Hans/zmodelChat/deepseek/deepseek-v4-pro"
+                    ]
+                  },
+                  {
                     "group": "智谱",
                     "pages": [
                       "zh-Hans/zmodelChat/zhipu/glm-4.5-air",
@@ -341,6 +348,13 @@
                       "en/zmodelChat/byteplus/seed-2-0-lite-260228",
                       "en/zmodelChat/byteplus/seed-2-0-mini-260215",
                       "en/zmodelChat/byteplus/seed-2-0-pro-260328"
+                    ]
+                  },
+                  {
+                    "group": "DeepSeek",
+                    "pages": [
+                      "en/zmodelChat/deepseek/deepseek-v4-flash",
+                      "en/zmodelChat/deepseek/deepseek-v4-pro"
                     ]
                   },
                   {

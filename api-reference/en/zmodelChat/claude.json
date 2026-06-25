@@ -145,6 +145,8 @@
               "qwen3.6-plus",
               "qwen3-coder-plus",
               "deepseek-v3-2-251201",
+              "deepseek-v4-flash",
+              "deepseek-v4-pro",
               "seed-1-6-250915",
               "seed-1-8-251228",
               "seed-2-0-lite-260228",
