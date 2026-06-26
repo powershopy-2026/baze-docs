@@ -195,10 +195,68 @@
                 "type": "string"
               },
               {
-                "type": "array"
+                "type": "array",
+                "description": "Multimodal content blocks. MiniMax-M3 supports text, image, and video inputs.",
+                "items": {
+                  "type": "object",
+                  "required": ["type"],
+                  "description": "A multimodal content block. Use the `type` field to declare the block type, and populate only the field that matches that type.",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": ["text", "image_url", "video_url"],
+                      "description": "Content block type:\n- `text`: Text block\n- `image_url`: Image input\n- `video_url`: Video input"
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "Text content (when `type` is `text`)."
+                    },
+                    "image_url": {
+                      "type": "object",
+                      "description": "Image input (when `type` is `image_url`). Maximum 10 MB per image. Supported formats: JPEG, PNG, GIF, WEBP.",
+                      "required": ["url"],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "Image URL or Base64 data URL."
+                        },
+                        "detail": {
+                          "type": "string",
+                          "enum": ["low", "default", "high"],
+                          "default": "default",
+                          "description": "Controls image parsing resolution. Defaults to `default`."
+                        }
+                      }
+                    },
+                    "video_url": {
+                      "type": "object",
+                      "description": "Video input (when `type` is `video_url`). Supported formats: MP4, AVI, MOV, MKV.",
+                      "required": ["url"],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "Video URL, Base64 data URL, or a Files API reference in the form `mm_file://{file_id}`. URL/Base64 videos: max 50 MB; Files API videos: max 512 MB."
+                        },
+                        "detail": {
+                          "type": "string",
+                          "enum": ["low", "default", "high"],
+                          "default": "default",
+                          "description": "Controls video frame extraction resolution. Defaults to `default`."
+                        },
+                        "fps": {
+                          "type": "number",
+                          "minimum": 0.2,
+                          "maximum": 5,
+                          "default": 1,
+                          "description": "Video frame extraction rate. Defaults to 1, range [0.2, 5]. Higher values are more sensitive to visual changes but cost more tokens; lower values cost fewer tokens but may miss visual changes."
+                        }
+                      }
+                    }
+                  }
+                }
               }
             ],
-            "description": "Name of the sender. If there are multiple messages with the same role type, a specific name must be provided to distinguish them"
+            "description": "Message content. MiniMax-M3 supports text, image, and video content blocks."
           }
         }
       },
