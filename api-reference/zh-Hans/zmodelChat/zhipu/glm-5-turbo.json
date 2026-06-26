@@ -3,7 +3,7 @@
   "info": {
     "title": "智谱对话补全",
     "version": "1.0.0",
-    "description": "智谱对话补全文档。公开统一入口为 `/v1/chat/completions`，适用于文本对话、图像理解、流式输出、思考模式与函数工具调用。\n\n支持模型：`glm-5-turbo`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`stream`、`thinking`、`temperature`、`top_p`、`max_tokens`、`stop`、`tools`、`tool_choice`。多模态消息当前仅描述 `text` 与 `image_url` 内容分片。",
+    "description": "智谱对话补全文档。公开统一入口为 `/v1/chat/completions`，适用于文本对话、流式输出、思考模式与函数工具调用。\n\n支持模型：`glm-5-turbo`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`stream`、`thinking`、`temperature`、`top_p`、`max_tokens`、`stop`、`tools`、`tool_choice`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "智谱对话补全",
-        "description": "面向智谱 GLM 系列聊天模型的统一入口。\n\n支持模型包括 `glm-5-turbo` 。同一路径支持纯文本对话，以及包含 `image_url` 分片的图像理解请求。\n\n本文档公开字段：`model`、`messages`、`stream`、`thinking`、`temperature`、`top_p`、`max_tokens`、`stop`、`tools`、`tool_choice`。",
+        "description": "面向智谱 GLM 系列聊天模型的统一入口。\n\n支持模型包括 `glm-5-turbo` 。\n\n本文档公开字段：`model`、`messages`、`stream`、`thinking`、`temperature`、`top_p`、`max_tokens`、`stop`、`tools`、`tool_choice`。",
         "operationId": "zhipuChatCompletions",
         "tags": [
           "Zhipu Chat"
@@ -93,30 +93,6 @@
                     ],
                     "tool_choice": "auto",
                     "stream": true
-                  }
-                },
-                "vision_chat": {
-                  "summary": "图像理解",
-                  "value": {
-                    "model": "glm-5-turbo",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "image_url",
-                            "image_url": {
-                              "url": "https://example.com/invoice.png"
-                            }
-                          },
-                          {
-                            "type": "text",
-                            "text": "请识别这张图片的主要内容。"
-                          }
-                        ]
-                      }
-                    ],
-                    "stream": false
                   }
                 }
               }
@@ -351,7 +327,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "消息列表。支持纯文本消息，以及包含 `image_url` 分片的图像输入。请求中至少需要包含一条非 `system`、非 `assistant` 的消息；不能只传 `system` 消息或只传 `assistant` 消息。",
+            "description": "消息列表。请求中至少需要包含一条非 `system`、非 `assistant` 的消息；不能只传 `system` 消息或只传 `assistant` 消息。",
             "items": {
               "$ref": "#/components/schemas/Message"
             },
@@ -424,18 +400,8 @@
             "description": "消息角色。"
           },
           "content": {
-            "description": "消息内容。用户消息可为字符串或多模态分片数组；工具消息固定为字符串。",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ContentPart"
-                }
-              }
-            ]
+            "description": "消息内容。",
+            "type": "string"
           },
           "tool_calls": {
             "type": "array",
@@ -447,43 +413,6 @@
           "tool_call_id": {
             "type": "string",
             "description": "工具消息对应的工具调用 ID。"
-          }
-        }
-      },
-      "ContentPart": {
-        "type": "object",
-        "required": [
-          "type"
-        ],
-        "description": "多模态消息分片。当前文档仅包含已稳定透传的文本与图像输入。",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "text",
-              "image_url"
-            ],
-            "description": "分片类型。"
-          },
-          "text": {
-            "type": "string",
-            "description": "文本内容。当 `type` 为 `text` 时使用。"
-          },
-          "image_url": {
-            "$ref": "#/components/schemas/ImageURLPart"
-          }
-        }
-      },
-      "ImageURLPart": {
-        "type": "object",
-        "required": [
-          "url"
-        ],
-        "description": "图像输入对象。",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "图片 URL 或 base64 数据。"
           }
         }
       },
