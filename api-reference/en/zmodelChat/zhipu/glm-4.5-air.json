@@ -3,7 +3,7 @@
   "info": {
     "title": "Zhipu Chat Completions",
     "version": "1.0.0",
-    "description": "Zhipu Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, supporting text chat, image understanding, streaming output, thinking mode, and function tool calls.\n\nSupported model: `glm-4.5-air`.\n\nThis document covers the following request fields: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, `tool_choice`. Multimodal messages currently describe only `text` and `image_url` content parts.",
+    "description": "Zhipu Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, supporting text chat, streaming output, thinking mode, and function tool calls.\n\nSupported model: `glm-4.5-air`.\n\nThis document covers the following request fields: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, `tool_choice`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "Zhipu Chat Completions",
-        "description": "Unified endpoint for Zhipu GLM series chat models exposed through the baze platform.\n\nSupported model: `glm-4.5-air`. The same path supports plain text chat as well as image understanding requests containing `image_url` content parts.\n\nDocumented fields: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, `tool_choice`.",
+        "description": "Unified endpoint for Zhipu GLM series chat models exposed through the baze platform.\n\nSupported model: `glm-4.5-air`.\n\nDocumented fields: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, `tool_choice`.",
         "operationId": "zhipuChatCompletions",
         "tags": [
           "Zhipu Chat"
@@ -93,30 +93,6 @@
                     ],
                     "tool_choice": "auto",
                     "stream": true
-                  }
-                },
-                "vision_chat": {
-                  "summary": "Image understanding",
-                  "value": {
-                    "model": "glm-5",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "image_url",
-                            "image_url": {
-                              "url": "https://example.com/invoice.png"
-                            }
-                          },
-                          {
-                            "type": "text",
-                            "text": "Identify the main content of this image."
-                          }
-                        ]
-                      }
-                    ],
-                    "stream": false
                   }
                 }
               }
@@ -351,7 +327,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "Message list. Supports plain text messages and image input via `image_url` content parts. The request must contain at least one message that is not `system` or `assistant`; sending only `system` or only `assistant` messages will be rejected by the upstream provider.",
+            "description": "Message list. The request must contain at least one message that is not `system` or `assistant`; sending only `system` or only `assistant` messages will be rejected by the upstream provider.",
             "items": {
               "$ref": "#/components/schemas/Message"
             },
@@ -424,18 +400,8 @@
             "description": "Message role."
           },
           "content": {
-            "description": "Message content. User messages can be a string or a multimodal content-part array; tool messages must be a string.",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/ContentPart"
-                }
-              }
-            ]
+            "description": "Message content.",
+            "type": "string"
           },
           "tool_calls": {
             "type": "array",
@@ -447,43 +413,6 @@
           "tool_call_id": {
             "type": "string",
             "description": "The tool call ID that this tool message corresponds to."
-          }
-        }
-      },
-      "ContentPart": {
-        "type": "object",
-        "required": [
-          "type"
-        ],
-        "description": "Multimodal message content part. This document only covers the stable text and image input types.",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "text",
-              "image_url"
-            ],
-            "description": "Content part type."
-          },
-          "text": {
-            "type": "string",
-            "description": "Text content. Used when `type` is `text`."
-          },
-          "image_url": {
-            "$ref": "#/components/schemas/ImageURLPart"
-          }
-        }
-      },
-      "ImageURLPart": {
-        "type": "object",
-        "required": [
-          "url"
-        ],
-        "description": "Image input object.",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "Image URL or base64-encoded data."
           }
         }
       },
