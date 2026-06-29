@@ -76,6 +76,8 @@
                     ]
                   },
                   {
+                  },
+                  {
                     "group": "智谱",
                     "pages": [
                       "zh-Hans/zmodelChat/zhipu/glm-4.5-air",
@@ -96,7 +98,14 @@
                     "group": "MiniMax",
                     "pages": [
                       "zh-Hans/zmodelImage/minimax/image01-image-to-image",
-                      "zh-Hans/zmodelImage/minimax/image01-text-to-image"
+                      "zh-Hans/zmodelImage/minimax/image01-text-to-image",
+                      {
+                        "group": "minimax兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelImage/minimax/minimax兼容API/text-to-image",
+                          "zh-Hans/zmodelImage/minimax/minimax兼容API/image-to-image"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -153,7 +162,18 @@
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
-                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
+                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
+                      {
+                        "group": "minimax兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/text-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/image-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/subject-reference-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/query-video-task",
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/download-video-file"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -250,7 +270,13 @@
                       "zh-Hans/zmodelAudio/minimax/speech-2.8-hd",
                       "zh-Hans/zmodelAudio/minimax/speech-2.8-turbo",
                       "zh-Hans/zmodelAudio/minimax/speech-02-hd",
-                      "zh-Hans/zmodelAudio/minimax/speech-02-turbo"
+                      "zh-Hans/zmodelAudio/minimax/speech-02-turbo",
+                      {
+                        "group": "minimax兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelAudio/minimax/minimax兼容API/t2a-v2"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -360,6 +386,8 @@
                       "en/zmodelChat/deepseek/deepseek-v4-flash",
                       "en/zmodelChat/deepseek/deepseek-v4-pro"
                     ]
+                  },
+                  {
                   },
                   {
                     "group": "Zhipu",
