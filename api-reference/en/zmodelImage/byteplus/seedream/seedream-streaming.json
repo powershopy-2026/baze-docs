@@ -1,0 +1,284 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Streaming Response (BytePlus API Compat)",
+    "version": "1.0.0",
+    "description": "This document describes the streaming response mode of the image generation API, compatible with BytePlus ModelArk upstream SSE protocol.\n\nWhen streaming is enabled (`stream: true`), the server pushes each image generation result in real-time via Server-Sent Events (SSE).\n\nOnly `seedream-5-0-lite`, `seedream-4-5`, and `seedream-4-0` support streaming responses.\n\nReference upstream documentation: https://docs.byteplus.com/en/docs/ModelArk/1824137",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Seedream API Compat",
+      "description": "Seedream streaming response interface (BytePlus API Compat mode)"
+    }
+  ],
+  "paths": {
+    "/api/v3/images/generations": {
+      "post": {
+        "summary": "Streaming Image Generation",
+        "description": "When streaming is enabled, the request is identical to the normal image creation API (same path, method, and request body format). Simply set `stream: true` in the request body and set the `Accept` header to `text/event-stream` on the client side.\n\nThe server pushes each generation result via SSE protocol: an `image_generation.partial_succeeded` event is pushed each time an image is generated; an `image_generation.completed` event is pushed when all images are finished.",
+        "operationId": "seedreamStreaming",
+        "tags": [
+          "Seedream API Compat"
+        ],
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "description": "Client must set this header to `text/event-stream` to receive SSE stream.",
+            "schema": {
+              "type": "string",
+              "example": "text/event-stream"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StreamingRequest"
+              },
+              "examples": {
+                "text_to_image_stream": {
+                  "summary": "Text-to-Image with streaming",
+                  "value": {
+                    "model": "seedream-4-5-251128",
+                    "prompt": "A set of four seasons landscape illustrations",
+                    "size": "2K",
+                    "stream": true,
+                    "sequential_image_generation": "auto",
+                    "sequential_image_generation_options": {
+                      "max_images": 4
+                    }
+                  }
+                },
+                "single_image_stream": {
+                  "summary": "Single image with streaming",
+                  "value": {
+                    "model": "seedream-4-0-250828",
+                    "prompt": "A cute corgi running on a grassy field",
+                    "size": "2048x2048",
+                    "stream": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SSE streaming response. Content type is `text/event-stream`. Contains the following events:\n\n### Event Types\n\n| Event Name | Trigger | Description |\n|---|---|---|\n| `image_generation.partial_succeeded` | Each time an image is generated | Pushes a single image's generation result |\n| `image_generation.completed` | All images finished | Pushes usage info, marks end of stream |\n\n### image_generation.partial_succeeded Event\n\nData format:\n\n```json\n{\n  \"url\": \"https://...\",\n  \"size\": \"2048x2048\",\n  \"image_index\": 0\n}\n```\n\n- `url`: Image download URL, valid for 24 hours\n- `size`: Image dimensions in pixels\n- `image_index`: Index of the image in the batch (starting from 0)\n\n### image_generation.completed Event\n\nData format:\n\n```json\n{\n  \"usage\": {\n    \"generated_images\": 4,\n    \"output_tokens\": 16384,\n    \"total_tokens\": 16384\n  }\n}\n```\n\nAfter receiving this event, the stream has ended and the client should disconnect.",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE stream text. Each line starts with `event:` or `data:`, events are separated by blank lines."
+                },
+                "examples": {
+                  "stream_example": {
+                    "summary": "Streaming response example",
+                    "value": "event: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img1.png\",\"size\":\"2048x2048\",\"image_index\":0}\n\nevent: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img2.png\",\"size\":\"2048x2048\",\"image_index\":1}\n\nevent: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img3.png\",\"size\":\"2048x2048\",\"image_index\":2}\n\nevent: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img4.png\",\"size\":\"2048x2048\",\"image_index\":3}\n\nevent: image_generation.completed\ndata: {\"usage\":{\"generated_images\":4,\"output_tokens\":16384,\"total_tokens\":16384}}\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Parameter Error",
+                    "value": {
+                      "error": {
+                        "code": "bad_request_body",
+                        "message": "Invalid request body format or illegal field value"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit or insufficient quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "StreamingRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt",
+          "stream"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "seedream-5-0-260128",
+              "seedream-4-5-251128",
+              "seedream-4-0-250828"
+            ],
+            "description": "Image generation model ID. Only `seedream-5-0-lite`, `seedream-4-5`, and `seedream-4-0` support streaming output."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt for image generation."
+          },
+          "stream": {
+            "type": "boolean",
+            "enum": [
+              true
+            ],
+            "description": "Streaming switch. Must be set to `true` to enable SSE streaming."
+          },
+          "image": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 14
+              }
+            ],
+            "description": "Reference images (optional)."
+          },
+          "size": {
+            "type": "string",
+            "description": "Output size.",
+            "default": "2048x2048"
+          },
+          "output_format": {
+            "type": "string",
+            "enum": [
+              "jpeg",
+              "png"
+            ],
+            "default": "jpeg"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "default": "url"
+          },
+          "sequential_image_generation": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "disabled"
+            ],
+            "default": "disabled"
+          },
+          "sequential_image_generation_options": {
+            "type": "object",
+            "properties": {
+              "max_images": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 15
+              }
+            }
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": true
+          },
+          "optimize_prompt_options": {
+            "type": "object",
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "fast"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

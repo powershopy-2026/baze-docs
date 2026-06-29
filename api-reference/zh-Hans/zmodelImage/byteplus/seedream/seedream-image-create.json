@@ -1,0 +1,416 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "图片创建（字节API兼容）",
+    "version": "1.0.0",
+    "description": "本文介绍图片创建 API 的请求与响应参数，与 BytePlus 模型方舟上游接口保持一致。\n\n统一入口为 `/api/v3/images/generations`，支持 `seedream-5-0-260128`、`seedream-4-5-251128`、`seedream-4-0-250828` 等模型。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Seedream API Compat",
+      "description": "Seedream 图片创建接口（字节API兼容模式）"
+    }
+  ],
+  "paths": {
+    "/api/v3/images/generations": {
+      "post": {
+        "summary": "图片创建",
+        "description": "调用图片生成模型，根据文本提示词生成图像。支持文生图、图生图、批量序列生成等模式。\n\n参考上游文档：https://docs.byteplus.com/en/docs/ModelArk/1541523",
+        "operationId": "seedreamImageCreate",
+        "tags": [
+          "Seedream API Compat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageCreateRequest"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "文生图",
+                  "value": {
+                    "model": "seedream-5-0-260128",
+                    "prompt": "一只可爱的柯基犬在草地上奔跑，阳光明媚，写实风格",
+                    "size": "2048x2048",
+                    "response_format": "url"
+                  }
+                },
+                "image_to_image": {
+                  "summary": "图生图-单图参考",
+                  "value": {
+                    "model": "seedream-5-0-260128",
+                    "prompt": "将这张图片转换为油画风格",
+                    "image": ["https://example.com/input.jpg"],
+                    "size": "2048x2048"
+                  }
+                },
+                "multi_image_fusion": {
+                  "summary": "多图融合",
+                  "value": {
+                    "model": "seedream-4-5-251128",
+                    "prompt": "将图片1中的人物放在图片2的场景中，电影级光影",
+                    "image": [
+                      "https://example.com/person.png",
+                      "https://example.com/background.jpg"
+                    ],
+                    "size": "4K"
+                  }
+                },
+                "sequential_generation": {
+                  "summary": "批量序列生成",
+                  "value": {
+                    "model": "seedream-5-0-260128",
+                    "prompt": "一套春夏秋冬四季风景插画",
+                    "sequential_image_generation": "auto",
+                    "sequential_image_generation_options": {
+                      "max_images": 4
+                    },
+                    "size": "2K"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功，返回图像生成结果。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "code": "bad_request_body",
+                        "message": "请求体格式错误或字段取值非法"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "code": "access_denied",
+                        "message": "无效的令牌"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "内容审核拦截。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "code": "insufficient_user_quota",
+                        "message": "当前账户额度不足，请稍后重试"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "code": "gen_relay_info_failed",
+                        "message": "服务内部处理失败，请稍后重试"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ImageCreateRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "seedream-5-0-260128",
+              "seedream-4-5-251128",
+              "seedream-4-0-250828"
+            ],
+            "description": "图像生成模型名称。支持的模型：\n\n- `seedream-5-0-260128`（最新，推荐）\n- `seedream-4-5-251128`（支持4K与强文本渲染）\n- `seedream-4-0-250828`（维护状态，最经济的4K选项）"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "图像生成的文本提示词，支持中英文。建议不超过 300 个汉字或 600 个英文单词。字数过多容易信息分散，模型可能因此忽略细节。"
+          },
+          "image": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "单张参考图 URL 或 Base64 编码字符串。"
+              },
+              {
+                "type": "array",
+                "description": "多张参考图 URL 或 Base64 编码数组，最多 14 张。",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 14
+              }
+            ],
+            "description": "参考图像，用于图生图或多图融合。支持 URL 或 Base64 编码（格式：`data:image/<格式>;base64,<编码>`）。\n\n支持的图片格式：JPEG、PNG、WEBP、BMP、TIFF、GIF。单图宽高均需大于 14 px，单图文件 ≤ 10 MB，单图总像素 ≤ 6000×6000。"
+          },
+          "size": {
+            "type": "string",
+            "description": "输出图像尺寸。支持两种方式（不可同时使用）：\n\n**方式一**：分辨率描述。取值 `2K`、`3K`（仅 5.0）或 `4K`（5.0 不支持），配合 prompt 中描述宽高比，由模型决定具体像素。\n\n**方式二**：直接指定像素，如 `\"2048x2048\"`。总像素需满足模型版本对应的范围要求，宽高比 ∈ [1/16, 16]。",
+            "default": "2048x2048",
+            "example": "2048x2048"
+          },
+          "output_format": {
+            "type": "string",
+            "enum": [
+              "jpeg",
+              "png"
+            ],
+            "description": "生成图片的文件格式。",
+            "default": "jpeg"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "图片在 API 响应中的返回方式。\n\n- `url`：返回图片下载链接（24 小时有效）\n- `b64_json`：直接返回 Base64 编码的图片数据",
+            "default": "url"
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "是否开启流式输出。设为 `true` 后，模型每生成一张图片即通过 SSE 推送。仅 seedream-5-0-lite、seedream-4-5、seedream-4-0 支持流式响应。详见「流式响应」文档。",
+            "default": false
+          },
+          "sequential_image_generation": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "disabled"
+            ],
+            "description": "批量序列生成开关。\n\n- `auto`：根据输入自动生成一组相关图片\n- `disabled`：仅生成单张图片",
+            "default": "disabled"
+          },
+          "sequential_image_generation_options": {
+            "type": "object",
+            "description": "批量序列生成配置，仅在 `sequential_image_generation` 为 `auto` 时生效。",
+            "x-valid-when": {
+              "sequential_image_generation": [
+                "auto"
+              ]
+            },
+            "properties": {
+              "max_images": {
+                "type": "integer",
+                "description": "本次请求最多允许生成的图片数量。取值范围 1–15。实际生成数量还需满足：输入参考图数 + 生成图数 ≤ 15。",
+                "minimum": 1,
+                "maximum": 15,
+                "default": 15
+              }
+            }
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印。\n\n- `true`：右下角添加「AI 生成」水印\n- `false`：不添加水印",
+            "default": true
+          },
+          "optimize_prompt_options": {
+            "type": "object",
+            "description": "提示词优化功能配置。",
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "fast"
+                ],
+                "description": "提示词优化模式。\n\n- `standard`：质量更高，生成时间更长\n- `fast`：速度更快，质量一般",
+                "default": "standard"
+              }
+            }
+          }
+        }
+      },
+      "ImageCreateResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "本次请求的唯一标识。"
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "创建时间的 Unix 时间戳（秒）。"
+          },
+          "data": {
+            "type": "array",
+            "description": "生成的图片信息列表。批量序列生成场景下可能包含多张图片。",
+            "items": {
+              "$ref": "#/components/schemas/ImageData"
+            }
+          },
+          "usage": {
+            "type": "object",
+            "description": "当前请求的用量信息。",
+            "properties": {
+              "generated_images": {
+                "type": "integer",
+                "description": "模型成功生成的图片数量（不含失败）。计费以此为准。"
+              },
+              "output_tokens": {
+                "type": "integer",
+                "description": "本次生图消耗的 token 数。计算公式：sum(图片宽×高) / 256，四舍五入取整。"
+              },
+              "total_tokens": {
+                "type": "integer",
+                "description": "当前请求消耗的 token 总数，目前与 output_tokens 相同。"
+              }
+            }
+          },
+          "error": {
+            "type": "object",
+            "description": "本次请求的错误信息（若有）。",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "错误码。"
+              },
+              "message": {
+                "type": "string",
+                "description": "错误描述。"
+              }
+            }
+          }
+        }
+      },
+      "ImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "图片下载链接。`response_format` 为 `url` 时返回，链接 24 小时内有效，请及时保存。"
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "图片 Base64 编码数据。`response_format` 为 `b64_json` 时返回。不带 `data:image/...;base64,` 前缀。"
+          },
+          "size": {
+            "type": "string",
+            "description": "图片宽高像素，格式 `<宽>x<高>`，如 `\"2048x2048\"`。仅 seedream-5.0-lite、seedream-4.5、seedream-4.0 返回。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "错误码。"
+              },
+              "message": {
+                "type": "string",
+                "description": "错误描述。"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

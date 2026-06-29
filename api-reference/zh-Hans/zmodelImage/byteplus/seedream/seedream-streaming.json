@@ -1,0 +1,284 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "流式响应（字节API兼容）",
+    "version": "1.0.0",
+    "description": "本文介绍图片生成 API 的流式响应模式，与 BytePlus 模型方舟上游接口的 SSE 协议保持一致。\n\n开启流式输出后（`stream: true`），服务端通过 Server-Sent Events（SSE）实时推送每张图片的生成结果。\n\n仅 `seedream-5-0-lite`、`seedream-4-5`、`seedream-4-0` 支持流式响应。\n\n参考上游文档：https://docs.byteplus.com/en/docs/ModelArk/1824137",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Seedream API Compat",
+      "description": "Seedream 流式响应接口（字节API兼容模式）"
+    }
+  ],
+  "paths": {
+    "/api/v3/images/generations": {
+      "post": {
+        "summary": "流式生成图片",
+        "description": "开启流式输出后，请求与普通图片创建接口相同（路径、方法、请求体格式不变），只需在请求体中设置 `stream: true`，并将客户端的 `Accept` 头设置为 `text/event-stream`。\n\n服务端通过 SSE 协议逐张推送生成结果：每生成完一张图片，推送 `image_generation.partial_succeeded` 事件；全部生成完成后，推送 `image_generation.completed` 事件。",
+        "operationId": "seedreamStreaming",
+        "tags": [
+          "Seedream API Compat"
+        ],
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "description": "客户端需设置此请求头为 `text/event-stream` 以接收 SSE 流。",
+            "schema": {
+              "type": "string",
+              "example": "text/event-stream"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StreamingRequest"
+              },
+              "examples": {
+                "text_to_image_stream": {
+                  "summary": "文生图流式输出",
+                  "value": {
+                    "model": "seedream-4-5-251128",
+                    "prompt": "一套春夏秋冬四季风景插画",
+                    "size": "2K",
+                    "stream": true,
+                    "sequential_image_generation": "auto",
+                    "sequential_image_generation_options": {
+                      "max_images": 4
+                    }
+                  }
+                },
+                "single_image_stream": {
+                  "summary": "单图流式输出",
+                  "value": {
+                    "model": "seedream-4-0-250828",
+                    "prompt": "一只可爱的柯基犬在草地上奔跑",
+                    "size": "2048x2048",
+                    "stream": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SSE 流式响应。响应类型为 `text/event-stream`。包含以下事件：\n\n### 事件类型\n\n| 事件名称 | 触发时机 | 说明 |\n|---|---|---|\n| `image_generation.partial_succeeded` | 每生成完一张图片 | 推送单张图片的生成结果 |\n| `image_generation.completed` | 全部图片生成完成 | 推送用量信息，标记流结束 |\n\n### image_generation.partial_succeeded 事件\n\n数据格式：\n\n```json\n{\n  \"url\": \"https://...\",\n  \"size\": \"2048x2048\",\n  \"image_index\": 0\n}\n```\n\n- `url`：图片下载链接，有效期 24 小时\n- `size`：图片宽高像素\n- `image_index`：图片在批次中的序号（从 0 开始）\n\n### image_generation.completed 事件\n\n数据格式：\n\n```json\n{\n  \"usage\": {\n    \"generated_images\": 4,\n    \"output_tokens\": 16384,\n    \"total_tokens\": 16384\n  }\n}\n```\n\n收到此事件后表示流结束，客户端应断开连接。",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE 流式文本。每行以 `event:` 或 `data:` 开头，事件之间以空行分隔。"
+                },
+                "examples": {
+                  "stream_example": {
+                    "summary": "流式响应示例",
+                    "value": "event: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img1.png\",\"size\":\"2048x2048\",\"image_index\":0}\n\nevent: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img2.png\",\"size\":\"2048x2048\",\"image_index\":1}\n\nevent: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img3.png\",\"size\":\"2048x2048\",\"image_index\":2}\n\nevent: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img4.png\",\"size\":\"2048x2048\",\"image_index\":3}\n\nevent: image_generation.completed\ndata: {\"usage\":{\"generated_images\":4,\"output_tokens\":16384,\"total_tokens\":16384}}\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "code": "bad_request_body",
+                        "message": "请求体格式错误或字段取值非法"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "速率限制或额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "StreamingRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt",
+          "stream"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "seedream-5-0-260128",
+              "seedream-4-5-251128",
+              "seedream-4-0-250828"
+            ],
+            "description": "图像生成模型名称。仅 `seedream-5-0-lite`、`seedream-4-5`、`seedream-4-0` 支持流式输出。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "图像生成的文本提示词。"
+          },
+          "stream": {
+            "type": "boolean",
+            "enum": [
+              true
+            ],
+            "description": "流式输出开关，必须设为 `true` 以启用 SSE 流。"
+          },
+          "image": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 14
+              }
+            ],
+            "description": "参考图像（可选）。"
+          },
+          "size": {
+            "type": "string",
+            "description": "输出尺寸。",
+            "default": "2048x2048"
+          },
+          "output_format": {
+            "type": "string",
+            "enum": [
+              "jpeg",
+              "png"
+            ],
+            "default": "jpeg"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "default": "url"
+          },
+          "sequential_image_generation": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "disabled"
+            ],
+            "default": "disabled"
+          },
+          "sequential_image_generation_options": {
+            "type": "object",
+            "properties": {
+              "max_images": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 15
+              }
+            }
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": true
+          },
+          "optimize_prompt_options": {
+            "type": "object",
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "standard",
+                  "fast"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
