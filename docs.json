@@ -125,7 +125,14 @@
                       "zh-Hans/zmodelImage/byteplus/seedream-4-5-text-to-image",
                       "zh-Hans/zmodelImage/byteplus/seedream-4-5-image-to-image",
                       "zh-Hans/zmodelImage/byteplus/seedream-5-0-text-to-image",
-                      "zh-Hans/zmodelImage/byteplus/seedream-5-0-image-to-image"
+                      "zh-Hans/zmodelImage/byteplus/seedream-5-0-image-to-image",
+                      {
+                        "group": "字节API兼容",
+                        "pages": [
+                          "zh-Hans/zmodelImage/byteplus/seedream/seedream-image-create",
+                          "zh-Hans/zmodelImage/byteplus/seedream/seedream-streaming"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -430,7 +437,14 @@
                       "en/zmodelImage/byteplus/seedream-4-5-text-to-image",
                       "en/zmodelImage/byteplus/seedream-4-5-image-to-image",
                       "en/zmodelImage/byteplus/seedream-5-0-text-to-image",
-                      "en/zmodelImage/byteplus/seedream-5-0-image-to-image"
+                      "en/zmodelImage/byteplus/seedream-5-0-image-to-image",
+                      {
+                        "group": "BytePlus API Compat",
+                        "pages": [
+                          "en/zmodelImage/byteplus/seedream/seedream-image-create",
+                          "en/zmodelImage/byteplus/seedream/seedream-streaming"
+                        ]
+                      }
                     ]
                   },
                   {
