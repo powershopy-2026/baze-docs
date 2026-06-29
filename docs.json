@@ -87,7 +87,14 @@
                     "group": "MiniMax",
                     "pages": [
                       "zh-Hans/zmodelImage/minimax/image01-image-to-image",
-                      "zh-Hans/zmodelImage/minimax/image01-text-to-image"
+                      "zh-Hans/zmodelImage/minimax/image01-text-to-image",
+                      {
+                        "group": "minimax兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelImage/minimax/minimax兼容API/text-to-image",
+                          "zh-Hans/zmodelImage/minimax/minimax兼容API/image-to-image"
+                        ]
+                      }
                     ]
                   },
                   {
