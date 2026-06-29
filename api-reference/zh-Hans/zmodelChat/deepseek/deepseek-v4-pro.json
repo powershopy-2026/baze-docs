@@ -3,7 +3,7 @@
   "info": {
     "title": "deepseek-v4-pro",
     "version": "1.0.0",
-    "description": "DeepSeek 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`deepseek-v4-pro`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。",
+    "description": "DeepSeek 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`deepseek-v4-pro`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-pro",
-        "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-v4-pro`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
+        "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-v4-pro`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
         "operationId": "deepseekChatCompletions_deepseek_v4_pro",
         "tags": [
           "DeepSeek Chat"
@@ -55,7 +55,7 @@
                     "thinking": {
                       "type": "enabled"
                     },
-                    "reasoning_effort": "medium",
+                    "reasoning_effort": "high",
                     "temperature": 0.3,
                     "max_completion_tokens": 1024,
                     "stream": false
@@ -153,6 +153,7 @@
                       "object": "chat.completion",
                       "created": 1742342400,
                       "model": "deepseek-v4-pro",
+                      "system_fingerprint": "fp_baze_deepseek_v4_pro",
                       "choices": [
                         {
                           "index": 0,
@@ -166,7 +167,12 @@
                       "usage": {
                         "prompt_tokens": 123,
                         "completion_tokens": 98,
-                        "total_tokens": 221
+                        "total_tokens": 221,
+                        "prompt_cache_hit_tokens": 64,
+                        "prompt_cache_miss_tokens": 59,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 0
+                        }
                       }
                     }
                   }
@@ -180,7 +186,7 @@
                 "examples": {
                   "stream": {
                     "summary": "流式响应片段",
-                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"seed-1-8-251228\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"正在调用天气工具\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"seed-1-8-251228\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"正在调用天气工具\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
                   }
                 }
               }
@@ -307,7 +313,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称。支持的 DeepSeek 对话模型包括 `deepseek-v4-pro`",
+            "description": "使用的模型的 ID。支持 `deepseek-v4-pro`。",
             "enum": [
               "deepseek-v4-pro"
             ],
@@ -315,7 +321,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "消息列表。当前文档公开 `system`、`user`、`assistant`、`tool` 四种角色。`messages[].content` 支持纯文本，也支持由 `text`、`image_url`、`video_url` 组成的多模态分片。",
+            "description": "对话的消息列表。当前文档公开 `system`、`user`、`assistant`、`tool` 四种角色。`messages[].content` 支持纯文本，也支持由 `text`、`image_url`、`video_url` 组成的多模态分片。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -326,22 +332,22 @@
           },
           "stream": {
             "type": "boolean",
-            "default": true,
-            "description": "是否启用流式输出。为 `true` 时响应内容类型为 `text/event-stream`。"
+            "default": false,
+            "description": "如果设置为 true，将会以 SSE（server-sent events）的形式以流式发送消息增量。消息流以 `data: [DONE]` 结尾。"
           },
           "stream_options": {
             "$ref": "#/components/schemas/StreamOptions"
           },
           "max_tokens": {
             "type": "integer",
-            "description": "模型回答最大长度（不含思维链长度），单位 token。"
+            "description": "限制一次请求中模型生成 completion 的最大 token 数。输入 token 和输出 token 的总长度受模型的上下文长度的限制。"
           },
           "max_completion_tokens": {
             "type": "integer",
-            "description": "模型输出最大长度（含回答与思维链长度），单位 token。设置后 `max_tokens` 会失效。"
+            "description": "限制一次请求中模型生成的最大 token 数（含回答与思维链长度）。设置后 `max_tokens` 会失效。"
           },
           "stop": {
-            "description": "停止序列。可以是单个字符串，也可以是字符串数组。",
+            "description": "一个 string 或最多包含 16 个 string 的 list，在遇到这些词时，API 将停止生成更多的 token。",
             "oneOf": [
               {
                 "type": "string"
@@ -357,12 +363,10 @@
           "reasoning_effort": {
             "type": "string",
             "enum": [
-              "minimal",
-              "low",
-              "medium",
-              "high"
+              "high",
+              "max"
             ],
-            "description": "限制思考工作量。`minimal` 最快，`high` 最深。"
+            "description": "控制模型的推理强度。对普通请求，默认为 high。对一些复杂 Agent 类请求（如 Claude Code、OpenCode），自动设置为 max。出于兼容考虑 low、medium 会映射为 high，xhigh 会映射为 max。"
           },
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
@@ -372,38 +376,40 @@
             "minimum": -2,
             "maximum": 2,
             "default": 0,
-            "description": "频率惩罚。值越高，越抑制重复表达。"
+            "deprecated": true,
+            "description": "该参数已不再支持。传入该参数将不会产生任何效果。"
           },
           "presence_penalty": {
             "type": "number",
             "minimum": -2,
             "maximum": 2,
             "default": 0,
-            "description": "存在惩罚。值越高，越鼓励模型引入新话题。"
+            "deprecated": true,
+            "description": "该参数已不再支持。传入该参数将不会产生任何效果。"
           },
           "temperature": {
             "type": "number",
             "minimum": 0,
             "maximum": 2,
             "default": 1,
-            "description": "采样温度。越低越稳定，越高越发散。"
+            "description": "采样温度，介于 0 和 2 之间。更高的值，如 0.8，会使输出更随机，而更低的值，如 0.2，会使其更加集中和确定。我们通常建议可以更改这个值或者更改 top_p，但不建议同时对两者进行修改。"
           },
           "top_p": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
-            "default": 0.95,
-            "description": "核采样参数。通常与 `temperature` 二选一调优。"
+            "default": 1,
+            "description": "作为调节采样温度的替代方案，模型会考虑前 top_p 概率的 token 的结果。所以 0.1 就意味着只有包括在最高 10% 概率中的 token 会被考虑。我们通常建议修改这个值或者更改 temperature，但不建议同时对两者进行修改。"
           },
           "logprobs": {
             "type": "boolean",
-            "description": "是否返回输出 token 的对数概率信息。"
+            "description": "是否返回所输出 token 的对数概率。如果为 true，则在 message 的 content 中返回每个输出 token 的对数概率。"
           },
           "top_logprobs": {
             "type": "integer",
             "minimum": 0,
             "maximum": 20,
-            "description": "当 `logprobs=true` 时，指定每个位置返回多少个候选 token 的对数概率。",
+            "description": "一个介于 0 到 20 之间的整数 N，指定每个输出位置返回输出概率 top N 的 token，且返回这些 token 的对数概率。指定此参数时，logprobs 必须为 true。",
             "x-valid-when": {
               "logprobs": [
                 true
@@ -412,7 +418,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "可供模型调用的函数工具定义列表。",
+            "description": "模型可能会调用的 tool 的列表。目前，仅支持 function 作为工具。使用此参数来提供以 JSON 作为输入参数的 function 列表。最多支持 128 个 function。",
             "items": {
               "$ref": "#/components/schemas/ToolDefinition"
             }
@@ -423,6 +429,10 @@
           },
           "tool_choice": {
             "$ref": "#/components/schemas/ToolChoice"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "您自定义的 user_id，可选字符集为 [a-zA-Z0-9\\-_]，最大长度为 512。请不要在 user_id 中包含用户隐私信息。user_id 可用于区分您业务侧的用户身份，以帮助进行内容安全处理、KVCache 缓存隔离以及调度隔离。"
           }
         }
       },
@@ -441,7 +451,7 @@
               "assistant",
               "tool"
             ],
-            "description": "消息角色。"
+            "description": "该消息的发起角色。"
           },
           "content": {
             "description": "消息内容。可为纯文本字符串，或由多模态内容分片组成的数组。",
@@ -459,18 +469,18 @@
           },
           "reasoning_content": {
             "type": "string",
-            "description": "assistant 消息中的推理内容。"
+            "description": "仅适用于思考模式。内容为 assistant 消息中在最终答案之前的推理内容。"
           },
           "tool_calls": {
             "type": "array",
-            "description": "assistant 消息中的工具调用列表。",
+            "description": "模型生成的 tool 调用，例如 function 调用。",
             "items": {
               "$ref": "#/components/schemas/ToolCallMessage"
             }
           },
           "tool_call_id": {
             "type": "string",
-            "description": "tool 角色消息用于关联上一次工具调用的 ID。"
+            "description": "此消息所响应的 tool call 的 ID。"
           }
         }
       },
@@ -573,7 +583,7 @@
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "控制模型是否开启深度思考模式。",
+        "description": "控制思考模式与非思考模式的转换。",
         "properties": {
           "type": {
             "type": "string",
@@ -581,21 +591,22 @@
               "enabled",
               "disabled"
             ],
-            "description": "思考模式。`enabled` 强制思考，`disabled` 直接回答。"
+            "default": "enabled",
+            "description": "如果设为 enabled，则使用思考模式。如果设为 disabled，则使用非思考模式。"
           }
         }
       },
       "StreamOptions": {
         "type": "object",
-        "description": "流式响应附加选项。仅在 `stream=true` 时生效。",
+        "description": "流式输出相关选项。只有在 stream 参数为 true 时，才可设置此参数。",
         "properties": {
           "include_usage": {
             "type": "boolean",
-            "description": "若为 `true`，流结束前会额外返回一次带完整 `usage` 的 chunk。"
+            "description": "如果设置为 true，在流式消息最后的 `data: [DONE]` 之前将会传输一个额外的块。此块上的 usage 字段显示整个请求的 token 使用统计信息，而 choices 字段将始终是一个空数组。所有其他块也将包含一个 usage 字段，但其值为 null。"
           },
           "chunk_include_usage": {
             "type": "boolean",
-            "description": "若为 `true`，每个流式 chunk 都会附带截至当前时刻的累计 `usage`。"
+            "description": "若为 true，每个流式 chunk 都会附带截至当前时刻的累计 usage。"
           }
         }
       },
@@ -612,7 +623,7 @@
             "enum": [
               "function"
             ],
-            "description": "当前仅支持函数工具。"
+            "description": "tool 的类型。目前仅支持 function。"
           },
           "function": {
             "type": "object",
@@ -623,22 +634,27 @@
             "properties": {
               "name": {
                 "type": "string",
-                "description": "函数名称。"
+                "description": "要调用的 function 名称。必须由 a-z、A-Z、0-9 字符组成，或包含下划线和连字符，最大长度为 64 个字符。"
               },
               "description": {
                 "type": "string",
-                "description": "函数用途描述。"
+                "description": "function 的功能描述，供模型理解何时以及如何调用该 function。"
               },
               "parameters": {
                 "type": "object",
-                "description": "JSON Schema 风格的函数参数定义。"
+                "description": "function 的输入参数，以 JSON Schema 对象描述。"
+              },
+              "strict": {
+                "type": "boolean",
+                "default": false,
+                "description": "如果设置为 true，API 将在函数调用中使用 strict 模式，以确保输出始终符合函数的 JSON schema 定义。该功能为 Beta 功能。"
               }
             }
           }
         }
       },
       "ToolChoice": {
-        "description": "工具调用策略。可以是字符串模式，也可以是指定具体函数的对象。",
+        "description": "控制模型调用 tool 的行为。none 意味着模型不会调用任何 tool，而是生成一条消息。auto 意味着模型可以选择生成一条消息或调用一个或多个 tool。required 意味着模型必须调用一个或多个 tool。通过 {\"type\": \"function\", \"function\": {\"name\": \"my_function\"}} 指定特定 tool，会强制模型调用该 tool。",
         "oneOf": [
           {
             "type": "string",
@@ -669,7 +685,7 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "description": "指定要调用的函数名。"
+                    "description": "要调用的函数名称。"
                   }
                 }
               }
@@ -679,7 +695,7 @@
       },
       "ResponseFormat": {
         "type": "object",
-        "description": "控制回答格式（Beta）。",
+        "description": "一个 object，指定模型必须输出的格式。",
         "properties": {
           "type": {
             "type": "string",
@@ -688,7 +704,8 @@
               "json_object",
               "json_schema"
             ],
-            "description": "目标输出格式。"
+            "default": "text",
+            "description": "目标输出格式。设置为 `json_object` 可启用 JSON 模式。使用 JSON 模式时，你还必须通过系统或用户消息指示模型生成 JSON。"
           },
           "json_schema": {
             "$ref": "#/components/schemas/ResponseJsonSchema"
@@ -732,17 +749,18 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "工具调用 ID。"
+            "description": "tool 调用的 ID。"
           },
           "type": {
             "type": "string",
             "enum": [
               "function"
             ],
-            "description": "当前仅支持函数工具调用。"
+            "description": "tool 的类型。目前仅支持 function。"
           },
           "function": {
             "type": "object",
+            "description": "模型调用的 function。",
             "required": [
               "name",
               "arguments"
@@ -750,11 +768,11 @@
             "properties": {
               "name": {
                 "type": "string",
-                "description": "函数名。"
+                "description": "模型调用的 function 名。"
               },
               "arguments": {
                 "type": "string",
-                "description": "JSON 字符串形式的调用参数。"
+                "description": "要调用的 function 的参数，由模型生成，格式为 JSON。请注意，模型并不总是生成有效的 JSON，并且可能会臆造出你函数模式中未定义的参数。在调用函数之前，请在代码中验证这些参数。"
               }
             }
           }
@@ -766,22 +784,27 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "响应 ID。"
+            "description": "该对话的唯一标识符。"
           },
           "object": {
             "type": "string",
-            "description": "对象类型，例如 `chat.completion`。"
+            "description": "对象的类型，其值为 chat.completion。"
           },
           "created": {
             "type": "integer",
-            "description": "Unix 时间戳。"
+            "description": "创建聊天完成时的 Unix 时间戳（以秒为单位）。"
           },
           "model": {
             "type": "string",
-            "description": "实际使用的模型名称。"
+            "description": "生成该 completion 的模型名。"
+          },
+          "system_fingerprint": {
+            "type": "string",
+            "description": "该指纹代表模型运行的后端配置。"
           },
           "choices": {
             "type": "array",
+            "description": "模型生成的 completion 的选择列表。",
             "items": {
               "$ref": "#/components/schemas/ChatCompletionChoice"
             }
@@ -796,14 +819,14 @@
         "properties": {
           "index": {
             "type": "integer",
-            "description": "候选响应序号。"
+            "description": "该 completion 在模型生成的 completion 的选择列表中的索引。"
           },
           "message": {
             "$ref": "#/components/schemas/AssistantMessage"
           },
           "finish_reason": {
             "type": "string",
-            "description": "结束原因，例如 `stop`、`length` 或 `tool_calls`。"
+            "description": "模型停止生成 token 的原因。`stop` 表示模型自然停止生成或遇到 stop 序列；`length` 表示输出长度达到了模型上下文长度限制或 max_tokens 的限制；`content_filter` 表示输出内容因触发过滤策略而被过滤；`tool_calls` 表示模型调用了工具；`insufficient_system_resource` 表示系统推理资源不足，生成被打断。"
           }
         }
       },
@@ -814,18 +837,20 @@
             "type": "string",
             "enum": [
               "assistant"
-            ]
+            ],
+            "description": "生成这条消息的角色。"
           },
           "content": {
             "type": "string",
-            "description": "assistant 输出的文本内容。"
+            "description": "该 completion 的内容。"
           },
           "reasoning_content": {
             "type": "string",
-            "description": "assistant 输出的推理内容。"
+            "description": "仅适用于思考模式。内容为 assistant 消息中在最终答案之前的推理内容。"
           },
           "tool_calls": {
             "type": "array",
+            "description": "模型生成的 tool 调用，例如 function 调用。",
             "items": {
               "$ref": "#/components/schemas/ToolCallMessage"
             }
@@ -834,19 +859,37 @@
       },
       "Usage": {
         "type": "object",
-        "description": "Token 用量统计。",
+        "description": "该对话补全请求的用量信息。",
         "properties": {
           "prompt_tokens": {
             "type": "integer",
-            "description": "输入 token 数。"
+            "description": "用户 prompt 所包含的 token 数。该值等于 prompt_cache_hit_tokens + prompt_cache_miss_tokens。"
           },
           "completion_tokens": {
             "type": "integer",
-            "description": "输出 token 数。"
+            "description": "模型 completion 产生的 token 数。"
           },
           "total_tokens": {
             "type": "integer",
-            "description": "总 token 数。"
+            "description": "该请求中，所有 token 的数量（prompt + completion）。"
+          },
+          "prompt_cache_hit_tokens": {
+            "type": "integer",
+            "description": "用户 prompt 中，命中上下文缓存的 token 数。"
+          },
+          "prompt_cache_miss_tokens": {
+            "type": "integer",
+            "description": "用户 prompt 中，未命中上下文缓存的 token 数。"
+          },
+          "completion_tokens_details": {
+            "type": "object",
+            "description": "completion tokens 的详细信息。",
+            "properties": {
+              "reasoning_tokens": {
+                "type": "integer",
+                "description": "推理模型所产生的思维链 token 数量。"
+              }
+            }
           }
         }
       },

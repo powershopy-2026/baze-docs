@@ -3,7 +3,7 @@
   "info": {
     "title": "deepseek-v4-flash",
     "version": "1.0.0",
-    "description": "DeepSeek Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `deepseek-v4-flash`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.",
+    "description": "DeepSeek Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `deepseek-v4-flash`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`, `user_id`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-flash",
-        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-flash`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
+        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-flash`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`, `user_id`. `messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
         "operationId": "deepseekChatCompletions_deepseek_v4_flash",
         "tags": [
           "DeepSeek Chat"
@@ -55,7 +55,7 @@
                     "thinking": {
                       "type": "enabled"
                     },
-                    "reasoning_effort": "medium",
+                    "reasoning_effort": "high",
                     "temperature": 0.3,
                     "max_completion_tokens": 1024,
                     "stream": false
@@ -153,6 +153,7 @@
                       "object": "chat.completion",
                       "created": 1742342400,
                       "model": "deepseek-v4-flash",
+                      "system_fingerprint": "fp_baze_deepseek_v4_flash",
                       "choices": [
                         {
                           "index": 0,
@@ -166,7 +167,12 @@
                       "usage": {
                         "prompt_tokens": 123,
                         "completion_tokens": 98,
-                        "total_tokens": 221
+                        "total_tokens": 221,
+                        "prompt_cache_hit_tokens": 64,
+                        "prompt_cache_miss_tokens": 59,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 0
+                        }
                       }
                     }
                   }
@@ -180,7 +186,7 @@
                 "examples": {
                   "stream": {
                     "summary": "Streaming response chunk",
-                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"seed-1-8-251228\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"seed-1-8-251228\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-flash\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-flash\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
                   }
                 }
               }
@@ -307,7 +313,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Model name. Supported DeepSeek chat models include `deepseek-v4-flash`",
+            "description": "The ID of the model to use. Supports `deepseek-v4-flash`.",
             "enum": [
               "deepseek-v4-flash"
             ],
@@ -315,7 +321,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "Message list. This document covers four roles: `system`, `user`, `assistant`, and `tool`.`messages[].content` supports plain text or multimodal parts composed of `text`, `image_url`, and `video_url`.",
+            "description": "A list of messages comprising the conversation so far. This document covers four roles: `system`, `user`, `assistant`, and `tool`. `messages[].content` supports plain text or multimodal parts composed of `text`, `image_url`, and `video_url`.",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -326,22 +332,22 @@
           },
           "stream": {
             "type": "boolean",
-            "default": true,
-            "description": "Whether to enable streaming output. When `true`, the response content type is `text/event-stream`."
+            "default": false,
+            "description": "If set to true, the model will send message deltas as SSE (server-sent events). The message stream ends with `data: [DONE]`."
           },
           "stream_options": {
             "$ref": "#/components/schemas/StreamOptions"
           },
           "max_tokens": {
             "type": "integer",
-            "description": "Maximum length of the model response (excluding chain-of-thought), in tokens."
+            "description": "The maximum number of tokens the model can generate for the completion in a single request. The total length of input and output tokens is limited by the model's context length."
           },
           "max_completion_tokens": {
             "type": "integer",
-            "description": "Maximum total output length (including response and chain-of-thought), in tokens. When set, `max_tokens` is ignored."
+            "description": "The maximum number of tokens the model can generate in a single request (including response and chain-of-thought). When set, `max_tokens` is ignored."
           },
           "stop": {
-            "description": "Stop sequence. Can be a single string or an array of strings.",
+            "description": "A string or a list of up to 16 strings. The API will stop generating further tokens when it encounters any of these strings.",
             "oneOf": [
               {
                 "type": "string"
@@ -357,12 +363,10 @@
           "reasoning_effort": {
             "type": "string",
             "enum": [
-              "minimal",
-              "low",
-              "medium",
-              "high"
+              "high",
+              "max"
             ],
-            "description": "Limit reasoning effort. `minimal` is fastest, `high` is deepest."
+            "description": "Controls the reasoning effort of the model. For normal requests, the default is high. For some complex agent-style requests (e.g. Claude Code, OpenCode), it is automatically set to max. For compatibility, low and medium are mapped to high, and xhigh is mapped to max."
           },
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
@@ -372,38 +376,40 @@
             "minimum": -2,
             "maximum": 2,
             "default": 0,
-            "description": "Frequency penalty. Higher values suppress repetitive expressions."
+            "deprecated": true,
+            "description": "This parameter is no longer supported. Passing it will have no effect."
           },
           "presence_penalty": {
             "type": "number",
             "minimum": -2,
             "maximum": 2,
             "default": 0,
-            "description": "Presence penalty. Higher values encourage the model to introduce new topics."
+            "deprecated": true,
+            "description": "This parameter is no longer supported. Passing it will have no effect."
           },
           "temperature": {
             "type": "number",
             "minimum": 0,
             "maximum": 2,
-            "default": 0.7,
-            "description": "Sampling temperature. Lower values produce more deterministic output; higher values produce more diverse output."
+            "default": 1,
+            "description": "Sampling temperature between 0 and 2. Higher values like 0.8 make the output more random, while lower values like 0.2 make it more focused and deterministic. We generally recommend altering this or top_p but not both."
           },
           "top_p": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
-            "default": 0.95,
-            "description": "Nucleus sampling parameter. Typically tuned as an alternative to `temperature`."
+            "default": 1,
+            "description": "An alternative to sampling with temperature, the model considers the results of the tokens with top_p probability. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both."
           },
           "logprobs": {
             "type": "boolean",
-            "description": "Whether to return log probabilities of output tokens."
+            "description": "Whether to return the log probabilities of the output tokens. If true, the log probabilities of each output token are returned in the content of the message."
           },
           "top_logprobs": {
             "type": "integer",
             "minimum": 0,
             "maximum": 20,
-            "description": "When `logprobs=true`, specifies how many candidate token log probabilities to return at each position.",
+            "description": "An integer N between 0 and 20 that specifies the top N tokens by probability to return at each output position, along with their log probabilities. When this parameter is specified, logprobs must be true.",
             "x-valid-when": {
               "logprobs": [
                 true
@@ -412,7 +418,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "List of function tool definitions available for the model to call.",
+            "description": "A list of tools the model may call. Currently, only function is supported as a tool. Use this parameter to provide a list of functions that take JSON as input. Up to 128 functions are supported.",
             "items": {
               "$ref": "#/components/schemas/ToolDefinition"
             }
@@ -423,6 +429,10 @@
           },
           "tool_choice": {
             "$ref": "#/components/schemas/ToolChoice"
+          },
+          "user_id": {
+            "type": "string",
+            "description": "Your custom user_id, with the character set [a-zA-Z0-9\\-_] and a maximum length of 512. Do not include private user information in user_id. user_id can be used to distinguish users on your side for content safety handling, KVCache isolation, and scheduling isolation."
           }
         }
       },
@@ -441,7 +451,7 @@
               "assistant",
               "tool"
             ],
-            "description": "Message role."
+            "description": "The role of the message author."
           },
           "content": {
             "description": "Message content. Can be a plain text string or an array of multimodal content parts.",
@@ -459,18 +469,18 @@
           },
           "reasoning_content": {
             "type": "string",
-            "description": "Reasoning content in an assistant message."
+            "description": "Only applicable in thinking mode. The reasoning content in the assistant message, preceding the final answer."
           },
           "tool_calls": {
             "type": "array",
-            "description": "List of tool calls in an assistant message.",
+            "description": "Tool calls generated by the model, e.g. function calls.",
             "items": {
               "$ref": "#/components/schemas/ToolCallMessage"
             }
           },
           "tool_call_id": {
             "type": "string",
-            "description": "ID linking a tool-role message to the preceding tool call."
+            "description": "The ID of the tool call that this message is responding to."
           }
         }
       },
@@ -573,7 +583,7 @@
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "Controls whether the model enables deep thinking mode.",
+        "description": "Controls the switch between thinking mode and non-thinking mode.",
         "properties": {
           "type": {
             "type": "string",
@@ -581,21 +591,22 @@
               "enabled",
               "disabled"
             ],
-            "description": "Thinking mode. `enabled` forces thinking, `disabled` answers directly."
+            "default": "enabled",
+            "description": "If set to enabled, thinking mode is used. If set to disabled, non-thinking mode is used."
           }
         }
       },
       "StreamOptions": {
         "type": "object",
-        "description": "Additional options for streaming responses. Only effective when `stream=true`.",
+        "description": "Options for streaming output. This parameter can only be set when the stream parameter is true.",
         "properties": {
           "include_usage": {
             "type": "boolean",
-            "description": "If `true`, an additional chunk with complete `usage` is returned before the stream ends."
+            "description": "If set to true, an additional chunk will be transmitted just before the final `data: [DONE]` in the stream. The usage field on this chunk shows the token usage statistics for the entire request, while the choices field will always be an empty array. All other chunks will also include a usage field, but its value will be null."
           },
           "chunk_include_usage": {
             "type": "boolean",
-            "description": "If `true`, each streaming chunk includes cumulative `usage` up to that point."
+            "description": "If true, each streaming chunk includes cumulative usage up to that point."
           }
         }
       },
@@ -612,7 +623,7 @@
             "enum": [
               "function"
             ],
-            "description": "Currently only function tools are supported."
+            "description": "The type of the tool. Currently only function is supported."
           },
           "function": {
             "type": "object",
@@ -623,22 +634,27 @@
             "properties": {
               "name": {
                 "type": "string",
-                "description": "Function name."
+                "description": "The name of the function to call. Must consist of a-z, A-Z, 0-9 characters, or include underscores and hyphens, with a maximum length of 64 characters."
               },
               "description": {
                 "type": "string",
-                "description": "Description of the function's purpose."
+                "description": "A description of what the function does, used by the model to understand when and how to call it."
               },
               "parameters": {
                 "type": "object",
-                "description": "JSON Schema-style function parameter definition."
+                "description": "The input parameters of the function, described as a JSON Schema object."
+              },
+              "strict": {
+                "type": "boolean",
+                "default": false,
+                "description": "If set to true, the API will use strict mode in function calls to ensure the output always conforms to the function's JSON schema definition. This is a Beta feature."
               }
             }
           }
         }
       },
       "ToolChoice": {
-        "description": "Tool calling strategy. Can be a string mode or an object specifying a particular function.",
+        "description": "Controls the model's tool calling behavior. none means the model will not call any tool and instead generates a message. auto means the model can choose to generate a message or call one or more tools. required means the model must call one or more tools. Specifying a particular tool via {\"type\": \"function\", \"function\": {\"name\": \"my_function\"}} forces the model to call that tool.",
         "oneOf": [
           {
             "type": "string",
@@ -669,7 +685,7 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "description": "Name of the function to call."
+                    "description": "The name of the function to call."
                   }
                 }
               }
@@ -679,7 +695,7 @@
       },
       "ResponseFormat": {
         "type": "object",
-        "description": "Controls the response format (Beta).",
+        "description": "An object specifying the format the model must output.",
         "properties": {
           "type": {
             "type": "string",
@@ -688,7 +704,8 @@
               "json_object",
               "json_schema"
             ],
-            "description": "Target output format."
+            "default": "text",
+            "description": "Target output format. Set to `json_object` to enable JSON mode. When using JSON mode, you must also instruct the model to produce JSON via a system or user message."
           },
           "json_schema": {
             "$ref": "#/components/schemas/ResponseJsonSchema"
@@ -732,17 +749,18 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Tool call ID."
+            "description": "The ID of the tool call."
           },
           "type": {
             "type": "string",
             "enum": [
               "function"
             ],
-            "description": "Currently only function tool calls are supported."
+            "description": "The type of the tool. Currently only function is supported."
           },
           "function": {
             "type": "object",
+            "description": "The function the model called.",
             "required": [
               "name",
               "arguments"
@@ -750,11 +768,11 @@
             "properties": {
               "name": {
                 "type": "string",
-                "description": "Function name."
+                "description": "The name of the function the model called."
               },
               "arguments": {
                 "type": "string",
-                "description": "Call arguments as a JSON string."
+                "description": "The arguments to call the function with, generated by the model as a JSON string. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined in your function schema. Validate these arguments in your code before calling the function."
               }
             }
           }
@@ -766,22 +784,27 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Response ID."
+            "description": "A unique identifier for the chat."
           },
           "object": {
             "type": "string",
-            "description": "Object type, e.g. `chat.completion`."
+            "description": "The type of the object, which is chat.completion."
           },
           "created": {
             "type": "integer",
-            "description": "Unix timestamp."
+            "description": "The Unix timestamp (in seconds) when the chat completion was created."
           },
           "model": {
             "type": "string",
-            "description": "Actual model name used."
+            "description": "The name of the model that generated the completion."
+          },
+          "system_fingerprint": {
+            "type": "string",
+            "description": "This fingerprint represents the backend configuration that the model runs with."
           },
           "choices": {
             "type": "array",
+            "description": "A list of completions generated by the model.",
             "items": {
               "$ref": "#/components/schemas/ChatCompletionChoice"
             }
@@ -796,14 +819,14 @@
         "properties": {
           "index": {
             "type": "integer",
-            "description": "Candidate response index."
+            "description": "The index of this completion in the list of completions generated by the model."
           },
           "message": {
             "$ref": "#/components/schemas/AssistantMessage"
           },
           "finish_reason": {
             "type": "string",
-            "description": "Finish reason, e.g. `stop`, `length`, or `tool_calls`."
+            "description": "The reason the model stopped generating tokens. `stop` means the model finished generating naturally or hit a stop sequence; `length` means the output length reached the model's context length limit or the max_tokens limit; `content_filter` means the output was filtered due to a filtering policy; `tool_calls` means the model called a tool; `insufficient_system_resource` means generation was interrupted due to insufficient system inference resources."
           }
         }
       },
@@ -814,18 +837,20 @@
             "type": "string",
             "enum": [
               "assistant"
-            ]
+            ],
+            "description": "The role that generated this message."
           },
           "content": {
             "type": "string",
-            "description": "Text content output by the assistant."
+            "description": "The content of this completion."
           },
           "reasoning_content": {
             "type": "string",
-            "description": "Reasoning content output by the assistant."
+            "description": "Only applicable in thinking mode. The reasoning content in the assistant message, preceding the final answer."
           },
           "tool_calls": {
             "type": "array",
+            "description": "Tool calls generated by the model, e.g. function calls.",
             "items": {
               "$ref": "#/components/schemas/ToolCallMessage"
             }
@@ -834,19 +859,37 @@
       },
       "Usage": {
         "type": "object",
-        "description": "Token usage statistics.",
+        "description": "Usage information for this chat completion request.",
         "properties": {
           "prompt_tokens": {
             "type": "integer",
-            "description": "Number of input tokens."
+            "description": "The number of tokens contained in the user prompt. This value equals prompt_cache_hit_tokens + prompt_cache_miss_tokens."
           },
           "completion_tokens": {
             "type": "integer",
-            "description": "Number of output tokens."
+            "description": "The number of tokens generated by the model for the completion."
           },
           "total_tokens": {
             "type": "integer",
-            "description": "Total number of tokens."
+            "description": "The total number of tokens in this request (prompt + completion)."
+          },
+          "prompt_cache_hit_tokens": {
+            "type": "integer",
+            "description": "The number of tokens in the user prompt that hit the context cache."
+          },
+          "prompt_cache_miss_tokens": {
+            "type": "integer",
+            "description": "The number of tokens in the user prompt that missed the context cache."
+          },
+          "completion_tokens_details": {
+            "type": "object",
+            "description": "Details about the completion tokens.",
+            "properties": {
+              "reasoning_tokens": {
+                "type": "integer",
+                "description": "The number of chain-of-thought tokens generated by the reasoning model."
+              }
+            }
           }
         }
       },
