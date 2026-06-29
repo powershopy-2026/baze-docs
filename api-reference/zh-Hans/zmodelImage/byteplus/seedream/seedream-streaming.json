@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "流式响应（字节API兼容）",
+    "title": "流式响应",
     "version": "1.0.0",
-    "description": "本文介绍图片生成 API 的流式响应模式，与 BytePlus 模型方舟上游接口的 SSE 协议保持一致。\n\n开启流式输出后（`stream: true`），服务端通过 Server-Sent Events（SSE）实时推送每张图片的生成结果。\n\n仅 `seedream-5-0-lite`、`seedream-4-5`、`seedream-4-0` 支持流式响应。\n\n参考上游文档：https://docs.byteplus.com/en/docs/ModelArk/1824137",
+    "description": "本文介绍图片生成 API 的流式响应模式，与 BytePlus 模型方舟上游接口的 SSE 协议保持一致。\n\n开启流式输出后（`stream: true`），服务端通过 Server-Sent Events（SSE）实时推送每张图片的生成结果。\n\n仅 `seedream-5-0-lite`、`seedream-4-5`、`seedream-4-0` 支持流式响应。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -18,7 +18,7 @@
   "tags": [
     {
       "name": "Seedream API Compat",
-      "description": "Seedream 流式响应接口（字节API兼容模式）"
+      "description": "Seedream 流式响应接口"
     }
   ],
   "paths": {

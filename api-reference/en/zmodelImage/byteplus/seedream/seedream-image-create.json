@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Image Creation (BytePlus API Compat)",
+    "title": "Image Creation",
     "version": "1.0.0",
     "description": "This document describes the request and response parameters of the Image Creation API, compatible with BytePlus ModelArk upstream interface.\n\nThe unified endpoint is `/api/v3/images/generations`, supporting models such as `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`.",
     "license": {
@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "Seedream API Compat",
-      "description": "Seedream image creation interface (BytePlus API Compat mode)"
+      "description": "Seedream image creation interface"
     }
   ],
   "paths": {
     "/api/v3/images/generations": {
       "post": {
         "summary": "Image Creation",
-        "description": "Call the image generation model to generate images from text prompts. Supports text-to-image, image-to-image, and batch sequential generation modes.\n\nReference upstream documentation: https://docs.byteplus.com/en/docs/ModelArk/1541523",
+        "description": "Call the image generation model to generate images from text prompts. Supports text-to-image, image-to-image, and batch sequential generation modes.",
         "operationId": "seedreamImageCreate",
         "tags": [
           "Seedream API Compat"

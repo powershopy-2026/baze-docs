@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Streaming Response (BytePlus API Compat)",
+    "title": "Streaming Response",
     "version": "1.0.0",
-    "description": "This document describes the streaming response mode of the image generation API, compatible with BytePlus ModelArk upstream SSE protocol.\n\nWhen streaming is enabled (`stream: true`), the server pushes each image generation result in real-time via Server-Sent Events (SSE).\n\nOnly `seedream-5-0-lite`, `seedream-4-5`, and `seedream-4-0` support streaming responses.\n\nReference upstream documentation: https://docs.byteplus.com/en/docs/ModelArk/1824137",
+    "description": "This document describes the streaming response mode of the image generation API, compatible with BytePlus ModelArk upstream SSE protocol.\n\nWhen streaming is enabled (`stream: true`), the server pushes each image generation result in real-time via Server-Sent Events (SSE).\n\nOnly `seedream-5-0-lite`, `seedream-4-5`, and `seedream-4-0` support streaming responses.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -18,7 +18,7 @@
   "tags": [
     {
       "name": "Seedream API Compat",
-      "description": "Seedream streaming response interface (BytePlus API Compat mode)"
+      "description": "Seedream streaming response interface"
     }
   ],
   "paths": {
