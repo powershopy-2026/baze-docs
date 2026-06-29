@@ -76,8 +76,6 @@
                     ]
                   },
                   {
-                  },
-                  {
                     "group": "智谱",
                     "pages": [
                       "zh-Hans/zmodelChat/zhipu/glm-4.5-air",
@@ -393,8 +391,6 @@
                       "en/zmodelChat/deepseek/deepseek-v4-flash",
                       "en/zmodelChat/deepseek/deepseek-v4-pro"
                     ]
-                  },
-                  {
                   },
                   {
                     "group": "Zhipu",
