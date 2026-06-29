@@ -79,6 +79,29 @@
                     ]
                   }
                 },
+                "video_chat": {
+                  "summary": "Video understanding (multimodal)",
+                  "value": {
+                    "model": "qwen3.5-flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example.com/video.mp4"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "Describe this video."
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
                 "streaming_chat": {
                   "summary": "Streaming output",
                   "value": {
@@ -281,7 +304,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "List of conversation messages. Supports text content and multimodal content (image + text).",
+            "description": "List of conversation messages. Supports text content and multimodal content (image/video + text).",
             "items": {
               "$ref": "#/components/schemas/Message"
             }
@@ -401,7 +424,8 @@
             "type": "string",
             "enum": [
               "text",
-              "image_url"
+              "image_url",
+              "video_url"
             ],
             "description": "Content type."
           },
@@ -416,6 +440,16 @@
               "url": {
                 "type": "string",
                 "description": "Image URL or Base64-encoded image data."
+              }
+            }
+          },
+          "video_url": {
+            "type": "object",
+            "description": "Video information. Required when type=video_url.",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "Video URL or Base64-encoded video data."
               }
             }
           }

@@ -18,7 +18,7 @@
   "tags": [
     {
       "name": "Qwen Chat",
-      "description": "Qwen series chat and multimodal capabilities"
+      "description": "Qwen series chat capability"
     }
   ],
   "paths": {
@@ -56,29 +56,7 @@
                     "max_tokens": 2000
                   }
                 },
-                "vision_chat": {
-                  "summary": "Image understanding (multimodal)",
-                  "value": {
-                    "model": "qwen3-max",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "image_url",
-                            "image_url": {
-                              "url": "https://example.com/image.jpg"
-                            }
-                          },
-                          {
-                            "type": "text",
-                            "text": "What is in this image?"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                },
+
                 "streaming_chat": {
                   "summary": "Streaming output",
                   "value": {
@@ -281,7 +259,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "List of conversation messages. Supports text content and multimodal content (image + text).",
+            "description": "List of conversation messages. Supports text content.",
             "items": {
               "$ref": "#/components/schemas/Message"
             }
@@ -368,55 +346,14 @@
             "description": "Role of the message sender."
           },
           "content": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "Text content."
-              },
-              {
-                "type": "array",
-                "description": "Multimodal content list (for image understanding).",
-                "items": {
-                  "$ref": "#/components/schemas/ContentItem"
-                }
-              }
-            ]
+            "type": "string",
+            "description": "Text content."
           },
           "tool_calls": {
             "type": "array",
             "description": "Tool call information.",
             "items": {
               "type": "object"
-            }
-          }
-        }
-      },
-      "ContentItem": {
-        "type": "object",
-        "required": [
-          "type"
-        ],
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "text",
-              "image_url"
-            ],
-            "description": "Content type."
-          },
-          "text": {
-            "type": "string",
-            "description": "Text content. Required when type=text."
-          },
-          "image_url": {
-            "type": "object",
-            "description": "Image information. Required when type=image_url.",
-            "properties": {
-              "url": {
-                "type": "string",
-                "description": "Image URL or Base64-encoded image data."
-              }
             }
           }
         }
