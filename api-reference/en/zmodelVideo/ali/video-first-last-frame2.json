@@ -476,9 +476,7 @@
           "size": {
             "type": "string",
             "enum": [
-              "480P",
-              "720P",
-              "1080P"
+              "720P"
             ],
             "description": "Output video resolution tier. wan2.2-kf2v-flash supports 480P/720P/1080P, wan2.1-kf2v-plus supports 720P.",
             "default": "720P"

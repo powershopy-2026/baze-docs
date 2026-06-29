@@ -55,7 +55,7 @@
                 "with_negative_prompt": {
                   "summary": "With negative prompt",
                   "value": {
-                    "model": "wan2.1-kf2v-plus",
+                    "model": "wan2.2-kf2v-flash",
                     "images": [
                       "https://example.com/first-frame.png",
                       "https://example.com/last-frame.png"

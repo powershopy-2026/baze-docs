@@ -476,9 +476,7 @@
           "size": {
             "type": "string",
             "enum": [
-              "480P",
-              "720P",
-              "1080P"
+              "720P"
             ],
             "description": "生成视频的分辨率档位。wan2.2-kf2v-flash 支持 480P/720P/1080P，wan2.1-kf2v-plus 支持 720P。",
             "default": "720P"
