@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "seed-2-0-mini-260215",
-        "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `seed-2-0-mini-260215` \n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
+        "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `seed-2-0-mini-260215` \n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports `text`, `image_url`, `video_url`, and `input_audio` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
         "operationId": "byteplusChatCompletions",
         "tags": [
           "BytePlus Chat"
@@ -71,7 +71,7 @@
                         "content": [
                           {
                             "type": "text",
-                            "text": "First identify the product in the image, then use the video to determine the scene it is placed in."
+                            "text": "First identify the product in the image, use the video to determine the scene it is placed in, and analyze the background sound in the audio."
                           },
                           {
                             "type": "image_url",
@@ -84,6 +84,12 @@
                             "type": "video_url",
                             "video_url": {
                               "url": "https://example.com/store.mp4"
+                            }
+                          },
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "url": "https://example.com/audio.mp3"
                             }
                           }
                         ]
@@ -315,7 +321,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "Message list. This document covers four roles: `system`, `user`, `assistant`, and `tool`.`messages[].content` supports plain text or multimodal parts composed of `text`, `image_url`, and `video_url`.",
+            "description": "Message list. This document covers four roles: `system`, `user`, `assistant`, and `tool`.`messages[].content` supports plain text or multimodal parts composed of `text`, `image_url`, `video_url`, and `input_audio`.",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -536,6 +542,26 @@
                 "$ref": "#/components/schemas/VideoURL"
               }
             }
+          },
+          {
+            "type": "object",
+            "title": "audio",
+            "required": [
+              "type",
+              "input_audio"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "input_audio"
+                ],
+                "description": "Audio part."
+              },
+              "input_audio": {
+                "$ref": "#/components/schemas/InputAudio"
+              }
+            }
           }
         ]
       },
@@ -571,6 +597,19 @@
           "url": {
             "type": "string",
             "description": "Video URL or Base64-encoded data."
+          }
+        }
+      },
+      "InputAudio": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "description": "Audio content. Supports audio URLs or Base64-encoded data.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Audio URL or Base64-encoded data."
           }
         }
       },

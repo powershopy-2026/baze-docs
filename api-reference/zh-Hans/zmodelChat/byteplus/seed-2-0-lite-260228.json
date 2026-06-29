@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "BytePlus 对话补全",
-        "description": "调用 BytePlus chat completions 能力。\n\n支持模型包括 `seed-2-0-lite-260228` \n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
+        "description": "调用 BytePlus chat completions capability。\n\n支持模型包括 `seed-2-0-lite-260228`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。`messages[].content` 支持 `text`、`image_url`、`video_url`、`input_audio` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
         "operationId": "byteplusChatCompletions",
         "tags": [
           "BytePlus Chat"
@@ -71,7 +71,7 @@
                         "content": [
                           {
                             "type": "text",
-                            "text": "请先识别图片中的商品，再结合视频画面判断它被放在什么场景里。"
+                            "text": "请先识别图片中的商品，结合视频画面判断它被放在什么场景里，并分析音频中的背景声音。"
                           },
                           {
                             "type": "image_url",
@@ -84,6 +84,12 @@
                             "type": "video_url",
                             "video_url": {
                               "url": "https://example.com/store.mp4"
+                            }
+                          },
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "url": "https://example.com/audio.mp3"
                             }
                           }
                         ]
@@ -315,7 +321,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "消息列表。当前文档公开 `system`、`user`、`assistant`、`tool` 四种角色。`messages[].content` 支持纯文本，也支持由 `text`、`image_url`、`video_url` 组成的多模态分片。",
+            "description": "消息列表。当前文档公开 `system`、`user`、`assistant`、`tool` 四种角色。`messages[].content` 支持纯文本，也支持由 `text`、`image_url`、`video_url`、`input_audio` 组成的多模态分片。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -536,6 +542,26 @@
                 "$ref": "#/components/schemas/VideoURL"
               }
             }
+          },
+          {
+            "type": "object",
+            "title": "audio",
+            "required": [
+              "type",
+              "input_audio"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "input_audio"
+                ],
+                "description": "音频分片。"
+              },
+              "input_audio": {
+                "$ref": "#/components/schemas/InputAudio"
+              }
+            }
           }
         ]
       },
@@ -571,6 +597,19 @@
           "url": {
             "type": "string",
             "description": "视频链接或 Base64 编码。"
+          }
+        }
+      },
+      "InputAudio": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "description": "音频内容。支持音频链接或 Base64 编码。",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "音频链接或 Base64 编码。"
           }
         }
       },
