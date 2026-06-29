@@ -79,6 +79,29 @@
                     ]
                   }
                 },
+                "video_chat": {
+                  "summary": "视频理解（多模态）",
+                  "value": {
+                    "model": "qwen3.6-plus",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example.com/video.mp4"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "描述这个视频。"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
                 "streaming_chat": {
                   "summary": "流式输出",
                   "value": {
@@ -281,7 +304,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "对话消息列表。支持文本内容和多模态内容（图像+文本）。",
+            "description": "对话消息列表。支持文本内容和多模态内容（图像/视频+文本）。",
             "items": {
               "$ref": "#/components/schemas/Message"
             }
@@ -401,7 +424,8 @@
             "type": "string",
             "enum": [
               "text",
-              "image_url"
+              "image_url",
+              "video_url"
             ],
             "description": "内容类型。"
           },
@@ -416,6 +440,16 @@
               "url": {
                 "type": "string",
                 "description": "图像 URL 或 Base64 编码的图像数据。"
+              }
+            }
+          },
+          "video_url": {
+            "type": "object",
+            "description": "视频信息。当 type=video_url 时必填。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "视频 URL 或 Base64 编码的视频数据。"
               }
             }
           }
