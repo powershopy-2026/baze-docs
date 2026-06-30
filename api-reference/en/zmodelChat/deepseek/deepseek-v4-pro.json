@@ -450,7 +450,7 @@
           },
           "prefix": {
             "type": "boolean",
-            "description": "(Beta) Set this to true to force the model to start its response with the prefix content provided in this assistant message. You must set the base_url to the beta endpoint to use this feature."
+            "description": "(Beta) Set this to true to force the model to start its response with the prefix content provided in this assistant message. "
           },
           "reasoning_content": {
             "type": "string",
