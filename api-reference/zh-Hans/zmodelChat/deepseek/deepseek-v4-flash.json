@@ -3,7 +3,7 @@
   "info": {
     "title": "deepseek-v4-flash",
     "version": "1.0.0",
-    "description": "DeepSeek 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`deepseek-v4-flash`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。",
+    "description": "DeepSeek 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`deepseek-v4-flash`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-flash",
-        "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-v4-flash`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
+        "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-v4-flash`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
         "operationId": "deepseekChatCompletions_deepseek_v4_flash",
         "tags": [
           "DeepSeek Chat"
@@ -280,10 +280,6 @@
             "type": "integer",
             "description": "限制一次请求中模型生成 completion 的最大 token 数。输入 token 和输出 token 的总长度受模型的上下文长度的限制。"
           },
-          "max_completion_tokens": {
-            "type": "integer",
-            "description": "限制一次请求中模型生成的最大 token 数（含回答与思维链长度）。设置后 `max_tokens` 会失效。"
-          },
           "stop": {
             "description": "一个 string 或最多包含 16 个 string 的 list，在遇到这些词时，API 将停止生成更多的 token。",
             "oneOf": [
@@ -427,7 +423,7 @@
         "description": "User message。该消息的发起角色为 user。",
         "properties": {
           "content": {
-            "description": "user 消息的内容。可为纯文本字符串，或由 `text`、`image_url`、`video_url` 多模态分片组成的数组。",
+            "description": "user 消息的内容。",
             "oneOf": [
               {
                 "type": "string"
@@ -485,13 +481,6 @@
             "type": "string",
             "nullable": true,
             "description": "(Beta) 用于思考模式下在对话前缀续写功能下，作为最后一条 assistant 思维链内容的输入。使用此功能时，prefix 参数必须设置为 true。"
-          },
-          "tool_calls": {
-            "type": "array",
-            "description": "模型生成的 tool 调用，例如 function 调用。",
-            "items": {
-              "$ref": "#/components/schemas/ToolCallMessage"
-            }
           }
         }
       },
@@ -729,20 +718,16 @@
       },
       "ResponseFormat": {
         "type": "object",
-        "description": "一个 object，指定模型必须输出的格式。",
+        "description": "一个 object，指定模型必须输出的格式。\n\n设置为 { \"type\": \"json_object\" } 以启用 JSON 模式，该模式保证模型生成的消息是有效的 JSON。\n\n注意: 使用 JSON 模式时，你还必须通过系统或用户消息指示模型生成 JSON。否则，模型可能会生成不断的空白字符，直到生成达到令牌限制，从而导致请求长时间运行并显得“卡住”。此外，如果 finish_reason=\"length\"，这表示生成超过了 max_tokens 或对话超过了最大上下文长度，消息内容可能会被部分截断。",
         "properties": {
           "type": {
             "type": "string",
             "enum": [
               "text",
-              "json_object",
-              "json_schema"
+              "json_object"
             ],
             "default": "text",
-            "description": "目标输出格式。设置为 `json_object` 可启用 JSON 模式。使用 JSON 模式时，你还必须通过系统或用户消息指示模型生成 JSON。"
-          },
-          "json_schema": {
-            "$ref": "#/components/schemas/ResponseJsonSchema"
+            "description": "Must be one of text or json_object."
           }
         }
       },
