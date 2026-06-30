@@ -22,7 +22,7 @@
     }
   ],
   "paths": {
-    "/api/v3/images/generations": {
+    "/byteplus/api/v3/images/generations": {
       "post": {
         "summary": "流式生成图片",
         "description": "开启流式输出后，请求与普通图片创建接口相同（路径、方法、请求体格式不变），只需在请求体中设置 `stream: true`，并将客户端的 `Accept` 头设置为 `text/event-stream`。\n\n服务端通过 SSE 协议逐张推送生成结果：每生成完一张图片，推送 `image_generation.partial_succeeded` 事件；全部生成完成后，推送 `image_generation.completed` 事件。",
@@ -251,6 +251,7 @@
           },
           "optimize_prompt_options": {
             "type": "object",
+            "description": "提示词优化功能配置。仅 `seedream-5-0-lite`、`seedream-4-5`（仅支持 `standard` 模式）和 `seedream-4-0` 支持此参数。",
             "properties": {
               "mode": {
                 "type": "string",

@@ -22,7 +22,7 @@
     }
   ],
   "paths": {
-    "/api/v3/images/generations": {
+    "/byteplus/api/v3/images/generations": {
       "post": {
         "summary": "Streaming Image Generation",
         "description": "When streaming is enabled, the request is identical to the normal image creation API (same path, method, and request body format). Simply set `stream: true` in the request body and set the `Accept` header to `text/event-stream` on the client side.\n\nThe server pushes each generation result via SSE protocol: an `image_generation.partial_succeeded` event is pushed each time an image is generated; an `image_generation.completed` event is pushed when all images are finished.",
@@ -251,6 +251,7 @@
           },
           "optimize_prompt_options": {
             "type": "object",
+            "description": "Prompt optimization configuration. Only `seedream-5-0-lite`, `seedream-4-5` (only supports `standard` mode) and `seedream-4-0` support this parameter.",
             "properties": {
               "mode": {
                 "type": "string",
