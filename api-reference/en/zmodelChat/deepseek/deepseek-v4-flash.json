@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "DeepSeek Chat",
-      "description": "DeepSeek text chat, multimodal understanding, and tool calling capabilities"
+      "description": "DeepSeek text chat and tool calling capabilities"
     }
   ],
   "paths": {
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-flash",
-        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-flash`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`. `messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
+        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-flash`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`. `messages[].content` supports text content (string); `assistant` messages support `reasoning_content` and `tool_calls`.",
         "operationId": "deepseekChatCompletions_deepseek_v4_flash",
         "tags": [
           "DeepSeek Chat"
@@ -408,18 +408,8 @@
         "description": "User message. The role of this message is user.",
         "properties": {
           "content": {
-            "description": "The content of the user message. ",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/MessageContentPart"
-                }
-              }
-            ]
+            "type": "string",
+            "description": "The content of the user message."
           },
           "role": {
             "type": "string",
@@ -496,103 +486,7 @@
           }
         }
       },
-      "MessageContentPart": {
-        "oneOf": [
-          {
-            "type": "object",
-            "required": [
-              "type",
-              "text"
-            ],
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "text"
-                ],
-                "description": "Text part."
-              },
-              "text": {
-                "type": "string",
-                "description": "Text content."
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "type",
-              "image_url"
-            ],
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "image_url"
-                ],
-                "description": "Image part."
-              },
-              "image_url": {
-                "$ref": "#/components/schemas/ImageURL"
-              }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "type",
-              "video_url"
-            ],
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "video_url"
-                ],
-                "description": "Video part."
-              },
-              "video_url": {
-                "$ref": "#/components/schemas/VideoURL"
-              }
-            }
-          }
-        ]
-      },
-      "ImageURL": {
-        "type": "object",
-        "required": [
-          "url"
-        ],
-        "description": "Image content. Supports image URLs or Base64-encoded data.",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "Image URL or Base64-encoded data."
-          },
-          "detail": {
-            "type": "string",
-            "enum": [
-              "low",
-              "high",
-              "xhigh"
-            ],
-            "description": "Image understanding detail level."
-          }
-        }
-      },
-      "VideoURL": {
-        "type": "object",
-        "required": [
-          "url"
-        ],
-        "description": "Video content. Supports video URLs or Base64-encoded data.",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "Video URL or Base64-encoded data."
-          }
-        }
-      },
+
       "ThinkingConfig": {
         "type": "object",
         "description": "Controls the switch between thinking mode and non-thinking mode.",
