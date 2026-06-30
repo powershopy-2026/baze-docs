@@ -3,7 +3,7 @@
   "info": {
     "title": "deepseek-v4-pro",
     "version": "1.0.0",
-    "description": "DeepSeek 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`deepseek-v4-pro`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。",
+    "description": "DeepSeek 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`deepseek-v4-pro`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`stop`、`reasoning_effort`、`response_format`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`tool_choice`、`user_id`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-pro",
-        "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-v4-pro`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
+        "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-v4-pro`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`stop`、`reasoning_effort`、`response_format`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`tool_choice`、`user_id`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
         "operationId": "deepseekChatCompletions_deepseek_v4_pro",
         "tags": [
           "DeepSeek Chat"
@@ -305,22 +305,6 @@
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
           },
-          "frequency_penalty": {
-            "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "default": 0,
-            "deprecated": true,
-            "description": "该参数已不再支持。传入该参数将不会产生任何效果。"
-          },
-          "presence_penalty": {
-            "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "default": 0,
-            "deprecated": true,
-            "description": "该参数已不再支持。传入该参数将不会产生任何效果。"
-          },
           "temperature": {
             "type": "number",
             "minimum": 0,
@@ -356,10 +340,6 @@
             "items": {
               "$ref": "#/components/schemas/ToolDefinition"
             }
-          },
-          "parallel_tool_calls": {
-            "type": "boolean",
-            "description": "是否允许模型并行发起多个工具调用。"
           },
           "tool_choice": {
             "$ref": "#/components/schemas/ToolChoice"

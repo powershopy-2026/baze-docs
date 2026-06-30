@@ -3,7 +3,7 @@
   "info": {
     "title": "deepseek-v4-pro",
     "version": "1.0.0",
-    "description": "DeepSeek Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `deepseek-v4-pro`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`, `user_id`.",
+    "description": "DeepSeek Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `deepseek-v4-pro`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-pro",
-        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-pro`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`, `user_id`. `messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
+        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-pro`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`. `messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
         "operationId": "deepseekChatCompletions_deepseek_v4_pro",
         "tags": [
           "DeepSeek Chat"
@@ -305,22 +305,6 @@
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
           },
-          "frequency_penalty": {
-            "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "default": 0,
-            "deprecated": true,
-            "description": "This parameter is no longer supported. Passing it will have no effect."
-          },
-          "presence_penalty": {
-            "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "default": 0,
-            "deprecated": true,
-            "description": "This parameter is no longer supported. Passing it will have no effect."
-          },
           "temperature": {
             "type": "number",
             "minimum": 0,
@@ -356,10 +340,6 @@
             "items": {
               "$ref": "#/components/schemas/ToolDefinition"
             }
-          },
-          "parallel_tool_calls": {
-            "type": "boolean",
-            "description": "Whether to allow the model to issue multiple tool calls in parallel."
           },
           "tool_choice": {
             "$ref": "#/components/schemas/ToolChoice"
