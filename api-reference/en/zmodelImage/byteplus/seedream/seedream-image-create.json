@@ -3,7 +3,7 @@
   "info": {
     "title": "Image Creation",
     "version": "1.0.0",
-    "description": "This document describes the request and response parameters of the Image Creation API, compatible with BytePlus ModelArk upstream interface.\n\nThe unified endpoint is `/api/v3/images/generations`, supporting models such as `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`.",
+    "description": "This document describes the request and response parameters of the Image Creation API, compatible with BytePlus ModelArk upstream interface.\n\nThe unified endpoint is `/byteplus/api/v3/images/generations`, supporting models such as `seedream-5-0-260128`, `seedream-4-5-251128`, and `seedream-4-0-250828`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,7 +22,7 @@
     }
   ],
   "paths": {
-    "/api/v3/images/generations": {
+    "/byteplus/api/v3/images/generations": {
       "post": {
         "summary": "Image Creation",
         "description": "Call the image generation model to generate images from text prompts. Supports text-to-image, image-to-image, and batch sequential generation modes.",
