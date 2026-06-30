@@ -87,31 +87,36 @@
                   "success": {
                     "summary": "Non-streaming success response",
                     "value": {
-                      "id": "chatcmpl_bp_123",
+                      "id": "26231-33ea-4464-af18-c8c49d256",
                       "object": "chat.completion",
-                      "created": 1742342400,
+                      "created": 1782805310,
                       "model": "deepseek-v4-flash",
-                      "system_fingerprint": "fp_baze_deepseek_v4_flash",
                       "choices": [
                         {
                           "index": 0,
                           "message": {
                             "role": "assistant",
-                            "content": "The core RAG workflow typically consists of three steps: retrieval, augmentation, and generation. The system first converts the user query into a vector and retrieves relevant knowledge snippets, then concatenates the retrieved results with the original query into the prompt. Finally, the model generates an answer based on the augmented context, reducing hallucinations and improving factual accuracy."
+                            "content": "Hello! How can I assist you today?",
+                            "reasoning_content": "We are given a conversation: \"You are a helpful assistant\" and \"Hi\". We need to respond appropriately. Since I'm the assistant, I should respond to the user's greeting. A simple friendly response is fine."
                           },
+                          "logprobs": null,
                           "finish_reason": "stop"
                         }
                       ],
                       "usage": {
-                        "prompt_tokens": 123,
-                        "completion_tokens": 98,
-                        "total_tokens": 221,
-                        "prompt_cache_hit_tokens": 64,
-                        "prompt_cache_miss_tokens": 59,
+                        "prompt_tokens": 10,
+                        "completion_tokens": 55,
+                        "total_tokens": 65,
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0
+                        },
                         "completion_tokens_details": {
-                          "reasoning_tokens": 0
-                        }
-                      }
+                          "reasoning_tokens": 45
+                        },
+                        "prompt_cache_hit_tokens": 0,
+                        "prompt_cache_miss_tokens": 10
+                      },
+                      "system_fingerprint": "fp_9954bca7_prod0820_fp8_kvcache_20260402"
                     }
                   }
                 }
@@ -346,7 +351,7 @@
           },
           "user_id": {
             "type": "string",
-            "description": "Your custom user_id, with the character set [a-zA-Z0-9\\-_] and a maximum length of 512. Do not include private user information in user_id. user_id can be used to distinguish users on your side for content safety handling, KVCache isolation, and scheduling isolation."
+            "description": "Your custom user_id, with the character set [a-zA-Z0-9\\-_] and a maximum length of 512. Do not include private user information in user_id. user_id can be used to distinguish user identities on your side to help us with content safety review.\nuser_id can be used for KVCache isolation for privacy management.\nuser_id can be used for scheduling isolation of users on your business side."
           }
         }
       },
@@ -631,8 +636,7 @@
           "function": {
             "type": "object",
             "required": [
-              "name",
-              "parameters"
+              "name"
             ],
             "properties": {
               "name": {

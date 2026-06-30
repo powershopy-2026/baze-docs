@@ -87,31 +87,36 @@
                   "success": {
                     "summary": "非流式成功响应",
                     "value": {
-                      "id": "chatcmpl_bp_123",
+                      "id": "26231-33ea-4464-af18-c8c49d256",
                       "object": "chat.completion",
-                      "created": 1742342400,
+                      "created": 1782805310,
                       "model": "deepseek-v4-pro",
-                      "system_fingerprint": "fp_baze_deepseek_v4_pro",
                       "choices": [
                         {
                           "index": 0,
                           "message": {
                             "role": "assistant",
-                            "content": "RAG 的核心流程通常分为检索、增强和生成三步。系统先把用户问题转换为向量并检索相关知识片段，再把检索结果与原问题一起拼接进提示词。最后模型基于增强后的上下文生成答案，从而降低幻觉并提升事实性。"
+                            "content": "Hello! How can I assist you today?",
+                            "reasoning_content": "We are given a conversation: \"You are a helpful assistant\" and \"Hi\". We need to respond appropriately. Since I'm the assistant, I should respond to the user's greeting. A simple friendly response is fine."
                           },
+                          "logprobs": null,
                           "finish_reason": "stop"
                         }
                       ],
                       "usage": {
-                        "prompt_tokens": 123,
-                        "completion_tokens": 98,
-                        "total_tokens": 221,
-                        "prompt_cache_hit_tokens": 64,
-                        "prompt_cache_miss_tokens": 59,
+                        "prompt_tokens": 10,
+                        "completion_tokens": 55,
+                        "total_tokens": 65,
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0
+                        },
                         "completion_tokens_details": {
-                          "reasoning_tokens": 0
-                        }
-                      }
+                          "reasoning_tokens": 45
+                        },
+                        "prompt_cache_hit_tokens": 0,
+                        "prompt_cache_miss_tokens": 10
+                      },
+                      "system_fingerprint": "fp_9954bca7_prod0820_fp8_kvcache_20260402"
                     }
                   }
                 }
@@ -346,7 +351,7 @@
           },
           "user_id": {
             "type": "string",
-            "description": "您自定义的 user_id，可选字符集为 [a-zA-Z0-9\\-_]，最大长度为 512。请不要在 user_id 中包含用户隐私信息。user_id 可用于区分您业务侧的用户身份，以帮助进行内容安全处理、KVCache 缓存隔离以及调度隔离。"
+            "description": "您自定义的 user_id，可选字符集为 [a-zA-Z0-9\\-_]，最大长度为 512。请不要在 user_id 中包含用户隐私信息。user_id 可用于区分您业务侧的用户身份，以帮助我们进行内容安全处理。\nuser_id 可用于 KVCache 缓存隔离，以进行隐私管理。\nuser_id 可用于我们对您业务侧用户进行调度隔离。"
           }
         }
       },
@@ -631,8 +636,7 @@
           "function": {
             "type": "object",
             "required": [
-              "name",
-              "parameters"
+              "name"
             ],
             "properties": {
               "name": {
