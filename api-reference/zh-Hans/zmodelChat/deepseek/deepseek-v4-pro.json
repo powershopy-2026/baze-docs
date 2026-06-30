@@ -543,7 +543,8 @@
               },
               "parameters": {
                 "type": "object",
-                "description": "function 的输入参数，以 JSON Schema 对象描述。"
+                "description": "function 的输入参数，以 JSON Schema 对象描述。省略 parameters 会定义一个参数列表为空的 function。",
+                "additionalProperties": true
               },
               "strict": {
                 "type": "boolean",

@@ -543,7 +543,8 @@
               },
               "parameters": {
                 "type": "object",
-                "description": "The input parameters of the function, described as a JSON Schema object."
+                "description": "The input parameters of the function, described as a JSON Schema object. Omitting parameters defines a function with an empty parameter list.",
+                "additionalProperties": true
               },
               "strict": {
                 "type": "boolean",
