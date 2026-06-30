@@ -725,6 +725,60 @@
           "finish_reason": {
             "type": "string",
             "description": "模型停止生成 token 的原因。`stop` 表示模型自然停止生成或遇到 stop 序列；`length` 表示输出长度达到了模型上下文长度限制或 max_tokens 的限制；`content_filter` 表示输出内容因触发过滤策略而被过滤；`tool_calls` 表示模型调用了工具；`insufficient_system_resource` 表示系统推理资源不足，生成被打断。"
+          },
+          "logprobs": {
+            "$ref": "#/components/schemas/ChoiceLogprobs"
+          }
+        }
+      },
+      "ChoiceLogprobs": {
+        "type": "object",
+        "description": "该 choice 的对数概率信息。",
+        "properties": {
+          "content": {
+            "type": "array",
+            "nullable": true,
+            "description": "一个包含输出 token 对数概率信息的列表。",
+            "items": {
+              "$ref": "#/components/schemas/LogprobToken"
+            }
+          },
+          "reasoning_content": {
+            "type": "array",
+            "nullable": true,
+            "description": "一个包含输出 token 对数概率信息的列表。",
+            "items": {
+              "$ref": "#/components/schemas/LogprobToken"
+            }
+          }
+        }
+      },
+      "LogprobToken": {
+        "type": "object",
+        "description": "输出 token 的对数概率信息。",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "输出的 token。"
+          },
+          "logprob": {
+            "type": "number",
+            "description": "该 token 的对数概率。-9999.0 代表该 token 的输出概率极小，不在 top 20 最可能输出的 token 中。"
+          },
+          "bytes": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer"
+            },
+            "description": "一个包含该 token UTF-8 字节表示的整数列表。一般在一个 UTF-8 字符被拆分成多个 token 来表示时有用。如果 token 没有对应的字节表示，则该值为 null。"
+          },
+          "top_logprobs": {
+            "type": "array",
+            "description": "一个包含在该输出位置上，输出概率 top N 的 token 的列表，以及它们的对数概率。在罕见情况下，返回的 token 数量可能少于请求参数中指定的 top_logprobs 值。",
+            "items": {
+              "$ref": "#/components/schemas/LogprobToken"
+            }
           }
         }
       },
