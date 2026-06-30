@@ -321,7 +321,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "对话的消息列表。当前文档公开 `system`、`user`、`assistant`、`tool` 四种角色。`messages[].content` 支持纯文本，也支持由 `text`、`image_url`、`video_url` 组成的多模态分片。",
+            "description": "对话的消息列表。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -437,24 +437,57 @@
         }
       },
       "Message": {
+        "description": "对话的消息列表中的单条消息。根据 role 的不同，分为 system、user、assistant、tool 四种消息类型。",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SystemMessage"
+          },
+          {
+            "$ref": "#/components/schemas/UserMessage"
+          },
+          {
+            "$ref": "#/components/schemas/AssistantRequestMessage"
+          },
+          {
+            "$ref": "#/components/schemas/ToolMessage"
+          }
+        ]
+      },
+      "SystemMessage": {
         "type": "object",
         "required": [
-          "role"
+          "role",
+          "content"
         ],
-        "description": "单条消息。`assistant` 消息支持 `reasoning_content` 与 `tool_calls`；当角色为 `assistant` 时，`content` 与 `tool_calls` 至少应提供其一。",
+        "description": "System message。该消息的发起角色为 system。",
         "properties": {
+          "content": {
+            "type": "string",
+            "description": "system 消息的内容。"
+          },
           "role": {
             "type": "string",
             "enum": [
-              "system",
-              "user",
-              "assistant",
-              "tool"
+              "system"
             ],
-            "description": "该消息的发起角色。"
+            "description": "该消息的发起角色，其值为 system。"
           },
+          "name": {
+            "type": "string",
+            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+          }
+        }
+      },
+      "UserMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "User message。该消息的发起角色为 user。",
+        "properties": {
           "content": {
-            "description": "消息内容。可为纯文本字符串，或由多模态内容分片组成的数组。",
+            "description": "user 消息的内容。可为纯文本字符串，或由 `text`、`image_url`、`video_url` 多模态分片组成的数组。",
             "oneOf": [
               {
                 "type": "string"
@@ -467,9 +500,50 @@
               }
             ]
           },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "该消息的发起角色，其值为 user。"
+          },
+          "name": {
+            "type": "string",
+            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+          }
+        }
+      },
+      "AssistantRequestMessage": {
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "description": "Assistant message。该消息的发起角色为 assistant。",
+        "properties": {
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "description": "assistant 消息的内容。"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "该消息的发起角色，其值为 assistant。"
+          },
+          "name": {
+            "type": "string",
+            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+          },
+          "prefix": {
+            "type": "boolean",
+            "description": "(Beta) 设置此参数为 true，来强制模型在其回答中以此 assistant 消息中提供的前缀内容开始。您必须设置 base_url 为 beta 入口来使用此功能。"
+          },
           "reasoning_content": {
             "type": "string",
-            "description": "仅适用于思考模式。内容为 assistant 消息中在最终答案之前的推理内容。"
+            "nullable": true,
+            "description": "(Beta) 用于思考模式下在对话前缀续写功能下，作为最后一条 assistant 思维链内容的输入。使用此功能时，prefix 参数必须设置为 true。"
           },
           "tool_calls": {
             "type": "array",
@@ -477,6 +551,28 @@
             "items": {
               "$ref": "#/components/schemas/ToolCallMessage"
             }
+          }
+        }
+      },
+      "ToolMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content",
+          "tool_call_id"
+        ],
+        "description": "Tool message。该消息的发起角色为 tool。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "tool"
+            ],
+            "description": "该消息的发起角色，其值为 tool。"
+          },
+          "content": {
+            "type": "string",
+            "description": "tool 消息的内容。"
           },
           "tool_call_id": {
             "type": "string",
