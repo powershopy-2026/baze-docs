@@ -308,7 +308,7 @@
           },
           "optimize_prompt_options": {
             "type": "object",
-            "description": "提示词优化功能配置。",
+            "description": "提示词优化功能配置。仅 `seedream-5-0-lite`、`seedream-4-5`（仅支持 `standard` 模式）和 `seedream-4-0` 支持此参数。",
             "properties": {
               "mode": {
                 "type": "string",

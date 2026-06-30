@@ -251,6 +251,7 @@
           },
           "optimize_prompt_options": {
             "type": "object",
+            "description": "Prompt optimization configuration. Only `seedream-5-0-lite`, `seedream-4-5` (only supports `standard` mode) and `seedream-4-0` support this parameter.",
             "properties": {
               "mode": {
                 "type": "string",
