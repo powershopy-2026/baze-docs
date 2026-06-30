@@ -454,6 +454,7 @@
         ]
       },
       "SystemMessage": {
+        "title": "System message",
         "type": "object",
         "required": [
           "role",
@@ -479,6 +480,7 @@
         }
       },
       "UserMessage": {
+        "title": "User message",
         "type": "object",
         "required": [
           "role",
@@ -514,6 +516,7 @@
         }
       },
       "AssistantRequestMessage": {
+        "title": "Assistant message",
         "type": "object",
         "required": [
           "role"
@@ -555,6 +558,7 @@
         }
       },
       "ToolMessage": {
+        "title": "Tool message",
         "type": "object",
         "required": [
           "role",
