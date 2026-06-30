@@ -3,7 +3,7 @@
   "info": {
     "title": "deepseek-v4-flash",
     "version": "1.0.0",
-    "description": "DeepSeek Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `deepseek-v4-flash`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`, `user_id`.",
+    "description": "DeepSeek Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `deepseek-v4-flash`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`, `user_id`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-flash",
-        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-flash`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`, `user_id`. `messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
+        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-flash`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`, `user_id`. `messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
         "operationId": "deepseekChatCompletions_deepseek_v4_flash",
         "tags": [
           "DeepSeek Chat"
@@ -38,99 +38,37 @@
                 "$ref": "#/components/schemas/ChatCompletionRequest"
               },
               "examples": {
-                "basic_text_chat": {
+                "default": {
                   "summary": "Basic text chat",
                   "value": {
                     "model": "deepseek-v4-flash",
                     "messages": [
                       {
-                        "role": "system",
-                        "content": "You are a concise and accurate assistant."
+                        "content": "You are a helpful assistant",
+                        "role": "system"
                       },
                       {
-                        "role": "user",
-                        "content": "Summarize the core RAG workflow in three sentences."
+                        "content": "Hi",
+                        "role": "user"
                       }
                     ],
                     "thinking": {
                       "type": "enabled"
                     },
                     "reasoning_effort": "high",
-                    "temperature": 0.3,
-                    "max_completion_tokens": 1024,
-                    "stream": false
-                  }
-                },
-                "multimodal_understanding": {
-                  "summary": "Multimodal understanding",
-                  "value": {
-                    "model": "deepseek-v4-flash",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "text",
-                            "text": "First identify the product in the image, then use the video to determine the scene it is placed in."
-                          },
-                          {
-                            "type": "image_url",
-                            "image_url": {
-                              "url": "https://example.com/product.jpg",
-                              "detail": "high"
-                            }
-                          },
-                          {
-                            "type": "video_url",
-                            "video_url": {
-                              "url": "https://example.com/store.mp4"
-                            }
-                          }
-                        ]
-                      }
-                    ],
-                    "max_tokens": 512,
-                    "stream": false
-                  }
-                },
-                "tool_calling_stream": {
-                  "summary": "Tool calling with streaming",
-                  "value": {
-                    "model": "deepseek-v4-flash",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": "Look up today's weather in Beijing and tell me if it's suitable for outdoor running."
-                      }
-                    ],
-                    "tools": [
-                      {
-                        "type": "function",
-                        "function": {
-                          "name": "get_weather",
-                          "description": "Query real-time weather by city name",
-                          "parameters": {
-                            "type": "object",
-                            "properties": {
-                              "city": {
-                                "type": "string",
-                                "description": "City name"
-                              }
-                            },
-                            "required": [
-                              "city"
-                            ]
-                          }
-                        }
-                      }
-                    ],
-                    "tool_choice": "auto",
-                    "parallel_tool_calls": true,
-                    "stream": true,
-                    "stream_options": {
-                      "include_usage": true,
-                      "chunk_include_usage": true
-                    }
+                    "max_tokens": 4096,
+                    "response_format": {
+                      "type": "text"
+                    },
+                    "stop": null,
+                    "stream": false,
+                    "stream_options": null,
+                    "temperature": 1,
+                    "top_p": 1,
+                    "tools": null,
+                    "tool_choice": "none",
+                    "logprobs": false,
+                    "top_logprobs": null
                   }
                 }
               }
@@ -703,10 +641,6 @@
           "include_usage": {
             "type": "boolean",
             "description": "If set to true, an additional chunk will be transmitted just before the final `data: [DONE]` in the stream. The usage field on this chunk shows the token usage statistics for the entire request, while the choices field will always be an empty array. All other chunks will also include a usage field, but its value will be null."
-          },
-          "chunk_include_usage": {
-            "type": "boolean",
-            "description": "If true, each streaming chunk includes cumulative usage up to that point."
           }
         }
       },

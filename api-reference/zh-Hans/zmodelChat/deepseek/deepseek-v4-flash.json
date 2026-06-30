@@ -3,7 +3,7 @@
   "info": {
     "title": "deepseek-v4-flash",
     "version": "1.0.0",
-    "description": "DeepSeek 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`deepseek-v4-flash`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。",
+    "description": "DeepSeek 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`deepseek-v4-flash`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-flash",
-        "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-v4-flash`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
+        "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-v4-flash`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`、`user_id`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
         "operationId": "deepseekChatCompletions_deepseek_v4_flash",
         "tags": [
           "DeepSeek Chat"
@@ -38,99 +38,37 @@
                 "$ref": "#/components/schemas/ChatCompletionRequest"
               },
               "examples": {
-                "basic_text_chat": {
+                "default": {
                   "summary": "基础文本对话",
                   "value": {
                     "model": "deepseek-v4-flash",
                     "messages": [
                       {
-                        "role": "system",
-                        "content": "你是一个简洁、准确的中文助手。"
+                        "content": "You are a helpful assistant",
+                        "role": "system"
                       },
                       {
-                        "role": "user",
-                        "content": "请用三句话总结一下 RAG 的核心流程。"
+                        "content": "Hi",
+                        "role": "user"
                       }
                     ],
                     "thinking": {
                       "type": "enabled"
                     },
                     "reasoning_effort": "high",
-                    "temperature": 0.3,
-                    "max_completion_tokens": 1024,
-                    "stream": false
-                  }
-                },
-                "multimodal_understanding": {
-                  "summary": "多模态理解",
-                  "value": {
-                    "model": "deepseek-v4-flash",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "text",
-                            "text": "请先识别图片中的商品，再结合视频画面判断它被放在什么场景里。"
-                          },
-                          {
-                            "type": "image_url",
-                            "image_url": {
-                              "url": "https://example.com/product.jpg",
-                              "detail": "high"
-                            }
-                          },
-                          {
-                            "type": "video_url",
-                            "video_url": {
-                              "url": "https://example.com/store.mp4"
-                            }
-                          }
-                        ]
-                      }
-                    ],
-                    "max_tokens": 512,
-                    "stream": false
-                  }
-                },
-                "tool_calling_stream": {
-                  "summary": "工具调用与流式返回",
-                  "value": {
-                    "model": "deepseek-v4-flash",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": "帮我查询北京今天的天气，并说明是否适合户外跑步。"
-                      }
-                    ],
-                    "tools": [
-                      {
-                        "type": "function",
-                        "function": {
-                          "name": "get_weather",
-                          "description": "根据城市名查询实时天气",
-                          "parameters": {
-                            "type": "object",
-                            "properties": {
-                              "city": {
-                                "type": "string",
-                                "description": "城市名称"
-                              }
-                            },
-                            "required": [
-                              "city"
-                            ]
-                          }
-                        }
-                      }
-                    ],
-                    "tool_choice": "auto",
-                    "parallel_tool_calls": true,
-                    "stream": true,
-                    "stream_options": {
-                      "include_usage": true,
-                      "chunk_include_usage": true
-                    }
+                    "max_tokens": 4096,
+                    "response_format": {
+                      "type": "text"
+                    },
+                    "stop": null,
+                    "stream": false,
+                    "stream_options": null,
+                    "temperature": 1,
+                    "top_p": 1,
+                    "tools": null,
+                    "tool_choice": "none",
+                    "logprobs": false,
+                    "top_logprobs": null
                   }
                 }
               }
@@ -703,10 +641,6 @@
           "include_usage": {
             "type": "boolean",
             "description": "如果设置为 true，在流式消息最后的 `data: [DONE]` 之前将会传输一个额外的块。此块上的 usage 字段显示整个请求的 token 使用统计信息，而 choices 字段将始终是一个空数组。所有其他块也将包含一个 usage 字段，但其值为 null。"
-          },
-          "chunk_include_usage": {
-            "type": "boolean",
-            "description": "若为 true，每个流式 chunk 都会附带截至当前时刻的累计 usage。"
           }
         }
       },
