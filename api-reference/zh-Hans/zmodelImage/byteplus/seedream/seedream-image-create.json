@@ -3,7 +3,7 @@
   "info": {
     "title": "图片生成 API",
     "version": "1.0.0",
-    "description": "本文介绍图片生成模型如 Seedream 5.0 lite 的调用 API，包括输入输出参数、取值范围、注意事项等信息，供您使用接口时查阅字段含义。\n\n统一入口为 `/byteplus/api/v3/images/generations`，支持 `Seedream-5.0-lite`、`Seedream-4.5`、`Seedream-4.0` 等模型。各模型支持的参数存在差异，详见各字段说明中的模型兼容性备注。",
+    "description": "本文介绍图片生成模型如 Seedream 5.0 lite 的调用 API，包括输入输出参数、取值范围、注意事项等信息，供您使用接口时查阅字段含义。\n\n统一入口为 `/byteplus/api/v3/images/generations`，支持 `seedream-5-0-260128`、`seedream-4-5-251128`、`seedream-4-0-250828` 等模型。各模型支持的参数存在差异，详见各字段说明中的模型兼容性备注。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/byteplus/api/v3/images/generations": {
       "post": {
         "summary": "图片生成",
-        "description": "调用图片生成模型，根据文本提示词生成图像。支持文生图、图生图、多图融合、批量序列生成等模式。\n\n不同模型支持的图片生成能力简介：\n- **Seedream-5.0-lite/4.5/4.0**：生成组图（需配置 `sequential_image_generation` 为 `auto`）\n  - 多图生组图：根据您输入的多张参考图片（2-14）+ 文本提示词生成一组内容关联的图片（输入的参考图数量 + 最终生成的图片数量 ≤ 15 张）\n  - 单图生组图：根据您输入的单张参考图片 + 文本提示词生成一组内容关联的图片（最多生成 14 张图片）\n  - 文生组图：根据您输入的文本提示词生成一组内容关联的图片（最多生成 15 张图片）\n- **Seedream-5.0-lite/4.5/4.0**：生成单图（配置 `sequential_image_generation` 为 `disabled`）\n  - 多图生图：根据您输入的多张参考图片（2-14）+ 文本提示词生成单张图片\n  - 单图生图：根据您输入的单张参考图片 + 文本提示词生成单张图片\n  - 文生图：根据您输入的文本提示词生成单张图片",
+        "description": "调用图片生成模型，根据文本提示词生成图像。支持文生图、图生图、多图融合、批量序列生成等模式。\n\n不同模型支持的图片生成能力简介：\n- **seedream-5-0-260128/4.5/4.0**：生成组图（需配置 `sequential_image_generation` 为 `auto`）\n  - 多图生组图：根据您输入的多张参考图片（2-14）+ 文本提示词生成一组内容关联的图片（输入的参考图数量 + 最终生成的图片数量 ≤ 15 张）\n  - 单图生组图：根据您输入的单张参考图片 + 文本提示词生成一组内容关联的图片（最多生成 14 张图片）\n  - 文生组图：根据您输入的文本提示词生成一组内容关联的图片（最多生成 15 张图片）\n- **seedream-5-0-260128/4.5/4.0**：生成单图（配置 `sequential_image_generation` 为 `disabled`）\n  - 多图生图：根据您输入的多张参考图片（2-14）+ 文本提示词生成单张图片\n  - 单图生图：根据您输入的单张参考图片 + 文本提示词生成单张图片\n  - 文生图：根据您输入的文本提示词生成单张图片",
         "operationId": "seedreamImageCreate",
         "tags": ["Seedream API Compat"],
         "requestBody": {
@@ -37,9 +37,9 @@
               },
               "examples": {
                 "text_to_image_5_0_lite": {
-                  "summary": "文生图 — Seedream-5.0-lite",
+                  "summary": "文生图 — seedream-5-0-260128",
                   "value": {
-                    "model": "Seedream-5.0-lite",
+                    "model": "seedream-5-0-260128",
                     "prompt": "充满活力的特写编辑肖像，模特眼神犀利，头戴雕塑感帽子，色彩拼接丰富，眼部焦点锐利，景深较浅，具有Vogue杂志封面的美学风格，采用中画幅拍摄，工作室灯光效果强烈。",
                     "size": "2K",
                     "output_format": "png",
@@ -47,9 +47,9 @@
                   }
                 },
                 "image_to_image_5_0_lite": {
-                  "summary": "图生图 — Seedream-5.0-lite 单图参考",
+                  "summary": "图生图 — seedream-5-0-260128 单图参考",
                   "value": {
-                    "model": "Seedream-5.0-lite",
+                    "model": "seedream-5-0-260128",
                     "prompt": "保持模特姿势和液态服装的流动形状不变，将服装材质从银色金属改为完全透明的清水（或玻璃），光影从反射变为折射。",
                     "image": "https://example.com/reference.png",
                     "size": "2K",
@@ -58,9 +58,9 @@
                   }
                 },
                 "multi_image_fusion_5_0_lite": {
-                  "summary": "多图融合 — Seedream-5.0-lite",
+                  "summary": "多图融合 — seedream-5-0-260128",
                   "value": {
-                    "model": "Seedream-5.0-lite",
+                    "model": "seedream-5-0-260128",
                     "prompt": "将图1的服装换为图2的服装",
                     "image": ["https://example.com/photo1.png", "https://example.com/photo2.png"],
                     "sequential_image_generation": "disabled",
@@ -70,9 +70,9 @@
                   }
                 },
                 "sequential_images_5_0_lite": {
-                  "summary": "文生组图 — Seedream-5.0-lite",
+                  "summary": "文生组图 — seedream-5-0-260128",
                   "value": {
-                    "model": "Seedream-5.0-lite",
+                    "model": "seedream-5-0-260128",
                     "prompt": "生成一组共4张连贯插画，核心为同一庭院一角的四季变迁，以统一风格展现四季独特色彩、元素与氛围",
                     "size": "2K",
                     "sequential_image_generation": "auto",
@@ -86,9 +86,9 @@
                   }
                 },
                 "web_search_5_0_lite": {
-                  "summary": "联网搜索 — Seedream-5.0-lite",
+                  "summary": "联网搜索 — seedream-5-0-260128",
                   "value": {
-                    "model": "Seedream-5.0-lite",
+                    "model": "seedream-5-0-260128",
                     "prompt": "制作一张上海未来5日的天气预报图，采用现代扁平化插画风格，清晰展示每日天气、温度和穿搭建议。",
                     "size": "2048x2048",
                     "tools": [{"type": "web_search"}],
@@ -98,9 +98,9 @@
                   }
                 },
                 "text_to_image_4_0": {
-                  "summary": "文生图 — Seedream-4.0",
+                  "summary": "文生图 — seedream-4-0-250828",
                   "value": {
-                    "model": "Seedream-4.0",
+                    "model": "seedream-4-0-250828",
                     "prompt": "一只可爱的猫咪在花园里玩耍，阳光明媚",
                     "size": "2K",
                     "watermark": false,
@@ -110,9 +110,9 @@
                   }
                 },
                 "text_to_image_4_5": {
-                  "summary": "文生图 — Seedream-4.5",
+                  "summary": "文生图 — seedream-4-5-251128",
                   "value": {
-                    "model": "Seedream-4.5",
+                    "model": "seedream-4-5-251128",
                     "prompt": "一只可爱的猫咪在花园里玩耍，阳光明媚",
                     "size": "2K",
                     "watermark": false,
@@ -137,7 +137,7 @@
                   "single_image_url": {
                     "summary": "单图 — URL 格式",
                     "value": {
-                      "model": "Seedream-5.0-lite",
+                      "model": "seedream-5-0-260128",
                       "created": 1757321139,
                       "data": [
                         {
@@ -155,7 +155,7 @@
                   "single_image_b64": {
                     "summary": "单图 — Base64 格式",
                     "value": {
-                      "model": "Seedream-5.0-lite",
+                      "model": "seedream-5-0-260128",
                       "created": 1757321139,
                       "data": [
                         {
@@ -172,7 +172,7 @@
                   "multi_image": {
                     "summary": "多图输出",
                     "value": {
-                      "model": "Seedream-4.0",
+                      "model": "seedream-4-0-250828",
                       "created": 1757321139,
                       "data": [
                         {
@@ -308,8 +308,8 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "您需要调用的模型的 ID（Model ID）。您也可通过 Endpoint ID 来调用模型，获得限流、计费类型（前付费/后付费）、运行状态查询、监控、安全等高级能力。\n\n支持的模型：\n- `Seedream-5.0-lite`（最新推荐）\n- `Seedream-4.5`（支持 4K 与强文本渲染）\n- `Seedream-4.0`（维护状态，最经济的 4K 选项）\n- `Seedream-3.0-t2i`（经典文生图模型）",
-            "example": "Seedream-5.0-lite"
+            "description": "您需要调用的模型的 ID（Model ID）。您也可通过 Endpoint ID 来调用模型，获得限流、计费类型（前付费/后付费）、运行状态查询、监控、安全等高级能力。\n\n支持的模型：\n- `seedream-5-0-260128`（最新推荐）\n- `seedream-4-5-251128`（支持 4K 与强文本渲染）\n- `seedream-4-0-250828`（维护状态，最经济的 4K 选项）",
+            "example": "seedream-5-0-260128"
           },
           "prompt": {
             "type": "string",
@@ -331,23 +331,23 @@
                 "maxItems": 14
               }
             ],
-            "description": "输入的图片信息，支持 URL 或 Base64 编码。Seedream-5.0-lite/4.5/4.0 支持单图或多图输入。\n\n- 图片 URL：请确保图片 URL 可被访问。\n- Base64 编码：请遵循此格式 `data:image/<图片格式>;base64,<Base64编码>`。注意 `<图片格式>` 需小写，如 `data:image/png;base64,<base64_image>`。\n\n说明：\n- 传入单张图片要求：\n  - 图片格式：jpeg、png（Seedream-5.0-lite/4.5/4.0 新增支持 webp、bmp、tiff、gif、heic、heif 格式）\n  - 宽高比（宽/高）范围：[1/16, 16]（适用模型：Seedream-5.0-lite/4.5/4.0）\n  - 宽高长度（px） > 14\n  - 大小：不超过 30MB\n  - 总像素：不超过 6000×6000 = 36000000 px（对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制）\n- Seedream-5.0-lite/4.5/4.0 最多支持传入 14 张参考图。"
+            "description": "输入的图片信息，支持 URL 或 Base64 编码。seedream-5-0-260128/4.5/4.0 支持单图或多图输入。\n\n- 图片 URL：请确保图片 URL 可被访问。\n- Base64 编码：请遵循此格式 `data:image/<图片格式>;base64,<Base64编码>`。注意 `<图片格式>` 需小写，如 `data:image/png;base64,<base64_image>`。\n\n说明：\n- 传入单张图片要求：\n  - 图片格式：jpeg、png（seedream-5-0-260128/4.5/4.0 新增支持 webp、bmp、tiff、gif、heic、heif 格式）\n  - 宽高比（宽/高）范围：[1/16, 16]（适用模型：seedream-5-0-260128/4.5/4.0）\n  - 宽高长度（px） > 14\n  - 大小：不超过 30MB\n  - 总像素：不超过 6000×6000 = 36000000 px（对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制）\n- seedream-5-0-260128/4.5/4.0 最多支持传入 14 张参考图。"
           },
           "size": {
             "type": "string",
-            "description": "指定生成图像的尺寸信息。不同模型支持的尺寸方式存在差异。\n\n**Seedream-5.0-lite**：\n- 方式 1 | 指定生成图像的分辨率，并在 prompt 中用自然语言描述图片宽高比、图片形状或图片用途，最终由模型判断生成图片的大小。可选值：`2K`、`3K`、`4K`\n- 方式 2 | 指定生成图像的宽高像素值：\n  - 默认值：`2048x2048`\n  - 总像素取值范围：[`2560x1440=3686400`, `4096x4096=16777216`]\n  - 宽高比取值范围：[`1/16`, `16`]\n\n**Seedream-4.5**：\n- 方式 1 | 指定生成图像的分辨率。可选值：`2K`、`4K`\n- 方式 2 | 指定生成图像的宽高像素值：\n  - 默认值：`2048x2048`\n  - 总像素取值范围：[`2560x1440=3686400`, `4096x4096=16777216`]\n  - 宽高比取值范围：[`1/16`, `16`]\n\n**Seedream-4.0**：\n- 方式 1 | 指定生成图像的分辨率。可选值：`1K`、`2K`、`4K`\n- 方式 2 | 指定生成图像的宽高像素值：\n  - 默认值：`2048x2048`\n  - 总像素取值范围：[`1280x720=921600`, `4096x4096=16777216`]\n  - 宽高比取值范围：[`1/16`, `16`]\n\n**Seedream-3.0-t2i**：\n- 仅支持指定宽高像素值：\n  - 默认值：`1024x1024`\n  - 单张图片像素取值范围：[`512x512`, `2048x2048`]\n\n说明：\n- 采用方式 2 时，需同时满足总像素取值范围和宽高比取值范围。总像素是对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制。\n- 有效示例：`3750x1250`（总像素值 4687500，符合区间要求；宽高比 3，符合 [1/16, 16]）\n- 无效示例：`1500x1500`（总像素值 2250000，未达到最低要求）",
+            "description": "指定生成图像的尺寸信息。不同模型支持的尺寸方式存在差异。\n\n**seedream-5-0-260128**：\n- 方式 1 | 指定生成图像的分辨率，并在 prompt 中用自然语言描述图片宽高比、图片形状或图片用途，最终由模型判断生成图片的大小。可选值：`2K`、`3K`、`4K`\n- 方式 2 | 指定生成图像的宽高像素值：\n  - 默认值：`2048x2048`\n  - 总像素取值范围：[`2560x1440=3686400`, `4096x4096=16777216`]\n  - 宽高比取值范围：[`1/16`, `16`]\n\n**seedream-4-5-251128**：\n- 方式 1 | 指定生成图像的分辨率。可选值：`2K`、`4K`\n- 方式 2 | 指定生成图像的宽高像素值：\n  - 默认值：`2048x2048`\n  - 总像素取值范围：[`2560x1440=3686400`, `4096x4096=16777216`]\n  - 宽高比取值范围：[`1/16`, `16`]\n\n**seedream-4-0-250828**：\n- 方式 1 | 指定生成图像的分辨率。可选值：`1K`、`2K`、`4K`\n- 方式 2 | 指定生成图像的宽高像素值：\n  - 默认值：`2048x2048`\n  - 总像素取值范围：[`1280x720=921600`, `4096x4096=16777216`]\n  - 宽高比取值范围：[`1/16`, `16`]\n\n说明：\n- 采用方式 2 时，需同时满足总像素取值范围和宽高比取值范围。总像素是对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制。\n- 有效示例：`3750x1250`（总像素值 4687500，符合区间要求；宽高比 3，符合 [1/16, 16]）\n- 无效示例：`1500x1500`（总像素值 2250000，未达到最低要求）",
             "default": "2048x2048",
             "example": "2K"
           },
           "sequential_image_generation": {
             "type": "string",
             "enum": ["auto", "disabled"],
-            "description": "控制是否关闭组图功能。\n- `auto`：自动判断模式，模型会根据用户提供的提示词自主判断是否返回组图以及组图包含的图片数量。\n- `disabled`：关闭组图功能，模型只会生成一张图。\n\n仅 Seedream-5.0-lite/4.5/4.0 支持该参数。",
+            "description": "控制是否关闭组图功能。\n- `auto`：自动判断模式，模型会根据用户提供的提示词自主判断是否返回组图以及组图包含的图片数量。\n- `disabled`：关闭组图功能，模型只会生成一张图。\n\n仅 seedream-5-0-260128/4.5/4.0 支持该参数。",
             "default": "disabled"
           },
           "sequential_image_generation_options": {
             "type": "object",
-            "description": "组图功能的配置。仅当 `sequential_image_generation` 为 `auto` 时生效。\n\n仅 Seedream-5.0-lite/4.5/4.0 支持该参数。",
+            "description": "组图功能的配置。仅当 `sequential_image_generation` 为 `auto` 时生效。\n\n仅 seedream-5-0-260128/4.5/4.0 支持该参数。",
             "properties": {
               "max_images": {
                 "type": "integer",
@@ -360,7 +360,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "配置模型要调用的工具。\n\n仅 `Seedream-5.0-lite` 支持该参数。",
+            "description": "配置模型要调用的工具。\n\n仅 `seedream-5-0-260128` 支持该参数。",
             "items": {
               "type": "object",
               "properties": {
@@ -376,12 +376,12 @@
           },
           "stream": {
             "type": "boolean",
-            "description": "控制是否开启流式输出模式。\n- `false`：非流式输出模式，等待所有图片全部生成结束后再一次性返回所有信息。\n- `true`：流式输出模式，即时返回每张图片输出的结果。在生成单图和组图的场景下，流式输出模式均生效。\n\n仅 Seedream-5.0-lite/4.5/4.0 支持流式响应。详见「流式响应」文档。",
+            "description": "控制是否开启流式输出模式。\n- `false`：非流式输出模式，等待所有图片全部生成结束后再一次性返回所有信息。\n- `true`：流式输出模式，即时返回每张图片输出的结果。在生成单图和组图的场景下，流式输出模式均生效。\n\n仅 seedream-5-0-260128/4.5/4.0 支持流式响应。详见「流式响应」文档。",
             "default": false
           },
           "guidance_scale": {
             "type": "number",
-            "description": "模型输出结果与 prompt 的一致程度，生成图像的自由度，又称为文本权重；值越大，模型自由度越小，与用户输入的提示词相关性越强。\n- 取值范围：[1, 10]\n\n**Seedream-5.0-lite/4.5/4.0 不支持该参数**。",
+            "description": "模型输出结果与 prompt 的一致程度，生成图像的自由度，又称为文本权重；值越大，模型自由度越小，与用户输入的提示词相关性越强。\n- 取值范围：[1, 10]\n\n**seedream-5-0-260128/4.5/4.0 不支持该参数**。",
             "minimum": 1,
             "maximum": 10,
             "example": 5
@@ -389,7 +389,7 @@
           "output_format": {
             "type": "string",
             "enum": ["jpeg", "png"],
-            "description": "指定生成图像的文件格式。\n- 可选值：png、jpeg\n- 仅 `Seedream-5.0-lite` 支持该参数。\n- Seedream-4.5/4.0 模型生成图像的文件格式默认为 jpeg，不支持自定义设置。",
+            "description": "指定生成图像的文件格式。\n- 可选值：png、jpeg\n- 仅 `seedream-5-0-260128` 支持该参数。\n- seedream-4-5-251128/4.0 模型生成图像的文件格式默认为 jpeg，不支持自定义设置。",
             "default": "jpeg"
           },
           "response_format": {
@@ -405,12 +405,12 @@
           },
           "optimize_prompt_options": {
             "type": "object",
-            "description": "提示词优化功能的配置。\n\n仅 Seedream-5.0-lite/4.5/4.0 支持该参数。",
+            "description": "提示词优化功能的配置。\n\n仅 seedream-5-0-260128/4.5/4.0 支持该参数。",
             "properties": {
               "mode": {
                 "type": "string",
                 "enum": ["standard", "fast"],
-                "description": "设置提示词优化功能使用的模式。\n- `standard`：标准模式，生成内容的质量更高，耗时较长。\n- `fast`：快速模式，生成内容的耗时更短，质量一般；Seedream-5.0-lite/4.5 当前不支持。",
+                "description": "设置提示词优化功能使用的模式。\n- `standard`：标准模式，生成内容的质量更高，耗时较长。\n- `fast`：快速模式，生成内容的耗时更短，质量一般；seedream-5-0-260128/4.5 当前不支持。",
                 "default": "standard"
               }
             }
@@ -431,7 +431,7 @@
           },
           "data": {
             "type": "array",
-            "description": "输出图像的信息。\n\n说明：Seedream-5.0-lite/4.5/4.0 模型生成组图场景下，组图生成过程中某张图生成失败时：\n- 若失败原因为审核不通过：仍会继续请求下一个图片生成任务，即不影响同请求内其他图片的生成流程。\n- 若失败原因为内部服务异常（500）：不会继续请求下一个图片生成任务。",
+            "description": "输出图像的信息。\n\n说明：seedream-5-0-260128/4.5/4.0 模型生成组图场景下，组图生成过程中某张图生成失败时：\n- 若失败原因为审核不通过：仍会继续请求下一个图片生成任务，即不影响同请求内其他图片的生成流程。\n- 若失败原因为内部服务异常（500）：不会继续请求下一个图片生成任务。",
             "items": {
               "$ref": "#/components/schemas/ImageData"
             }
@@ -507,7 +507,7 @@
           },
           "size": {
             "type": "string",
-            "description": "仅 Seedream-5.0-lite/4.5/4.0 支持该字段。图像的宽高像素值，格式 <宽像素>x<高像素>，如 2048×2048。"
+            "description": "仅 seedream-5-0-260128/4.5/4.0 支持该字段。图像的宽高像素值，格式 <宽像素>x<高像素>，如 2048×2048。"
           },
           "error": {
             "type": "object",
