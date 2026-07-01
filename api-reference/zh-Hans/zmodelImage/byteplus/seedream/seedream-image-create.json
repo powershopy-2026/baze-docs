@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "图片创建",
+    "title": "图片生成 API",
     "version": "1.0.0",
     "description": "本文介绍图片生成模型如 Seedream 5.0 lite 的调用 API，包括输入输出参数、取值范围、注意事项等信息，供您使用接口时查阅字段含义。\n\n统一入口为 `/byteplus/api/v3/images/generations`，支持 `Seedream-5.0-lite`、`Seedream-4.5`、`Seedream-4.0` 等模型。各模型支持的参数存在差异，详见各字段说明中的模型兼容性备注。",
     "license": {
@@ -18,13 +18,13 @@
   "tags": [
     {
       "name": "Seedream API Compat",
-      "description": "Seedream 图片创建接口"
+      "description": "Seedream 图片生成接口"
     }
   ],
   "paths": {
     "/byteplus/api/v3/images/generations": {
       "post": {
-        "summary": "图片创建",
+        "summary": "图片生成",
         "description": "调用图片生成模型，根据文本提示词生成图像。支持文生图、图生图、多图融合、批量序列生成等模式。\n\n不同模型支持的图片生成能力简介：\n- **Seedream-5.0-lite/4.5/4.0**：生成组图（需配置 `sequential_image_generation` 为 `auto`）\n  - 多图生组图：根据您输入的多张参考图片（2-14）+ 文本提示词生成一组内容关联的图片（输入的参考图数量 + 最终生成的图片数量 ≤ 15 张）\n  - 单图生组图：根据您输入的单张参考图片 + 文本提示词生成一组内容关联的图片（最多生成 14 张图片）\n  - 文生组图：根据您输入的文本提示词生成一组内容关联的图片（最多生成 15 张图片）\n- **Seedream-5.0-lite/4.5/4.0**：生成单图（配置 `sequential_image_generation` 为 `disabled`）\n  - 多图生图：根据您输入的多张参考图片（2-14）+ 文本提示词生成单张图片\n  - 单图生图：根据您输入的单张参考图片 + 文本提示词生成单张图片\n  - 文生图：根据您输入的文本提示词生成单张图片",
         "operationId": "seedreamImageCreate",
         "tags": ["Seedream API Compat"],
@@ -103,24 +103,9 @@
                     "model": "Seedream-4.0",
                     "prompt": "一只可爱的猫咪在花园里玩耍，阳光明媚",
                     "size": "2K",
-                    "scale": 0.5,
-                    "force_single": false,
+                    "watermark": false,
                     "optimize_prompt_options": {
                       "mode": "standard"
-                    }
-                  }
-                },
-                "image_to_image_4_0": {
-                  "summary": "图生图 — Seedream-4.0",
-                  "value": {
-                    "model": "Seedream-4.0",
-                    "prompt": "背景换成演唱会现场",
-                    "image": "https://example.com/reference-image.jpg",
-                    "scale": 0.6,
-                    "width": 2048,
-                    "height": 2048,
-                    "optimize_prompt_options": {
-                      "mode": "fast"
                     }
                   }
                 },
@@ -130,22 +115,7 @@
                     "model": "Seedream-4.5",
                     "prompt": "一只可爱的猫咪在花园里玩耍，阳光明媚",
                     "size": "2K",
-                    "scale": 0.5,
-                    "force_single": false,
-                    "optimize_prompt_options": {
-                      "mode": "standard"
-                    }
-                  }
-                },
-                "image_to_image_4_5": {
-                  "summary": "图生图 — Seedream-4.5",
-                  "value": {
-                    "model": "Seedream-4.5",
-                    "prompt": "背景换成演唱会现场",
-                    "image": "https://example.com/reference-image.jpg",
-                    "scale": 0.6,
-                    "width": 2048,
-                    "height": 2048,
+                    "watermark": false,
                     "optimize_prompt_options": {
                       "mode": "standard"
                     }
@@ -206,8 +176,7 @@
                       "created": 1757321139,
                       "data": [
                         {
-                          "url": "https://example.com/generated-image-1.jpg",
-                          "b64_json": "iVBORw0KGgoAAAANSUhEUgAA..."
+                          "url": "https://example.com/generated-image-1.jpg"
                         },
                         {
                           "url": "https://example.com/generated-image-2.jpg"
@@ -339,7 +308,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "您需要调用的模型的 ID（Model ID），开通模型服务并查询 Model ID。\n\n您也可通过 Endpoint ID 来调用模型，获得限流、计费类型（前付费/后付费）、运行状态查询、监控、安全等高级能力。\n\n支持的模型：\n- `Seedream-5.0-lite`（最新推荐）\n- `Seedream-4.5`（支持 4K 与强文本渲染）\n- `Seedream-4.0`（维护状态，最经济的 4K 选项）",
+            "description": "您需要调用的模型的 ID（Model ID）。您也可通过 Endpoint ID 来调用模型，获得限流、计费类型（前付费/后付费）、运行状态查询、监控、安全等高级能力。\n\n支持的模型：\n- `Seedream-5.0-lite`（最新推荐）\n- `Seedream-4.5`（支持 4K 与强文本渲染）\n- `Seedream-4.0`（维护状态，最经济的 4K 选项）",
             "example": "Seedream-5.0-lite"
           },
           "prompt": {
@@ -362,7 +331,7 @@
                 "maxItems": 14
               }
             ],
-            "description": "输入的图片信息，支持 URL 或 Base64 编码。\n\n- 图片 URL：请确保图片 URL 可被访问。\n- Base64 编码：请遵循此格式 `data:image/<图片格式>;base64,<Base64编码>`。注意 `<图片格式>` 需小写，如 `data:image/png;base64,<base64_image>`。\n\n说明：\n- 传入单张图片要求：\n  - 图片格式：jpeg、png（Seedream-5.0-lite/4.5/4.0 新增支持 webp、bmp、tiff、gif、heic、heif 格式）\n  - 宽高比（宽/高）范围：[1/16, 16]（适用模型：Seedream-5.0-lite/4.5/4.0）\n  - 宽高长度（px）> 14\n  - 大小：不超过 30MB\n  - 总像素：不超过 6000×6000 = 36000000 px（对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制）\n- Seedream-5.0-lite/4.5/4.0 最多支持传入 14 张参考图。"
+            "description": "输入的图片信息，支持 URL 或 Base64 编码。Seedream-5.0-lite/4.5/4.0 支持单图或多图输入。\n\n- 图片 URL：请确保图片 URL 可被访问。\n- Base64 编码：请遵循此格式 `data:image/<图片格式>;base64,<Base64编码>`。注意 `<图片格式>` 需小写，如 `data:image/png;base64,<base64_image>`。\n\n说明：\n- 传入单张图片要求：\n  - 图片格式：jpeg、png（Seedream-5.0-lite/4.5/4.0 新增支持 webp、bmp、tiff、gif、heic、heif 格式）\n  - 宽高比（宽/高）范围：[1/16, 16]（适用模型：Seedream-5.0-lite/4.5/4.0）\n  - 宽高长度（px） > 14\n  - 大小：不超过 30MB\n  - 总像素：不超过 6000×6000 = 36000000 px（对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制）\n- Seedream-5.0-lite/4.5/4.0 最多支持传入 14 张参考图。"
           },
           "size": {
             "type": "string",
@@ -370,74 +339,15 @@
             "default": "2048x2048",
             "example": "2K"
           },
-          "width": {
-            "type": "integer",
-            "description": "生成图像宽度，需同时传 `width` 和 `height` 才会生效。宽高乘积在 [1024×1024, 4096×4096]，且宽高比在 [min_ratio, max_ratio] 之间。\n\n仅 Seedream-4.0 和 Seedream-4.5 支持此参数。",
-            "example": 2048
-          },
-          "height": {
-            "type": "integer",
-            "description": "生成图像高度，需同时传 `width` 和 `height` 才会生效。宽高乘积在 [1024×1024, 4096×4096]，且宽高比在 [min_ratio, max_ratio] 之间。\n\n仅 Seedream-4.0 和 Seedream-4.5 支持此参数。",
-            "example": 2048
-          },
-          "scale": {
-            "type": "number",
-            "description": "文本描述影响的程度，该值越大代表文本描述影响程度越大，且输入图片影响程度越小。取值范围 [0, 1]，精度支持小数点后两位。\n\n仅 Seedream-4.0 和 Seedream-4.5 支持此参数。",
-            "default": 0.5,
-            "minimum": 0,
-            "maximum": 1,
-            "example": 0.5
-          },
-          "force_single": {
-            "type": "boolean",
-            "description": "是否强制生成单图。若对延迟和价格敏感，建议使用该参数。\n\n注意：生成的组图越多，耗时越久，且生成耗时会随图片数量增多而显著变长。\n\n仅 Seedream-4.0 和 Seedream-4.5 支持此参数。",
-            "default": false
-          },
-          "min_ratio": {
-            "type": "number",
-            "description": "生图结果的宽/高 ≥ `min_ratio`，如果智能选比例 < `min_ratio`，则用 `min_ratio`。取值范围 [1/16, 16)。\n\n仅 Seedream-4.0 和 Seedream-4.5 支持此参数。",
-            "default": 0.333,
-            "minimum": 0.0625,
-            "example": 0.333
-          },
-          "max_ratio": {
-            "type": "number",
-            "description": "生图结果的宽/高 ≤ `max_ratio`，如果智能选比例 > `max_ratio`，则用 `max_ratio`。取值范围 [1/16, 16)。\n\n仅 Seedream-4.0 和 Seedream-4.5 支持此参数。",
-            "default": 3,
-            "maximum": 16,
-            "example": 3
-          },
-          "output_format": {
-            "type": "string",
-            "enum": ["jpeg", "png"],
-            "description": "指定生成图像的文件格式。\n- 可选值：png、jpeg\n- 仅 `Seedream-5.0-lite` 支持该参数。\n- Seedream-4.5/4.0 模型生成图像的文件格式默认为 jpeg，不支持自定义设置。",
-            "default": "jpeg"
-          },
-          "response_format": {
-            "type": "string",
-            "enum": ["url", "b64_json"],
-            "description": "指定生成图像的返回格式。支持以下两种返回方式：\n- `url`：返回图片下载链接；链接在图片生成后 24 小时内有效，请及时下载图片。\n- `b64_json`：以 Base64 编码字符串的 JSON 格式返回图像数据。",
-            "default": "url"
-          },
-          "watermark": {
-            "type": "boolean",
-            "description": "是否在生成的图片中添加水印。\n- `false`：不添加水印。\n- `true`：在图片右下角添加“AI生成”字样的水印标识。",
-            "default": true
-          },
-          "stream": {
-            "type": "boolean",
-            "description": "控制是否开启流式输出模式。\n- `false`：非流式输出模式，等待所有图片全部生成结束后再一次性返回所有信息。\n- `true`：流式输出模式，即时返回每张图片输出的结果。在生成单图和组图的场景下，流式输出模式均生效。\n\n仅 Seedream-5.0-lite、Seedream-4.5、Seedream-4.0 支持流式响应。详见「流式响应」文档。",
-            "default": false
-          },
           "sequential_image_generation": {
             "type": "string",
             "enum": ["auto", "disabled"],
-            "description": "控制是否关闭组图功能。\n- `auto`：自动判断模式，模型会根据用户提供的提示词自主判断是否返回组图以及组图包含的图片数量。\n- `disabled`：关闭组图功能，模型只会生成一张图。\n\n仅 Seedream-5.0-lite、Seedream-4.5、Seedream-4.0 支持该参数。",
+            "description": "控制是否关闭组图功能。\n- `auto`：自动判断模式，模型会根据用户提供的提示词自主判断是否返回组图以及组图包含的图片数量。\n- `disabled`：关闭组图功能，模型只会生成一张图。\n\n仅 Seedream-5.0-lite/4.5/4.0 支持该参数。",
             "default": "disabled"
           },
           "sequential_image_generation_options": {
             "type": "object",
-            "description": "组图功能的配置。仅当 `sequential_image_generation` 为 `auto` 时生效。\n\n仅 Seedream-5.0-lite、Seedream-4.5、Seedream-4.0 支持该参数。",
+            "description": "组图功能的配置。仅当 `sequential_image_generation` 为 `auto` 时生效。\n\n仅 Seedream-5.0-lite/4.5/4.0 支持该参数。",
             "properties": {
               "max_images": {
                 "type": "integer",
@@ -457,38 +367,51 @@
                 "type": {
                   "type": "string",
                   "enum": ["web_search"],
-                  "description": "指定使用的工具类型。\n- `web_search`：联网搜索功能。"
+                  "description": "指定使用的工具类型。\n- `web_search`：联网搜索功能。\n\n说明：\n- 开启联网搜索后，模型会根据用户的提示词自主判断是否搜索互联网内容（如商品、天气等），提升生成图片的时效性，但也会增加一定的时延。\n- 实际搜索次数可通过字段 `usage.tool_usage.web_search` 查询，如果为 0 表示未搜索。"
                 }
               },
               "required": ["type"]
             },
             "example": [{"type": "web_search"}]
           },
+          "stream": {
+            "type": "boolean",
+            "description": "控制是否开启流式输出模式。\n- `false`：非流式输出模式，等待所有图片全部生成结束后再一次性返回所有信息。\n- `true`：流式输出模式，即时返回每张图片输出的结果。在生成单图和组图的场景下，流式输出模式均生效。\n\n仅 Seedream-5.0-lite/4.5/4.0 支持流式响应。详见「流式响应」文档。",
+            "default": false
+          },
+          "guidance_scale": {
+            "type": "number",
+            "description": "模型输出结果与 prompt 的一致程度，生成图像的自由度，又称为文本权重；值越大，模型自由度越小，与用户输入的提示词相关性越强。\n- 取值范围：[1, 10]\n\n**Seedream-5.0-lite/4.5/4.0 不支持该参数**。",
+            "minimum": 1,
+            "maximum": 10,
+            "example": 5
+          },
+          "output_format": {
+            "type": "string",
+            "enum": ["jpeg", "png"],
+            "description": "指定生成图像的文件格式。\n- 可选值：png、jpeg\n- 仅 `Seedream-5.0-lite` 支持该参数。\n- Seedream-4.5/4.0 模型生成图像的文件格式默认为 jpeg，不支持自定义设置。",
+            "default": "jpeg"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": ["url", "b64_json"],
+            "description": "指定生成图像的返回格式。支持以下两种返回方式：\n- `url`：返回图片下载链接；链接在图片生成后 24 小时内有效，请及时下载图片。\n- `b64_json`：以 Base64 编码字符串的 JSON 格式返回图像数据。",
+            "default": "url"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否在生成的图片中添加水印。\n- `false`：不添加水印。\n- `true`：在图片右下角添加「AI生成」字样的水印标识。",
+            "default": true
+          },
           "optimize_prompt_options": {
             "type": "object",
-            "description": "提示词优化功能的配置。\n\n仅 Seedream-5.0-lite、Seedream-4.5、Seedream-4.0 支持该参数。",
+            "description": "提示词优化功能的配置。\n\n仅 Seedream-5.0-lite/4.5/4.0 支持该参数。",
             "properties": {
               "mode": {
                 "type": "string",
                 "enum": ["standard", "fast"],
                 "description": "设置提示词优化功能使用的模式。\n- `standard`：标准模式，生成内容的质量更高，耗时较长。\n- `fast`：快速模式，生成内容的耗时更短，质量一般；Seedream-5.0-lite/4.5 当前不支持。",
                 "default": "standard"
-              }
-            }
-          },
-          "provider": {
-            "type": "object",
-            "description": "调度配置。包含图像生成特有参数和服务商调度参数。\n\n**图像生成特有参数**：\n- `enable_image_base64`（bool，默认 `false`）：是否在响应数据的 `data` 字段中同时返回图像的 Base64 编码。\n- `enable_image_origin_data`（bool，默认 `false`）：是否在响应中包含原始响应数据。\n\n**服务商调度参数**：还支持 `only`、`order`、`sort`、`input_price_range`、`output_price_range`、`throughput_range`、`latency_range`、`input_length_range`、`allow_filter_prompt_length`、`ignore`、`allow_fallbacks` 等。",
-            "properties": {
-              "enable_image_base64": {
-                "type": "boolean",
-                "description": "是否在响应数据的 `data` 字段中同时返回图像的 Base64 编码。默认 `false`。",
-                "default": false
-              },
-              "enable_image_origin_data": {
-                "type": "boolean",
-                "description": "是否在响应中包含原始响应数据。默认 `false`。",
-                "default": false
               }
             }
           }
@@ -567,14 +490,6 @@
                 "description": "错误提示信息。"
               }
             }
-          },
-          "provider": {
-            "type": "string",
-            "description": "服务商名称。"
-          },
-          "origin_data": {
-            "type": "object",
-            "description": "服务商的原始响应数据。仅在请求参数 `provider.enable_image_origin_data` 设置为 `true` 时返回此字段。默认不返回。"
           }
         }
       },
