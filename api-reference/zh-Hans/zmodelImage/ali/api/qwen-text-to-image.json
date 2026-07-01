@@ -3,7 +3,7 @@
   "info": {
     "title": "千问-文生图",
     "version": "1.0.0",
-    "description": "阿里云千问文生图能力文档。平台统一接口端点为 `/v1/images/generations`。本文档描述了 `qwen-image-2.0-pro`、`qwen-image-2.0`、`qwen-image-max`、`qwen-image-plus` 等模型的文生图调用契约：`input.messages[].content[].text` 携带正向提示词，`parameters` 控制图像分辨率、数量、反向提示词等参数。",
+    "description": "阿里云千问文生图能力文档。平台统一接口端点为 `/ali/api/v1/services/aigc/multimodal-generation/generation`。本文档描述了 `qwen-image-2.0-pro`、`qwen-image-2.0`、`qwen-image-max`、`qwen-image-plus` 等模型的文生图调用契约：`input.messages[].content[].text` 携带正向提示词，`parameters` 控制图像分辨率、数量、反向提示词等参数。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,7 +22,7 @@
     }
   ],
   "paths": {
-    "/v1/images/generations": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
       "post": {
         "summary": "千问-文生图",
         "description": "调用阿里云千问 `qwen-image-2.0-pro`、`qwen-image-2.0`、`qwen-image-max`、`qwen-image-plus` 模型执行文生图任务。\n\n请求体包含 `model`、`input`、`parameters` 三个主要字段。`input.messages[0].content[0].text` 放置正向提示词。`parameters` 字段控制分辨率 `size`、数量 `n`、反向提示词 `negative_prompt`、提示词智能改写 `prompt_extend`、水印 `watermark`、随机种子 `seed` 等。",

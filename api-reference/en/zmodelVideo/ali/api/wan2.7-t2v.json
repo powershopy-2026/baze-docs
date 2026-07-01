@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan 2.7 Text to Video",
     "version": "1.0.0",
-    "description": "Aliyun Wan `wan2.7-t2v` text-to-video capability documentation. The unified API endpoint is `/v1/videos`, used to create asynchronous video generation tasks.",
+    "description": "Aliyun Wan `wan2.7-t2v` text-to-video capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/video-generation/video-synthesis`, used to create asynchronous video generation tasks.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,10 +22,10 @@
     }
   ],
   "paths": {
-    "/v1/videos": {
+    "/ali/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
         "summary": "Create wan2.7-t2v text-to-video task",
-        "description": "Submit an asynchronous Ali `wan2.7-t2v` text-to-video task.\n\nAfter submitting a task, query its status via `GET /v1/videos/{task_id}`.",
+        "description": "Submit an asynchronous Ali `wan2.7-t2v` text-to-video task.\n\nAfter submitting a task, query its status via `GET /ali/api/v1/tasks/{task_id}`.",
         "operationId": "aliWan27T2VCreate",
         "tags": [
           "Wan 2.7 Video"
@@ -117,7 +117,7 @@
         ]
       }
     },
-    "/v1/videos/{task_id}": {
+    "/ali/api/v1/tasks/{task_id}": {
       "get": {
         "summary": "Query wan2.7-t2v video task status",
         "description": "Query the status and result of a video generation task by task ID.\n\nTask status flow: PENDING (queued) -> RUNNING (processing) -> SUCCEEDED (success) / FAILED (failure).",

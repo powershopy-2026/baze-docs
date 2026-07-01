@@ -3,7 +3,7 @@
   "info": {
     "title": "Ali Text-to-Speech",
     "version": "1.0.0",
-    "description": "Ali channel text-to-speech capability exposed through the unified `/v1/audio/speech` endpoint. Supports `qwen3-tts-flash`, `qwen3-tts-instruct-flash`, and `qwen-tts` models.\n\nThe request body follows the official Ali-compatible structure: `model`, `input` (object), `voice`, `language_type`, `instructions`, and `optimize_instructions`.\n\nStreaming follows the official Ali HTTP contract: clients must explicitly send `X-DashScope-SSE: enable` in the request header. This channel does not expose `stream_format`.\n\nModel differences:\n- `qwen3-tts-instruct-flash` supports the `instructions` and `optimize_instructions` fields;\n- `qwen3-tts-flash` returns `characters` in usage;\n- `qwen-tts` returns `total_tokens` and token detail fields in usage.\n\nBilling note: the gateway maps upstream `usage.characters` to unified `usage.prompt_tokens_details.audio_tokens`, keeps `usage.output_tokens` in `usage.completion_tokens_details.audio_tokens`, and stores both raw Ali usage and normalized usage snapshots in consume_detail for billing traceability."
+    "description": "Ali channel text-to-speech capability exposed through the unified `/ali/api/v1/services/aigc/video-generation/video-synthesis` endpoint. Supports `qwen3-tts-flash`, `qwen3-tts-instruct-flash`, and `qwen-tts` models.\n\nThe request body follows the official Ali-compatible structure: `model`, `input` (object), `voice`, `language_type`, `instructions`, and `optimize_instructions`.\n\nStreaming follows the official Ali HTTP contract: clients must explicitly send `X-DashScope-SSE: enable` in the request header. This channel does not expose `stream_format`.\n\nModel differences:\n- `qwen3-tts-instruct-flash` supports the `instructions` and `optimize_instructions` fields;\n- `qwen3-tts-flash` returns `characters` in usage;\n- `qwen-tts` returns `total_tokens` and token detail fields in usage.\n\nBilling note: the gateway maps upstream `usage.characters` to unified `usage.prompt_tokens_details.audio_tokens`, keeps `usage.output_tokens` in `usage.completion_tokens_details.audio_tokens`, and stores both raw Ali usage and normalized usage snapshots in consume_detail for billing traceability."
   },
   "servers": [
     {
@@ -18,10 +18,10 @@
     }
   ],
   "paths": {
-    "/v1/audio/speech": {
+    "/ali/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
         "summary": "Ali text-to-speech",
-        "description": "Call Ali `qwen3-tts-flash`, `qwen3-tts-instruct-flash`, or `qwen-tts` through the unified `/v1/audio/speech` endpoint.\n\nResponse contract:\n- non-streaming returns the official Ali JSON response;\n- streaming returns `text/event-stream` and forwards Ali SSE payloads.",
+        "description": "Call Ali `qwen3-tts-flash`, `qwen3-tts-instruct-flash`, or `qwen-tts` through the unified `/ali/api/v1/services/aigc/video-generation/video-synthesis` endpoint.\n\nResponse contract:\n- non-streaming returns the official Ali JSON response;\n- streaming returns `text/event-stream` and forwards Ali SSE payloads.",
         "operationId": "aliAudioSpeechCompat",
         "tags": [
           "Ali Audio"

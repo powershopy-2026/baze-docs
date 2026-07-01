@@ -3,7 +3,7 @@
   "info": {
     "title": "Qwen text-to-image",
     "version": "1.0.0",
-    "description": "Ali Qwen text-to-image capability documentation. The unified API endpoint is `/v1/images/generations`. This document describes the public gateway contract for `qwen-image-2.0-pro`, `qwen-image-2.0`, `qwen-image-max`, and `qwen-image-plus`: `input.messages[].content[].text` carries the prompt, and `parameters` controls resolution, count, negative prompt, and other options.",
+    "description": "Ali Qwen text-to-image capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/multimodal-generation/generation`. This document describes the public gateway contract for `qwen-image-2.0-pro`, `qwen-image-2.0`, `qwen-image-max`, and `qwen-image-plus`: `input.messages[].content[].text` carries the prompt, and `parameters` controls resolution, count, negative prompt, and other options.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,7 +22,7 @@
     }
   ],
   "paths": {
-    "/v1/images/generations": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
       "post": {
         "summary": "Qwen text-to-image",
         "description": "Calls Ali `qwen-image-2.0-pro`, `qwen-image-2.0`, `qwen-image-max`, and `qwen-image-plus` models to perform text-to-image generation.\n\nThe request body contains three main fields: `model`, `input`, and `parameters`. The prompt is placed in `input.messages[0].content[0].text`. The `parameters` field controls resolution `size`, count `n`, negative prompt `negative_prompt`, smart prompt rewriting `prompt_extend`, watermark `watermark`, and random seed `seed`.",

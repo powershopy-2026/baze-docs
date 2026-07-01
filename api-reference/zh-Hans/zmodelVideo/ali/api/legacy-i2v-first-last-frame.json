@@ -3,7 +3,7 @@
   "info": {
     "title": "万相-图生视频-基于首尾帧",
     "version": "1.0.0",
-    "description": "阿里云万相 2.2 系列基于首尾帧的图生视频能力文档。统一公开入口为 `/v1/videos`，用于创建异步视频生成任务。\n\n支持的模型：`wan2.2-kf2v-flash`、`wanx2.1-kf2v-plus`。",
+    "description": "阿里云万相 2.2 系列基于首尾帧的图生视频能力文档。统一公开入口为 `/ali/api/v1/services/aigc/image2video/video-synthesis`，用于创建异步视频生成任务。\n\n支持的模型：`wan2.2-kf2v-flash`、`wanx2.1-kf2v-plus`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,10 +22,10 @@
     }
   ],
   "paths": {
-    "/v1/videos": {
+    "/ali/api/v1/services/aigc/image2video/video-synthesis": {
       "post": {
         "summary": "创建万相图生视频任务（首尾帧）",
-        "description": "提交一个异步的万相 2.2 图生视频任务，基于首帧（及可选尾帧）图像生成视频。\n\n提交任务后，请通过 `GET /v1/videos/{task_id}` 查询任务状态。",
+        "description": "提交一个异步的万相 2.2 图生视频任务，基于首帧（及可选尾帧）图像生成视频。\n\n提交任务后，请通过 `GET /ali/api/v1/tasks/{task_id}` 查询任务状态。",
         "operationId": "aliLegacyI2VFirstLastFrameCreate",
         "tags": [
           "Wan Legacy Video"
@@ -134,7 +134,7 @@
         ]
       }
     },
-    "/v1/videos/{task_id}": {
+    "/ali/api/v1/tasks/{task_id}": {
       "get": {
         "summary": "查询万相图生视频任务状态（首尾帧）",
         "description": "根据任务 ID 查询视频生成任务的状态和结果。\n\n任务状态流转：PENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。",

@@ -3,7 +3,7 @@
   "info": {
     "title": "Qwen image edit",
     "version": "1.0.0",
-    "description": "Ali Qwen image edit capability documentation. The unified API endpoint is `/v1/images/edits`. This document describes the public gateway contract for `qwen-image-2.0-pro`, `qwen-image-edit-max`, `qwen-image-edit-plus`, and `qwen-image-edit`: `input.messages[].content[]` carries 1-3 input images and 1 edit instruction, and `parameters` controls negative prompt, count, watermark, and random seed.",
+    "description": "Ali Qwen image edit capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/multimodal-generation/generation`. This document describes the public gateway contract for `qwen-image-2.0-pro`, `qwen-image-edit-max`, `qwen-image-edit-plus`, and `qwen-image-edit`: `input.messages[].content[]` carries 1-3 input images and 1 edit instruction, and `parameters` controls negative prompt, count, watermark, and random seed.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,7 +22,7 @@
     }
   ],
   "paths": {
-    "/v1/images/edits": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
       "post": {
         "summary": "Qwen image edit",
         "description": "Calls Ali `qwen-image-2.0-pro`, `qwen-image-edit-max`, `qwen-image-edit-plus`, and `qwen-image-edit` models to perform image editing.\n\nThe `input.messages[0].content[]` array must contain 1-3 `image` objects (input image URL or Base64) and 1 `text` object (edit instruction). The `parameters` field controls negative prompt `negative_prompt`, count `n`, watermark `watermark`, and random seed `seed`. Note: `qwen-image-edit` series does not support `size` and `prompt_extend` parameters.",

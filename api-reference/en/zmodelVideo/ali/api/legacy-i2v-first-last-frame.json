@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan Image to Video (First and Last Frame)",
     "version": "1.0.0",
-    "description": "Aliyun Wan 2.2 series first-and-last-frame image-to-video capability documentation. The unified API endpoint is `/v1/videos`, used to create asynchronous video generation tasks.\n\nSupported models: `wan2.2-kf2v-flash`, `wanx2.1-kf2v-plus`.",
+    "description": "Aliyun Wan 2.2 series first-and-last-frame image-to-video capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/image2video/video-synthesis`, used to create asynchronous video generation tasks.\n\nSupported models: `wan2.2-kf2v-flash`, `wanx2.1-kf2v-plus`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,10 +22,10 @@
     }
   ],
   "paths": {
-    "/v1/videos": {
+    "/ali/api/v1/services/aigc/image2video/video-synthesis": {
       "post": {
         "summary": "Create Wan image-to-video task (first and last frame)",
-        "description": "Submit an asynchronous Wan 2.2 image-to-video task, generating a video based on a first frame (and optional last frame) image.\n\nAfter submitting a task, query its status via `GET /v1/videos/{task_id}`.",
+        "description": "Submit an asynchronous Wan 2.2 image-to-video task, generating a video based on a first frame (and optional last frame) image.\n\nAfter submitting a task, query its status via `GET /ali/api/v1/tasks/{task_id}`.",
         "operationId": "aliLegacyI2VFirstLastFrameCreate",
         "tags": [
           "Wan Legacy Video"
@@ -134,7 +134,7 @@
         ]
       }
     },
-    "/v1/videos/{task_id}": {
+    "/ali/api/v1/tasks/{task_id}": {
       "get": {
         "summary": "Query Wan image-to-video task status (first and last frame)",
         "description": "Query the status and result of a video generation task by task ID.\n\nTask status flow: PENDING (queued) -> RUNNING (processing) -> SUCCEEDED (success) / FAILED (failure).",

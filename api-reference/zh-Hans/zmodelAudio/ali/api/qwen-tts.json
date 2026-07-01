@@ -3,7 +3,7 @@
   "info": {
     "title": "阿里兼容文本转语音",
     "version": "1.0.0",
-    "description": "阿里渠道文本转语音能力，通过 `/v1/audio/speech` 统一接口调用。支持 `qwen3-tts-flash`、`qwen3-tts-instruct-flash`、`qwen-tts` 模型。\n\n请求体采用阿里官方兼容结构：`model`、`input`（对象）、`voice`、`language_type`、`instructions`、`optimize_instructions`。\n\n流式遵循阿里官方 HTTP 协议：客户端需在请求头显式发送 `X-DashScope-SSE: enable`。本渠道不暴露 `stream_format`。\n\n模型差异说明：\n- `qwen3-tts-instruct-flash` 支持 `instructions` 和 `optimize_instructions` 字段；\n- `qwen3-tts-flash` 的 usage 包含 `characters` 字段；\n- `qwen-tts` 的 usage 包含 `total_tokens` 及 token 明细字段。\n\n计费说明：网关将上游 `usage.characters` 映射为统一 `usage.prompt_tokens_details.audio_tokens`，保留 `usage.output_tokens` 于 `usage.completion_tokens_details.audio_tokens`，并在 consume_detail 中存储原始阿里 usage 与归一化 usage 快照以便计费溯源。"
+    "description": "阿里渠道文本转语音能力，通过 `/ali/api/v1/services/aigc/video-generation/video-synthesis` 统一接口调用。支持 `qwen3-tts-flash`、`qwen3-tts-instruct-flash`、`qwen-tts` 模型。\n\n请求体采用阿里官方兼容结构：`model`、`input`（对象）、`voice`、`language_type`、`instructions`、`optimize_instructions`。\n\n流式遵循阿里官方 HTTP 协议：客户端需在请求头显式发送 `X-DashScope-SSE: enable`。本渠道不暴露 `stream_format`。\n\n模型差异说明：\n- `qwen3-tts-instruct-flash` 支持 `instructions` 和 `optimize_instructions` 字段；\n- `qwen3-tts-flash` 的 usage 包含 `characters` 字段；\n- `qwen-tts` 的 usage 包含 `total_tokens` 及 token 明细字段。\n\n计费说明：网关将上游 `usage.characters` 映射为统一 `usage.prompt_tokens_details.audio_tokens`，保留 `usage.output_tokens` 于 `usage.completion_tokens_details.audio_tokens`，并在 consume_detail 中存储原始阿里 usage 与归一化 usage 快照以便计费溯源。"
   },
   "servers": [
     {
@@ -18,10 +18,10 @@
     }
   ],
   "paths": {
-    "/v1/audio/speech": {
+    "/ali/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
         "summary": "阿里文本转语音",
-        "description": "通过统一接口 `/v1/audio/speech` 调用阿里 `qwen3-tts-flash`、`qwen3-tts-instruct-flash` 或 `qwen-tts`。\n\n响应契约：\n- 非流式返回阿里官方 JSON 响应；\n- 流式返回 `text/event-stream` 并转发阿里 SSE 负载。",
+        "description": "通过统一接口 `/ali/api/v1/services/aigc/video-generation/video-synthesis` 调用阿里 `qwen3-tts-flash`、`qwen3-tts-instruct-flash` 或 `qwen-tts`。\n\n响应契约：\n- 非流式返回阿里官方 JSON 响应；\n- 流式返回 `text/event-stream` 并转发阿里 SSE 负载。",
         "operationId": "aliAudioSpeechCompat",
         "tags": [
           "阿里音频"
