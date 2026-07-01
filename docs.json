@@ -112,7 +112,15 @@
                       "zh-Hans/zmodelImage/ali/qwen-edit",
                       "zh-Hans/zmodelImage/ali/qwen-text-to-image",
                       "zh-Hans/zmodelImage/ali/wan-edit",
-                      "zh-Hans/zmodelImage/ali/wan-text-to-image"
+                      "zh-Hans/zmodelImage/ali/wan-text-to-image",
+                      {
+                        "group": "阿里巴巴兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelImage/ali/api/qwen-text-to-image",
+                          "zh-Hans/zmodelImage/ali/api/qwen-image-edit",
+                          "zh-Hans/zmodelImage/ali/api/wan2.7-image-generation"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -190,7 +198,17 @@
                       "zh-Hans/zmodelVideo/ali/video-first-last-frame2",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
-                      "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation"
+                      "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      {
+                        "group": "阿里巴巴兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelVideo/ali/api/wan2.7-i2v",
+                          "zh-Hans/zmodelVideo/ali/api/wan2.7-t2v",
+                          "zh-Hans/zmodelVideo/ali/api/wan2.7-r2v",
+                          "zh-Hans/zmodelVideo/ali/api/legacy-i2v-first-frame",
+                          "zh-Hans/zmodelVideo/ali/api/legacy-i2v-first-last-frame"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -287,7 +305,13 @@
                   {
                     "group": "阿里巴巴",
                     "pages": [
-                      "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash"
+                      "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash",
+                      {
+                        "group": "阿里巴巴兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelAudio/ali/api/qwen-tts"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -422,7 +446,15 @@
                       "en/zmodelImage/ali/qwen-edit",
                       "en/zmodelImage/ali/qwen-text-to-image",
                       "en/zmodelImage/ali/wan-edit",
-                      "en/zmodelImage/ali/wan-text-to-image"
+                      "en/zmodelImage/ali/wan-text-to-image",
+                      {
+                        "group": "Alibaba Compatible API",
+                        "pages": [
+                          "en/zmodelImage/ali/api/qwen-text-to-image",
+                          "en/zmodelImage/ali/api/qwen-image-edit",
+                          "en/zmodelImage/ali/api/wan2.7-image-generation"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -489,7 +521,17 @@
                       "en/zmodelVideo/ali/video-first-last-frame2",
                       "en/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "en/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
-                      "en/zmodelVideo/ali/wan2.7-i2v-video-continuation"
+                      "en/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      {
+                        "group": "Alibaba Compatible API",
+                        "pages": [
+                          "en/zmodelVideo/ali/api/wan2.7-i2v",
+                          "en/zmodelVideo/ali/api/wan2.7-t2v",
+                          "en/zmodelVideo/ali/api/wan2.7-r2v",
+                          "en/zmodelVideo/ali/api/legacy-i2v-first-frame",
+                          "en/zmodelVideo/ali/api/legacy-i2v-first-last-frame"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -580,7 +622,13 @@
                   {
                     "group": "Alibaba",
                     "pages": [
-                      "en/zmodelAudio/ali/qwen3-tts-instruct-flash"
+                      "en/zmodelAudio/ali/qwen3-tts-instruct-flash",
+                      {
+                        "group": "Alibaba Compatible API",
+                        "pages": [
+                          "en/zmodelAudio/ali/api/qwen-tts"
+                        ]
+                      }
                     ]
                   },
                   {

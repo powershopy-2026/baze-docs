@@ -1,0 +1,417 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "千问-图像编辑",
+    "version": "1.0.0",
+    "description": "阿里云千问图像编辑能力文档。平台统一接口端点为 `/v1/images/edits`。本文档描述了 `qwen-image-2.0-pro`、`qwen-image-edit-max`、`qwen-image-edit-plus`、`qwen-image-edit` 等模型的图像编辑调用契约：`input.messages[].content[]` 携带1-3张输入图像和1条编辑指令，`parameters` 控制反向提示词、数量、水印、随机种子等参数。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "baze平台 API 服务端点"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Qwen Image",
+      "description": "千问图像编辑能力"
+    }
+  ],
+  "paths": {
+    "/v1/images/edits": {
+      "post": {
+        "summary": "千问-图像编辑",
+        "description": "调用阿里云千问 `qwen-image-2.0-pro`、`qwen-image-edit-max`、`qwen-image-edit-plus`、`qwen-image-edit` 模型执行图像编辑任务。\n\n请求体的 `input.messages[0].content[]` 数组需包含1-3个 `image` 对象（输入图像URL或Base64）和1个 `text` 对象（编辑指令）。`parameters` 字段控制反向提示词 `negative_prompt`、数量 `n`、水印 `watermark`、随机种子 `seed` 等。注意：`qwen-image-edit` 系列不支持 `size` 和 `prompt_extend` 参数。",
+        "operationId": "aliQwenImageEdit",
+        "tags": [
+          "Qwen Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageEditRequest"
+              },
+              "examples": {
+                "basic_edit": {
+                  "summary": "基础图像编辑",
+                  "value": {
+                    "model": "qwen-image-edit",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/input.png"
+                            },
+                            {
+                              "text": "将背景改为海边日落场景"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "n": 1,
+                      "watermark": false
+                    }
+                  }
+                },
+                "multi_image_edit": {
+                  "summary": "多图编辑",
+                  "value": {
+                    "model": "qwen-image-edit-max",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/input1.png"
+                            },
+                            {
+                              "image": "https://example.com/input2.png"
+                            },
+                            {
+                              "text": "将两张图片中的人物合并到同一场景中"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "n": 1,
+                      "negative_prompt": "低质量, 模糊",
+                      "watermark": false,
+                      "seed": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功返回图像编辑结果。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "认证失败，例如缺少或无效的令牌。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "请求体过大。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发限流或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "处理请求时发生内部服务器错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游渠道返回了异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游渠道暂时不可用，或当前模型无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传递 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ImageEditRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen-image-2.0-pro",
+              "qwen-image-edit-max",
+              "qwen-image-edit-plus",
+              "qwen-image-edit"
+            ],
+            "description": "图像编辑模型名称。"
+          },
+          "input": {
+            "$ref": "#/components/schemas/QwenImageEditInput"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/QwenImageEditParameters"
+          }
+        }
+      },
+      "QwenImageEditInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "目前仅支持单轮消息。",
+            "items": {
+              "$ref": "#/components/schemas/QwenImageEditMessage"
+            }
+          }
+        }
+      },
+      "QwenImageEditMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "固定为 `user`。"
+          },
+          "content": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "description": "包含1-3个 `image` 对象和1个 `text` 对象。",
+            "items": {
+              "$ref": "#/components/schemas/QwenImageEditContentItem"
+            }
+          }
+        }
+      },
+      "QwenImageEditContentItem": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "输入图像URL或Base64编码，支持1-3张。"
+          },
+          "text": {
+            "type": "string",
+            "description": "编辑指令，仅支持1个。"
+          }
+        }
+      },
+      "QwenImageEditParameters": {
+        "type": "object",
+        "properties": {
+          "negative_prompt": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "反向提示词，不超过500字符。"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "default": 1,
+            "description": "输出图像数量。`qwen-image-edit` 系列支持1-6张，其他模型固定为1。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否添加水印，默认不添加。"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "随机种子，取值范围 [0, 2147483647]。"
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "$ref": "#/components/schemas/ImageOutput"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/ImageUsage"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求ID。"
+          },
+          "code": {
+            "type": "string",
+            "description": "错误码，仅在请求失败时返回。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息，仅在请求失败时返回。"
+          }
+        }
+      },
+      "ImageOutput": {
+        "type": "object",
+        "properties": {
+          "choices": {
+            "type": "array",
+            "description": "生成结果列表。",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoice"
+            }
+          }
+        }
+      },
+      "ImageChoice": {
+        "type": "object",
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "description": "结束原因，成功时为 `stop`。"
+          },
+          "message": {
+            "$ref": "#/components/schemas/ImageChoiceMessage"
+          }
+        }
+      },
+      "ImageChoiceMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "角色，固定为 `assistant`。"
+          },
+          "content": {
+            "type": "array",
+            "description": "生成内容列表。",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoiceContentItem"
+            }
+          }
+        }
+      },
+      "ImageChoiceContentItem": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "图像URL，PNG格式，有效期24小时。"
+          }
+        }
+      },
+      "ImageUsage": {
+        "type": "object",
+        "properties": {
+          "image_count": {
+            "type": "integer",
+            "description": "生成图像数量。"
+          },
+          "width": {
+            "type": "integer",
+            "description": "图像宽度。"
+          },
+          "height": {
+            "type": "integer",
+            "description": "图像高度。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息。"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求ID。"
+          }
+        }
+      }
+    }
+  }
+}

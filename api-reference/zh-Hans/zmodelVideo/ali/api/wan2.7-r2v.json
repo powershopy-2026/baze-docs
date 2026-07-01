@@ -1,0 +1,460 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "万相2.7-参考生视频",
+    "version": "1.0.0",
+    "description": "阿里云万相 `wan2.7-r2v` 参考生视频能力文档。统一公开入口为 `/v1/videos`，用于创建异步视频生成任务。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan 2.7 Video",
+      "description": "Ali wan2.7-r2v 参考生视频能力"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "创建 wan2.7-r2v 参考生视频任务",
+        "description": "提交一个异步的 Ali `wan2.7-r2v` 参考生视频任务。通过 `input.media` 指定参考图像、参考视频或首帧图像，可搭配 `reference_voice` 进行音色参考。\n\n提交任务后，请通过 `GET /v1/videos/{task_id}` 查询任务状态。",
+        "operationId": "aliWan27R2VCreate",
+        "tags": [
+          "Wan 2.7 Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wan27R2VRequest"
+              },
+              "examples": {
+                "reference_image": {
+                  "summary": "使用参考图像",
+                  "value": {
+                    "model": "wan2.7-r2v",
+                    "input": {
+                      "prompt": "一位女性在海边漫步，海风吹动她的长发。",
+                      "media": [
+                        {
+                          "type": "reference_image",
+                          "url": "https://example.com/assets/woman.png"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "1080P",
+                      "ratio": "16:9",
+                      "duration": 5
+                    }
+                  }
+                },
+                "reference_video_with_voice": {
+                  "summary": "使用参考视频 + 音色参考",
+                  "value": {
+                    "model": "wan2.7-r2v",
+                    "input": {
+                      "prompt": "人物按照参考视频的动作进行表演，并使用参考音色说话。",
+                      "negative_prompt": "模糊，低质量",
+                      "media": [
+                        {
+                          "type": "reference_video",
+                          "url": "https://example.com/assets/ref.mp4",
+                          "reference_voice": "https://example.com/assets/voice.mp3"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "ratio": "9:16",
+                      "duration": 8,
+                      "seed": 42
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "查询 wan2.7-r2v 参考生视频任务状态",
+        "description": "根据任务 ID 查询视频生成任务的状态和结果。\n\n任务状态流转：PENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。",
+        "operationId": "aliWan27R2VQuery",
+        "tags": [
+          "Wan 2.7 Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "视频生成任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功，返回任务状态。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskQueryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在或已过期。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "Wan27R2VRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-r2v"
+            ],
+            "description": "模型名称。当前支持 `wan2.7-r2v`。"
+          },
+          "input": {
+            "$ref": "#/components/schemas/Wan27R2VInput"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/Wan27R2VParameters"
+          }
+        }
+      },
+      "Wan27R2VInput": {
+        "type": "object",
+        "required": [
+          "prompt",
+          "media"
+        ],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "提示词，描述期望的视频内容。长度不超过 5000 个字符。",
+            "maxLength": 5000
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "反向提示词，描述不希望在视频中看到的内容。长度不超过 500 个字符。",
+            "maxLength": 500
+          },
+          "media": {
+            "type": "array",
+            "description": "媒体素材列表。",
+            "items": {
+              "$ref": "#/components/schemas/Wan27R2VMedia"
+            }
+          }
+        }
+      },
+      "Wan27R2VMedia": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "reference_image",
+              "reference_video",
+              "first_frame"
+            ],
+            "description": "媒体素材类型。`reference_image` 参考图像、`reference_video` 参考视频、`first_frame` 首帧图像。"
+          },
+          "url": {
+            "type": "string",
+            "description": "公网可访问的素材 URL。"
+          },
+          "reference_voice": {
+            "type": "string",
+            "description": "可选音色参考 URL。"
+          }
+        }
+      },
+      "Wan27R2VParameters": {
+        "type": "object",
+        "properties": {
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "720P",
+              "1080P"
+            ],
+            "description": "输出视频分辨率。默认 `1080P`。",
+            "default": "1080P"
+          },
+          "ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4"
+            ],
+            "description": "视频宽高比。默认 `16:9`。",
+            "default": "16:9"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "视频时长（秒）。含视频素材时取值范围 [2, 10]，不含视频素材时取值范围 [2, 15]，默认 5。",
+            "minimum": 2,
+            "maximum": 15,
+            "default": 5
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "是否开启提示词智能改写。默认 true。",
+            "default": true
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否在视频中添加水印。默认 false。",
+            "default": false
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机数种子，取值范围 [0, 2147483647]。",
+            "minimum": 0,
+            "maximum": 2147483647
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "type": "object",
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "视频生成任务 ID。"
+              },
+              "task_status": {
+                "type": "string",
+                "enum": [
+                  "PENDING"
+                ],
+                "description": "任务状态，提交后返回 PENDING。"
+              }
+            }
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求 ID。"
+          }
+        }
+      },
+      "VideoTaskQueryResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "type": "object",
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "视频生成任务 ID。"
+              },
+              "task_status": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "RUNNING",
+                  "SUCCEEDED",
+                  "FAILED"
+                ],
+                "description": "任务状态。"
+              },
+              "video_url": {
+                "type": "string",
+                "description": "生成视频的下载链接。仅在任务成功时返回。"
+              },
+              "orig_prompt": {
+                "type": "string",
+                "description": "原始输入提示词。"
+              },
+              "submit_time": {
+                "type": "string",
+                "description": "任务提交时间。"
+              },
+              "scheduled_time": {
+                "type": "string",
+                "description": "任务调度时间。"
+              },
+              "end_time": {
+                "type": "string",
+                "description": "任务结束时间。"
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "properties": {
+              "duration": {
+                "type": "number",
+                "description": "视频时长（秒）。"
+              },
+              "input_video_duration": {
+                "type": "number",
+                "description": "输入视频时长（秒）。"
+              },
+              "output_video_duration": {
+                "type": "number",
+                "description": "输出视频时长（秒）。"
+              },
+              "video_count": {
+                "type": "integer",
+                "description": "生成视频数量。"
+              },
+              "SR": {
+                "type": "integer",
+                "description": "分辨率档位。"
+              },
+              "ratio": {
+                "type": "string",
+                "description": "视频宽高比。"
+              }
+            }
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求 ID。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息。"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求 ID。"
+          }
+        }
+      }
+    }
+  }
+}

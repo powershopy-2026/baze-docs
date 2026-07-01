@@ -1,0 +1,511 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wan2.7 image generation and edit",
+    "version": "1.0.0",
+    "description": "Ali Wan2.7 image generation and edit capability documentation. The unified API endpoint is `/v1/images/generations`. This document describes the public gateway contract for `wan2.7-image-pro` and `wan2.7-image`: `input.messages[].content[]` carries the prompt and/or input images, and `parameters` controls resolution, count, thinking mode, color palette, watermark, and random seed.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan Image",
+      "description": "Wan image generation and edit capability"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "Wan2.7 image generation and edit",
+        "description": "Calls Ali `wan2.7-image-pro` and `wan2.7-image` models to perform image generation and editing.\n\nThe `input.messages[0].content[]` array may contain `text` objects (prompt) and/or `image` objects (input images). The `parameters` field controls bbox region `bbox_list`, sequential mode `enable_sequential`, resolution `size`, count `n`, thinking mode `thinking_mode`, color palette `color_palette`, watermark `watermark`, and random seed `seed`. This model supports text-to-image, image-to-image, and interactive editing.",
+        "operationId": "aliWan27ImageGeneration",
+        "tags": [
+          "Wan Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageGenerationRequest"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "Text to image",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "A white fox running under cherry blossom trees, watercolor style"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "2K",
+                      "n": 1,
+                      "thinking_mode": true,
+                      "watermark": false
+                    }
+                  }
+                },
+                "image_edit": {
+                  "summary": "Image edit",
+                  "value": {
+                    "model": "wan2.7-image",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/input.png"
+                            },
+                            {
+                              "text": "Change the sky in the image to a starry night"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "1K",
+                      "n": 1,
+                      "thinking_mode": true,
+                      "watermark": false
+                    }
+                  }
+                },
+                "sequential_images": {
+                  "summary": "Sequential images mode",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "A set of four seasonal landscape illustrations: spring, summer, autumn, winter"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "1K",
+                      "n": 4,
+                      "enable_sequential": true,
+                      "thinking_mode": true,
+                      "watermark": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Returns the image generation result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request body too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream provider returned an abnormal response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream provider is temporarily unavailable, or no available channel for the current model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ImageGenerationRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-image-pro",
+              "wan2.7-image"
+            ],
+            "description": "Wan image model name."
+          },
+          "input": {
+            "$ref": "#/components/schemas/WanImageInput"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/WanImageParameters"
+          }
+        }
+      },
+      "WanImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Currently only single-turn messages are supported.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageMessage"
+            }
+          }
+        }
+      },
+      "WanImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "Fixed to `user`."
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Contains `text` and/or `image` objects. `image` supports 0-9 images.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageContentItem"
+            }
+          }
+        }
+      },
+      "WanImageContentItem": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "Prompt. Maximum 5000 characters."
+          },
+          "image": {
+            "type": "string",
+            "description": "Input image URL or Base64. Supports 0-9 images."
+          }
+        }
+      },
+      "WanImageParameters": {
+        "type": "object",
+        "properties": {
+          "bbox_list": {
+            "type": "array",
+            "description": "List of interactive editing bbox regions.",
+            "items": {
+              "$ref": "#/components/schemas/BboxItem"
+            }
+          },
+          "enable_sequential": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to enable sequential image mode. Disabled by default."
+          },
+          "size": {
+            "type": "string",
+            "description": "Output resolution. Supports `1K`, `2K`, `4K`, or `width*height` format.",
+            "x-options": [
+              {
+                "label": "1K",
+                "value": "1K"
+              },
+              {
+                "label": "2K",
+                "value": "2K"
+              },
+              {
+                "label": "4K",
+                "value": "4K"
+              }
+            ]
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "description": "Number of images. Non-sequential mode supports 1-4, default 1; sequential mode supports 1-12, default 12."
+          },
+          "thinking_mode": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable thinking mode. Enabled by default."
+          },
+          "color_palette": {
+            "type": "array",
+            "description": "Custom color palette list.",
+            "items": {
+              "type": "string",
+              "description": "Color value, e.g. `#FF5733`."
+            }
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to add a watermark. Disabled by default."
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed. Range [0, 2147483647]."
+          }
+        }
+      },
+      "BboxItem": {
+        "type": "object",
+        "description": "Bbox region coordinates.",
+        "properties": {
+          "x": {
+            "type": "integer",
+            "description": "Top-left x coordinate."
+          },
+          "y": {
+            "type": "integer",
+            "description": "Top-left y coordinate."
+          },
+          "width": {
+            "type": "integer",
+            "description": "Width."
+          },
+          "height": {
+            "type": "integer",
+            "description": "Height."
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "$ref": "#/components/schemas/WanImageOutput"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/WanImageUsage"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request ID."
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code. Only returned when the request fails."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message. Only returned when the request fails."
+          }
+        }
+      },
+      "WanImageOutput": {
+        "type": "object",
+        "properties": {
+          "choices": {
+            "type": "array",
+            "description": "List of generation results.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageChoice"
+            }
+          },
+          "finished": {
+            "type": "boolean",
+            "description": "Whether the task is finished."
+          }
+        }
+      },
+      "WanImageChoice": {
+        "type": "object",
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "description": "Finish reason. `stop` on success."
+          },
+          "message": {
+            "$ref": "#/components/schemas/WanImageChoiceMessage"
+          }
+        }
+      },
+      "WanImageChoiceMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Role. Fixed to `assistant`."
+          },
+          "content": {
+            "type": "array",
+            "description": "List of generated content items.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageChoiceContentItem"
+            }
+          }
+        }
+      },
+      "WanImageChoiceContentItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Content type. Fixed to `image`."
+          },
+          "image": {
+            "type": "string",
+            "description": "Image URL. PNG format."
+          }
+        }
+      },
+      "WanImageUsage": {
+        "type": "object",
+        "properties": {
+          "image_count": {
+            "type": "integer",
+            "description": "Number of generated images."
+          },
+          "size": {
+            "type": "string",
+            "description": "Output resolution."
+          },
+          "input_tokens": {
+            "type": "integer",
+            "description": "Input token count."
+          },
+          "output_tokens": {
+            "type": "integer",
+            "description": "Output token count."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total token count."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request ID."
+          }
+        }
+      }
+    }
+  }
+}
