@@ -158,7 +158,6 @@
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/text-to-video",
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/image-to-video",
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/first-last-frame-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/subject-reference-to-video",
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/query-video-task",
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/download-video-file"
                         ]
