@@ -450,7 +450,7 @@
           },
           "prefix": {
             "type": "boolean",
-            "description": "(Beta) Set this to true to force the model to start its response with the prefix content provided in this assistant message. You must set the base_url to the beta endpoint to use this feature."
+            "description": "(Beta) Set this to true to force the model to start its response with the prefix content provided in this assistant message. "
           },
           "reasoning_content": {
             "type": "string",
@@ -725,6 +725,60 @@
           "finish_reason": {
             "type": "string",
             "description": "The reason the model stopped generating tokens. `stop` means the model finished generating naturally or hit a stop sequence; `length` means the output length reached the model's context length limit or the max_tokens limit; `content_filter` means the output was filtered due to a filtering policy; `tool_calls` means the model called a tool; `insufficient_system_resource` means generation was interrupted due to insufficient system inference resources."
+          },
+          "logprobs": {
+            "$ref": "#/components/schemas/ChoiceLogprobs"
+          }
+        }
+      },
+      "ChoiceLogprobs": {
+        "type": "object",
+        "description": "The log probabilities information for this choice.",
+        "properties": {
+          "content": {
+            "type": "array",
+            "nullable": true,
+            "description": "A list of objects containing the log probabilities of output tokens.",
+            "items": {
+              "$ref": "#/components/schemas/LogprobToken"
+            }
+          },
+          "reasoning_content": {
+            "type": "array",
+            "nullable": true,
+            "description": "A list of objects containing the log probabilities of output tokens.",
+            "items": {
+              "$ref": "#/components/schemas/LogprobToken"
+            }
+          }
+        }
+      },
+      "LogprobToken": {
+        "type": "object",
+        "description": "Log probability information for an output token.",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The output token."
+          },
+          "logprob": {
+            "type": "number",
+            "description": "The log probability of this token. -9999.0 means the token has a very small output probability and is not among the top 20 most likely output tokens."
+          },
+          "bytes": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer"
+            },
+            "description": "A list of integers representing the UTF-8 bytes representation of the token. Useful when a UTF-8 character is split into multiple tokens. If the token has no byte representation, this value is null."
+          },
+          "top_logprobs": {
+            "type": "array",
+            "description": "A list of the top N tokens by output probability at this position, along with their log probabilities. In rare cases, the number of tokens returned may be fewer than the top_logprobs value specified in the request.",
+            "items": {
+              "$ref": "#/components/schemas/LogprobToken"
+            }
           }
         }
       },

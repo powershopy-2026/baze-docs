@@ -1,0 +1,419 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Qwen text-to-image",
+    "version": "1.0.0",
+    "description": "Ali Qwen text-to-image capability documentation. The unified API endpoint is `/v1/images/generations`. This document describes the public gateway contract for `qwen-image-2.0-pro`, `qwen-image-2.0`, `qwen-image-max`, and `qwen-image-plus`: `input.messages[].content[].text` carries the prompt, and `parameters` controls resolution, count, negative prompt, and other options.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Qwen Image",
+      "description": "Qwen text-to-image capability"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "Qwen text-to-image",
+        "description": "Calls Ali `qwen-image-2.0-pro`, `qwen-image-2.0`, `qwen-image-max`, and `qwen-image-plus` models to perform text-to-image generation.\n\nThe request body contains three main fields: `model`, `input`, and `parameters`. The prompt is placed in `input.messages[0].content[0].text`. The `parameters` field controls resolution `size`, count `n`, negative prompt `negative_prompt`, smart prompt rewriting `prompt_extend`, watermark `watermark`, and random seed `seed`.",
+        "operationId": "aliQwenTextToImage",
+        "tags": [
+          "Qwen Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToImageRequest"
+              },
+              "examples": {
+                "basic_generation": {
+                  "summary": "Basic text-to-image",
+                  "value": {
+                    "model": "qwen-image-2.0-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "A cute orange cat sitting on a windowsill, bathed in sunlight, realistic style"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "2048*2048",
+                      "n": 1,
+                      "watermark": false
+                    }
+                  }
+                },
+                "advanced_generation": {
+                  "summary": "Advanced text-to-image",
+                  "value": {
+                    "model": "qwen-image-max",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "Sci-fi cityscape at night, neon lights, futuristic architecture"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "2048*1024",
+                      "n": 2,
+                      "negative_prompt": "low resolution, low quality, blurry",
+                      "prompt_extend": true,
+                      "watermark": false,
+                      "seed": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Returns the image generation result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request body too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream provider returned an abnormal response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream provider is temporarily unavailable, or no available channel for the current model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "TextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen-image-2.0-pro",
+              "qwen-image-2.0",
+              "qwen-image-max",
+              "qwen-image-plus"
+            ],
+            "description": "Text-to-image model name."
+          },
+          "input": {
+            "$ref": "#/components/schemas/QwenTextToImageInput"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/QwenTextToImageParameters"
+          }
+        }
+      },
+      "QwenTextToImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Currently only single-turn messages are supported.",
+            "items": {
+              "$ref": "#/components/schemas/QwenTextToImageMessage"
+            }
+          }
+        }
+      },
+      "QwenTextToImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "Fixed to `user`."
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Only a single text content item is supported.",
+            "items": {
+              "$ref": "#/components/schemas/QwenTextToImageContentItem"
+            }
+          }
+        }
+      },
+      "QwenTextToImageContentItem": {
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Text-to-image prompt. Supports Chinese and English."
+          }
+        }
+      },
+      "QwenTextToImageParameters": {
+        "type": "object",
+        "properties": {
+          "negative_prompt": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Negative prompt. Maximum 500 characters."
+          },
+          "size": {
+            "type": "string",
+            "description": "Output image resolution in `width*height` format, e.g. `2048*2048`."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "default": 1,
+            "description": "Number of output images. `qwen-image-2.0-pro` and `qwen-image-2.0` support 1-6; other models are fixed at 1."
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable smart prompt rewriting. Enabled by default."
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to add a watermark. Disabled by default."
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed. Range [0, 2147483647]."
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "$ref": "#/components/schemas/ImageOutput"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/ImageUsage"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request ID."
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code. Only returned when the request fails."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message. Only returned when the request fails."
+          }
+        }
+      },
+      "ImageOutput": {
+        "type": "object",
+        "properties": {
+          "choices": {
+            "type": "array",
+            "description": "List of generation results.",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoice"
+            }
+          }
+        }
+      },
+      "ImageChoice": {
+        "type": "object",
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "description": "Finish reason. `stop` on success."
+          },
+          "message": {
+            "$ref": "#/components/schemas/ImageChoiceMessage"
+          }
+        }
+      },
+      "ImageChoiceMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Role. Fixed to `assistant`."
+          },
+          "content": {
+            "type": "array",
+            "description": "List of generated content items.",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoiceContentItem"
+            }
+          }
+        }
+      },
+      "ImageChoiceContentItem": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Image URL. PNG format. Valid for 24 hours."
+          }
+        }
+      },
+      "ImageUsage": {
+        "type": "object",
+        "properties": {
+          "image_count": {
+            "type": "integer",
+            "description": "Number of generated images."
+          },
+          "width": {
+            "type": "integer",
+            "description": "Image width."
+          },
+          "height": {
+            "type": "integer",
+            "description": "Image height."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request ID."
+          }
+        }
+      }
+    }
+  }
+}

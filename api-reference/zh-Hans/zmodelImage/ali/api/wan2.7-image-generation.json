@@ -1,0 +1,511 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "万相-图像生成与编辑2.7",
+    "version": "1.0.0",
+    "description": "阿里云万相2.7图像生成与编辑能力文档。平台统一接口端点为 `/v1/images/generations`。本文档描述了 `wan2.7-image-pro` 和 `wan2.7-image` 模型的图像生成与编辑调用契约：`input.messages[].content[]` 携带提示词和/或输入图像，`parameters` 控制分辨率、数量、思考模式、颜色主题、水印、随机种子等参数。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "baze平台 API 服务端点"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan Image",
+      "description": "万相图像生成与编辑能力"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "万相-图像生成与编辑2.7",
+        "description": "调用阿里云万相 `wan2.7-image-pro` 和 `wan2.7-image` 模型执行图像生成与编辑任务。\n\n请求体的 `input.messages[0].content[]` 数组可包含 `text` 对象（提示词）和/或 `image` 对象（输入图像）。`parameters` 字段控制框选区域 `bbox_list`、组图模式 `enable_sequential`、分辨率 `size`、数量 `n`、思考模式 `thinking_mode`、颜色主题 `color_palette`、水印 `watermark`、随机种子 `seed` 等。该模型支持文生图、图生图和交互式编辑。",
+        "operationId": "aliWan27ImageGeneration",
+        "tags": [
+          "Wan Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageGenerationRequest"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "文生图",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "一只在樱花树下奔跑的白狐，水彩风格"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "2K",
+                      "n": 1,
+                      "thinking_mode": true,
+                      "watermark": false
+                    }
+                  }
+                },
+                "image_edit": {
+                  "summary": "图像编辑",
+                  "value": {
+                    "model": "wan2.7-image",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/input.png"
+                            },
+                            {
+                              "text": "将图片中的天空改为星空"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "1K",
+                      "n": 1,
+                      "thinking_mode": true,
+                      "watermark": false
+                    }
+                  }
+                },
+                "sequential_images": {
+                  "summary": "组图模式",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "一组四季风景插画，春、夏、秋、冬"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "1K",
+                      "n": 4,
+                      "enable_sequential": true,
+                      "thinking_mode": true,
+                      "watermark": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功返回图像生成结果。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "认证失败，例如缺少或无效的令牌。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "请求体过大。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发限流或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "处理请求时发生内部服务器错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游渠道返回了异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游渠道暂时不可用，或当前模型无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传递 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ImageGenerationRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-image-pro",
+              "wan2.7-image"
+            ],
+            "description": "万相图像模型名称。"
+          },
+          "input": {
+            "$ref": "#/components/schemas/WanImageInput"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/WanImageParameters"
+          }
+        }
+      },
+      "WanImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "目前仅支持单轮消息。",
+            "items": {
+              "$ref": "#/components/schemas/WanImageMessage"
+            }
+          }
+        }
+      },
+      "WanImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "固定为 `user`。"
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "description": "包含 `text` 和/或 `image` 对象。`image` 支持0-9张。",
+            "items": {
+              "$ref": "#/components/schemas/WanImageContentItem"
+            }
+          }
+        }
+      },
+      "WanImageContentItem": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "提示词，不超过5000字符。"
+          },
+          "image": {
+            "type": "string",
+            "description": "输入图像URL或Base64编码，支持0-9张。"
+          }
+        }
+      },
+      "WanImageParameters": {
+        "type": "object",
+        "properties": {
+          "bbox_list": {
+            "type": "array",
+            "description": "交互式编辑框选区域列表。",
+            "items": {
+              "$ref": "#/components/schemas/BboxItem"
+            }
+          },
+          "enable_sequential": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否启用组图模式，默认不启用。"
+          },
+          "size": {
+            "type": "string",
+            "description": "输出分辨率，支持 `1K`、`2K`、`4K` 或 `宽*高` 格式。",
+            "x-options": [
+              {
+                "label": "1K",
+                "value": "1K"
+              },
+              {
+                "label": "2K",
+                "value": "2K"
+              },
+              {
+                "label": "4K",
+                "value": "4K"
+              }
+            ]
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "description": "生成数量。非组图模式支持1-4，默认1；组图模式支持1-12，默认12。"
+          },
+          "thinking_mode": {
+            "type": "boolean",
+            "default": true,
+            "description": "是否启用思考模式，默认启用。"
+          },
+          "color_palette": {
+            "type": "array",
+            "description": "自定义颜色主题列表。",
+            "items": {
+              "type": "string",
+              "description": "颜色值，如 `#FF5733`。"
+            }
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否添加水印，默认不添加。"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "随机种子，取值范围 [0, 2147483647]。"
+          }
+        }
+      },
+      "BboxItem": {
+        "type": "object",
+        "description": "框选区域坐标。",
+        "properties": {
+          "x": {
+            "type": "integer",
+            "description": "左上角x坐标。"
+          },
+          "y": {
+            "type": "integer",
+            "description": "左上角y坐标。"
+          },
+          "width": {
+            "type": "integer",
+            "description": "宽度。"
+          },
+          "height": {
+            "type": "integer",
+            "description": "高度。"
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "$ref": "#/components/schemas/WanImageOutput"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/WanImageUsage"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求ID。"
+          },
+          "code": {
+            "type": "string",
+            "description": "错误码，仅在请求失败时返回。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息，仅在请求失败时返回。"
+          }
+        }
+      },
+      "WanImageOutput": {
+        "type": "object",
+        "properties": {
+          "choices": {
+            "type": "array",
+            "description": "生成结果列表。",
+            "items": {
+              "$ref": "#/components/schemas/WanImageChoice"
+            }
+          },
+          "finished": {
+            "type": "boolean",
+            "description": "是否结束。"
+          }
+        }
+      },
+      "WanImageChoice": {
+        "type": "object",
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "description": "结束原因，成功时为 `stop`。"
+          },
+          "message": {
+            "$ref": "#/components/schemas/WanImageChoiceMessage"
+          }
+        }
+      },
+      "WanImageChoiceMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "角色，固定为 `assistant`。"
+          },
+          "content": {
+            "type": "array",
+            "description": "生成内容列表。",
+            "items": {
+              "$ref": "#/components/schemas/WanImageChoiceContentItem"
+            }
+          }
+        }
+      },
+      "WanImageChoiceContentItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "内容类型，固定为 `image`。"
+          },
+          "image": {
+            "type": "string",
+            "description": "图像URL，PNG格式。"
+          }
+        }
+      },
+      "WanImageUsage": {
+        "type": "object",
+        "properties": {
+          "image_count": {
+            "type": "integer",
+            "description": "生成图像数量。"
+          },
+          "size": {
+            "type": "string",
+            "description": "输出分辨率。"
+          },
+          "input_tokens": {
+            "type": "integer",
+            "description": "输入token数量。"
+          },
+          "output_tokens": {
+            "type": "integer",
+            "description": "输出token数量。"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "总token数量。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息。"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求ID。"
+          }
+        }
+      }
+    }
+  }
+}

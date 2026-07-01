@@ -1,0 +1,381 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "万相-图生视频-基于首帧",
+    "version": "1.0.0",
+    "description": "阿里云万相 2.1-2.6 系列基于首帧的图生视频能力文档。统一公开入口为 `/v1/videos`，用于创建异步视频生成任务。\n\n支持的模型：`wan2.6-i2v-flash`、`wan2.6-i2v`、`wan2.5-i2v-preview`、`wan2.2-i2v-plus`、`wan2.2-i2v-flash`、`wanx2.1-i2v-turbo`、`wanx2.1-i2v-plus`。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan Legacy Video",
+      "description": "Ali wan 2.1-2.6 图生视频能力"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "创建万相图生视频任务（首帧）",
+        "description": "提交一个异步的万相 2.1-2.6 图生视频任务，基于首帧图像生成视频。\n\n提交任务后，请通过 `GET /v1/videos/{task_id}` 查询任务状态。",
+        "operationId": "aliLegacyI2VFirstFrameCreate",
+        "tags": [
+          "Wan Legacy Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LegacyI2VRequest"
+              },
+              "examples": {
+                "basic_request": {
+                  "summary": "基础首帧图生视频请求",
+                  "value": {
+                    "model": "wan2.6-i2v",
+                    "input": {
+                      "prompt": "一只猫从静止逐渐开始走动，画面充满活力。",
+                      "img_url": "https://example.com/assets/cat.png"
+                    },
+                    "parameters": {
+                      "resolution": "1080P",
+                      "duration": 5,
+                      "prompt_extend": true,
+                      "watermark": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "查询万相图生视频任务状态（首帧）",
+        "description": "根据任务 ID 查询视频生成任务的状态和结果。\n\n任务状态流转：PENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。",
+        "operationId": "aliLegacyI2VFirstFrameQuery",
+        "tags": [
+          "Wan Legacy Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "视频生成任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功，返回任务状态。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskQueryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在或已过期。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "LegacyI2VRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.6-i2v-flash",
+              "wan2.6-i2v",
+              "wan2.5-i2v-preview",
+              "wan2.2-i2v-plus",
+              "wan2.2-i2v-flash",
+              "wanx2.1-i2v-turbo",
+              "wanx2.1-i2v-plus"
+            ],
+            "description": "模型名称。"
+          },
+          "input": {
+            "$ref": "#/components/schemas/LegacyI2VInput"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/LegacyI2VParameters"
+          }
+        }
+      },
+      "LegacyI2VInput": {
+        "type": "object",
+        "required": [
+          "img_url"
+        ],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "可选提示词。"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "反向提示词，描述不希望在视频中看到的内容。长度不超过 500 个字符。",
+            "maxLength": 500
+          },
+          "img_url": {
+            "type": "string",
+            "description": "首帧图像 URL 或 Base64 编码。"
+          },
+          "audio_url": {
+            "type": "string",
+            "description": "可选音频 URL。仅 wan2.6、wan2.5 模型支持。"
+          },
+          "template": {
+            "type": "string",
+            "description": "可选视频特效模板。"
+          }
+        }
+      },
+      "LegacyI2VParameters": {
+        "type": "object",
+        "properties": {
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "480P",
+              "720P",
+              "1080P"
+            ],
+            "description": "输出视频分辨率。"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "视频时长（秒）。"
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "是否开启提示词智能改写。默认 true。",
+            "default": true
+          },
+          "shot_type": {
+            "type": "string",
+            "enum": [
+              "single",
+              "multi"
+            ],
+            "description": "镜头类型。仅 wan2.6 模型支持。"
+          },
+          "audio": {
+            "type": "boolean",
+            "description": "是否生成有声视频。仅 `wan2.6-i2v-flash` 支持。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否在视频中添加水印。默认 false。",
+            "default": false
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机数种子，取值范围 [0, 2147483647]。",
+            "minimum": 0,
+            "maximum": 2147483647
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "type": "object",
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "视频生成任务 ID。"
+              },
+              "task_status": {
+                "type": "string",
+                "enum": [
+                  "PENDING"
+                ],
+                "description": "任务状态，提交后返回 PENDING。"
+              }
+            }
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求 ID。"
+          }
+        }
+      },
+      "VideoTaskQueryResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "type": "object",
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "视频生成任务 ID。"
+              },
+              "task_status": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "RUNNING",
+                  "SUCCEEDED",
+                  "FAILED"
+                ],
+                "description": "任务状态。"
+              },
+              "video_url": {
+                "type": "string",
+                "description": "生成视频的下载链接。仅在任务成功时返回。"
+              },
+              "orig_prompt": {
+                "type": "string",
+                "description": "原始输入提示词。"
+              },
+              "actual_prompt": {
+                "type": "string",
+                "description": "优化后的提示词（开启 prompt_extend 时）。"
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "description": "用量信息。",
+            "additionalProperties": true
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求 ID。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息。"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求 ID。"
+          }
+        }
+      }
+    }
+  }
+}
