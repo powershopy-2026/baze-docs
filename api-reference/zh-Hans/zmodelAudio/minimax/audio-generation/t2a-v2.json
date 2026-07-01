@@ -263,16 +263,14 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "请求的模型版本，可选范围：`speech-2.8-hd`, `speech-2.8-turbo`, `speech-2.6-hd`,\n`speech-2.6-turbo`, `speech-02-hd`, `speech-02-turbo`,\n`speech-01-hd`, `speech-01-turbo`.",
+            "description": "请求的模型版本，可选范围：`speech-2.8-hd`, `speech-2.8-turbo`, `speech-2.6-hd`,\n`speech-2.6-turbo`, `speech-02-hd`, `speech-02-turbo`.",
             "enum": [
               "speech-2.8-hd",
               "speech-2.8-turbo",
               "speech-2.6-hd",
               "speech-2.6-turbo",
               "speech-02-hd",
-              "speech-02-turbo",
-              "speech-01-hd",
-              "speech-01-turbo"
+              "speech-02-turbo"
             ]
           },
           "text": {
@@ -303,7 +301,7 @@
           },
           "language_boost": {
             "type": "string",
-            "description": "是否增强对指定的小语种和方言的识别能力。默认值为 `null`，可设置为 `auto` 让模型自主判断。\n\n注意：speech-01 和 speech-02 系列模型暂不支持 Persian、Filipino、Tamil 这三个语种。",
+            "description": "是否增强对指定的小语种和方言的识别能力。默认值为 `null`，可设置为 `auto` 让模型自主判断。\n\n注意：speech-02 系列模型暂不支持 Persian、Filipino、Tamil 这三个语种。",
             "enum": [
               "Chinese",
               "Chinese,Yue",
@@ -354,7 +352,7 @@
           },
           "subtitle_enable": {
             "type": "boolean",
-            "description": "控制是否开启字幕服务，默认值为 false。仅对 `speech-2.8-hd`, `speech-2.8-turbo`,\n`speech-2.6-hd`, `speech-2.6-turbo`, `speech-02-hd`,\n`speech-02-turbo`, `speech-01-hd`, `speech-01-turbo` 模型有效",
+            "description": "控制是否开启字幕服务，默认值为 false。仅对 `speech-2.8-hd`, `speech-2.8-turbo`,\n`speech-2.6-hd`, `speech-2.6-turbo`, `speech-02-hd`,\n`speech-02-turbo` 模型有效",
             "default": false
           },
           "subtitle_type": {
@@ -525,7 +523,7 @@
           },
           "emotion": {
             "type": "string",
-            "description": "控制合成语音的情绪，参数范围 `[\"happy\", \"sad\", \"angry\", \"fearful\", \"disgusted\", \"surprised\", \"calm\", \"fluent\", \"whisper\"]`，分别对应 8 种情绪：高兴，悲伤，愤怒，害怕，厌恶，惊讶，中性，生动，低语 \r\n- 模型会根据输入文本自动匹配合适的情绪，一般无需手动指定  \r\n- 该参数仅对 `speech-2.8-hd`, `speech-2.8-turbo`, `speech-2.6-hd`, `speech-2.6-turbo`, `speech-02-hd`, `speech-02-turbo`, `speech-01-hd`, `speech-01-turbo` 模型生效 \r\n- 选项 `fluent`, `whisper` 仅对 `speech-2.6-turbo`, `speech-2.6-hd` 模型生效，`speech-2.8-hd`, `speech-2.8-turbo` 模型不支持 `whisper`",
+            "description": "控制合成语音的情绪，参数范围 `[\"happy\", \"sad\", \"angry\", \"fearful\", \"disgusted\", \"surprised\", \"calm\", \"fluent\", \"whisper\"]`，分别对应 8 种情绪：高兴，悲伤，愤怒，害怕，厌恶，惊讶，中性，生动，低语 \r\n- 模型会根据输入文本自动匹配合适的情绪，一般无需手动指定  \r\n- 该参数仅对 `speech-2.8-hd`, `speech-2.8-turbo`, `speech-2.6-hd`, `speech-2.6-turbo`, `speech-02-hd`, `speech-02-turbo` 模型生效 \r\n- 选项 `fluent`, `whisper` 仅对 `speech-2.6-turbo`, `speech-2.6-hd` 模型生效，`speech-2.8-hd`, `speech-2.8-turbo` 模型不支持 `whisper`",
             "enum": [
               "happy",
               "sad",
