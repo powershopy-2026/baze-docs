@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan2.7 image generation and edit",
     "version": "1.0.0",
-    "description": "Ali Wan2.7 image generation and edit capability documentation. The unified API endpoint is `/v1/images/generations`. This document describes the public gateway contract for `wan2.7-image-pro` and `wan2.7-image`: `input.messages[].content[]` carries the prompt and/or input images, and `parameters` controls resolution, count, thinking mode, color palette, watermark, and random seed.",
+    "description": "Ali Wan2.7 image generation and edit capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/multimodal-generation/generation`. This document describes the public gateway contract for `wan2.7-image-pro` and `wan2.7-image`: `input.messages[].content[]` carries the prompt and/or input images, and `parameters` controls resolution, count, thinking mode, color palette, watermark, and random seed.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,7 +22,7 @@
     }
   ],
   "paths": {
-    "/v1/images/generations": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
       "post": {
         "summary": "Wan2.7 image generation and edit",
         "description": "Calls Ali `wan2.7-image-pro` and `wan2.7-image` models to perform image generation and editing.\n\nThe `input.messages[0].content[]` array may contain `text` objects (prompt) and/or `image` objects (input images). The `parameters` field controls bbox region `bbox_list`, sequential mode `enable_sequential`, resolution `size`, count `n`, thinking mode `thinking_mode`, color palette `color_palette`, watermark `watermark`, and random seed `seed`. This model supports text-to-image, image-to-image, and interactive editing.",

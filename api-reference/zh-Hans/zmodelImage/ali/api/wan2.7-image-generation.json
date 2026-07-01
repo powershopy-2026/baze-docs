@@ -3,7 +3,7 @@
   "info": {
     "title": "万相-图像生成与编辑2.7",
     "version": "1.0.0",
-    "description": "阿里云万相2.7图像生成与编辑能力文档。平台统一接口端点为 `/v1/images/generations`。本文档描述了 `wan2.7-image-pro` 和 `wan2.7-image` 模型的图像生成与编辑调用契约：`input.messages[].content[]` 携带提示词和/或输入图像，`parameters` 控制分辨率、数量、思考模式、颜色主题、水印、随机种子等参数。",
+    "description": "阿里云万相2.7图像生成与编辑能力文档。平台统一接口端点为 `/ali/api/v1/services/aigc/multimodal-generation/generation`。本文档描述了 `wan2.7-image-pro` 和 `wan2.7-image` 模型的图像生成与编辑调用契约：`input.messages[].content[]` 携带提示词和/或输入图像，`parameters` 控制分辨率、数量、思考模式、颜色主题、水印、随机种子等参数。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,7 +22,7 @@
     }
   ],
   "paths": {
-    "/v1/images/generations": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
       "post": {
         "summary": "万相-图像生成与编辑2.7",
         "description": "调用阿里云万相 `wan2.7-image-pro` 和 `wan2.7-image` 模型执行图像生成与编辑任务。\n\n请求体的 `input.messages[0].content[]` 数组可包含 `text` 对象（提示词）和/或 `image` 对象（输入图像）。`parameters` 字段控制框选区域 `bbox_list`、组图模式 `enable_sequential`、分辨率 `size`、数量 `n`、思考模式 `thinking_mode`、颜色主题 `color_palette`、水印 `watermark`、随机种子 `seed` 等。该模型支持文生图、图生图和交互式编辑。",

@@ -3,7 +3,7 @@
   "info": {
     "title": "万相2.7-参考生视频",
     "version": "1.0.0",
-    "description": "阿里云万相 `wan2.7-r2v` 参考生视频能力文档。统一公开入口为 `/v1/videos`，用于创建异步视频生成任务。",
+    "description": "阿里云万相 `wan2.7-r2v` 参考生视频能力文档。统一公开入口为 `/ali/api/v1/services/aigc/video-generation/video-synthesis`，用于创建异步视频生成任务。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,10 +22,10 @@
     }
   ],
   "paths": {
-    "/v1/videos": {
+    "/ali/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
         "summary": "创建 wan2.7-r2v 参考生视频任务",
-        "description": "提交一个异步的 Ali `wan2.7-r2v` 参考生视频任务。通过 `input.media` 指定参考图像、参考视频或首帧图像，可搭配 `reference_voice` 进行音色参考。\n\n提交任务后，请通过 `GET /v1/videos/{task_id}` 查询任务状态。",
+        "description": "提交一个异步的 Ali `wan2.7-r2v` 参考生视频任务。通过 `input.media` 指定参考图像、参考视频或首帧图像，可搭配 `reference_voice` 进行音色参考。\n\n提交任务后，请通过 `GET /ali/api/v1/tasks/{task_id}` 查询任务状态。",
         "operationId": "aliWan27R2VCreate",
         "tags": [
           "Wan 2.7 Video"
@@ -144,7 +144,7 @@
         ]
       }
     },
-    "/v1/videos/{task_id}": {
+    "/ali/api/v1/tasks/{task_id}": {
       "get": {
         "summary": "查询 wan2.7-r2v 参考生视频任务状态",
         "description": "根据任务 ID 查询视频生成任务的状态和结果。\n\n任务状态流转：PENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。",

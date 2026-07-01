@@ -3,7 +3,7 @@
   "info": {
     "title": "千问-图像编辑",
     "version": "1.0.0",
-    "description": "阿里云千问图像编辑能力文档。平台统一接口端点为 `/v1/images/edits`。本文档描述了 `qwen-image-2.0-pro`、`qwen-image-edit-max`、`qwen-image-edit-plus`、`qwen-image-edit` 等模型的图像编辑调用契约：`input.messages[].content[]` 携带1-3张输入图像和1条编辑指令，`parameters` 控制反向提示词、数量、水印、随机种子等参数。",
+    "description": "阿里云千问图像编辑能力文档。平台统一接口端点为 `/ali/api/v1/services/aigc/multimodal-generation/generation`。本文档描述了 `qwen-image-2.0-pro`、`qwen-image-edit-max`、`qwen-image-edit-plus`、`qwen-image-edit` 等模型的图像编辑调用契约：`input.messages[].content[]` 携带1-3张输入图像和1条编辑指令，`parameters` 控制反向提示词、数量、水印、随机种子等参数。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -22,7 +22,7 @@
     }
   ],
   "paths": {
-    "/v1/images/edits": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
       "post": {
         "summary": "千问-图像编辑",
         "description": "调用阿里云千问 `qwen-image-2.0-pro`、`qwen-image-edit-max`、`qwen-image-edit-plus`、`qwen-image-edit` 模型执行图像编辑任务。\n\n请求体的 `input.messages[0].content[]` 数组需包含1-3个 `image` 对象（输入图像URL或Base64）和1个 `text` 对象（编辑指令）。`parameters` 字段控制反向提示词 `negative_prompt`、数量 `n`、水印 `watermark`、随机种子 `seed` 等。注意：`qwen-image-edit` 系列不支持 `size` 和 `prompt_extend` 参数。",
