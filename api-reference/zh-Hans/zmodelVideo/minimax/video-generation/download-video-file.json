@@ -33,8 +33,7 @@
             "required": true,
             "description": "文件的唯一标识符\n支持视频任务状态查询接口获得的 `file_id`",
             "schema": {
-              "type": "integer",
-              "format": "int64"
+              "type": "string"
             }
           }
         ],
@@ -84,8 +83,7 @@
         "type": "object",
         "properties": {
           "file_id": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "description": "文件的唯一标识符"
           },
           "bytes": {
