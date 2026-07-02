@@ -36,7 +36,7 @@
                 "$ref": "#/components/schemas/ImageCreateRequest"
               },
               "examples": {
-                "seedream-5_0-text_to_image": {
+                "seedream-5.0-文生图": {
                   "summary": "seedream-5.0-文生图",
                   "value": {
                     "model": "seedream-5-0-260128",
@@ -46,7 +46,7 @@
                     "watermark": false
                   }
                 },
-                "seedream-5_0-image_to_image": {
+                "seedream-5.0-图生图": {
                   "summary": "seedream-5.0-图生图",
                   "value": {
                     "model": "seedream-5-0-260128",
@@ -57,7 +57,7 @@
                     "watermark": false
                   }
                 },
-                "seedream-5_0-multi_image_fusion": {
+                "seedream-5.0-多图融合": {
                   "summary": "seedream-5.0-多图融合",
                   "value": {
                     "model": "seedream-5-0-260128",
@@ -69,7 +69,7 @@
                     "watermark": false
                   }
                 },
-                "seedream-5_0-sequential_images": {
+                "seedream-5.0-多参考图生组图": {
                   "summary": "seedream-5.0-多参考图生组图",
                   "value": {
                     "model": "seedream-5-0-260128",
@@ -85,7 +85,7 @@
                     "watermark": false
                   }
                 },
-                "seedream-5_0-stream": {
+                "seedream-5.0-流式输出": {
                   "summary": "seedream-5.0-流式输出",
                   "value": {
                     "model": "seedream-5-0-260128",
@@ -96,7 +96,7 @@
                     "watermark": false
                   }
                 },
-                "seedream-5_0-web_search": {
+                "seedream-5.0-联网搜索": {
                   "summary": "seedream-5.0-联网搜索",
                   "value": {
                     "model": "seedream-5-0-260128",
@@ -121,8 +121,8 @@
                   "$ref": "#/components/schemas/ImageCreateResponse"
                 },
                 "examples": {
-                  "single_image_url": {
-                    "summary": "单图 — URL 格式",
+                  "单图": {
+                    "summary": "单图",
                     "value": {
                       "model": "seedream-5-0-260128",
                       "created": 1757321139,
@@ -139,7 +139,7 @@
                       }
                     }
                   },
-                  "single_image_b64": {
+                  "单图 — Base64 格式": {
                     "summary": "单图 — Base64 格式",
                     "value": {
                       "model": "seedream-5-0-260128",
@@ -156,17 +156,19 @@
                       }
                     }
                   },
-                  "multi_image": {
+                  "多图": {
                     "summary": "多图输出",
                     "value": {
                       "model": "seedream-4-0-250828",
                       "created": 1757321139,
                       "data": [
                         {
-                          "url": "https://example.com/generated-image-1.jpg"
+                          "url": "https://example.com/generated-image-1.jpg",
+                          "size": "2048x2048"
                         },
                         {
-                          "url": "https://example.com/generated-image-2.jpg"
+                          "url": "https://example.com/generated-image-2.jpg",
+                          "size": "2048x2048"
                         }
                       ],
                       "usage": {
