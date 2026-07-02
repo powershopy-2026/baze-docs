@@ -25,7 +25,7 @@
     "/ali/api/v1/services/aigc/multimodal-generation/generation": {
       "post": {
         "summary": "千问-图像编辑",
-        "description": "调用阿里云千问 `qwen-image-2.0-pro` 模型执行图像编辑任务。\n\n请求体的 `input.messages[0].content[]` 数组需包含1-3个 `image` 对象（输入图像URL或Base64）和1个 `text` 对象（编辑指令）。`parameters` 字段控制反向提示词 `negative_prompt`、数量 `n`、水印 `watermark`、随机种子 `seed` 等。注意：`qwen-image-edit` 系列不支持 `size` 和 `prompt_extend` 参数。",
+        "description": "调用阿里云千问 `qwen-image-2.0-pro` 模型执行图像编辑任务。`input.messages[0].content[]` 数组需包含 1-3 个 `image` 对象（输入图像 URL 或 Base64）和 1 个 `text` 对象（编辑指令）。`parameters` 字段控制输出数量 `n`、反向提示词 `negative_prompt`、分辨率 `size`、提示词智能改写 `prompt_extend`、水印 `watermark`、随机种子 `seed` 等。",
         "operationId": "aliQwenImageEdit",
         "tags": [
           "Qwen Image"
@@ -38,20 +38,20 @@
                 "$ref": "#/components/schemas/ImageEditRequest"
               },
               "examples": {
-                "basic_edit": {
-                  "summary": "基础图像编辑",
+                "qwen_image_2_pro_edit": {
+                  "summary": "Qwen-Image-2.0 Pro 图像编辑",
                   "value": {
-                    "model": "qwen-image-edit",
+                    "model": "qwen-image-2.0-pro",
                     "input": {
                       "messages": [
                         {
                           "role": "user",
                           "content": [
                             {
-                              "image": "https://example.com/input.png"
+                              "image": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260310/jiydyi/image+%2818%29-2026-03-10-16-39-59.webp"
                             },
                             {
-                              "text": "将背景改为海边日落场景"
+                              "text": "在画面右下角石板路旁、靠近树干根部的位置，以浅灰墨色手写体题写一首七言绝句，字体为行楷风格，笔触自然流畅、略带飞白，大小适中（约占画面高度1/10），与整体水墨淡雅氛围协调。诗文内容为：“青石桥畔柳风轻， 素手拈花闭目听。 一水碧痕浮旧梦， 半篙烟雨入空舲。”诗句横向排列，四句分两行书写（前两句一行，后两句一行），末句“舲”字右下角钤一枚朱红小印，印文为“江南”二字篆书，尺寸约等于单字高度的1/3。"
                             }
                           ]
                         }
@@ -59,37 +59,10 @@
                     },
                     "parameters": {
                       "n": 1,
-                      "watermark": false
-                    }
-                  }
-                },
-                "multi_image_edit": {
-                  "summary": "多图编辑",
-                  "value": {
-                    "model": "qwen-image-edit-max",
-                    "input": {
-                      "messages": [
-                        {
-                          "role": "user",
-                          "content": [
-                            {
-                              "image": "https://example.com/input1.png"
-                            },
-                            {
-                              "image": "https://example.com/input2.png"
-                            },
-                            {
-                              "text": "将两张图片中的人物合并到同一场景中"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    "parameters": {
-                      "n": 1,
-                      "negative_prompt": "低质量, 模糊",
+                      "negative_prompt": " ",
+                      "prompt_extend": true,
                       "watermark": false,
-                      "seed": 0
+                      "size": "2048*2048"
                     }
                   }
                 }
@@ -104,6 +77,34 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ImageResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功响应",
+                    "value": {
+                      "output": {
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "message": {
+                              "content": [
+                                {
+                                  "image": "https://dashscope-result-sz.oss-cn-shenzhen.aliyuncs.com/xxx.png?Expires=xxx"
+                                }
+                              ],
+                              "role": "assistant"
+                            }
+                          }
+                        ]
+                      },
+                      "usage": {
+                        "height": 2048,
+                        "image_count": 1,
+                        "width": 2048
+                      },
+                      "request_id": "571ae02f-5c9d-436c-83c2-f221e6df0xxx"
+                    }
+                  }
                 }
               }
             }
@@ -209,7 +210,7 @@
             "enum": [
               "qwen-image-2.0-pro"
             ],
-            "description": "图像编辑模型名称。"
+            "description": "模型名称，示例值 `qwen-image-2.0-pro`。"
           },
           "input": {
             "$ref": "#/components/schemas/QwenImageEditInput"
@@ -229,12 +230,13 @@
             "type": "array",
             "minItems": 1,
             "maxItems": 1,
-            "description": "目前仅支持单轮消息。",
+            "description": "请求内容数组。当前仅支持单轮对话，因此数组内有且只有一个对象，该对象包含 `role` 和 `content` 两个属性。",
             "items": {
               "$ref": "#/components/schemas/QwenImageEditMessage"
             }
           }
-        }
+        },
+        "description": "输入参数对象。"
       },
       "QwenImageEditMessage": {
         "type": "object",
@@ -248,13 +250,13 @@
             "enum": [
               "user"
             ],
-            "description": "固定为 `user`。"
+            "description": "消息发送者角色，必须设置为 `user`。"
           },
           "content": {
             "type": "array",
             "minItems": 2,
             "maxItems": 4,
-            "description": "包含1-3个 `image` 对象和1个 `text` 对象。",
+            "description": "消息内容，包含 1-3 张图像，格式为 `{\"image\":\"...\"}`；以及单个编辑指令，格式为 `{\"text\":\"...\"}`。",
             "items": {
               "$ref": "#/components/schemas/QwenImageEditContentItem"
             }
@@ -266,11 +268,11 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "输入图像URL或Base64编码，支持1-3张。"
+            "description": "输入图像的 URL 或 Base64 编码数据。支持传入 1-3 张图像。多图输入时，按照数组顺序定义图像顺序，输出图像的比例以最后一张为准。图像格式支持 JPG、JPEG、PNG、BMP、TIFF、WEBP 和 GIF；输出图像为 PNG 格式，对于 GIF 动图，仅处理其第一帧。为获得最佳效果，建议图像的宽和高均在 384 像素至 3072 像素之间。图像大小不超过 10MB。支持公网 URL（HTTP/HTTPS）、临时 OSS URL，以及 `data:image/jpeg;base64,...` 格式的 Base64 编码图像。示例值：`https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/fpakfo/image36.webp`。"
           },
           "text": {
             "type": "string",
-            "description": "编辑指令，仅支持1个。"
+            "description": "正向提示词用于描述您期望生成的图像内容、风格和构图。支持中英文，`qwen-image-2.0` 系列模型长度上限为 1300 Token，超出部分将自动截断。注意：仅支持传入一个 `text`，不传或传入多个将报错。"
           }
         }
       },
@@ -280,49 +282,60 @@
           "negative_prompt": {
             "type": "string",
             "maxLength": 500,
-            "description": "反向提示词，不超过500字符。"
+            "description": "反向提示词，用来描述不希望在画面中看到的内容，可以对画面进行限制。支持中英文，长度上限 500 个字符，每个汉字、字母、数字或符号计为一个字符，超过部分会自动截断。示例值：低分辨率、错误、最差质量、低质量、残缺、多余的手指、比例不良等。"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 6,
             "default": 1,
-            "description": "输出图像数量。`qwen-image-edit` 系列支持1-6张，其他模型固定为1。"
+            "description": "输出图像的数量，默认值为 1。对于 `qwen-image-2.0` 系列模型，可选择输出 1-6 张图片。"
           },
           "watermark": {
             "type": "boolean",
             "default": false,
-            "description": "是否添加水印，默认不添加。"
+            "description": "是否在图像右下角添加 \"Qwen-Image\" 水印。默认值为 `false`。"
           },
           "seed": {
             "type": "integer",
             "format": "int64",
             "minimum": 0,
             "maximum": 2147483647,
-            "description": "随机种子，取值范围 [0, 2147483647]。"
+            "description": "随机数种子，取值范围 [0, 2147483647]。使用相同的 `seed` 参数值可使生成内容保持相对稳定。若不提供，算法将自动使用随机数种子。注意：模型生成过程具有概率性，即使使用相同的 `seed`，也不能保证每次生成结果完全一致。"
+          },
+          "size": {
+            "type": "string",
+            "description": "设置输出图像的分辨率，格式为 `宽*高`，例如 `1024*1536`。`qwen-image-2.0` 系列模型图像总像素需在 `512*512` 至 `2048*2048` 之间。默认总像素数接近 `1024*1024`，宽高比与输入图（多图输入时为最后一张）相近。常见比例推荐分辨率：1:1 为 `1024*1024`、`1536*1536`；2:3 为 `768*1152`、`1024*1536`；3:2 为 `1152*768`、`1536*1024`；3:4 为 `960*1280`、`1080*1440`；4:3 为 `1280*960`、`1440*1080`；9:16 为 `720*1280`、`1080*1920`；16:9 为 `1280*720`、`1920*1080`；21:9 为 `1344*576`、`2048*872`。"
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "default": true,
+            "description": "是否开启提示词智能改写，默认值为 `true`。开启后，模型会优化正向提示词（`text`），对描述较简单的提示词效果提升明显。"
           }
-        }
+        },
+        "description": "控制图像生成的附加参数。"
       },
       "ImageResponse": {
         "type": "object",
         "properties": {
           "output": {
-            "$ref": "#/components/schemas/ImageOutput"
+            "$ref": "#/components/schemas/ImageOutput",
+            "description": "包含模型生成结果。"
           },
           "usage": {
             "$ref": "#/components/schemas/ImageUsage"
           },
           "request_id": {
             "type": "string",
-            "description": "请求ID。"
+            "description": "请求唯一标识。可用于请求明细溯源和问题排查。"
           },
           "code": {
             "type": "string",
-            "description": "错误码，仅在请求失败时返回。"
+            "description": "请求失败的错误码。请求成功时不会返回此参数。"
           },
           "message": {
             "type": "string",
-            "description": "错误信息，仅在请求失败时返回。"
+            "description": "请求失败的详细信息。请求成功时不会返回此参数。"
           }
         }
       },
@@ -331,7 +344,7 @@
         "properties": {
           "choices": {
             "type": "array",
-            "description": "生成结果列表。",
+            "description": "结果选项列表。",
             "items": {
               "$ref": "#/components/schemas/ImageChoice"
             }
@@ -343,7 +356,7 @@
         "properties": {
           "finish_reason": {
             "type": "string",
-            "description": "结束原因，成功时为 `stop`。"
+            "description": "任务停止原因，自然停止时为 `stop`。"
           },
           "message": {
             "$ref": "#/components/schemas/ImageChoiceMessage"
@@ -355,23 +368,24 @@
         "properties": {
           "role": {
             "type": "string",
-            "description": "角色，固定为 `assistant`。"
+            "description": "消息的角色，固定为 `assistant`。"
           },
           "content": {
             "type": "array",
-            "description": "生成内容列表。",
+            "description": "消息内容，包含生成的图像信息。",
             "items": {
               "$ref": "#/components/schemas/ImageChoiceContentItem"
             }
           }
-        }
+        },
+        "description": "模型返回的消息。"
       },
       "ImageChoiceContentItem": {
         "type": "object",
         "properties": {
           "image": {
             "type": "string",
-            "description": "图像URL，PNG格式，有效期24小时。"
+            "description": "生成图像的 URL，格式为 PNG。链接有效期为 24 小时，请及时下载并保存图像。"
           }
         }
       },
@@ -380,32 +394,33 @@
         "properties": {
           "image_count": {
             "type": "integer",
-            "description": "生成图像数量。"
+            "description": "生成图像的张数。"
           },
           "width": {
             "type": "integer",
-            "description": "图像宽度。"
+            "description": "生成图像的宽度（像素）。"
           },
           "height": {
             "type": "integer",
-            "description": "图像高度。"
+            "description": "生成图像的高度（像素）。"
           }
-        }
+        },
+        "description": "本次调用的资源使用情况，仅调用成功时返回。"
       },
       "ErrorResponse": {
         "type": "object",
         "properties": {
           "code": {
             "type": "string",
-            "description": "错误码。"
+            "description": "请求失败的错误码。请求成功时不会返回此参数。"
           },
           "message": {
             "type": "string",
-            "description": "错误信息。"
+            "description": "请求失败的详细信息。请求成功时不会返回此参数。"
           },
           "request_id": {
             "type": "string",
-            "description": "请求ID。"
+            "description": "请求唯一标识。可用于请求明细溯源和问题排查。"
           }
         }
       }
