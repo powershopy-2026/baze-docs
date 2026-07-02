@@ -205,7 +205,6 @@
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-i2v",
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-t2v",
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-r2v",
-                          "zh-Hans/zmodelVideo/ali/api/legacy-i2v-first-frame",
                           "zh-Hans/zmodelVideo/ali/api/legacy-i2v-first-last-frame"
                         ]
                       }
@@ -528,7 +527,6 @@
                           "en/zmodelVideo/ali/api/wan2.7-i2v",
                           "en/zmodelVideo/ali/api/wan2.7-t2v",
                           "en/zmodelVideo/ali/api/wan2.7-r2v",
-                          "en/zmodelVideo/ali/api/legacy-i2v-first-frame",
                           "en/zmodelVideo/ali/api/legacy-i2v-first-last-frame"
                         ]
                       }
