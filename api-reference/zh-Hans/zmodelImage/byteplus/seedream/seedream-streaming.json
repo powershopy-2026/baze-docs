@@ -3,7 +3,7 @@
   "info": {
     "title": "流式响应",
     "version": "1.0.0",
-    "description": "seedream-5-0/4.5/4.0 支持流式输出模式。当您调用图片生成 API 并将 **stream** 设置为 `true` 时，服务器会在生成响应的过程中，通过 Server-Sent Events（SSE）实时向客户端推送事件。\n\n仅 `seedream-5-0`、`seedream-4-5`、`seedream-4-0` 支持流式响应。",
+    "description": "seedream-5-0/4.5/4.0 支持流式输出模式。当您调用图片生成 API 并将 **stream** 设置为 `true` 时，服务器会在生成响应的过程中，通过 Server-Sent Events（SSE）实时向客户端推送事件。本节内容介绍服务器会推送的各类事件。\n\n仅 `seedream-5-0`、`seedream-4-5`、`seedream-4-0` 支持流式响应。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/byteplus/api/v3/images/generations": {
       "post": {
         "summary": "流式生成图片",
-        "description": "开启流式输出后，请求与普通图片创建接口相同（路径、方法、请求体格式不变），只需在请求体中设置 `stream: true`，并将客户端的 `Accept` 头设置为 `text/event-stream`。\n\n服务端通过 SSE 协议逐张推送生成结果，包含以下事件类型：\n\n| 事件名称 | 触发时机 | 说明 |\n|---|---|---|\n| `image_generation.partial_succeeded` | 每生成完一张图片 | 推送单张图片的生成结果 |\n| `image_generation.partial_failed` | 任意图片生成失败 | 推送失败原因 |\n| `image_generation.completed` | 全部图片生成完成 | 推送用量信息，标记流结束 |\n| `error` | 请求发生错误 | 返回错误信息 |",
+        "description": "开启流式输出后，请求与普通图片创建接口相同（路径、方法、请求体格式不变），只需在请求体中设置 `stream: true`，并将客户端的 `Accept` 头设置为 `text/event-stream`。\n\n服务端通过 SSE 协议实时推送以下事件：\n\n| 事件名称 | 触发时机 | 说明 |\n|---|---|---|\n| `image_generation.partial_succeeded` | 任意图片生成成功 | 推送单张图片的生成结果 |\n| `image_generation.partial_failed` | 任意图片生成失败 | 推送失败原因 |\n| `image_generation.completed` | 全部图片处理完毕 | 推送用量信息，标记流结束 |\n| `error` | 请求发生错误 | 返回错误信息 |",
         "operationId": "seedreamStreaming",
         "tags": [
           "Seedream API Compat"
@@ -36,8 +36,7 @@
             "in": "header",
             "description": "客户端需设置此请求头为 `text/event-stream` 以接收 SSE 流。",
             "schema": {
-              "type": "string",
-              "example": "text/event-stream"
+              "type": "string"
             }
           }
         ],
@@ -53,52 +52,12 @@
         },
         "responses": {
           "200": {
-            "description": "SSE 流式响应。响应类型为 `text/event-stream`。包含以下事件：\n\n### image_generation.partial_succeeded\n\n在流式响应模式下，当任意图片生成成功时返回该事件。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `type` | string | 固定为 `image_generation.partial_succeeded` |\n| `model` | string | 本次请求使用的模型 ID，格式为 `<模型名称>-<版本>` |\n| `created` | integer | 本次请求创建时间的 Unix 时间戳（秒） |\n| `image_index` | integer | 本次事件对应图片在请求中的序号，从 `0` 开始累加 |\n| `url` | string | 图片下载 URL（当 `response_format` 为 `url` 时返回） |\n| `b64_json` | string | 图片 Base64 编码（当 `response_format` 为 `b64_json` 时返回） |\n| `size` | string | 图像宽高像素值，格式 `<宽像素>×<高像素>`，如 `2048×2048` |\n\n### image_generation.partial_failed\n\n在流式返回模式下，当任意图片生成失败时返回该事件。\n\n- 若失败原因为审核不通过：仍会继续请求下一个图片生成任务。\n- 若失败原因为内部服务异常（500）：不会继续请求下一个图片生成任务。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `type` | string | 固定为 `image_generation.partial_failed` |\n| `model` | string | 本次请求使用的模型 ID |\n| `created` | integer | 本次请求创建时间的 Unix 时间戳（秒） |\n| `image_index` | integer | 本次事件对应图片在请求中的序号，从 `0` 开始累加 |\n| `error` | object | 错误信息 |\n| `error.code` | string | 错误码 |\n| `error.message` | string | 错误提示信息 |\n\n### image_generation.completed\n\n请求的所有图片（无论成功或失败）均处理完毕后返回，是该流式返回的最后一个响应事件。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `type` | string | 固定为 `image_generation.completed` |\n| `model` | string | 本次请求使用的模型 ID |\n| `created` | integer | 本次请求创建时间的 Unix 时间戳（秒） |\n| `tools` | array of object | 本次请求配置的模型调用工具 |\n| `tools[].type` | string | 调用工具类型，如 `web_search` |\n| `usage` | object | 本次请求的用量信息 |\n| `usage.generated_images` | integer | 模型成功生成的图片张数（不含失败） |\n| `usage.output_tokens` | integer | 计算逻辑为 `sum(图片长*图片宽)/256` 取整 |\n| `usage.total_tokens` | integer | 与 `output_tokens` 值一致 |\n| `usage.tool_usage` | object | 使用工具的用量信息 |\n| `usage.tool_usage.web_search` | integer | 联网搜索调用次数 |\n\n### error\n\n本次请求如发生错误，返回的错误信息。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `error` | object | 错误信息 |\n| `error.code` | string | 错误码 |\n| `error.message` | string | 错误提示信息 |",
+            "description": "SSE 流式响应。响应类型为 `text/event-stream`。\n\n## image_generation.partial_succeeded\n\n在流式响应模式下，当任意图片生成成功时返回该事件。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `type` | string | 固定为 `image_generation.partial_succeeded` |\n| `model` | string | 本次请求使用的模型 ID，格式为 `<模型名称>-<版本>` |\n| `created` | integer | 本次请求创建时间的 Unix 时间戳（秒） |\n| `image_index` | integer | 本次事件对应图片在请求中的序号，从 `0` 开始累加，不管生图是否成功均自动累加 1 |\n| `url` | string | 本次事件对应图片的下载 URL。当请求中配置字段 `response_format` 为 `url` 时返回 |\n| `b64_json` | string | 本次事件对应图片的 Base64 编码。当请求中配置字段 `response_format` 为 `b64_json` 时返回 |\n| `size` | string | 图像的宽高像素值，格式 `<宽像素>×<高像素>`，如 `2048×2048` |\n\n## image_generation.partial_failed\n\n在流式返回模式下，当任意图片生成失败时返回该事件。\n\n- 若失败原因为审核不通过：仍会继续请求下一个图片生成任务，即不影响同请求内其他图片的生成流程。\n- 若失败原因为内部服务异常（500）：不会继续请求下一个图片生成任务。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `type` | string | 固定为 `image_generation.partial_failed` |\n| `model` | string | 本次请求使用的模型 ID，格式为 `<模型名称>-<版本>` |\n| `created` | integer | 本次请求创建时间的 Unix 时间戳（秒） |\n| `image_index` | integer | 本次事件对应图片在请求中的序号，从 `0` 开始累加，不管图片是否生成成功均自动累加 1 |\n| `error` | object | 本次事件对应的错误原因 |\n| `error.code` | string | 错误码 |\n| `error.message` | string | 错误提示信息 |\n\n## image_generation.completed\n\n请求的所有图片（无论成功或失败）均处理完毕后返回，是该流式返回的最后一个响应事件。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `type` | string | 固定为 `image_generation.completed` |\n| `model` | string | 本次请求使用的模型 ID，格式为 `<模型名称>-<版本>` |\n| `created` | integer | 本次请求创建时间的 Unix 时间戳（秒） |\n| `tools` | array of object | 本次请求配置的模型调用工具 |\n| `tools[].type` | string | 配置的调用工具类型。`web_search` 为联网搜索工具 |\n| `usage` | object | 本次请求的用量信息 |\n| `usage.generated_images` | integer | 模型成功生成的图片张数，不包含生成失败的图片。仅对成功生成图片按张数进行计费 |\n| `usage.output_tokens` | integer | 模型生成的图片花费的 token 数量。计算逻辑为 `sum(图片长*图片宽)/256` 取整 |\n| `usage.total_tokens` | integer | 本次请求消耗的总 token 数量。当前不计算输入 token，故与 `output_tokens` 值一致 |\n| `usage.tool_usage` | object | 使用工具的用量信息 |\n| `usage.tool_usage.web_search` | integer | 调用联网搜索工具次数，仅开启联网搜索时返回 |\n\n## error\n\n本次请求如发生错误，对应的错误信息。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `error` | object | 本次请求错误返回的错误信息 |\n| `error.code` | string | 错误码 |\n| `error.message` | string | 错误提示信息 |",
             "content": {
               "text/event-stream": {
                 "schema": {
                   "type": "string",
                   "description": "SSE 流式文本。每行以 `event:` 或 `data:` 开头，事件之间以空行分隔。"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "请求参数不合法。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "鉴权失败。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "速率限制或额度不足。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "服务端内部错误。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -230,7 +189,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "固定为 `image_generation.partial_succeeded`。",
+            "description": "此处应为 `image_generation.partial_succeeded`。",
             "enum": [
               "image_generation.partial_succeeded"
             ]
@@ -245,7 +204,7 @@
           },
           "image_index": {
             "type": "integer",
-            "description": "本次事件对应图片在请求中的序号。从 `0` 开始累加，不管生图是否成功。"
+            "description": "本次生图请求中，本次事件对应图片在请求中的序号。从 `0` 开始累加，不管生图是否成功，即在 `image_generation.partial_succeeded`、`image_generation.partial_failed` 事件，均会自动累加 1。"
           },
           "url": {
             "type": "string",
@@ -263,11 +222,11 @@
       },
       "PartialFailedEvent": {
         "type": "object",
-        "description": "在流式返回模式下，当任意图片生成失败时返回该事件。\n\n- 若失败原因为审核不通过：仍会继续请求下一个图片生成任务。\n- 若失败原因为内部服务异常（500）：不会继续请求下一个图片生成任务。",
+        "description": "在流式返回模式下，当任意图片生成失败时返回该事件。\n\n- 若失败原因为审核不通过：仍会继续请求下一个图片生成任务，即不影响同请求内其他图片的生成流程。\n- 若失败原因为内部服务异常（500）：不会继续请求下一个图片生成任务。",
         "properties": {
           "type": {
             "type": "string",
-            "description": "固定为 `image_generation.partial_failed`。",
+            "description": "此处应为 `image_generation.partial_failed`。",
             "enum": [
               "image_generation.partial_failed"
             ]
@@ -282,15 +241,15 @@
           },
           "image_index": {
             "type": "integer",
-            "description": "本次事件对应图片在请求中的序号。从 `0` 开始累加，不管图片是否生成成功。"
+            "description": "本次生图请求中，本次事件对应图片在请求中的序号。从 `0` 开始累加，不管图片是否生成成功，即在 `image_generation.partial_succeeded`、`image_generation.partial_failed` 事件，均会自动累加 1。"
           },
           "error": {
             "type": "object",
-            "description": "本次事件对应的错误原因。",
+            "description": "本次生图请求中，本次事件对应的错误原因。",
             "properties": {
               "code": {
                 "type": "string",
-                "description": "错误码。"
+                "description": "错误码。请参见错误码文档。"
               },
               "message": {
                 "type": "string",
@@ -306,7 +265,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "固定为 `image_generation.completed`。",
+            "description": "此处应为 `image_generation.completed`。",
             "enum": [
               "image_generation.completed"
             ]
@@ -327,7 +286,7 @@
               "properties": {
                 "type": {
                   "type": "string",
-                  "description": "配置的调用工具类型。如 `web_search` 为联网搜索工具。",
+                  "description": "配置的调用工具类型。`web_search` 为联网搜索工具。",
                   "enum": [
                     "web_search"
                   ]
@@ -367,15 +326,15 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "description": "本次请求如发生错误，返回的错误信息。",
+        "description": "本次请求如发生错误，对应的错误信息。",
         "properties": {
           "error": {
             "type": "object",
-            "description": "错误信息。",
+            "description": "本次请求错误返回的错误信息。",
             "properties": {
               "code": {
                 "type": "string",
-                "description": "错误码。"
+                "description": "错误码。请参见错误码文档。"
               },
               "message": {
                 "type": "string",
