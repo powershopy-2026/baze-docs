@@ -107,7 +107,7 @@
           },
           "resolution": {
             "type": "string",
-            "description": "视频分辨率。其可用值与模型相关：\n\n| Model | 6s | 10s |\n\n| :--- | :--- | :--- |\n\n| MiniMax-Hailuo-2.3 | `768P` (默认), `1080P` | `768P` (默认) |\n\n| MiniMax-Hailuo-2.3-Fast | `768P` (默认), `1080P` | `768P` (默认) |\n\n| MiniMax-Hailuo-02 | `512P`, `768P` (默认), `1080P` | `512P`, `768P`\n(默认) |",
+            "description": "视频分辨率。其可用值与模型相关：\n\n| Model | 6s | 10s |\n| :--- | :--- | :--- |\n| MiniMax-Hailuo-2.3 | `768P` (默认), `1080P` | `768P` (默认) |\n| MiniMax-Hailuo-2.3-Fast | `768P` (默认), `1080P` | `768P` (默认) |\n| MiniMax-Hailuo-02 | `512P`, `768P` (默认), `1080P` | `512P`, `768P` (默认) |",
             "enum": [
               "512P",
               "768P",
