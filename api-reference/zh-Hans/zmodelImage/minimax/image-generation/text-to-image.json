@@ -78,10 +78,9 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称。可选值：`image-01`，`image-01-live`",
+            "description": "模型名称。可选值：`image-01`",
             "enum": [
-              "image-01",
-              "image-01-live"
+              "image-01"
             ]
           },
           "prompt": {

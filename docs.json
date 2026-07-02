@@ -182,7 +182,6 @@
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/text-to-video",
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/image-to-video",
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/first-last-frame-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/subject-reference-to-video",
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/query-video-task",
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/download-video-file"
                         ]
@@ -205,7 +204,6 @@
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-i2v",
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-t2v",
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-r2v",
-                          "zh-Hans/zmodelVideo/ali/api/legacy-i2v-first-frame",
                           "zh-Hans/zmodelVideo/ali/api/legacy-i2v-first-last-frame"
                         ]
                       }
@@ -528,7 +526,6 @@
                           "en/zmodelVideo/ali/api/wan2.7-i2v",
                           "en/zmodelVideo/ali/api/wan2.7-t2v",
                           "en/zmodelVideo/ali/api/wan2.7-r2v",
-                          "en/zmodelVideo/ali/api/legacy-i2v-first-frame",
                           "en/zmodelVideo/ali/api/legacy-i2v-first-last-frame"
                         ]
                       }
