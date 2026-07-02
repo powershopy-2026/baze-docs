@@ -109,7 +109,7 @@
           "download_url": {
             "type": "string",
             "format": "url",
-            "description": "文件下载的url地址，有效期1小时"
+            "description": "文件下载的url地址，有效期14天"
           }
         }
       },
@@ -118,7 +118,7 @@
         "properties": {
           "status_code": {
             "type": "integer",
-            "description": "状态码如下：\n- 1000, 未知错误\n- 1001, 超时\n- 1002, 触发RPM限流\n- 1004, 鉴权失败\n- 1008, 余额不足\n- 1013, 服务内部错误\n- 1026, 输入内容错误\n- 1027, 输出内容错误\n- 1039, 触发TPM限流\n- 2013, 输入格式信息不正常\n\n更多内容可查看[错误码查询列表](/api-reference/errorcode)了解详情"
+            "description": "状态码如下：\n- 1000, 未知错误\n- 1001, 超时\n- 1002, 触发RPM限流\n- 1004, 鉴权失败\n- 1008, 余额不足\n- 1013, 服务内部错误\n- 1026, 输入内容错误\n- 1027, 输出内容错误\n- 1039, 触发TPM限流\n- 2013, 输入格式信息不正常\n\n"
           },
           "status_msg": {
             "type": "string",
@@ -132,7 +132,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "`HTTP: Bearer Auth`\n - Security Scheme Type: http\n - HTTP Authorization Scheme: Bearer API_key，用于验证账户信息，可在 [账户管理>接口密钥](https://platform.minimaxi.com/user-center/basic-information/interface-key) 中查看。"
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     }
   }
