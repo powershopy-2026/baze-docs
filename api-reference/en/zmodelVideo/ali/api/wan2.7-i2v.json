@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan 2.7 Image to Video",
     "version": "1.0.0",
-    "description": "Aliyun Wan `wan2.7-i2v-2026-04-25` image-to-video capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/video-generation/video-synthesis`, used to create asynchronous video generation tasks.",
+    "description": "Aliyun Wan `wan2.7-i2v` image-to-video capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/video-generation/video-synthesis`, used to create asynchronous video generation tasks.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/ali/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
         "summary": "Create wan2.7-i2v image-to-video task",
-        "description": "Submit an asynchronous Ali `wan2.7-i2v-2026-04-25` image-to-video task. Specify the first frame image, last frame image, driving audio, or first video clip via `input.media`.\n\nAfter submitting a task, query its status via `GET /ali/api/v1/tasks/{task_id}`.",
+        "description": "Submit an asynchronous Ali `wan2.7-i2v` image-to-video task. Specify the first frame image, last frame image, driving audio, or first video clip via `input.media`.\n\nAfter submitting a task, query its status via `GET /ali/api/v1/tasks/{task_id}`.",
         "operationId": "aliWan27I2VCreate",
         "tags": [
           "Wan 2.7 Video"
@@ -41,7 +41,7 @@
                 "first_frame_only": {
                   "summary": "First frame image only",
                   "value": {
-                    "model": "wan2.7-i2v-2026-04-25",
+                    "model": "wan2.7-i2v",
                     "input": {
                       "prompt": "A cat starts walking from rest, the scene is full of energy.",
                       "media": [
@@ -62,7 +62,7 @@
                 "first_frame_with_audio": {
                   "summary": "First frame + driving audio",
                   "value": {
-                    "model": "wan2.7-i2v-2026-04-25",
+                    "model": "wan2.7-i2v",
                     "input": {
                       "prompt": "A person gradually starts speaking naturally from a static portrait.",
                       "negative_prompt": "blurry, low quality",
@@ -226,9 +226,9 @@
           "model": {
             "type": "string",
             "enum": [
-              "wan2.7-i2v-2026-04-25"
+              "wan2.7-i2v"
             ],
-            "description": "Model name. Currently supports `wan2.7-i2v-2026-04-25`."
+            "description": "Model name. Currently supports `wan2.7-i2v`."
           },
           "input": {
             "$ref": "#/components/schemas/Wan27I2VInput"
