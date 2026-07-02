@@ -89,10 +89,15 @@
                   "summary": "seedream-5.0-流式输出",
                   "value": {
                     "model": "seedream-5-0-260128",
-                    "prompt": "一只可爱的猫咪在花园里玩耍，阳光明媚，色彩鲜艳",
-                    "size": "2048x2048",
+                    "prompt": "参考图1，生成四图片，图中人物分别带着墨镜，骑着摩托，带着帽子，拿着棒糖",
+                    "image": "https://ark-project.tos-cn-beijing.volces.com/doc_image/seedream4_imageToimages_1.png",
+                    "sequential_image_generation": "auto",
+                    "sequential_image_generation_options": {
+                      "max_images": 4
+                    },
+                    "size": "2K",
                     "stream": true,
-                    "response_format": "url",
+                    "output_format": "png",
                     "watermark": false
                   }
                 },
@@ -177,6 +182,18 @@
                         "total_tokens": 0
                       }
                     }
+                  }
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "当 `stream` 为 `true` 时，响应类型为 `text/event-stream`，通过 SSE 协议实时推送事件。每行以 `event:` 或 `data:` 开头，事件之间以空行分隔。"
+                },
+                "examples": {
+                  "seedream-5.0-流式输出": {
+                    "summary": "seedream-5.0-流式输出",
+                    "value": "event: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396757,\"image_index\":0,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396785,\"image_index\":1,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396825,\"image_index\":2,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.completed\ndata: {\"type\":\"image_generation.completed\",\"model\":\"seedream-5-0-260128\",\"created\":1757396825,\"usage\":{\"generated_images\":3,\"output_tokens\":48672,\"total_tokens\":48672}}\n\ndata: [DONE]\n"
                   }
                 }
               }
