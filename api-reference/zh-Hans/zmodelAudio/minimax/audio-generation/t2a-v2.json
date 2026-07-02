@@ -275,7 +275,7 @@
           },
           "text": {
             "type": "string",
-            "description": "需要合成语音的文本，长度限制小于 10000 字符，若文本长度大于 3000 字符，推荐使用流式输出\n\n- 段落切换用换行符标记\n\n- 停顿控制：支持自定义文本之间的语音时间间隔，以实现自定义文本语音停顿时间的效果。使用方式：在文本中增加`<#x#>`标记，`x`\n为停顿时长（单位：秒），范围 [0.01,\n99.99]，最多保留两位小数。文本间隔时间需设置在两个可以语音发音的文本之间，不可连续使用多个停顿标记\n\n- 行内发音替换：将普通话拼音（带声调数字 `1–5`）或 IPA 音标或粤语拼音（带声调数字\n`1–6`）用英文小括号包裹，可临时覆盖有问题的单词或者多音汉字的发音。\n  - `\"The word live is pronounced (lɪv) as a verb and (laɪv) as an adjective.\"`\n  - `\"This is (he2)平, not (huo4)面.\"`\n  - `\"去街市買啲(sung3)。\"`\n- 语气词标签：仅当模型选择 `speech-2.8-hd` 或 `speech-2.8-turbo`\n时，支持在文本中插入语气词标签。支持的语气词：`(laughs)`（笑声）、`(chuckle)`（轻笑）、`(coughs)`（咳嗽）、`(clear-throat)`（清嗓子）、`(groans)`（呻吟）、`(breath)`（正常换气）、`(pant)`（喘气）、`(inhale)`（吸气）、`(exhale)`（呼气）、`(gasps)`（倒吸气）、`(sniffs)`（吸鼻子）、`(sighs)`（叹气）、`(snorts)`（喷鼻息）、`(burps)`（打嗝）、`(lip-smacking)`（咂嘴）、`(humming)`（哼唱）、`(hissing)`（嘶嘶声）、`(emm)`（嗯）、`(sneezes)`（喷嚏）"
+            "description": "需要合成语音的文本，长度限制小于 10000 字符，若文本长度大于 3000 字符，推荐使用流式输出\n\n- 段落切换用换行符标记\n\n- 停顿控制：支持自定义文本之间的语音时间间隔，以实现自定义文本语音停顿时间的效果。使用方式：在文本中增加`<#x#>`标记，`x`\n为停顿时长（单位：秒），范围 [0.01, 99.99]，最多保留两位小数。文本间隔时间需设置在两个可以语音发音的文本之间，不可连续使用多个停顿标记\n\n- 行内发音替换：将普通话拼音（带声调数字 `1–5`）或 IPA 音标或粤语拼音（带声调数字 `1–6`）用英文小括号包裹，可临时覆盖有问题的单词或者多音汉字的发音。\n  - `\"The word live is pronounced (lɪv) as a verb and (laɪv) as an adjective.\"`\n  - `\"This is (he2)平, not (huo4)面.\"`\n  - `\"去街市買啲(sung3)。\"`\n- 语气词标签：仅当模型选择 `speech-2.8-hd` 或 `speech-2.8-turbo` 时，支持在文本中插入语气词标签。支持的语气词：`(laughs)`（笑声）、`(chuckle)`（轻笑）、`(coughs)`（咳嗽）、`(clear-throat)`（清嗓子）、`(groans)`（呻吟）、`(breath)`（正常换气）、`(pant)`（喘气）、`(inhale)`（吸气）、`(exhale)`（呼气）、`(gasps)`（倒吸气）、`(sniffs)`（吸鼻子）、`(sighs)`（叹气）、`(snorts)`（喷鼻息）、`(burps)`（打嗝）、`(lip-smacking)`（咂嘴）、`(humming)`（哼唱）、`(hissing)`（嘶嘶声）、`(emm)`（嗯）、`(sneezes)`（喷嚏）"
           },
           "stream": {
             "type": "boolean",
@@ -468,7 +468,7 @@
               "status_code": {
                 "type": "integer",
                 "format": "int64",
-                "description": "状态码。\n\n 您可在header中获取本次会话的trace_id，用于在咨询/反馈时帮助定位问题 \n\n- `0`: 请求结果正常\n- `1000`: 未知错误\n- `1001`: 超时\n- `1002`: 触发限流\n- `1004`: 鉴权失败\n- `1039`: 触发 TPM 限流\n- `1042`: 非法字符超过 10%\n- `2013`: 输入参数信息不正常\n\n更多内容可查看 [错误码查询列表](/api-reference/errorcode) 了解详情"
+                "description": "状态码。\n\n 您可在header中获取本次会话的trace_id，用于在咨询/反馈时帮助定位问题 \n\n- `0`: 请求结果正常\n- `1000`: 未知错误\n- `1001`: 超时\n- `1002`: 触发限流\n- `1004`: 鉴权失败\n- `1039`: 触发 TPM 限流\n- `1042`: 非法字符超过 10%\n- `2013`: 输入参数信息不正常\n\n"
               },
               "status_msg": {
                 "type": "string",
@@ -495,7 +495,7 @@
         "properties": {
           "voice_id": {
             "type": "string",
-            "description": "合成音频的音色编号。若需要设置混合音色，请设置 timbre_weights 参数，本参数设置为空值。支持系统音色、复刻音色以及文生音色三种类型，以下是部分最新的系统音色（ID），可查看 [系统音色列表](/faq/system-voice-id) 或使用 [查询可用音色 API](/api-reference/voice-management-get) 查询系统支持的全部音色\n\n - **中文**:\n\t- moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\n\t- moss_audio_aaa1346a-7ce7-11f0-8e61-2e6e3c7ee85d\n\t- Chinese (Mandarin)_Lyrical_Voice\n\t- Chinese (Mandarin)_HK_Flight_Attendant\n- **英文**:\n\t- English_Graceful_Lady\n\t- English_Insightful_Speaker\n\t- English_radiant_girl\n\t- English_Persuasive_Man\n\t- moss_audio_6dc281eb-713c-11f0-a447-9613c873494c\n\t- moss_audio_570551b1-735c-11f0-b236-0adeeecad052\n\t- moss_audio_ad5baf92-735f-11f0-8263-fe5a2fe98ec8\n\t- English_Lucky_Robot\n- **日文**:\n\t- Japanese_Whisper_Belle\n\t- moss_audio_24875c4a-7be4-11f0-9359-4e72c55db738\n\t- moss_audio_7f4ee608-78ea-11f0-bb73-1e2a4cfcd245\n\t- moss_audio_c1a6a3ac-7be6-11f0-8e8e-36b92fbb4f95\n- **粤语**（需将 `language_boost` 参数设置为 `Chinese,Yue`）:\n\t- Cantonese_GentleLady\n\t- Cantonese_podacast_host_1"
+            "description": "合成音频的音色编号。若需要设置混合音色，请设置 timbre_weights 参数，本参数设置为空值。支持系统音色、复刻音色以及文生音色三种类型，以下是部分最新的系统音色（ID）\n\n - **中文**:\n\t- moss_audio_ce44fc67-7ce3-11f0-8de5-96e35d26fb85\n\t- moss_audio_aaa1346a-7ce7-11f0-8e61-2e6e3c7ee85d\n\t- Chinese (Mandarin)_Lyrical_Voice\n\t- Chinese (Mandarin)_HK_Flight_Attendant\n- **英文**:\n\t- English_Graceful_Lady\n\t- English_Insightful_Speaker\n\t- English_radiant_girl\n\t- English_Persuasive_Man\n\t- moss_audio_6dc281eb-713c-11f0-a447-9613c873494c\n\t- moss_audio_570551b1-735c-11f0-b236-0adeeecad052\n\t- moss_audio_ad5baf92-735f-11f0-8263-fe5a2fe98ec8\n\t- English_Lucky_Robot\n- **日文**:\n\t- Japanese_Whisper_Belle\n\t- moss_audio_24875c4a-7be4-11f0-9359-4e72c55db738\n\t- moss_audio_7f4ee608-78ea-11f0-bb73-1e2a4cfcd245\n\t- moss_audio_c1a6a3ac-7be6-11f0-8e8e-36b92fbb4f95\n- **粤语**（需将 `language_boost` 参数设置为 `Chinese,Yue`）:\n\t- Cantonese_GentleLady\n\t- Cantonese_podacast_host_1"
           },
           "speed": {
             "type": "number",
@@ -608,7 +608,7 @@
         "properties": {
           "voice_id": {
             "type": "string",
-            "description": "合成音频的音色编号，须和weight参数同步填写。支持系统音色、复刻音色以及文生音色三种类型。系统支持的全部音色可查看\n[系统音色列表](/faq/system-voice-id)，也可使用 [查询可用音色\nAPI](/api-reference/voice-management-get) 查询系统支持的全部音色"
+            "description": "合成音频的音色编号，须和weight参数同步填写。支持系统音色、复刻音色以及文生音色三种类型。"
           },
           "weight": {
             "type": "integer",
@@ -659,7 +659,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "`HTTP: Bearer Auth`\n - Security Scheme Type: http\n - HTTP Authorization Scheme: Bearer API_key，用于验证账户信息，可在 [账户管理>接口密钥](https://platform.minimaxi.com/user-center/basic-information/interface-key) 中查看。"
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     }
   }
