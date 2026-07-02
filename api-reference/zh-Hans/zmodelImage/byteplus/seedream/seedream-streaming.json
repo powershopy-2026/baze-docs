@@ -30,6 +30,34 @@
         "tags": [
           "Seedream API Compat"
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StreamingRequest"
+              },
+              "examples": {
+                "seedream-5.0-流式输出": {
+                  "summary": "seedream-5.0-流式输出",
+                  "value": {
+                    "model": "seedream-5-0-260128",
+                    "prompt": "参考图1，生成四图片，图中人物分别带着墨镜，骑着摩托，带着帽子，拿着棒糖",
+                    "image": "https://ark-project.tos-cn-beijing.volces.com/doc_image/seedream4_imageToimages_1.png",
+                    "sequential_image_generation": "auto",
+                    "sequential_image_generation_options": {
+                      "max_images": 4
+                    },
+                    "size": "2K",
+                    "stream": true,
+                    "output_format": "png",
+                    "watermark": false
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "SSE 流式响应。响应类型为 `text/event-stream`。\n\n## image_generation.partial_succeeded\n\n> 当前仅 seedream-5-0-lite/4.5/4.0 支持流式响应。\n\n在流式响应模式下，当任意图片生成成功时返回该事件。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `type` | string | 此处应为 `image_generation.partial_succeeded` |\n| `model` | string | 本次请求使用的模型 ID，格式为 `<模型名称>-<版本>` |\n| `created` | integer | 本次请求创建时间的 Unix 时间戳（秒） |\n| `image_index` | integer | 本次生图请求中，本次事件对应图片在请求中的序号。从 `0` 开始累加，不管生图是否成功，即在 `image_generation.partial_succeeded`、`image_generation.partial_failed` 事件，均会自动累加 1 |\n| `url` | string | 本次事件对应图片的下载 URL。当请求中配置字段 `response_format` 为 `url` 时返回 |\n| `b64_json` | string | 本次事件对应图片的 Base64 编码。当请求中配置字段 `response_format` 为 `b64_json` 时返回 |\n| `size` | string | 图像的宽高像素值，格式 `<宽像素>×<高像素>`，如 `2048×2048` |\n\n## image_generation.partial_failed\n\n> 当前仅 seedream-5-0-lite/4.5/4.0 支持流式响应。\n\n在流式返回模式下，当任意图片生成失败时返回该事件。\n\n- 若失败原因为审核不通过：仍会继续请求下一个图片生成任务，即不影响同请求内其他图片的生成流程。\n- 若失败原因为内部服务异常（500）：不会继续请求下一个图片生成任务。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `type` | string | 此处应为 `image_generation.partial_failed` |\n| `model` | string | 本次请求使用的模型 ID，格式为 `<模型名称>-<版本>` |\n| `created` | integer | 本次请求创建时间的 Unix 时间戳（秒） |\n| `image_index` | integer | 本次生图请求中，本次事件对应图片在请求中的序号。从 `0` 开始累加，不管图片是否生成成功，即在 `image_generation.partial_succeeded`、`image_generation.partial_failed` 事件，均会自动累加 1 |\n| `error` | object | 本次生图请求中，本次事件对应的错误原因 |\n| `error.code` | string | 错误码 |\n| `error.message` | string | 错误提示信息 |\n\n## image_generation.completed\n\n> 当前仅 seedream-5-0-lite/4.5/4.0 支持流式响应。\n\n请求的所有图片（无论成功或失败）均处理完毕后返回，是该流式返回的最后一个响应事件。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `type` | string | 此处应为 `image_generation.completed` |\n| `model` | string | 本次请求使用的模型 ID，格式为 `<模型名称>-<版本>` |\n| `created` | integer | 本次请求创建时间的 Unix 时间戳（秒） |\n| `tools` | array of object | 本次请求配置的模型调用工具 |\n| `tools[].type` | string | 配置的调用工具类型。`web_search` 为联网搜索工具 |\n| `usage` | object | 本次请求的用量信息 |\n| `usage.generated_images` | integer | 模型成功生成的图片张数，不包含生成失败的图片。仅对成功生成图片按张数进行计费 |\n| `usage.output_tokens` | integer | 模型生成的图片花费的 token 数量。计算逻辑为 `sum(图片长*图片宽)/256` 取整 |\n| `usage.total_tokens` | integer | 本次请求消耗的总 token 数量。当前不计算输入 token，故与 `output_tokens` 值一致 |\n| `usage.tool_usage` | object | 使用工具的用量信息 |\n| `usage.tool_usage.web_search` | integer | 调用联网搜索工具次数，仅开启联网搜索时返回 |\n\n## error\n\n本次请求如发生错误，对应的错误信息。\n\n| 字段 | 类型 | 说明 |\n|---|---|---|\n| `error` | object | 本次请求错误返回的错误信息 |\n| `error.code` | string | 错误码 |\n| `error.message` | string | 错误提示信息 |",
@@ -38,6 +66,12 @@
                 "schema": {
                   "type": "string",
                   "description": "SSE 流式文本。每行以 `event:` 或 `data:` 开头，事件之间以空行分隔。"
+                },
+                "examples": {
+                  "seedream-5.0-流式输出": {
+                    "summary": "seedream-5.0-流式输出",
+                    "value": "event: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396757,\"image_index\":0,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396785,\"image_index\":1,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396825,\"image_index\":2,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.completed\ndata: {\"type\":\"image_generation.completed\",\"model\":\"seedream-5-0-260128\",\"created\":1757396825,\"usage\":{\"generated_images\":3,\"output_tokens\":48672,\"total_tokens\":48672}}\n\ndata: [DONE]\n"
+                  }
                 }
               }
             }
@@ -48,6 +82,67 @@
   },
   "components": {
     "schemas": {
+      "StreamingRequest": {
+        "type": "object",
+        "required": ["model", "prompt", "stream"],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": ["seedream-5-0-260128", "seedream-4-5-251128", "seedream-4-0-250828"],
+            "description": "图像生成模型 ID。仅 `seedream-5-0-lite`、`seedream-4-5`、`seedream-4-0` 支持流式输出。"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "图像生成的文本提示词。"
+          },
+          "image": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "array", "items": { "type": "string" }, "maxItems": 14 }
+            ],
+            "description": "参考图像（可选），支持 URL 或 Base64 编码。"
+          },
+          "size": {
+            "type": "string",
+            "description": "输出尺寸。",
+            "default": "2048x2048"
+          },
+          "sequential_image_generation": {
+            "type": "string",
+            "enum": ["auto", "disabled"],
+            "default": "disabled"
+          },
+          "sequential_image_generation_options": {
+            "type": "object",
+            "properties": {
+              "max_images": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 15
+              }
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "enum": [true],
+            "description": "流式输出开关，必须设为 `true`。"
+          },
+          "output_format": {
+            "type": "string",
+            "enum": ["jpeg", "png"],
+            "default": "jpeg"
+          },
+          "response_format": {
+            "type": "string",
+            "enum": ["url", "b64_json"],
+            "default": "url"
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
       "PartialSucceededEvent": {
         "type": "object",
         "description": "在流式响应模式下，当任意图片生成成功时返回该事件。",
