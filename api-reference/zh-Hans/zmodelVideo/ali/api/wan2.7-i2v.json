@@ -3,7 +3,7 @@
   "info": {
     "title": "万相2.7-图生视频",
     "version": "1.0.0",
-    "description": "阿里云万相 `wan2.7-i2v` 图生视频能力文档。统一公开入口为 `/ali/api/v1/services/aigc/video-generation/video-synthesis`，用于创建异步视频生成任务。",
+    "description": "阿里云万相 `wan2.7-i2v` 图生视频能力文档。平台统一接口端点为 `/ali/api/v1/services/aigc/video-generation/video-synthesis`，用于创建异步视频生成任务。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -12,20 +12,20 @@
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Baze API 服务地址"
+      "description": "baze平台 API 服务端点"
     }
   ],
   "tags": [
     {
       "name": "Wan 2.7 Video",
-      "description": "Ali wan2.7-i2v 图生视频能力"
+      "description": "阿里云万相 wan2.7-i2v 图生视频能力"
     }
   ],
   "paths": {
     "/ali/api/v1/services/aigc/video-generation/video-synthesis": {
       "post": {
         "summary": "创建 wan2.7-i2v 图生视频任务",
-        "description": "提交一个异步的 Ali `wan2.7-i2v` 图生视频任务。通过 `input.media` 指定首帧图像、尾帧图像、驱动音频或首帧视频片段。\n\n提交任务后，请通过 `GET /ali/api/v1/tasks/{task_id}` 查询任务状态。",
+        "description": "提交一个异步的阿里云万相 `wan2.7-i2v` 图生视频任务。通过 `input.media` 指定首帧图像、尾帧图像、驱动音频或首帧视频片段。\n\n提交任务后，请通过 `GET /ali/api/v1/tasks/{task_id}` 查询任务状态。",
         "operationId": "aliWan27I2VCreate",
         "tags": [
           "Wan 2.7 Video"
@@ -38,49 +38,28 @@
                 "$ref": "#/components/schemas/Wan27I2VRequest"
               },
               "examples": {
-                "first_frame_only": {
-                  "summary": "仅使用首帧图像",
-                  "value": {
-                    "model": "wan2.7-i2v",
-                    "input": {
-                      "prompt": "一只猫从静止逐渐开始走动，画面充满活力。",
-                      "media": [
-                        {
-                          "type": "first_frame",
-                          "url": "https://example.com/assets/cat.png"
-                        }
-                      ]
-                    },
-                    "parameters": {
-                      "resolution": "1080P",
-                      "duration": 5,
-                      "prompt_extend": true,
-                      "watermark": false
-                    }
-                  }
-                },
                 "first_frame_with_audio": {
-                  "summary": "使用首帧 + 驱动音频",
+                  "summary": "首帧 + 驱动音频",
                   "value": {
                     "model": "wan2.7-i2v",
                     "input": {
-                      "prompt": "人物从静态肖像逐渐开始自然开口说话。",
-                      "negative_prompt": "模糊，低质量",
+                      "prompt": "一幅都市奇幻艺术的场景。一个充满动感的涂鸦艺术角色。一个由喷漆所画成的少年，正从一面混凝土墙上活过来。他一边用极快的语速演唱一首英文rap，一边摆着一个经典的、充满活力的说唱歌手姿势。场景设定在夜晚一个充满都市感的铁路桥下。灯光来自一盏孤零零的街灯，营造出电影般的氛围，充满高能量和惊人的细节。视频的音频部分完全由rap构成，没有其他对话或杂音。",
                       "media": [
                         {
                           "type": "first_frame",
-                          "url": "https://example.com/assets/portrait.png"
+                          "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/wpimhv/rap.png"
                         },
                         {
                           "type": "driving_audio",
-                          "url": "https://example.com/assets/voice.mp3"
+                          "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/ozwpvi/rap.mp3"
                         }
                       ]
                     },
                     "parameters": {
                       "resolution": "720P",
-                      "duration": 8,
-                      "seed": 42
+                      "duration": 10,
+                      "prompt_extend": true,
+                      "watermark": true
                     }
                   }
                 }
@@ -95,6 +74,13 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/VideoTaskResponse"
+                },
+                "example": {
+                  "output": {
+                    "task_status": "PENDING",
+                    "task_id": "0385dc79-5ff8-4d82-bcb6-xxxxxx"
+                  },
+                  "request_id": "4909100c-7b5a-9f92-bfe5-xxxxxx"
                 }
               }
             }
@@ -228,7 +214,7 @@
             "enum": [
               "wan2.7-i2v"
             ],
-            "description": "模型名称。当前支持 `wan2.7-i2v`。"
+            "description": "模型名称。可选值：`wan2.7-i2v`。模型列表与价格详见模型价格。"
           },
           "input": {
             "$ref": "#/components/schemas/Wan27I2VInput"
@@ -246,17 +232,17 @@
         "properties": {
           "prompt": {
             "type": "string",
-            "description": "提示词，描述期望的视频内容。长度不超过 5000 个字符。",
+            "description": "文本提示词。用来描述生成视频中期望包含的元素和视觉特点。支持中英文，长度不超过5000个字符。每个汉字/字母占一个字符，超过部分会自动截断。提示词使用技巧详见文生视频/图生视频Prompt指南。",
             "maxLength": 5000
           },
           "negative_prompt": {
             "type": "string",
-            "description": "反向提示词，描述不希望在视频中看到的内容。长度不超过 500 个字符。",
+            "description": "反向提示词，用来描述不希望在视频画面中看到的内容，可以对视频画面进行限制。支持中英文，长度不超过500个字符，超过部分会自动截断。示例值：低分辨率、错误、最差质量、低质量、残缺、多余的手指、比例不良等。",
             "maxLength": 500
           },
           "media": {
             "type": "array",
-            "description": "媒体素材列表。",
+            "description": "媒体素材列表，用于指定视频生成所需的参考素材（图像、音频和视频）。数组的每个元素为一个媒体对象，包含 type 与 url 字段。\n\n素材组合（仅支持以下特定的组合，非法组合将报错）：\n- **首帧生视频**：`first_frame`\n- **首帧+音频**：`first_frame` + `driving_audio`\n- **首尾帧生视频**：`first_frame` + `last_frame`\n- **首尾帧+音频**：`first_frame` + `last_frame` + `driving_audio`\n- **视频续写**：`first_clip`\n- **首段视频+尾帧续写**：`first_clip` + `last_frame`\n\n每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_frame）。",
             "items": {
               "$ref": "#/components/schemas/Wan27I2VMedia"
             }
@@ -278,11 +264,11 @@
               "driving_audio",
               "first_clip"
             ],
-            "description": "媒体素材类型。`first_frame` 首帧图像、`last_frame` 尾帧图像、`driving_audio` 驱动音频、`first_clip` 首帧视频片段。"
+            "description": "媒体素材类型。可选值为：\n- `first_frame`：首帧。\n- `last_frame`：尾帧。\n- `driving_audio`：驱动音频。\n- `first_clip`：首视频片段。\n\n使用限制：每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_frame）。"
           },
           "url": {
             "type": "string",
-            "description": "公网可访问的素材 URL。"
+            "description": "媒体素材URL。素材包括图像、音频和视频。\n\n**传入图像（type=first_frame 或 last_frame）**：首帧或尾帧URL，或 Base64 编码数据。\n- 格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为 [240, 8000] 像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n- 支持的输入格式：\n  - 公网URL：HTTP 或 HTTPS 协议，例如 `https://xxx/xxx.png`。\n  - 临时URL：支持OSS协议，例如 `oss://dashscope-instant/xxx/xxx.png`。\n  - Base64：`data:{MIME_type};base64,{base64_data}`，例如 `data:image/png;base64,...`。\n\n**传入音频（type=driving_audio）**：音频文件的 URL。\n- 传入音频时：模型将以该音频为驱动源生成视频（如口型同步、动作卡点等）。\n- 未传入音频时：模型将根据视频画面内容，自动生成匹配的背景音乐或音效。\n- 格式：wav、mp3。\n- 时长：2～30s。\n- 文件大小：不超过15MB。\n- 截断处理：若音频长度超过 duration 值（如5秒），自动截取前5秒，其余部分丢弃。若音频长度不足视频时长，超出音频长度部分为无声视频。例如，音频为3秒，视频时长为5秒，输出视频前3秒有声，后2秒无声。\n- 支持的输入格式：\n  - 公网URL：HTTP 和 HTTPS 协议，例如 `https://xxx/xxx.mp3`。\n  - 临时URL：支持OSS协议，例如 `oss://dashscope-instant/xxx/xxx.mp3`。\n\n**传入视频（type=first_clip）**：视频文件的 URL。模型将基于该视频内容进行续写生成，续写时长的上限由 duration 参数控制。\n- 示例：当 duration=15 时，输入视频 3 秒，则模型续写生成 12 秒，最终输出视频总时长 15 秒，按 15 秒计费。\n- 格式：mp4、mov。\n- 时长：2～10s。\n- 分辨率：宽和高的范围为 [240, 4096] 像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过100MB。\n- 支持的输入格式：\n  - 公网URL：HTTP 和 HTTPS 协议，例如 `https://xxx/xxx.mp4`。\n  - 临时URL：支持OSS协议，例如 `oss://dashscope-instant/xxx/xxx.mp4`。"
           }
         }
       },
@@ -295,29 +281,29 @@
               "720P",
               "1080P"
             ],
-            "description": "输出视频分辨率。默认 `1080P`。",
+            "description": "重要：resolution 直接影响费用，请在调用前确认模型价格。\n\n指定生成的视频分辨率档位，用于控制视频的清晰度（总像素）。模型根据选择的分辨率档位，自动缩放至相近总像素。视频宽高比尽量与输入素材（首帧或首段视频）保持一致。\n\n可选值：\n- `720P`\n- `1080P`（默认值）",
             "default": "1080P"
           },
           "duration": {
             "type": "integer",
-            "description": "视频时长（秒），取值范围 [2, 15]，默认 5。",
+            "description": "重要：duration 直接影响费用，按秒计费，请在调用前确认模型价格。\n\n生成视频的时长，单位为秒。取值为 [2, 15] 之间的整数。默认值为5。",
             "minimum": 2,
             "maximum": 15,
             "default": 5
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "是否开启提示词智能改写。默认 true。",
+            "description": "是否开启 prompt 智能改写。开启后使用大模型对输入 prompt 进行智能改写。对于较短的 prompt 生成效果提升明显，但会增加耗时。`true`（默认值）：开启智能改写。`false`：不开启智能改写。",
             "default": true
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否在视频中添加水印。默认 false。",
+            "description": "是否添加水印标识，水印位于视频右下角，文案固定为 \"AI生成\"。`false`（默认值）：不添加水印。`true`：添加水印。",
             "default": false
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子，取值范围 [0, 2147483647]。",
+            "description": "随机数种子，取值范围为 [0, 2147483647]。未指定时，系统自动生成随机种子。若需提升生成结果的可复现性，建议固定 seed 值。请注意，由于模型生成具有概率性，即使使用相同 seed，也不能保证每次生成结果完全一致。",
             "minimum": 0,
             "maximum": 2147483647
           }
@@ -331,20 +317,31 @@
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "视频生成任务 ID。"
+                "description": "任务ID。查询有效期24小时。"
               },
               "task_status": {
                 "type": "string",
                 "enum": [
                   "PENDING"
                 ],
-                "description": "任务状态，提交后返回 PENDING。"
+                "description": "任务状态，提交后返回 PENDING。",
+                "x-enum-descriptions": {
+                  "PENDING": "任务排队中"
+                }
               }
             }
           },
           "request_id": {
             "type": "string",
-            "description": "请求 ID。"
+            "description": "请求唯一标识。可用于请求明细溯源和问题排查。"
+          },
+          "code": {
+            "type": "string",
+            "description": "请求失败的错误码。请求成功时不会返回此参数。"
+          },
+          "message": {
+            "type": "string",
+            "description": "请求失败的详细信息。请求成功时不会返回此参数。"
           }
         }
       },
@@ -364,9 +361,19 @@
                   "PENDING",
                   "RUNNING",
                   "SUCCEEDED",
-                  "FAILED"
+                  "FAILED",
+                  "CANCELED",
+                  "UNKNOWN"
                 ],
-                "description": "任务状态。"
+                "description": "任务状态。\n- `PENDING`：任务排队中\n- `RUNNING`：任务处理中\n- `SUCCEEDED`：任务执行成功\n- `FAILED`：任务执行失败\n- `CANCELED`：任务已取消\n- `UNKNOWN`：任务不存在或状态未知",
+                "x-enum-descriptions": {
+                  "PENDING": "任务排队中",
+                  "RUNNING": "任务处理中",
+                  "SUCCEEDED": "任务执行成功",
+                  "FAILED": "任务执行失败",
+                  "CANCELED": "任务已取消",
+                  "UNKNOWN": "任务不存在或状态未知"
+                }
               },
               "video_url": {
                 "type": "string",
@@ -418,6 +425,14 @@
           "request_id": {
             "type": "string",
             "description": "请求 ID。"
+          },
+          "code": {
+            "type": "string",
+            "description": "请求失败的错误码。请求成功时不会返回此参数。"
+          },
+          "message": {
+            "type": "string",
+            "description": "请求失败的详细信息。请求成功时不会返回此参数。"
           }
         }
       },
