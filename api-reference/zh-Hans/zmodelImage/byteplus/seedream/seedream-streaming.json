@@ -82,67 +82,6 @@
   },
   "components": {
     "schemas": {
-      "StreamingRequest": {
-        "type": "object",
-        "required": ["model", "prompt", "stream"],
-        "properties": {
-          "model": {
-            "type": "string",
-            "enum": ["seedream-5-0-260128", "seedream-4-5-251128", "seedream-4-0-250828"],
-            "description": "图像生成模型 ID。仅 `seedream-5-0-lite`、`seedream-4-5`、`seedream-4-0` 支持流式输出。"
-          },
-          "prompt": {
-            "type": "string",
-            "description": "图像生成的文本提示词。"
-          },
-          "image": {
-            "oneOf": [
-              { "type": "string" },
-              { "type": "array", "items": { "type": "string" }, "maxItems": 14 }
-            ],
-            "description": "参考图像（可选），支持 URL 或 Base64 编码。"
-          },
-          "size": {
-            "type": "string",
-            "description": "输出尺寸。",
-            "default": "2048x2048"
-          },
-          "sequential_image_generation": {
-            "type": "string",
-            "enum": ["auto", "disabled"],
-            "default": "disabled"
-          },
-          "sequential_image_generation_options": {
-            "type": "object",
-            "properties": {
-              "max_images": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 15
-              }
-            }
-          },
-          "stream": {
-            "type": "boolean",
-            "enum": [true],
-            "description": "流式输出开关，必须设为 `true`。"
-          },
-          "output_format": {
-            "type": "string",
-            "enum": ["jpeg", "png"],
-            "default": "jpeg"
-          },
-          "response_format": {
-            "type": "string",
-            "enum": ["url", "b64_json"],
-            "default": "url"
-          },
-          "watermark": {
-            "type": "boolean",
-            "default": true
-          }
-        }
-      },
       "PartialSucceededEvent": {
         "type": "object",
         "description": "在流式响应模式下，当任意图片生成成功时返回该事件。",
