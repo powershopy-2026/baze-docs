@@ -51,14 +51,12 @@
                 "basic": {
                   "summary": "非流式请求",
                   "value": {
-                    "model": "qwen3-tts-instruct-flash",
+                    "model": "qwen3-tts-flash",
                     "input": {
-                      "text": "用稍快的语速介绍这款产品。",
-                      "voice": "Cherry"
-                    },
-                    "instructions": "语速稍快，语气更明亮。",
-                    "optimize_instructions": false,
-                    "language_type": "Chinese"
+                      "text": "那我来给大家推荐一款T恤，这款呢真的是超级好看，这个颜色呢很显气质，而且呢也是搭配的绝佳单品，大家可以闭眼入，真的是非常好看，对身材的包容性也很好，不管啥身材的宝宝呢，穿上去都是很好看的。推荐宝宝们下单哦。",
+                      "voice": "Cherry",
+                      "language_type": "Chinese"
+                    }
                   }
                 },
                 "stream": {
@@ -94,6 +92,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AliSpeechResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "成功响应示例",
+                    "value": {
+                      "status_code": 200,
+                      "request_id": "5c63c65c-cad8-4bf4-959d-xxxxxxxxxxxx",
+                      "code": "",
+                      "message": "",
+                      "output": {
+                        "text": null,
+                        "finish_reason": "stop",
+                        "choices": null,
+                        "audio": {
+                          "data": "",
+                          "url": "http://dashscope-result-bj.oss-cn-beijing.aliyuncs.com/1d/ab/20251218/d2033070/39b6d8f2-c0db-4daa-9073-5d27bfb66b78.wav?Expires=1766113409&OSSAccessKeyId=LTAI5xxxxxxxxxxxx&Signature=NOrqxxxxxxxxxxxx%3D",
+                          "id": "audio_5c63c65c-cad8-4bf4-959d-xxxxxxxxxxxx",
+                          "expires_at": 1766113409
+                        }
+                      },
+                      "usage": {
+                        "input_tokens": 0,
+                        "output_tokens": 0,
+                        "characters": 195
+                      }
+                    }
+                  }
                 }
               },
               "text/event-stream": {
@@ -142,7 +167,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称。",
+            "description": "模型名称，可用选项：`qwen3-tts-instruct-flash`。",
             "enum": [
               "qwen3-tts-instruct-flash"
             ]
@@ -157,11 +182,11 @@
             "properties": {
               "text": {
                 "type": "string",
-                "description": "要合成的文本。`qwen-tts` 最大 512 Token，其他模型最大 600 字符。"
+                "description": "要合成的文本，支持多语种混合输入。最大输入长度：千问-TTS 模型为 512 Token，其他模型为 600 字符。"
               },
               "voice": {
                 "type": "string",
-                "description": "音色名称，如 `Cherry`。仅支持此处列出的枚举值。",
+                "description": "使用的音色。参见支持的系统音色。",
                 "enum": [
                   "Cherry",
                   "Serena",
@@ -191,7 +216,7 @@
               },
               "language_type": {
                 "type": "string",
-                "description": "语种，默认 `Auto`。",
+                "description": "合成音频的语种。默认为 `Auto`。\n\n- `Auto`：适用于文本包含多种语言或语种不确定的场景。模型自动为不同语言片段匹配发音，但无法保证完全精准。\n- 指定语种：适用于单一语种文本。指定具体语种能显著提升合成质量，效果通常优于 `Auto`。",
                 "enum": [
                   "Auto",
                   "Chinese",
@@ -209,11 +234,11 @@
               },
               "instructions": {
                 "type": "string",
-                "description": "指令控制语音风格，仅 `qwen3-tts-instruct-flash` 支持，最大 1600 Token。"
+                "description": "设置指令，参见指令控制。\n\n默认值：无，不设置时不生效。\n最大长度：1600 Token。\n支持语言：仅支持中文和英文。\n适用范围：该功能仅适用于千问3-TTS-Instruct-Flash-Realtime 系列模型。"
               },
               "optimize_instructions": {
                 "type": "boolean",
-                "description": "是否对 `instructions` 进行语义优化，仅 `qwen3-tts-instruct-flash` 支持，默认 `false`。显式传入 `false` 将被保留并转发。",
+                "description": "对 `instructions` 进行语义优化，以提升语音合成的自然度和表现力。\n\n默认值：`false`。\n行为说明：当设置为 `true` 时，系统将对 `instructions` 的内容进行语义增强与重写，生成更适合语音合成的内部指令。\n推荐在追求高品质、精细化语音表达时开启。\n依赖 `instructions` 参数。若 `instructions` 为空，此参数不生效。\n适用范围：该功能仅适用于千问3-TTS-Instruct-Flash 系列模型。",
                 "default": false
               }
             }
@@ -225,7 +250,7 @@
         "properties": {
           "status_code": {
             "type": "integer",
-            "description": "HTTP 状态码，200 表示成功。"
+            "description": "HTTP 状态码。遵循 RFC 9110 标准定义。例如：\n- 200：请求成功，正常返回结果\n- 400：客户端请求参数错误\n- 401：未授权访问\n- 404：资源未找到\n- 500：服务器内部错误"
           },
           "request_id": {
             "type": "string",

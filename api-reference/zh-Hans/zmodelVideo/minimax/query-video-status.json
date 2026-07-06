@@ -38,7 +38,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "公开视频任务 ID。"
+            "description": "待查询的任务 ID。只能查询当前账号创建的任务"
           }
         ],
         "responses": {
