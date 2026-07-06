@@ -1,0 +1,233 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Aliyun Task Status Query",
+    "version": "1.0.0",
+    "description": "Aliyun task status query endpoint. Used to query the status and result of an asynchronous task via `/ali/api/v1/tasks/{task_id}`.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Aliyun Video",
+      "description": "Aliyun video task query capability"
+    }
+  ],
+  "paths": {
+    "/ali/api/v1/tasks/{task_id}": {
+      "get": {
+        "summary": "Query task status",
+        "description": "Query the status and result of an asynchronous task by task ID.\n\nTask status flow: PENDING (queued) → RUNNING (processing) → SUCCEEDED (success) / FAILED (failure).\n\nThe initial query status is typically PENDING (queued) or RUNNING (processing).\nWhen the status becomes SUCCEEDED, the response will include the generated video URL.\nIf the status is FAILED, check the error information and retry.\nIf the status is CANCELED, the task has been canceled. Resubmit the task if needed.\nIf the status is UNKNOWN, the task does not exist or the status is unknown. This may occur when the task_id does not exist or exceeds the 24-hour validity period.",
+        "operationId": "aliVideoTaskQuery",
+        "tags": [
+          "Aliyun Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Task ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful. Returns the task status and result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskQueryResponse"
+                },
+                "example": {
+                  "request_id": "2ca1c497-f9e0-449d-9a3f-xxxxxx",
+                  "output": {
+                    "task_id": "af6efbc0-4bef-4194-8246-xxxxxx",
+                    "task_status": "SUCCEEDED",
+                    "submit_time": "2025-09-25 11:07:28.590",
+                    "scheduled_time": "2025-09-25 11:07:35.349",
+                    "end_time": "2025-09-25 11:17:11.650",
+                    "orig_prompt": "一幅都市奇幻艺术的场景。一个充满动感的涂鸦艺术角色。一个由喷漆所画成的少年，正从一面混凝土墙上活过来。他一边用极快的语速演唱一首英文rap，一边摆着一个经典的、充满活力的说唱歌手姿势。场景设定在夜晚一个充满都市感的铁路桥下。灯光来自一盏孤零零的街灯，营造出电影般的氛围，充满高能量和惊人的细节。视频的音频部分完全由他的rap构成，没有其他对话或杂音。",
+                    "video_url": "https://dashscope-result-sh.oss-cn-shanghai.aliyuncs.com/xxx.mp4?Expires=xxx"
+                  },
+                  "usage": {
+                    "duration": 15,
+                    "input_video_duration": 0,
+                    "output_video_duration": 15,
+                    "video_count": 1,
+                    "SR": 720
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task does not exist or has expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "TaskQueryResponse": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "description": "Unique request ID. Can be used for request tracing and issue diagnosis."
+          },
+          "output": {
+            "type": "object",
+            "description": "Task output information.",
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "Task ID. Valid for 24 hours for querying."
+              },
+              "task_status": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "RUNNING",
+                  "SUCCEEDED",
+                  "FAILED",
+                  "CANCELED",
+                  "UNKNOWN"
+                ],
+                "description": "Task status.\n\n- `PENDING`: Task is queued.\n- `RUNNING`: Task is processing.\n- `SUCCEEDED`: Task completed successfully.\n- `FAILED`: Task execution failed.\n- `CANCELED`: Task has been canceled.\n- `UNKNOWN`: Task does not exist or status is unknown.\n\nStatus flow during polling:\nPENDING (queued) → RUNNING (processing) → SUCCEEDED (success) / FAILED (failure).\n\nThe initial query status is typically PENDING or RUNNING.\nWhen the status becomes SUCCEEDED, the response will include the generated video URL.\nIf the status is FAILED, check the error information and retry.\nIf the status is CANCELED, the task has been canceled. Resubmit the task if needed.\nIf the status is UNKNOWN, the task does not exist or the status is unknown. This may occur when the task_id does not exist or exceeds the 24-hour validity period.",
+                "x-enum-descriptions": {
+                  "PENDING": "Task is queued",
+                  "RUNNING": "Task is processing",
+                  "SUCCEEDED": "Task completed successfully",
+                  "FAILED": "Task execution failed",
+                  "CANCELED": "Task has been canceled",
+                  "UNKNOWN": "Task does not exist or status is unknown"
+                }
+              },
+              "submit_time": {
+                "type": "string",
+                "description": "Task submission time. Format: YYYY-MM-DD HH:mm:ss.SSS."
+              },
+              "scheduled_time": {
+                "type": "string",
+                "description": "Task execution time. Format: YYYY-MM-DD HH:mm:ss.SSS."
+              },
+              "end_time": {
+                "type": "string",
+                "description": "Task completion time. Format: YYYY-MM-DD HH:mm:ss.SSS."
+              },
+              "video_url": {
+                "type": "string",
+                "description": "Video URL. Only returned when task_status is SUCCEEDED.\n\nThe link is valid for 24 hours. Download the video via this URL. The video format is MP4 (H.264 encoding)."
+              },
+              "orig_prompt": {
+                "type": "string",
+                "description": "Original input prompt, corresponding to the request parameter `prompt`."
+              },
+              "code": {
+                "type": "string",
+                "description": "Error code for request failure. Not returned when the request succeeds. See error codes for details."
+              },
+              "message": {
+                "type": "string",
+                "description": "Detailed error message for request failure. Not returned when the request succeeds. See error codes for details."
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "description": "Output information statistics. Only counts successful results.",
+            "properties": {
+              "input_video_duration": {
+                "type": "integer",
+                "description": "Duration of the input video, in seconds."
+              },
+              "output_video_duration": {
+                "type": "integer",
+                "description": "Duration of the output video, in seconds."
+              },
+              "duration": {
+                "type": "integer",
+                "description": "Total video duration, used for billing."
+              },
+              "SR": {
+                "type": "integer",
+                "description": "Resolution tier of the output video. Example value: 720."
+              },
+              "video_count": {
+                "type": "integer",
+                "description": "Number of output videos. Fixed at 1."
+              }
+            }
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code. Only returned when the request fails."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message. Only returned when the request fails."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request ID."
+          }
+        }
+      }
+    }
+  }
+}
