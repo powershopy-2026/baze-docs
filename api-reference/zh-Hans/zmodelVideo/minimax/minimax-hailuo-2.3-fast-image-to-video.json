@@ -234,20 +234,20 @@
             "enum": [
               "MiniMax-Hailuo-2.3-Fast"
             ],
-            "description": "当前能力使用的模型名称。"
+            "description": "模型名称。可用值：`MiniMax-Hailuo-2.3-Fast`。"
           },
           "image": {
             "type": "string",
-            "description": "首帧图片 URL 或 Data URL。"
+            "description": "将指定图片作为视频的起始帧。支持公网 URL 或 Base64 编码的 Data URL (`data:image/jpeg;base64,...`)\n\n- 图片要求：\n\t- 格式：JPG, JPEG, PNG, WebP\n\t- 体积：小于 20MB\n\t- 尺寸：短边像素大于 300px，长宽比在 2:5 和 5:2 之间  ",
           },
           "prompt": {
             "type": "string",
-            "description": "可选的视频提示词。",
+            "description": "视频的文本描述，最大 2000 字符。对于 `MiniMax-Hailuo-2.3-Fast` 模型，支持使用 `[指令]` 语法进行运镜控制。\n可在 prompt 中通过 [指令] 格式添加运镜指令，以实现精确的镜头控制。\n\n- 支持 15 种运镜指令的指令:\n\t - 左右移: [左移], [右移]\n\t - 左右摇: [左摇], [右摇]\n\t - 推拉: [推进], [拉远]\n\t - 升降: [上升], [下降]\n\t - 上下摇: [上摇], [下摇]\n\t - 变焦: [变焦推近], [变焦拉远]\n\t - 其他: [晃动], [跟随], [固定]\n\n - 使用规则:\n\t - 组合运镜: 同一组 [] 内的多个指令会同时生效，如 [左摇,上升]，建议组合不超过 3 个\n\t - 顺序运镜: prompt 中前后出现的指令会依次生效，如 \"...[推进], 然后...[拉远]\"\n\t - 自然语言: 也支持通过自然语言描述运镜，但使用标准指令能获得更准确的响应 ",
             "maxLength": 2000
           },
           "seconds": {
             "type": "string",
-            "description": "目标视频时长，单位秒。（1080P仅支持6秒）",
+            "description": "视频时长（秒），默认值为 6。其可用值与分辨率相关：\n| Model | 768P | 1080P |\n| :--- | :--- | :--- |\n| MiniMax-Hailuo-2.3-Fast | `6` 或 `10` | `6` |",
             "enum": [
               "6",
               "10"
@@ -269,7 +269,7 @@
           },
           "size": {
             "type": "string",
-            "description": "目标输出规格或分辨率。当前图生视频模型支持 `768P`、`1080P`。",
+            "description": "视频分辨率。其可用值与模型相关：\n| Model | 6s | 10s |\n| :--- | :--- | :--- |\n| MiniMax-Hailuo-2.3-Fast |  `768P` (默认), `1080P` |  `768P` (默认) |",
             "enum": [
               "768P",
               "1080P"

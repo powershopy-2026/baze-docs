@@ -250,16 +250,16 @@
             "enum": [
               "image-01"
             ],
-            "description": "当前能力使用的模型名称。"
+            "description": "模型名称。可选值：`image-01`"
           },
           "prompt": {
             "type": "string",
-            "description": "图像生成提示词。",
+            "description": "图像的文本描述，最长 1500 字符",
             "maxLength": 1500
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "目标宽高比。",
+            "description": "图像宽高比，默认为 1:1。可选值：\n- `1:1` (1024x1024)\n- `16:9` (1280x720)\n- `4:3` (1152x864)\n- `3:2` (1248x832)\n- `2:3` (832x1248)\n- `3:4` (864x1152)\n- `9:16` (720x1280)\n- `21:9` (1344x576) (仅适用于`image-01`)",
             "enum": [
               "1:1",
               "16:9",
@@ -273,14 +273,14 @@
           },
           "width": {
             "type": "integer",
-            "description": "生成图片的宽度（像素）。仅当 model 为 image-01 时生效。注意：width 和 height 需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 aspect_ratio 同时设置，则优先使用 aspect_ratio",
+            "description": "生成图片的宽度（像素）。仅当 model 为 `image-01` 时生效。注意：`width` 和 `height`\n需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 `aspect_ratio` 同时设置，则优先使用\n`aspect_ratio`",
             "minimum": 512,
             "maximum": 2048,
             "multipleOf": 8
           },
           "height": {
             "type": "integer",
-            "description": "生成图片的高度（像素）。仅当 model 为 image-01 时生效。注意：width 和 height 需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 aspect_ratio 同时设置，则优先使用 aspect_ratio",
+            "description": "生成图片的高度（像素）。仅当 model 为 `image-01` 时生效。注意：`width` 和 `height`\n需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 `aspect_ratio` 同时设置，则优先使用\n`aspect_ratio`",
             "minimum": 512,
             "maximum": 2048,
             "multipleOf": 8
@@ -291,22 +291,22 @@
               "url",
               "base64"
             ],
-            "description": "返回格式。使用 `url` 获取临时下载地址，使用 `base64` 获取 Base64 编码内容。"
+            "description": "返回图片的形式，默认为 url。可选值：url, base64。\n⚠️ 注意：url 的有效期为 24 小时"
           },
           "seed": {
             "type": "integer",
             "format": "int64",
-            "description": "随机种子。显式传 `0` 会被保留。"
+            "description": "随机种子。使用相同的 seed 和参数，可以生成内容相近的图片，用于复现结果。如未提供，算法会对 n 张图单独生成随机种子"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 9,
-            "description": "期望返回的图片数量。"
+            "description": "单次请求生成的图片数量，取值范围[1, 9]，默认为 1"
           },
           "prompt_optimizer": {
             "type": "boolean",
-            "description": "是否启用提示词优化。显式传 `false` 会被保留。"
+            "description": "是否开启 prompt 自动优化，默认为 `false`."
           }
         }
       },
@@ -333,11 +333,11 @@
         "properties": {
           "url": {
             "type": "string",
-            "description": "图片下载地址。通常为临时链接，请尽快保存。"
+            "description": "当 `response_format` 为 `url` 时返回的图片临时下载地址，链接有效期 24 小时"
           },
           "b64_json": {
             "type": "string",
-            "description": "Base64 编码的图片内容。"
+            "description": "当 `response_format` 为 `base64` 时返回的图片 Base64 编码内容"
           }
         }
       },
@@ -358,11 +358,11 @@
           },
           "success_count": {
             "type": "integer",
-            "description": "本次成功生成的结果数量。"
+            "description": "成功生成的图片数量"
           },
           "failed_count": {
             "type": "integer",
-            "description": "本次未返回结果的数量。"
+            "description": "因内容安全检查被拦截的图片数量"
           }
         }
       },
