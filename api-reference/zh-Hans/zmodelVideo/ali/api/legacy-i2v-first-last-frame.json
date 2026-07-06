@@ -43,31 +43,28 @@
                   "value": {
                     "model": "wan2.2-kf2v-flash",
                     "input": {
-                      "prompt": "一只猫从静止逐渐开始走动。",
-                      "first_frame_url": "https://example.com/assets/cat.png"
+                      "first_frame_url": "https://wanx.alicdn.com/material/20250318/first_frame.png",
+                      "prompt": "写实风格，一只黑色小猫好奇地看向天空，镜头从平视逐渐上升，最后俯拍它的好奇的眼神。"
                     },
                     "parameters": {
-                      "resolution": "1080P",
-                      "duration": 5,
-                      "prompt_extend": true,
-                      "watermark": false
+                      "resolution": "480P",
+                      "prompt_extend": true
                     }
                   }
                 },
                 "first_last_frame": {
                   "summary": "使用首帧 + 尾帧",
                   "value": {
-                    "model": "wanx2.1-kf2v-plus",
+                    "model": "wan2.2-kf2v-flash",
                     "input": {
-                      "prompt": "花朵从花苞逐渐绽放。",
-                      "negative_prompt": "模糊，低质量",
-                      "first_frame_url": "https://example.com/assets/bud.png",
-                      "last_frame_url": "https://example.com/assets/bloom.png"
+                      "first_frame_url": "https://wanx.alicdn.com/material/20250318/first_frame.png",
+                      "last_frame_url": "https://wanx.alicdn.com/material/20250318/last_frame.png",
+                      "prompt": "写实风格，一只黑色小猫好奇地看向天空，镜头从平视逐渐上升，最后俯拍它的好奇的眼神。",
+                      "negative_prompt": "低分辨率、错误、最差质量、低质量、残缺、多余的手指、比例不良等。"
                     },
                     "parameters": {
                       "resolution": "720P",
-                      "duration": 5,
-                      "seed": 42
+                      "prompt_extend": true
                     }
                   }
                 }
@@ -77,11 +74,18 @@
         },
         "responses": {
           "200": {
-            "description": "提交成功，返回视频任务对象。",
+            "description": "提交成功，返回视频任务对象。请保存 task_id，用于查询任务状态与结果。",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/VideoTaskResponse"
+                },
+                "example": {
+                  "output": {
+                    "task_status": "PENDING",
+                    "task_id": "0385dc79-5ff8-4d82-bcb6-xxxxxx"
+                  },
+                  "request_id": "4909100c-7b5a-9f92-bfe5-xxxxxx"
                 }
               }
             }
@@ -216,7 +220,7 @@
               "wan2.2-kf2v-flash",
               "wanx2.1-kf2v-plus"
             ],
-            "description": "模型名称。"
+            "description": "模型名称。示例值：`wan2.2-kf2v-flash`。详情参见百炼控制台。"
           },
           "input": {
             "$ref": "#/components/schemas/LegacyKf2VInput"
@@ -234,25 +238,25 @@
         "properties": {
           "prompt": {
             "type": "string",
-            "description": "可选提示词，描述期望的视频内容。长度不超过 800 个字符。",
+            "description": "文本提示词。支持中英文，长度不超过800个字符，每个汉字/字母占一个字符，超过部分会自动截断。\n\n如果首尾帧的主体和场景变化较大，建议描写变化过程，例如运镜过程（镜头向左移动）或者主体运动过程（人向前奔跑）。\n\n示例值：一只黑色小猫好奇地看向天空，镜头从平视逐渐上升，最后俯拍它的好奇的眼神。\n\n提示词的使用技巧请参见文生视频/图生视频Prompt指南。",
             "maxLength": 800
           },
           "negative_prompt": {
             "type": "string",
-            "description": "反向提示词，描述不希望在视频中看到的内容。长度不超过 500 个字符。",
+            "description": "反向提示词，用来描述不希望在视频画面中看到的内容，可以对视频画面进行限制。\n\n支持中英文，长度不超过500个字符，超过部分会自动截断。\n\n示例值：低分辨率、错误、最差质量、低质量、残缺、多余的手指、比例不良等。",
             "maxLength": 500
           },
           "first_frame_url": {
             "type": "string",
-            "description": "首帧图像 URL。"
+            "description": "首帧图像的URL或 Base64 编码数据。输出视频的宽高比将以此图像为基准。\n\n图像限制：\n- 图像格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 图像分辨率：图像的宽度和高度范围为[240,8000]，单位为像素。\n- 文件大小：不超过10MB。\n\n支持输入的格式：\n- **公网URL**：支持 HTTP 或 HTTPS 协议。示例值：`https://wanx.alicdn.com/xxx/first_frame.png`。\n- **临时URL**：支持OSS协议，必须通过上传文件获取临时 URL。示例值：`oss://dashscope-instant/xxx/xxx.png`。\n- **Base64 编码图像后的字符串**：数据格式：`data:{MIME_type};base64,{base64_data}`。示例值：`data:image/png;base64,GDU7MtCZzEbTbmRZ......`（编码字符串过长，仅展示片段）。\n\n详情请参见如何输入图像。"
           },
           "last_frame_url": {
             "type": "string",
-            "description": "可选尾帧图像 URL。"
+            "description": "尾帧图像的URL或 Base64 编码数据。\n\n图像限制：\n- 图像格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 图像分辨率：图像的宽度和高度范围为[240,8000]，单位为像素。尾帧图像分辨率可与首帧不同，无需强制对齐。\n- 文件大小：不超过10MB。\n\n支持输入的格式：\n- **公网URL**：支持 HTTP 或 HTTPS 协议。示例值：`https://wanx.alicdn.com/xxxx/last_frame.png`。\n- **临时URL**：支持OSS协议，必须通过上传文件获取临时 URL。示例值：`oss://dashscope-instant/xxx/xxx.png`。\n- **Base64 编码图像后的字符串**：数据格式：`data:{MIME_type};base64,{base64_data}`。示例值：`data:image/png;base64,GDU7MtCZ......`（编码字符串过长，仅展示片段）。\n\n详情请参见如何输入图像。"
           },
           "template": {
             "type": "string",
-            "description": "可选视频特效模板。"
+            "description": "视频特效模板的名称。使用此参数时，仅需传入 first_frame_url。\n\n不同模型支持不同的特效模板。调用前请查阅万相-图生视频-视频特效，以免调用失败。\n\n示例值：`hufu-1`，表示使用「唐韵翩然」特效。"
           }
         }
       },
@@ -266,26 +270,26 @@
               "720P",
               "1080P"
             ],
-            "description": "输出视频分辨率。"
+            "description": "**重要**：resolution直接影响费用，同一模型：1080P > 720P > 480P，调用前请确认百炼控制台。\n\n生成的视频分辨率档位。仅用于调整视频的清晰度（总像素），不改变视频的宽高比，视频宽高比将与首帧图像 first_frame_url 的宽高比保持一致。\n\n此参数的默认值和可用枚举值依赖于 model 参数，规则如下：\n- `wan2.2-kf2v-flash`：可选值：480P、720P、1080P。默认值为720P。\n- `wanx2.1-kf2v-plus`：可选值：720P。默认值为720P。\n\n示例值：720P。"
           },
           "duration": {
             "type": "integer",
-            "description": "视频时长（秒），固定为 5。",
+            "description": "**重要**：duration直接影响费用，按秒计费，调用前请确认百炼控制台。\n\n视频生成时长，单位为秒。当前参数值固定为5，且不支持修改。模型将始终生成5秒时长的视频。",
             "default": 5
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "是否开启提示词智能改写。默认 true。",
+            "description": "是否开启prompt智能改写。开启后使用大模型对输入prompt进行智能改写。对于较短的prompt生成效果提升明显，但会增加耗时。\n\n- `true`：默认值，开启智能改写。\n- `false`：不开启智能改写。\n\n示例值：true。",
             "default": true
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否在视频中添加水印。默认 false。",
+            "description": "是否添加水印标识，水印位于图片右下角，文案为「AI生成」。\n\n- `false`：默认值，不添加水印。\n- `true`：添加水印。\n\n示例值：false。",
             "default": false
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子，取值范围 [0, 2147483647]。",
+            "description": "随机数种子，取值范围为[0, 2147483647]。\n\n未指定时，系统自动生成随机种子。若需提升生成结果的可复现性，建议固定seed值。\n\n请注意，由于模型生成具有概率性，即使使用相同 seed，也不能保证每次生成结果完全一致。",
             "minimum": 0,
             "maximum": 2147483647
           }
@@ -299,7 +303,7 @@
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "视频生成任务 ID。"
+                "description": "任务ID。查询有效期24小时。"
               },
               "task_status": {
                 "type": "string",
@@ -312,7 +316,7 @@
           },
           "request_id": {
             "type": "string",
-            "description": "请求 ID。"
+            "description": "请求唯一标识。可用于请求明细溯源和问题排查。"
           }
         }
       },
@@ -324,7 +328,7 @@
             "properties": {
               "task_id": {
                 "type": "string",
-                "description": "视频生成任务 ID。"
+                "description": "任务ID。查询有效期24小时。"
               },
               "task_status": {
                 "type": "string",
@@ -332,9 +336,11 @@
                   "PENDING",
                   "RUNNING",
                   "SUCCEEDED",
-                  "FAILED"
+                  "FAILED",
+                  "CANCELED",
+                  "UNKNOWN"
                 ],
-                "description": "任务状态。"
+                "description": "任务状态。\n\n枚举值：\n- `PENDING`：任务排队中\n- `RUNNING`：任务处理中\n- `SUCCEEDED`：任务执行成功\n- `FAILED`：任务执行失败\n- `CANCELED`：任务已取消\n- `UNKNOWN`：任务不存在或状态未知"
               },
               "video_url": {
                 "type": "string",
@@ -369,7 +375,15 @@
           },
           "request_id": {
             "type": "string",
-            "description": "请求 ID。"
+            "description": "请求唯一标识。可用于请求明细溯源和问题排查。"
+          },
+          "code": {
+            "type": "string",
+            "description": "请求失败的错误码。请求成功时不会返回此参数。"
+          },
+          "message": {
+            "type": "string",
+            "description": "请求失败的详细信息。请求成功时不会返回此参数。"
           }
         }
       },
