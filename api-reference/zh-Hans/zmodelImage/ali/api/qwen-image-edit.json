@@ -254,8 +254,8 @@
           },
           "content": {
             "type": "array",
-            "minItems": 2,
-            "maxItems": 4,
+            "minItems": 1,
+            "maxItems": 1,
             "description": "消息内容，包含 1-3 张图像，格式为 `{\"image\":\"...\"}`；以及单个编辑指令，格式为 `{\"text\":\"...\"}`。",
             "items": {
               "$ref": "#/components/schemas/QwenImageEditContentItem"
@@ -268,7 +268,7 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "输入图像的 URL 或 Base64 编码数据。支持传入 1-3 张图像。多图输入时，按照数组顺序定义图像顺序，输出图像的比例以最后一张为准。图像格式支持 JPG、JPEG、PNG、BMP、TIFF、WEBP 和 GIF；输出图像为 PNG 格式，对于 GIF 动图，仅处理其第一帧。为获得最佳效果，建议图像的宽和高均在 384 像素至 3072 像素之间。图像大小不超过 10MB。支持公网 URL（HTTP/HTTPS）、临时 OSS URL，以及 `data:image/jpeg;base64,...` 格式的 Base64 编码图像。示例值：`https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/fpakfo/image36.webp`。"
+            "description": "image string （必选）\n\n输入图像的 URL 或 Base64 编码数据。支持传入1-3张图像。\n\n多图输入时，按照数组顺序定义图像顺序，输出图像的比例以最后一张为准。\n\n图像要求：\n\n图像格式：JPG、JPEG、PNG、BMP、TIFF、WEBP和GIF。\n\n输出图像为PNG格式，对于GIF动图，仅处理其第一帧。\n图像分辨率：为获得最佳效果，建议图像的宽和高均在384像素至3072像素之间。分辨率过低可能导致生成效果模糊，过高则会增加处理时长。\n\n图像大小：不超过10MB。\n\n支持的输入格式\n\n公网URL：\n\n支持 HTTP 和 HTTPS 协议。\n\n示例值：https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/fpakfo/image36.webp。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：oss://dashscope-instant/xxx/2024-07-18/xxx/cat.png。\n\n传入 Base64 编码图像后的字符串\n\n示例值：data:image/jpeg;base64,GDU7MtCZz...（示例已截断，仅做演示）\n\nBase64 编码规范请参见通过Base64编码传入图片。"
           },
           "text": {
             "type": "string",
