@@ -315,7 +315,7 @@
           "model": {
             "type": "string",
             "enum": ["seedream-5-0-260128", "seedream-4-5-251128", "seedream-4-0-250828"],
-            "description": "您需要调用的模型的 ID（Model ID）。您也可通过 Endpoint ID 来调用模型，获得限流、计费类型（前付费/后付费）、运行状态查询、监控、安全等高级能力。\n\n支持的模型：\n- `seedream-5-0-260128`（最新推荐）\n- `seedream-4-5-251128`（支持 4K 与强文本渲染）\n- `seedream-4-0-250828`（维护状态，最经济的 4K 选项）",
+            "description": "您需要调用的模型的 ID（Model ID）。\n\n支持的模型：\n- `seedream-5-0-260128`（最新推荐）\n- `seedream-4-5-251128`（支持 4K 与强文本渲染）\n- `seedream-4-0-250828`（维护状态，最经济的 4K 选项）",
             "example": "seedream-5-0-260128"
           },
           "prompt": {
