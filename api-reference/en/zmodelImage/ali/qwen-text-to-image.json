@@ -201,7 +201,7 @@
             "enum": [
               "qwen-image-2.0-pro"
             ],
-            "description": "Text-to-image model name."
+            "description": "Model name. Example: `qwen-image-2.0-pro`."
           },
           "response_format": {
             "type": "string",
@@ -209,7 +209,7 @@
               "url",
               "b64_json"
             ],
-            "description": "Unified response format.",
+            "description": "Response format. `url` returns an image download link; `b64_json` returns Base64-encoded image data. Default is `url`.",
             "default": "url"
           },
           "input": {
@@ -219,11 +219,11 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 6,
-            "description": "Number of output images. The gateway maps this to upstream `parameters.n`."
+            "description": "Number of output images. Default is 1. For the `qwen-image-2.0` series, you can generate 1-6 images. The gateway maps this to upstream `parameters.n`."
           },
           "size": {
             "type": "string",
-            "description": "Output image resolution in `widthxheight` or `width*height` format. The gateway converts and maps this to upstream `parameters.size`.",
+            "description": "Output image resolution in `width*height` format. For the `qwen-image-2.0` series, total output pixels must be between `512*512` and `2048*2048`, and the default resolution is `2048*2048`. Recommended resolutions: `2688*1536` (16:9), `1536*2688` (9:16), `2048*2048` (1:1, default), `2368*1728` (4:3), and `1728*2368` (3:4). The gateway maps this to upstream `parameters.size`.",
             "x-options": [
               {
                 "label": "512*512",
@@ -242,21 +242,21 @@
           },
           "negative_prompt": {
             "type": "string",
-            "description": "Negative prompt. The gateway maps this to upstream `parameters.negative_prompt`."
+            "description": "Negative prompt used to describe content that should not appear in the image and to constrain the image. Chinese and English are supported. Maximum length is 500 characters; extra content is automatically truncated. Example: low resolution, low quality, malformed limbs, malformed fingers, oversaturated image, wax figure appearance, no facial details, overly smooth, AI-like image, chaotic composition, blurry or distorted text. The gateway maps this to upstream `parameters.negative_prompt`."
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "Whether to enable smart prompt rewriting. The gateway maps this to upstream `parameters.prompt_extend`."
+            "description": "Whether to enable smart prompt rewriting. When enabled, the model optimizes and polishes the positive prompt. This feature does not modify the negative prompt. `true` (default): enabled, recommended for more diverse content. `false`: disabled, recommended for more controllable details. The gateway maps this to upstream `parameters.prompt_extend`."
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a watermark. Explicitly passing `false` is preserved and mapped to upstream `parameters.watermark`.",
+            "description": "Whether to add a \"Qwen-Image\" watermark in the lower-right corner of the image. Default is `false`. The gateway maps this to upstream `parameters.watermark`.",
             "default": false
           },
           "seed": {
             "type": "integer",
             "format": "int64",
-            "description": "Random seed. Explicitly passing `0` is preserved and mapped to upstream `parameters.seed`.",
+            "description": "Random seed. Range [0, 2147483647]. Using the same `seed` value can make generated content relatively stable. If omitted, the algorithm automatically uses a random seed. Note: generation is probabilistic, so the same `seed` cannot guarantee identical results every time. The gateway maps this to upstream `parameters.seed`.",
             "minimum": 0
           }
         }
@@ -271,7 +271,7 @@
             "type": "array",
             "minItems": 1,
             "maxItems": 1,
-            "description": "Currently only single-turn messages are supported.",
+            "description": "Request content array. Currently only single-turn conversations are supported, and the array must contain exactly one element.",
             "items": {
               "$ref": "#/components/schemas/QwenTextToImageMessage"
             }
@@ -290,13 +290,13 @@
             "enum": [
               "user"
             ],
-            "description": "Fixed to `user`."
+            "description": "Message role. This parameter must be set to `user`."
           },
           "content": {
             "type": "array",
             "minItems": 1,
             "maxItems": 1,
-            "description": "Only a single text content item is supported.",
+            "description": "Message content array. Only one `text` item is supported; omitting it or passing multiple text items causes an error.",
             "items": {
               "$ref": "#/components/schemas/QwenTextToImageContentItem"
             }
@@ -311,7 +311,7 @@
         "properties": {
           "text": {
             "type": "string",
-            "description": "Text-to-image prompt."
+            "description": "Positive prompt used to describe the image content, style, and composition you want to generate. Chinese and English are supported. The `qwen-image-2.0` series supports up to 1300 tokens; other models support up to 800 tokens. Extra content is automatically truncated."
           }
         }
       },
@@ -320,31 +320,35 @@
         "properties": {
           "size": {
             "type": "string",
-            "description": "Output image resolution in `width*height` format."
+            "description": "Output image resolution in `width*height` format. For the `qwen-image-2.0` series, total output pixels must be between `512*512` and `2048*2048`, and the default resolution is `2048*2048`. Recommended resolutions: `2688*1536` (16:9), `1536*2688` (9:16), `2048*2048` (1:1, default), `2368*1728` (4:3), and `1728*2368` (3:4)."
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 6,
-            "description": "Number of output images."
+            "default": 1,
+            "description": "Number of output images. Default is 1. For the `qwen-image-2.0` series, you can generate 1-6 images."
           },
           "negative_prompt": {
             "type": "string",
-            "description": "Negative prompt."
+            "description": "Negative prompt used to describe content that should not appear in the image and to constrain the image. Chinese and English are supported. Maximum length is 500 characters; extra content is automatically truncated. Example: low resolution, low quality, malformed limbs, malformed fingers, oversaturated image, wax figure appearance, no facial details, overly smooth, AI-like image, chaotic composition, blurry or distorted text."
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "Whether to enable smart prompt rewriting."
+            "default": true,
+            "description": "Whether to enable smart prompt rewriting. When enabled, the model optimizes and polishes the positive prompt. This feature does not modify the negative prompt. `true` (default): enabled, recommended for more diverse content. `false`: disabled, recommended for more controllable details."
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a watermark. Explicitly passing `false` is preserved and forwarded to the upstream provider.",
-            "default": false
+            "default": false,
+            "description": "Whether to add a \"Qwen-Image\" watermark in the lower-right corner of the image. Default is `false`."
           },
           "seed": {
             "type": "integer",
             "format": "int64",
-            "description": "Random seed. Explicitly passing `0` is preserved and forwarded to the upstream provider."
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed. Range [0, 2147483647]. Using the same `seed` value can make generated content relatively stable. If omitted, the algorithm automatically uses a random seed. Note: generation is probabilistic, so the same `seed` cannot guarantee identical results every time."
           }
         }
       },
