@@ -30,6 +30,32 @@
         "tags": [
           "Wan 2.7 Video"
         ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "description": "请求内容类型。此参数必须设置为 application/json。",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "application/json"
+              ]
+            }
+          },
+          {
+            "name": "X-DashScope-Async",
+            "in": "header",
+            "required": true,
+            "description": "异步处理配置参数。HTTP请求只支持异步，必须设置为 enable。",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "enable"
+              ]
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -39,9 +65,9 @@
               },
               "examples": {
                 "first_frame_with_audio": {
-                  "summary": "首帧 + 驱动音频",
+                  "summary": "首帧生视频",
                   "value": {
-                    "model": "wan2.7-i2v",
+                    "model": "wan2.7-i2v-2026-04-25",
                     "input": {
                       "prompt": "一幅都市奇幻艺术的场景。一个充满动感的涂鸦艺术角色。一个由喷漆所画成的少年，正从一面混凝土墙上活过来。他一边用极快的语速演唱一首英文rap，一边摆着一个经典的、充满活力的说唱歌手姿势。场景设定在夜晚一个充满都市感的铁路桥下。灯光来自一盏孤零零的街灯，营造出电影般的氛围，充满高能量和惊人的细节。视频的音频部分完全由rap构成，没有其他对话或杂音。",
                       "media": [
@@ -52,6 +78,52 @@
                         {
                           "type": "driving_audio",
                           "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/ozwpvi/rap.mp3"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "duration": 10,
+                      "prompt_extend": true,
+                      "watermark": true
+                    }
+                  }
+                },
+                "first_last_frame": {
+                  "summary": "首尾帧生视频",
+                  "value": {
+                    "model": "wan2.7-i2v-2026-04-25",
+                    "input": {
+                      "prompt": "写实风格,一只小黑猫好奇地仰望天空,镜头从平视角度逐渐升高,最后以俯视角度捕捉到它好奇的眼神。",
+                      "media": [
+                        {
+                          "type": "first_frame",
+                          "url": "https://wanx.alicdn.com/material/20250318/first_frame.png"
+                        },
+                        {
+                          "type": "last_frame",
+                          "url": "https://wanx.alicdn.com/material/20250318/last_frame.png"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "duration": 10,
+                      "prompt_extend": false,
+                      "watermark": true
+                    }
+                  }
+                },
+                "video_continuation": {
+                  "summary": "视频续写",
+                  "value": {
+                    "model": "wan2.7-i2v-2026-04-25",
+                    "input": {
+                      "prompt": "一个女孩对镜自拍，自拍结束后背着书包出门",
+                      "media": [
+                        {
+                          "type": "first_clip",
+                          "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260129/hfugmr/wan-r2v-role1.mp4"
                         }
                       ]
                     },
@@ -214,7 +286,7 @@
             "enum": [
               "wan2.7-i2v"
             ],
-            "description": "模型名称。可选值：`wan2.7-i2v`。模型列表与价格详见模型价格。"
+            "description": "模型名称。可选值：`wan2.7-i2v`。"
           },
           "input": {
             "$ref": "#/components/schemas/Wan27I2VInput"
@@ -232,7 +304,7 @@
         "properties": {
           "prompt": {
             "type": "string",
-            "description": "文本提示词。用来描述生成视频中期望包含的元素和视觉特点。支持中英文，长度不超过5000个字符。每个汉字/字母占一个字符，超过部分会自动截断。提示词使用技巧详见文生视频/图生视频Prompt指南。",
+            "description": "文本提示词。用来描述生成视频中期望包含的元素和视觉特点。支持中英文，长度不超过5000个字符。每个汉字/字母占一个字符，超过部分会自动截断。",
             "maxLength": 5000
           },
           "negative_prompt": {
@@ -268,7 +340,7 @@
           },
           "url": {
             "type": "string",
-            "description": "媒体素材URL。素材包括图像、音频和视频。\n\n**传入图像（type=first_frame 或 last_frame）**：首帧或尾帧URL，或 Base64 编码数据。\n- 格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为 [240, 8000] 像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n- 支持的输入格式：\n  - 公网URL：HTTP 或 HTTPS 协议，例如 `https://xxx/xxx.png`。\n  - 临时URL：支持OSS协议，例如 `oss://dashscope-instant/xxx/xxx.png`。\n  - Base64：`data:{MIME_type};base64,{base64_data}`，例如 `data:image/png;base64,...`。\n\n**传入音频（type=driving_audio）**：音频文件的 URL。\n- 传入音频时：模型将以该音频为驱动源生成视频（如口型同步、动作卡点等）。\n- 未传入音频时：模型将根据视频画面内容，自动生成匹配的背景音乐或音效。\n- 格式：wav、mp3。\n- 时长：2～30s。\n- 文件大小：不超过15MB。\n- 截断处理：若音频长度超过 duration 值（如5秒），自动截取前5秒，其余部分丢弃。若音频长度不足视频时长，超出音频长度部分为无声视频。例如，音频为3秒，视频时长为5秒，输出视频前3秒有声，后2秒无声。\n- 支持的输入格式：\n  - 公网URL：HTTP 和 HTTPS 协议，例如 `https://xxx/xxx.mp3`。\n  - 临时URL：支持OSS协议，例如 `oss://dashscope-instant/xxx/xxx.mp3`。\n\n**传入视频（type=first_clip）**：视频文件的 URL。模型将基于该视频内容进行续写生成，续写时长的上限由 duration 参数控制。\n- 示例：当 duration=15 时，输入视频 3 秒，则模型续写生成 12 秒，最终输出视频总时长 15 秒，按 15 秒计费。\n- 格式：mp4、mov。\n- 时长：2～10s。\n- 分辨率：宽和高的范围为 [240, 4096] 像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过100MB。\n- 支持的输入格式：\n  - 公网URL：HTTP 和 HTTPS 协议，例如 `https://xxx/xxx.mp4`。\n  - 临时URL：支持OSS协议，例如 `oss://dashscope-instant/xxx/xxx.mp4`。"
+            "description": "媒体素材URL。素材包括图像、音频和视频。\n\n**传入图像（type=first_frame或last_frame）**\n\n首帧或尾帧URL，或 Base64 编码数据。目前支持首帧生视频、首尾帧生视频。\n\n图像限制：\n\n- 格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 或 HTTPS 协议。\n\n示例值：https://xxx/xxx.png。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：oss://dashscope-instant/xxx/xxx.png。\n\nBase64 编码图像后的字符串：\n\n数据格式：data:{MIME_type};base64,{base64_data}。\n\n示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ......（示例已截断，仅做演示）。\n\nBase64编码数据格式\n\n格式： data:{MIME_type};base64,{base64_data} 。\n\n{base64_data}：图像文件经过 Base64 编码后的字符串。\n\n{MIME_type}：图像的媒体类型，需与文件格式对应。\n\n图像格式与MIME Type对照\n\n| 图像格式 | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
           }
         }
       },
@@ -321,13 +393,7 @@
               },
               "task_status": {
                 "type": "string",
-                "enum": [
-                  "PENDING"
-                ],
-                "description": "任务状态，提交后返回 PENDING。",
-                "x-enum-descriptions": {
-                  "PENDING": "任务排队中"
-                }
+                "description": "任务状态。\n\n**枚举值：**\n- `PENDING`：任务排队中\n- `RUNNING`：任务处理中\n- `SUCCEEDED`：任务执行成功\n- `FAILED`：任务执行失败\n- `CANCELED`：任务已取消\n- `UNKNOWN`：任务不存在或状态未知"
               }
             }
           },
