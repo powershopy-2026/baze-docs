@@ -3,7 +3,7 @@
   "info": {
     "title": "Streaming Response",
     "version": "1.0.0",
-    "description": "This document describes the streaming response mode of the image generation API, compatible with BytePlus ModelArk upstream SSE protocol.\n\nWhen streaming is enabled (`stream: true`), the server pushes each image generation result in real-time via Server-Sent Events (SSE).\n\nOnly `seedream-5-0-lite`, `seedream-4-5`, and `seedream-4-0` support streaming responses.",
+    "description": "seedream-5-0-lite/4.5/4.0 supports streaming output mode. When you call the image generation API and set **stream** to `true`, the server will push events to the client in real time via Server-Sent Events (SSE) while generating the response. This section describes the various events pushed by the server.\n\nOnly `seedream-5-0-lite`, `seedream-4-5`, and `seedream-4-0` support streaming responses.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -12,253 +12,184 @@
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Baze API Server"
+      "description": "Baze API server"
     }
   ],
   "tags": [
     {
       "name": "Seedream API Compat",
-      "description": "Seedream streaming response interface"
+      "description": "Seedream streaming response API"
     }
   ],
   "paths": {
     "/byteplus/api/v3/images/generations": {
       "post": {
-        "summary": "Streaming Image Generation",
-        "description": "When streaming is enabled, the request is identical to the normal image creation API (same path, method, and request body format). Simply set `stream: true` in the request body and set the `Accept` header to `text/event-stream` on the client side.\n\nThe server pushes each generation result via SSE protocol: an `image_generation.partial_succeeded` event is pushed each time an image is generated; an `image_generation.completed` event is pushed when all images are finished.",
+        "summary": "Streaming Response Events",
+        "description": "seedream-5-0-lite/4.5/4.0 supports streaming output mode. When you call the image generation API and set **stream** to `true`, the server will push events to the client in real time via Server-Sent Events (SSE) while generating the response.\n\nThe server will push the following events:\n\n| Event Name | Trigger Condition | Description |\n|---|---|---|\n| `image_generation.partial_succeeded` | Any image generated successfully | Pushes the generation result for a single image |\n| `image_generation.partial_failed` | Any image generation failed | Pushes the failure reason |\n| `image_generation.completed` | All images processed | Pushes usage information and marks the stream end |\n| `error` | Request error occurred | Returns error information |",
         "operationId": "seedreamStreaming",
         "tags": [
           "Seedream API Compat"
         ],
-        "parameters": [
-          {
-            "name": "Accept",
-            "in": "header",
-            "description": "Client must set this header to `text/event-stream` to receive SSE stream.",
-            "schema": {
-              "type": "string",
-              "example": "text/event-stream"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StreamingRequest"
-              },
-              "examples": {
-                "text_to_image_stream": {
-                  "summary": "Text-to-Image with streaming",
-                  "value": {
-                    "model": "seedream-4-5-251128",
-                    "prompt": "A set of four seasons landscape illustrations",
-                    "size": "2K",
-                    "stream": true,
-                    "sequential_image_generation": "auto",
-                    "sequential_image_generation_options": {
-                      "max_images": 4
-                    }
-                  }
-                },
-                "single_image_stream": {
-                  "summary": "Single image with streaming",
-                  "value": {
-                    "model": "seedream-4-0-250828",
-                    "prompt": "A cute corgi running on a grassy field",
-                    "size": "2048x2048",
-                    "stream": true
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "SSE streaming response. Content type is `text/event-stream`. Contains the following events:\n\n### Event Types\n\n| Event Name | Trigger | Description |\n|---|---|---|\n| `image_generation.partial_succeeded` | Each time an image is generated | Pushes a single image's generation result |\n| `image_generation.completed` | All images finished | Pushes usage info, marks end of stream |\n\n### image_generation.partial_succeeded Event\n\nData format:\n\n```json\n{\n  \"url\": \"https://...\",\n  \"size\": \"2048x2048\",\n  \"image_index\": 0\n}\n```\n\n- `url`: Image download URL, valid for 24 hours\n- `size`: Image dimensions in pixels\n- `image_index`: Index of the image in the batch (starting from 0)\n\n### image_generation.completed Event\n\nData format:\n\n```json\n{\n  \"usage\": {\n    \"generated_images\": 4,\n    \"output_tokens\": 16384,\n    \"total_tokens\": 16384\n  }\n}\n```\n\nAfter receiving this event, the stream has ended and the client should disconnect.",
+            "description": "SSE streaming response. Response type is `text/event-stream`.\n\n## image_generation.partial_succeeded\n\n> Currently only seedream-5-0-lite/4.5/4.0 supports streaming response.\n\nReturned when any image is generated successfully in streaming response mode.\n\n| Field | Type | Description |\n|---|---|---|\n| `type` | string | Should be `image_generation.partial_succeeded` |\n| `model` | string | The model ID used for this request, format is `<model name>-<version>` |\n| `created` | integer | Unix timestamp (seconds) of when this request was created |\n| `image_index` | integer | The index of the image corresponding to this event in the request, starting from `0`. The counter increments by 1 for both `image_generation.partial_succeeded` and `image_generation.partial_failed` events regardless of success or failure |\n| `url` | string | Download URL of the image for this event. Returned when the `response_format` is set to `url` |\n| `b64_json` | string | Base64-encoded image data for this event. Returned when the `response_format` is set to `b64_json` |\n| `size` | string | Image dimensions in pixels, format `<width pixels>×<height pixels>`, e.g. `2048×2048` |\n\n## image_generation.partial_failed\n\n> Currently only seedream-5-0-lite/4.5/4.0 supports streaming response.\n\nReturned when any image generation fails in streaming response mode.\n\n- If the failure reason is content moderation failure: the next image generation task will still proceed, i.e., it does not affect the generation flow of other images in the same request.\n- If the failure reason is an internal service error (500): the next image generation task will not proceed.\n\n| Field | Type | Description |\n|---|---|---|\n| `type` | string | Should be `image_generation.partial_failed` |\n| `model` | string | The model ID used for this request, format is `<model name>-<version>` |\n| `created` | integer | Unix timestamp (seconds) of when this request was created |\n| `image_index` | integer | The index of the image corresponding to this event in the request, starting from `0`. The counter increments by 1 for both `image_generation.partial_succeeded` and `image_generation.partial_failed` events regardless of success or failure |\n| `error` | object | The error reason for this event |\n| `error.code` | string | Error code |\n| `error.message` | string | Error message |\n\n## image_generation.completed\n\n> Currently only seedream-5-0-lite/4.5/4.0 supports streaming response.\n\nReturned when all images (whether successful or failed) have been processed. This is the last response event of the streaming response.\n\n| Field | Type | Description |\n|---|---|---|\n| `type` | string | Should be `image_generation.completed` |\n| `model` | string | The model ID used for this request, format is `<model name>-<version>` |\n| `created` | integer | Unix timestamp (seconds) of when this request was created |\n| `tools` | array of object | Tools configured for model invocation in this request |\n| `tools[].type` | string | The type of tool configured. `web_search` is the web search tool |\n| `usage` | object | Usage information for this request |\n| `usage.generated_images` | integer | Number of images successfully generated by the model, excluding failed ones. Billing is based on the number of successfully generated images |\n| `usage.output_tokens` | integer | Number of tokens consumed for the generated images. Calculated as `sum(image_width*image_height)/256` rounded down |\n| `usage.total_tokens` | integer | Total number of tokens consumed for this request. Currently input tokens are not counted, so it matches `output_tokens` |\n| `usage.tool_usage` | object | Usage information for tools used |\n| `usage.tool_usage.web_search` | integer | Number of times the web search tool was called, only returned when web search is enabled |\n\n## error\n\nError information returned when an error occurs in this request.\n\n| Field | Type | Description |\n|---|---|---|\n| `error` | object | Error information returned for this request |\n| `error.code` | string | Error code |\n| `error.message` | string | Error message |",
             "content": {
               "text/event-stream": {
                 "schema": {
                   "type": "string",
-                  "description": "SSE stream text. Each line starts with `event:` or `data:`, events are separated by blank lines."
+                  "description": "SSE streaming text. Each line starts with `event:` or `data:`, with events separated by blank lines."
                 },
                 "examples": {
-                  "stream_example": {
-                    "summary": "Streaming response example",
-                    "value": "event: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img1.png\",\"size\":\"2048x2048\",\"image_index\":0}\n\nevent: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img2.png\",\"size\":\"2048x2048\",\"image_index\":1}\n\nevent: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img3.png\",\"size\":\"2048x2048\",\"image_index\":2}\n\nevent: image_generation.partial_succeeded\ndata: {\"url\":\"https://example.com/img4.png\",\"size\":\"2048x2048\",\"image_index\":3}\n\nevent: image_generation.completed\ndata: {\"usage\":{\"generated_images\":4,\"output_tokens\":16384,\"total_tokens\":16384}}\n"
+                  "seedream-5.0-streaming-output": {
+                    "summary": "seedream-5.0 streaming output",
+                    "value": "event: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396757,\"image_index\":0,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396785,\"image_index\":1,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396825,\"image_index\":2,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.completed\ndata: {\"type\":\"image_generation.completed\",\"model\":\"seedream-5-0-260128\",\"created\":1757396825,\"usage\":{\"generated_images\":3,\"output_tokens\":48672,\"total_tokens\":48672}}\n\ndata: [DONE]\n"
                   }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid request parameters.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "invalid_request": {
-                    "summary": "Parameter Error",
-                    "value": {
-                      "error": {
-                        "code": "bad_request_body",
-                        "message": "Invalid request body format or illegal field value"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication failed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limit or insufficient quota.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
-        },
-        "security": [
-          {
-            "BearerAuth": []
-          }
-        ]
+        }
       }
     }
   },
   "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT",
-        "description": "Pass `Authorization: Bearer <token>` in the request header."
-      }
-    },
     "schemas": {
-      "StreamingRequest": {
+      "PartialSucceededEvent": {
         "type": "object",
-        "required": [
-          "model",
-          "prompt",
-          "stream"
-        ],
+        "description": "Returned when any image is generated successfully in streaming response mode.",
         "properties": {
+          "type": {
+            "type": "string",
+            "description": "Should be `image_generation.partial_succeeded`.",
+            "enum": [
+              "image_generation.partial_succeeded"
+            ]
+          },
           "model": {
             "type": "string",
-            "enum": [
-              "seedream-5-0-260128",
-              "seedream-4-5-251128",
-              "seedream-4-0-250828"
-            ],
-            "description": "Image generation model ID. Only `seedream-5-0-lite`, `seedream-4-5`, and `seedream-4-0` support streaming output."
+            "description": "The model ID used for this request, format is `<model name>-<version>`."
           },
-          "prompt": {
+          "created": {
+            "type": "integer",
+            "description": "Unix timestamp (seconds) of when this request was created."
+          },
+          "image_index": {
+            "type": "integer",
+            "description": "The index of the image corresponding to this event in the request, starting from `0`. The counter increments by 1 for both `image_generation.partial_succeeded` and `image_generation.partial_failed` events regardless of success or failure."
+          },
+          "url": {
             "type": "string",
-            "description": "Text prompt for image generation."
+            "description": "Download URL of the image for this event. Returned when the `response_format` is set to `url`."
           },
-          "stream": {
-            "type": "boolean",
-            "enum": [
-              true
-            ],
-            "description": "Streaming switch. Must be set to `true` to enable SSE streaming."
-          },
-          "image": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "maxItems": 14
-              }
-            ],
-            "description": "Reference images (optional)."
+          "b64_json": {
+            "type": "string",
+            "description": "Base64-encoded image data for this event. Returned when the `response_format` is set to `b64_json`."
           },
           "size": {
             "type": "string",
-            "description": "Output size.",
-            "default": "2048x2048"
-          },
-          "output_format": {
+            "description": "Image dimensions in pixels, format `<width pixels>×<height pixels>`, e.g. `2048×2048`."
+          }
+        }
+      },
+      "PartialFailedEvent": {
+        "type": "object",
+        "description": "Returned when any image generation fails in streaming response mode.\n\n- If the failure reason is content moderation failure: the next image generation task will still proceed, i.e., it does not affect the generation flow of other images in the same request.\n- If the failure reason is an internal service error (500): the next image generation task will not proceed.",
+        "properties": {
+          "type": {
             "type": "string",
+            "description": "Should be `image_generation.partial_failed`.",
             "enum": [
-              "jpeg",
-              "png"
-            ],
-            "default": "jpeg"
+              "image_generation.partial_failed"
+            ]
           },
-          "response_format": {
+          "model": {
             "type": "string",
-            "enum": [
-              "url",
-              "b64_json"
-            ],
-            "default": "url"
+            "description": "The model ID used for this request, format is `<model name>-<version>`."
           },
-          "sequential_image_generation": {
-            "type": "string",
-            "enum": [
-              "auto",
-              "disabled"
-            ],
-            "default": "disabled"
+          "created": {
+            "type": "integer",
+            "description": "Unix timestamp (seconds) of when this request was created."
           },
-          "sequential_image_generation_options": {
+          "image_index": {
+            "type": "integer",
+            "description": "The index of the image corresponding to this event in the request, starting from `0`. The counter increments by 1 for both `image_generation.partial_succeeded` and `image_generation.partial_failed` events regardless of success or failure."
+          },
+          "error": {
             "type": "object",
+            "description": "The error reason for this event.",
             "properties": {
-              "max_images": {
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 15
+              "code": {
+                "type": "string",
+                "description": "Error code. See the error code documentation."
+              },
+              "message": {
+                "type": "string",
+                "description": "Error message."
+              }
+            }
+          }
+        }
+      },
+      "CompletedEvent": {
+        "type": "object",
+        "description": "Returned when all images (whether successful or failed) have been processed. This is the last response event of the streaming response.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Should be `image_generation.completed`.",
+            "enum": [
+              "image_generation.completed"
+            ]
+          },
+          "model": {
+            "type": "string",
+            "description": "The model ID used for this request, format is `<model name>-<version>`."
+          },
+          "created": {
+            "type": "integer",
+            "description": "Unix timestamp (seconds) of when this request was created."
+          },
+          "tools": {
+            "type": "array",
+            "description": "Tools configured for model invocation in this request.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "The type of tool configured. `web_search` is the web search tool.",
+                  "enum": [
+                    "web_search"
+                  ]
+                }
               }
             }
           },
-          "watermark": {
-            "type": "boolean",
-            "default": true
-          },
-          "optimize_prompt_options": {
+          "usage": {
             "type": "object",
-            "description": "Prompt optimization configuration. Only `seedream-5-0-lite`, `seedream-4-5` (only supports `standard` mode) and `seedream-4-0` support this parameter.",
+            "description": "Usage information for this request.",
             "properties": {
-              "mode": {
-                "type": "string",
-                "enum": [
-                  "standard",
-                  "fast"
-                ]
+              "generated_images": {
+                "type": "integer",
+                "description": "Number of images successfully generated by the model, excluding failed ones. Billing is based on the number of successfully generated images."
+              },
+              "output_tokens": {
+                "type": "integer",
+                "description": "Number of tokens consumed for the generated images. Calculated as `sum(image_width*image_height)/256` rounded down."
+              },
+              "total_tokens": {
+                "type": "integer",
+                "description": "Total number of tokens consumed for this request. Currently input tokens are not counted, so it matches `output_tokens`."
+              },
+              "tool_usage": {
+                "type": "object",
+                "description": "Usage information for tools used.",
+                "properties": {
+                  "web_search": {
+                    "type": "integer",
+                    "description": "Number of times the web search tool was called, only returned when web search is enabled."
+                  }
+                }
               }
             }
           }
@@ -266,15 +197,19 @@
       },
       "ErrorResponse": {
         "type": "object",
+        "description": "Error information returned when an error occurs in this request.",
         "properties": {
           "error": {
             "type": "object",
+            "description": "Error information returned for this request.",
             "properties": {
               "code": {
-                "type": "string"
+                "type": "string",
+                "description": "Error code. See the error code documentation."
               },
               "message": {
-                "type": "string"
+                "type": "string",
+                "description": "Error message."
               }
             }
           }
