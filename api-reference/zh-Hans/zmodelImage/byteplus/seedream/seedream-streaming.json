@@ -37,7 +37,7 @@
               "text/event-stream": {
                 "schema": {
                   "type": "string",
-                  "description": "SSE 流式文本。每行以 `event:` 或 `data:` 开头，事件之间以空行分隔。"
+                  "description": ""
                 },
                 "examples": {
                   "seedream-5.0-流式输出": {
