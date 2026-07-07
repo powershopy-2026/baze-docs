@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan Image to Video (First and Last Frame)",
     "version": "1.0.0",
-    "description": "Aliyun Wan 2.2 series first-and-last-frame image-to-video capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/image2video/video-synthesis`, used to create asynchronous video generation tasks.\n\nSupported models: `wan2.2-kf2v-flash`, `wanx2.1-kf2v-plus`.",
+    "description": "Aliyun Wan 2.2 series first-and-last-frame image-to-video capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/image2video/video-synthesis`, used to create asynchronous video generation tasks.\n\nSupported models: `wan2.2-kf2v-flash`, `wan2.1-kf2v-plus`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -30,6 +30,26 @@
         "tags": [
           "Wan Legacy Video"
         ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Request content type. Must be set to `application/json`."
+          },
+          {
+            "name": "X-DashScope-Async",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Async processing configuration. HTTP requests only support async mode. Must be set to `enable`."
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -38,12 +58,13 @@
                 "$ref": "#/components/schemas/LegacyKf2VRequest"
               },
               "examples": {
-                "first_frame_only": {
-                  "summary": "First frame only",
+                "first_last_frame": {
+                  "summary": "First and last frame (URL)",
                   "value": {
                     "model": "wan2.2-kf2v-flash",
                     "input": {
                       "first_frame_url": "https://wanx.alicdn.com/material/20250318/first_frame.png",
+                      "last_frame_url": "https://wanx.alicdn.com/material/20250318/last_frame.png",
                       "prompt": "Realistic style, a small black cat curiously looks up at the sky, the camera gradually rises from eye level, finally looking down at its curious eyes."
                     },
                     "parameters": {
@@ -52,15 +73,44 @@
                     }
                   }
                 },
-                "first_last_frame": {
-                  "summary": "First frame + last frame",
+                "base64": {
+                  "summary": "Using Base64",
                   "value": {
-                    "model": "wan2.2-kf2v-flash",
+                    "model": "wan2.1-kf2v-plus",
+                    "input": {
+                      "first_frame_url": "data:image/png;base64,GDU7MtCZzEbTbmRZ......",
+                      "last_frame_url": "data:image/png;base64,VBORw0KGgoAAAANSUh......",
+                      "prompt": "Realistic style, a small black cat curiously looks up at the sky, the camera gradually rises from eye level, finally looking down at its curious eyes."
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "prompt_extend": true
+                    }
+                  }
+                },
+                "template": {
+                  "summary": "Using video effect template",
+                  "value": {
+                    "model": "wan2.1-kf2v-plus",
+                    "input": {
+                      "first_frame_url": "https://ty-yuanfang.oss-cn-hangzhou.aliyuncs.com/lizhengjia.lzj/tmp/11.png",
+                      "template": "hanfu-1"
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "prompt_extend": true
+                    }
+                  }
+                },
+                "negative_prompt": {
+                  "summary": "Using negative prompt",
+                  "value": {
+                    "model": "wan2.1-kf2v-plus",
                     "input": {
                       "first_frame_url": "https://wanx.alicdn.com/material/20250318/first_frame.png",
                       "last_frame_url": "https://wanx.alicdn.com/material/20250318/last_frame.png",
                       "prompt": "Realistic style, a small black cat curiously looks up at the sky, the camera gradually rises from eye level, finally looking down at its curious eyes.",
-                      "negative_prompt": "Low resolution, error, worst quality, low quality, disfigured, extra fingers, bad proportions, etc."
+                      "negative_prompt": "Human figures"
                     },
                     "parameters": {
                       "resolution": "720P",
@@ -218,7 +268,7 @@
             "type": "string",
             "enum": [
               "wan2.2-kf2v-flash",
-              "wanx2.1-kf2v-plus"
+              "wan2.1-kf2v-plus"
             ],
             "description": "Model name. Example: `wan2.2-kf2v-flash`. See the Bailian console for details."
           },
@@ -238,7 +288,7 @@
         "properties": {
           "prompt": {
             "type": "string",
-            "description": "Text prompt. Supports Chinese and English, up to 800 characters (each Chinese character or letter counts as one character). Excess characters will be automatically truncated.\n\nIf the subject and scene change significantly between the first and last frames, it is recommended to describe the transition, such as camera movement (e.g., camera panning left) or subject motion (e.g., a person running forward).\n\nExample: A small black cat curiously looks up at the sky, the camera gradually rises from eye level, finally looking down at its curious eyes.\n\nSee the Text-to-Video / Image-to-Video Prompt Guide for prompting tips.",
+            "description": "Text prompt. Supports Chinese and English, up to 800 characters (each Chinese character or letter counts as one character). Excess characters will be automatically truncated.\n\nIf the subject and scene change significantly between the first and last frames, it is recommended to describe the transition, such as camera movement (e.g., camera panning left) or subject motion (e.g., a person running forward).\n\nExample: A small black cat curiously looks up at the sky, the camera gradually rises from eye level, finally looking down at its curious eyes.",
             "maxLength": 800
           },
           "negative_prompt": {
@@ -248,11 +298,11 @@
           },
           "first_frame_url": {
             "type": "string",
-            "description": "The URL or Base64-encoded data of the first frame image. The output video's aspect ratio will follow this image.\n\nImage restrictions:\n- Image formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n- Image resolution: width and height range [240, 8000] pixels.\n- File size: up to 10MB.\n\nSupported input formats:\n- **Public URL**: HTTP or HTTPS protocol. Example: `https://wanx.alicdn.com/xxx/first_frame.png`.\n- **Temporary URL**: OSS protocol, must obtain via file upload. Example: `oss://dashscope-instant/xxx/xxx.png`.\n- **Base64-encoded image string**: Format: `data:{MIME_type};base64,{base64_data}`. Example: `data:image/png;base64,GDU7MtCZzEbTbmRZ......` (truncated for brevity).\n\nSee How to Input Images for details."
+            "description": "The URL or Base64-encoded data of the first frame image. The output video's aspect ratio will follow this image.\n\nImage restrictions:\n- Image formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n- Image resolution: width and height range [240, 8000] pixels.\n- File size: up to 10MB.\n\nSupported input formats:\n- **Public URL**: HTTP or HTTPS protocol. Example: `https://wanx.alicdn.com/xxx/first_frame.png`.\n- **Temporary URL**: OSS protocol, must obtain via file upload. Example: `oss://dashscope-instant/xxx/xxx.png`.\n- **Base64-encoded image string**: Format: `data:{MIME_type};base64,{base64_data}`. Example: `data:image/png;base64,GDU7MtCZzEbTbmRZ......` (truncated for brevity)."
           },
           "last_frame_url": {
             "type": "string",
-            "description": "The URL or Base64-encoded data of the last frame image.\n\nImage restrictions:\n- Image formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n- Image resolution: width and height range [240, 8000] pixels. The last frame resolution can differ from the first frame; no forced alignment required.\n- File size: up to 10MB.\n\nSupported input formats:\n- **Public URL**: HTTP or HTTPS protocol. Example: `https://wanx.alicdn.com/xxxx/last_frame.png`.\n- **Temporary URL**: OSS protocol, must obtain via file upload. Example: `oss://dashscope-instant/xxx/xxx.png`.\n- **Base64-encoded image string**: Format: `data:{MIME_type};base64,{base64_data}`. Example: `data:image/png;base64,GDU7MtCZ......` (truncated for brevity).\n\nSee How to Input Images for details."
+            "description": "The URL or Base64-encoded data of the last frame image.\n\nImage restrictions:\n- Image formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n- Image resolution: width and height range [240, 8000] pixels. The last frame resolution can differ from the first frame; no forced alignment required.\n- File size: up to 10MB.\n\nSupported input formats:\n- **Public URL**: HTTP or HTTPS protocol. Example: `https://wanx.alicdn.com/xxxx/last_frame.png`.\n- **Temporary URL**: OSS protocol, must obtain via file upload. Example: `oss://dashscope-instant/xxx/xxx.png`.\n- **Base64-encoded image string**: Format: `data:{MIME_type};base64,{base64_data}`. Example: `data:image/png;base64,GDU7MtCZ......` (truncated for brevity)."
           },
           "template": {
             "type": "string",
@@ -270,11 +320,11 @@
               "720P",
               "1080P"
             ],
-            "description": "**Important**: resolution directly affects cost. For the same model: 1080P > 720P > 480P. Check the Bailian console before calling.\n\nThe resolution tier for the generated video. Used to adjust video sharpness (total pixels) without changing the aspect ratio. The video aspect ratio will match that of the first frame image (first_frame_url).\n\nDefault values and available options depend on the model parameter:\n- `wan2.2-kf2v-flash`: Available values: 480P, 720P, 1080P. Default: 720P.\n- `wanx2.1-kf2v-plus`: Available values: 720P. Default: 720P.\n\nExample: 720P."
+            "description": "**Important**: resolution directly affects cost. For the same model: 1080P > 720P > 480P.\n\nThe resolution tier for the generated video. Used to adjust video sharpness (total pixels) without changing the aspect ratio. The video aspect ratio will match that of the first frame image (first_frame_url).\n\nDefault values and available options depend on the model parameter:\n- `wan2.2-kf2v-flash`: Available values: 480P, 720P, 1080P. Default: 720P.\n- `wan2.1-kf2v-plus`: Available values: 720P. Default: 720P.\n\nExample: 720P."
           },
           "duration": {
             "type": "integer",
-            "description": "**Important**: duration directly affects cost (billed per second). Check the Bailian console before calling.\n\nVideo duration in seconds. Currently fixed at 5 and cannot be changed. The model will always generate a 5-second video.",
+            "description": "**Important**: duration directly affects cost (billed per second).\n\nVideo duration in seconds. Currently fixed at 5 and cannot be changed. The model will always generate a 5-second video.",
             "default": 5
           },
           "prompt_extend": {
@@ -307,10 +357,15 @@
               },
               "task_status": {
                 "type": "string",
-                "enum": [
-                  "PENDING"
-                ],
-                "description": "Task status, returns PENDING after submission."
+                "description": "Task status.\n\nEnum values:\n- `PENDING`: Task is queued\n- `RUNNING`: Task is processing\n- `SUCCEEDED`: Task completed successfully\n- `FAILED`: Task failed\n- `CANCELED`: Task canceled\n- `UNKNOWN`: Task does not exist or status is unknown"
+              },
+              "code": {
+                "type": "string",
+                "description": "Error code for failed requests. Not returned on success."
+              },
+              "message": {
+                "type": "string",
+                "description": "Detailed error message for failed requests. Not returned on success."
               }
             }
           },
