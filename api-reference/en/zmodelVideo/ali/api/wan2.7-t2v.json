@@ -30,6 +30,26 @@
         "tags": [
           "Wan 2.7 Video"
         ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Request content type. This parameter must be set to application/json."
+          },
+          {
+            "name": "X-DashScope-Async",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Asynchronous processing configuration parameter. HTTP requests only support async mode and must be set to enable."
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -38,10 +58,10 @@
                 "$ref": "#/components/schemas/Wan27T2VRequest"
               },
               "examples": {
-                "basic_request": {
-                  "summary": "Basic text-to-video request",
+                "narrative": {
+                  "summary": "Multi-shot narrative",
                   "value": {
-                    "model": "wan2.7-t2v-2026-06-12",
+                    "model": "wan2.7-t2v",
                     "input": {
                       "prompt": "一段紧张刺激的侦探追查故事，展现电影级叙事能力。第1个镜头[0-3秒] 全景：雨夜的纽约街头，霓虹灯闪烁，一位身穿黑色风衣的侦探快步行走。 第2个镜头[3-6秒] 中景：侦探进入一栋老旧建筑，雨水打湿了他的外套，门在他身后缓缓关闭。 第3个镜头[6-9秒] 特写：侦探的眼神坚毅专注，远处传来警笛声，他微微皱眉思考。 第4个镜头[9-12秒] 中景：侦探在昏暗走廊中小心前行，手电筒照亮前方。 第5个镜头[12-15秒] 特写：侦探发现关键线索，脸上露出恍然大悟的表情。"
                     },
@@ -51,6 +71,51 @@
                       "prompt_extend": true,
                       "watermark": true,
                       "duration": 15
+                    }
+                  }
+                },
+                "with_audio": {
+                  "summary": "With audio file",
+                  "value": {
+                    "model": "wan2.7-t2v",
+                    "input": {
+                      "prompt": "A cute cartoon cat general in exquisitely detailed golden armor and an oversized helmet bravely stands on a cliff. He rides a small but valiant warhorse, reciting ancient poetry in a childlike voice. Below the cliff, a vast army of mice charges with makeshift weapons. A dramatic battle scene inspired by Chinese war epics. Storm clouds gather above distant snowy peaks.",
+                      "audio_url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250923/hbiayh/%E4%BB%8E%E5%86%9B%E8%A1%8C.mp3"
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "ratio": "16:9",
+                      "prompt_extend": true,
+                      "duration": 10
+                    }
+                  }
+                },
+                "auto_dub": {
+                  "summary": "Auto dubbing",
+                  "value": {
+                    "model": "wan2.7-t2v",
+                    "input": {
+                      "prompt": "A cute cartoon cat general in exquisitely detailed golden armor and an oversized helmet bravely stands on a cliff. He rides a small but valiant warhorse, reciting ancient poetry in a childlike voice. Below the cliff, a vast army of mice charges with makeshift weapons. A dramatic battle scene inspired by Chinese war epics. Storm clouds gather above distant snowy peaks."
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "ratio": "16:9",
+                      "prompt_extend": true,
+                      "duration": 10
+                    }
+                  }
+                },
+                "with_negative_prompt": {
+                  "summary": "With negative prompt",
+                  "value": {
+                    "model": "wan2.7-t2v",
+                    "input": {
+                      "prompt": "A little cat running in the moonlight",
+                      "negative_prompt": "flowers"
+                    },
+                    "parameters": {
+                      "resolution": "720P",
+                      "ratio": "16:9"
                     }
                   }
                 }
@@ -205,7 +270,7 @@
             "enum": [
               "wan2.7-t2v"
             ],
-            "description": "Model name. See the model list for available models."
+            "description": "Model name."
           },
           "input": {
             "$ref": "#/components/schemas/Wan27T2VInput"
@@ -223,7 +288,7 @@
         "properties": {
           "prompt": {
             "type": "string",
-            "description": "Text prompt describing the desired video content and visual characteristics. Supports Chinese and English, each character or letter counts as one. Excess characters will be automatically truncated. Character limit varies by model version:\n- `wan2.7-t2v`: up to 5000 characters.\n\nFor prompt usage tips, see the Text-to-Video / Image-to-Video Prompt Guide.",
+            "description": "Text prompt describing the desired video content and visual characteristics. Supports Chinese and English, each character or letter counts as one. Excess characters will be automatically truncated. Character limit varies by model version:\n- `wan2.7-t2v`: up to 5000 characters.",
             "maxLength": 5000
           },
           "negative_prompt": {
@@ -298,13 +363,7 @@
               },
               "task_status": {
                 "type": "string",
-                "enum": [
-                  "PENDING"
-                ],
-                "description": "Task status, returns PENDING after successful submission.",
-                "x-enum-descriptions": {
-                  "PENDING": "Task is queued"
-                }
+                "description": "Task status.\n\nEnum values\n\nPENDING: Task queued\n\nRUNNING: Task processing\n\nSUCCEEDED: Task completed successfully\n\nFAILED: Task failed\n\nCANCELED: Task canceled\n\nUNKNOWN: Task does not exist or status unknown"
               }
             }
           },
@@ -342,14 +401,14 @@
                   "CANCELED",
                   "UNKNOWN"
                 ],
-                "description": "Task status.\n- `PENDING`: Task is queued.\n- `RUNNING`: Task is processing.\n- `SUCCEEDED`: Task completed successfully.\n- `FAILED`: Task execution failed.\n- `CANCELED`: Task has been canceled.\n- `UNKNOWN`: Task does not exist or status is unknown.",
+                "description": "Task status.\n- `PENDING`: Task queued\n- `RUNNING`: Task processing\n- `SUCCEEDED`: Task completed successfully\n- `FAILED`: Task failed\n- `CANCELED`: Task canceled\n- `UNKNOWN`: Task does not exist or status unknown",
                 "x-enum-descriptions": {
-                  "PENDING": "Task is queued",
-                  "RUNNING": "Task is processing",
+                  "PENDING": "Task queued",
+                  "RUNNING": "Task processing",
                   "SUCCEEDED": "Task completed successfully",
-                  "FAILED": "Task execution failed",
-                  "CANCELED": "Task has been canceled",
-                  "UNKNOWN": "Task does not exist or status is unknown"
+                  "FAILED": "Task failed",
+                  "CANCELED": "Task canceled",
+                  "UNKNOWN": "Task does not exist or status unknown"
                 }
               },
               "video_url": {

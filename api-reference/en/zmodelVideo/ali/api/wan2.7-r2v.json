@@ -30,6 +30,26 @@
         "tags": [
           "Wan 2.7 Video"
         ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Request content type. This parameter must be set to application/json."
+          },
+          {
+            "name": "X-DashScope-Async",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Asynchronous processing configuration parameter. HTTP requests only support async mode and must be set to enable."
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -38,8 +58,8 @@
                 "$ref": "#/components/schemas/Wan27R2VRequest"
               },
               "examples": {
-                "reference_to_video": {
-                  "summary": "Reference to video with multiple assets",
+                "multi_reference": {
+                  "summary": "Multi-subject reference (image + video + voice)",
                   "value": {
                     "model": "wan2.7-r2v",
                     "input": {
@@ -72,6 +92,27 @@
                     "parameters": {
                       "resolution": "720P",
                       "ratio": "16:9",
+                      "duration": 10,
+                      "prompt_extend": false,
+                      "watermark": true
+                    }
+                  }
+                },
+                "single_image_storyboard": {
+                  "summary": "Single image reference (multi-panel storyboard)",
+                  "value": {
+                    "model": "wan2.7-r2v-2026-06-12",
+                    "input": {
+                      "prompt": "Reference image, 3D cartoon adventure movie style, Q-version characters with fine textures, smooth motion, vibrant colors, keep characters consistent with the forest scene, no text. Atmosphere: adventure, lighthearted, mysterious, childlike. Characters: Little boy explorer - round hat, backpack, short cloak. Companion: flying little robot, round body, blue glowing eyes. Scene: fantasy forest, giant tree roots, mushrooms, vines, treasure cave entrance, sunbeams. Storyboard: 1. Wide shot: tall trees and light beams crisscross in the fantasy forest, mysterious and bright. 2. Medium shot: the little boy pushes aside vines to explore. 3. Medium shot: the little robot flies beside him, scanning ahead with blue light. 4. Close-up: an old treasure map unfolds in the boy's hands. 5. Medium close-up: he shows an excited expression, eyes lighting up. 6. Action shot: they jump over tree roots and a stream, venturing deeper into the forest. 7. Medium shot: a moss-covered treasure chest is revealed behind the vines. 8. Close-up: golden light shines from the edge of the chest. 9. Closing shot: the boy and the little robot stand in surprise before the chest, full of adventure.",
+                      "media": [
+                        {
+                          "type": "reference_image",
+                          "url": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/en-US/20260403/wgjaxy/banana_storyboard_00000020.png"
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "resolution": "720P",
                       "duration": 10,
                       "prompt_extend": false,
                       "watermark": true
@@ -229,7 +270,7 @@
             "enum": [
               "wan2.7-r2v"
             ],
-            "description": "Model name. See the model list and pricing for details. Available value: `wan2.7-r2v`."
+            "description": "Model name. Available value: `wan2.7-r2v`."
           },
           "input": {
             "$ref": "#/components/schemas/Wan27R2VInput"
@@ -248,7 +289,7 @@
         "properties": {
           "prompt": {
             "type": "string",
-            "description": "Text prompt describing the desired video content and visual characteristics. Supports Chinese and English; each character, letter, or punctuation mark counts as one character. Excess characters are automatically truncated.\n\n- `wan2.7-r2v`: up to 5000 characters.\n\n**Reference naming conventions:**\n- For Chinese prompts, reference images with markers like \"图1\", \"图2\" and reference videos with markers like \"视频1\", \"视频2\".\n- For English prompts, use markers like \"Image 1\", \"Video 1\" (capitalized first letter, space between letter and number).\n- The order matches the `media` array order. Images and videos are counted separately, e.g. \"图1\" and \"视频1\" can exist simultaneously.\n- If only one reference image or video is provided, you can simply use \"参考图片\" (reference image) or \"参考视频\" (reference video).\n\n**Scene description examples:**\n- Direct reference: \"图1在图2里玩耍\" (Image 1 is playing in Image 2).\n- Combined description: \"图1的猫在图2的房间里玩耍\" (The cat from Image 1 plays in the room from Image 2).\n\n**Multi-panel/storyboard images:**\nWhen the reference image is a multi-panel (storyboard) image, describe the content in a multi-shot narrative format. You do not need to describe every panel; provide key shot content and the model will automatically identify the panel logic and intelligently fill in the details. For best results, it is recommended to provide only one multi-panel image per request.\n\nFor prompt tips, see the text-to-video / image-to-video prompt guide.",
+            "description": "Text prompt describing the desired video content and visual characteristics. Supports Chinese and English; each character, letter, or punctuation mark counts as one character. Excess characters are automatically truncated.\n\n- `wan2.7-r2v`: up to 5000 characters.\n\n**Reference naming conventions:**\n- For Chinese prompts, reference images with markers like \"图1\", \"图2\" and reference videos with markers like \"视频1\", \"视频2\".\n- For English prompts, use markers like \"Image 1\", \"Video 1\" (capitalized first letter, space between letter and number).\n- The order matches the `media` array order. Images and videos are counted separately, e.g. \"图1\" and \"视频1\" can exist simultaneously.\n- If only one reference image or video is provided, you can simply use \"参考图片\" (reference image) or \"参考视频\" (reference video).\n\n**Scene description examples:**\n- Direct reference: \"图1在图2里玩耍\" (Image 1 is playing in Image 2).\n- Combined description: \"图1的猫在图2的房间里玩耍\" (The cat from Image 1 plays in the room from Image 2).\n\n**Multi-panel/storyboard images:**\nWhen the reference image is a multi-panel (storyboard) image, describe the content in a multi-shot narrative format. You do not need to describe every panel; provide key shot content and the model will automatically identify the panel logic and intelligently fill in the details. For best results, it is recommended to provide only one multi-panel image per request.",
             "maxLength": 5000
           },
           "negative_prompt": {
@@ -258,7 +299,7 @@
           },
           "media": {
             "type": "array",
-            "description": "Array of media assets, including images, videos, and audio. Supports image/video input as visual reference, and images can provide multi-view references for characters, props, scenes, etc.\n\nEach element in the array is a media object containing `type` and `url` fields.\n\nThe order in the array defines the reference mapping order in the prompt. Images and videos are counted separately, so \"图1\" (Image 1) and \"视频1\" (Video 1) can exist simultaneously.\n- The 1st `reference_video` in the array corresponds to \"视频1\", the 2nd to \"视频2\", etc.\n- The 1st `reference_image` in the array corresponds to \"图1\", the 2nd to \"图2\", etc.\n\nConstraints:\n- First frame image (`first_frame`): max 1.\n- At least 1 reference image or reference video must be provided. Total reference images + reference videos ≤ 5.\n- When a reference asset contains a subject character, it should contain only a single character.",
+            "description": "Array of media assets, including images, videos, and audio. Supports image/video input as visual reference, and images can provide multi-view references for characters, props, scenes, etc.\n\nEach element in the array is a media object containing `type` and `url` fields.\n\nThe order in the array defines the reference mapping order in the prompt. Images and videos are counted separately, so \"图1\" (Image 1) and \"视频1\" (Video 1) can exist simultaneously.\n- The 1st `reference_video` in the array corresponds to \"视频1\", the 2nd to \"视频2\", etc.\n- The 1st `reference_image` in the array corresponds to \"图1\", the 2nd to \"图2\", etc.",
             "items": {
               "$ref": "#/components/schemas/Wan27R2VMedia"
             }
@@ -274,12 +315,7 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": [
-              "reference_image",
-              "reference_video",
-              "first_frame"
-            ],
-            "description": "Media asset type. Available values:\n- `reference_image`: Reference image. Provides subject (person/animal/object) and scene reference.\n- `reference_video`: Reference video. Provides subject (person/animal/object) and voice reference. B-roll/empty scene videos are not recommended.\n- `first_frame`: First frame image. Generates video based on the first frame, typically containing the subject (person/animal/object). Supports combined use with subject reference for consistency, or voice reference."
+            "description": "type string (required)\n\nMedia asset type. Available values:\n\nreference_image: Reference image. Provides subject (person/animal/object) and scene reference.\n\nreference_video: Reference video. Provides subject (person/animal/object) and voice reference. B-roll/empty scene videos are not recommended.\n\nfirst_frame: First frame image. Generates video based on the first frame, typically containing the subject (person/animal/object). Supports combined use with subject reference for consistency, or voice reference.\n\nFirst frame: already contains the subject to reference; you can pair it with subject reference for enhanced consistency, or use voice reference.\n\nFirst frame: does not yet contain the subject to reference; you can use subject reference to define the characteristics of the new subject appearing during the video.\n\nMaterial constraints:\n\nFirst frame image: max 1.\n\nAt least 1 reference image or reference video must be provided. Total reference images + reference videos ≤ 5.\n\nWhen a reference asset contains a subject character, it should contain only a single character."
           },
           "url": {
             "type": "string",
@@ -352,13 +388,7 @@
               },
               "task_status": {
                 "type": "string",
-                "enum": [
-                  "PENDING"
-                ],
-                "description": "Task status. Returns PENDING after submission.",
-                "x-enum-descriptions": {
-                  "PENDING": "Task queued"
-                }
+                "description": "Task status.\n\nEnum values\n\nPENDING: Task queued\n\nRUNNING: Task processing\n\nSUCCEEDED: Task completed successfully\n\nFAILED: Task failed\n\nCANCELED: Task canceled\n\nUNKNOWN: Task does not exist or status unknown"
               }
             }
           },
