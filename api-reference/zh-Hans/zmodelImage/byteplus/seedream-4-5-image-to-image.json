@@ -201,25 +201,25 @@
           },
           "prompt": {
             "type": "string",
-            "description": "图像生成提示词。建议不超过 300 个汉字或 600 个英文单词。"
+            "description": "用于生成图像的提示词，支持中英文。建议不超过 300 个汉字或 600 个英文单词。字数过多信息容易分散，模型可能因此忽略细节，只关注重点，造成图片缺失部分元素。",
+            "example": "充满活力的特写编辑肖像，模特眼神犀利，头戴雕塑感帽子，色彩拼接丰富。"
           },
           "image": {
-            "anyOf": [
+            "oneOf": [
               {
                 "type": "string",
-                "description": "单张参考图片 URL 或 Base64 编码。"
+                "description": "输入的图片信息，支持 URL 或 Base64 编码。"
               },
               {
                 "type": "array",
-                "description": "多张参考图片（2-14 张）。",
+                "description": "输入的多张图片信息，支持 URL 或 Base64 编码。",
                 "items": {
                   "type": "string"
                 },
-                "minItems": 1,
                 "maxItems": 14
               }
             ],
-            "description": "参考图片。当前公开的 Seedream 模型支持 1-14 张参考图。"
+            "description": "输入的图片信息，支持 URL 或 Base64 编码。seedream 4.0 支持单图或多图输入。\n\n- 图片 URL：请确保图片 URL 可被访问。\n- Base64 编码：请遵循此格式 `data:image/<图片格式>;base64,<Base64编码>`。注意 `<图片格式>` 需小写，如 `data:image/png;base64,<base64_image>`。\n\n说明：\n- 传入单张图片要求：\n  - 图片格式：jpeg、png（seedream 4.0 新增支持 webp、bmp、tiff、gif、heic、heif 格式）\n  - 宽高比（宽/高）范围：[1/16, 16]（适用模型：seedream 4.0）\n  - 宽高长度（px） > 14\n  - 大小：不超过 30MB\n  - 总像素：不超过 6000×6000 = 36000000 px（对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制）\n- seedream 4.0 最多支持传入 14 张参考图。"
           },
           "size": {
             "type": "string",
@@ -227,17 +227,14 @@
               "2K",
               "4K"
             ],
-            "description": "输出图像尺寸。\n- seedream-5-0-260128：支持 2K/3K 或自定义（总像素 3686400-10404496，宽高比 1/16-16）\n- seedream-4-5-251128：支持 2K/4K 或自定义（总像素 3686400-16777216，宽高比 1/16-16）\n- seedream-4-0-250828：支持 1K/2K/4K 或自定义（总像素 921600-16777216，宽高比 1/16-16）",
+            "description": "指定生成图像的尺寸信息。不同模型支持的尺寸方式存在差异。\n\n**seedream-4-5-251128**：\n- 方式 1 | 指定生成图像的分辨率。可选值：`2K`、`4K`\n- 方式 2 | 指定生成图像的宽高像素值：\n  - 默认值：`2048x2048`\n  - 总像素取值范围：[`2560x1440=3686400`, `4096x4096=16777216`]\n  - 宽高比取值范围：[`1/16`, `16`]\n\n推荐的宽高像素值：\n\n| 分辨率 | 宽高比 | 宽高像素值 |\n|---|---|---|\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2304x1728 |\n| | 3:4 | 1728x2304 |\n| | 16:9 | 2848x1600 |\n| | 9:16 | 1600x2848 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n| 4K | 1:1 | 4096x4096 |\n| | 3:4 | 3520x4704 |\n| | 4:3 | 4704x3520 |\n| | 16:9 | 5504x3040 |\n| | 9:16 | 3040x5504 |\n| | 2:3 | 3328x4992 |\n| | 3:2 | 4992x3328 |\n| | 21:9 | 6240x2656 |",
             "default": "2K",
             "example": "2048x2048"
           },
-          "response_format": {
+           "response_format": {
             "type": "string",
-            "enum": [
-              "url",
-              "b64_json"
-            ],
-            "description": "响应格式。",
+            "enum": ["url", "b64_json"],
+            "description": "指定生成图像的返回格式。支持以下两种返回方式：\n- `url`：返回图片下载链接；链接在图片生成后 24 小时内有效，请及时下载图片。\n- `b64_json`：以 Base64 编码字符串的 JSON 格式返回图像数据。",
             "default": "url"
           },
           "seed": {
@@ -247,37 +244,29 @@
             "minimum": -1,
             "maximum": 2147483647
           },
-          "sequential_image_generation": {
+         "sequential_image_generation": {
             "type": "string",
-            "enum": [
-              "auto",
-              "disabled"
-            ],
-            "description": "组图功能开关。`auto` 为自动判断模式，`disabled` 为关闭组图（仅生成单图）。当前支持的 Seedream 模型均可使用该能力。",
+            "enum": ["auto", "disabled"],
+            "description": "控制是否关闭组图功能。\n- `auto`：自动判断模式，模型会根据用户提供的提示词自主判断是否返回组图以及组图包含的图片数量。\n- `disabled`：关闭组图功能，模型只会生成一张图。\n\n仅 seedream 5.0/4.5/4.0 支持该参数。",
             "default": "disabled"
           },
           "sequential_image_generation_options": {
             "type": "object",
-            "description": "组图功能配置。仅当 `sequential_image_generation=auto` 时生效。",
-            "x-valid-when": {
-              "sequential_image_generation": [
-                "auto"
-              ]
-            },
+            "description": "组图功能的配置。仅当 `sequential_image_generation` 为 `auto` 时生效。\n\n仅 seedream 5.0/4.5/4.0 支持该参数。",
             "properties": {
               "max_images": {
                 "type": "integer",
-                "description": "本次请求最多允许生成的图片数量。注意：参考图数量与最终生成图数量之和不超过 15。",
+                "description": "指定本次请求，最多可生成的图片数量。\n- 取值范围：[1, 15]\n\n说明：实际可生成的图片数量，除受到 `max_images` 影响外，还受到输入的参考图数量影响。输入的参考图数量 + 最终生成的图片数量 ≤ 15 张。",
                 "minimum": 1,
                 "maximum": 15,
-                "default": 3
+                "default": 15
               }
             }
           },
-          "watermark": {
+           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。",
-            "default": false
+            "description": "是否在生成的图片中添加水印。\n- `false`：不添加水印。\n- `true`：在图片右下角添加「AI生成」字样的水印标识。",
+            "default": true
           }
         }
       },
