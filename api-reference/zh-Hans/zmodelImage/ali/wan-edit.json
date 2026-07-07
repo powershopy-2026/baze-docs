@@ -239,7 +239,7 @@
           },
           "size": {
             "type": "string",
-            "description": "输出图像分辨率。图像编辑场景建议使用官方规格如 `1K`、`2K`。网关会映射到上游 `parameters.size`。",
+            "description": "控制输出图像分辨率。图像编辑场景支持 `1K`（默认）、`2K`。网关会映射到上游 `parameters.size`。",
             "x-enum": [
               "1K",
               "2K"
@@ -250,27 +250,27 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 4,
-            "description": "生成图像数量。网关会映射到上游 `parameters.n`。"
+            "description": "输出图片数量。重要：`n` 直接影响费用。费用 = 单价 × 成功生成的图片数量。调用前请确认模型定价。网关会映射到上游 `parameters.n`。"
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。网关会映射到上游 `parameters.watermark`。",
+            "description": "是否添加水印。水印位于图片右下角，文字为 'AI生成'。`false`（默认）：无水印。`true`：添加水印。网关会映射到上游 `parameters.watermark`。",
             "default": false
           },
           "negative_prompt": {
             "type": "string",
-            "description": "反向提示词。网关会映射到上游 `parameters.negative_prompt`。"
+            "description": "反向提示词，描述输出中应避免的内容。网关会映射到上游 `parameters.negative_prompt`。"
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子，取值范围 [0, 2147483647]。网关会映射到上游 `parameters.seed`。",
+            "description": "随机种子。取值范围 [0, 2147483647]。使用相同的种子有助于保持生成结果相对稳定。注意：生成过程具有概率性，相同的种子也不能保证每次结果完全一致。网关会映射到上游 `parameters.seed`。",
             "default": 0,
             "minimum": 0,
             "maximum": 2147483647
           },
           "bbox_list": {
             "type": "array",
-            "description": "交互式编辑框选区域，按输入图片顺序对应。网关会映射到上游 `parameters.bbox_list`。",
+            "description": "交互式编辑框选区域，按输入图片顺序对应。每个元素是该图片对应的框选数组 `[x1, y1, x2, y2]`，空数组 `[]` 表示该图片不做框选。网关会映射到上游 `parameters.bbox_list`。",
             "items": {
               "type": "array",
               "items": {
@@ -312,7 +312,7 @@
             "enum": [
               "user"
             ],
-            "description": "消息角色，固定为 `user`。"
+            "description": "固定为 `user`。"
           },
           "content": {
             "type": "array",
@@ -328,11 +328,12 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "输入图片 URL 或 Data URL。"
+            "description": "输入图片 URL 或 Data URL。支持 PNG、JPG、JPEG、WEBP 格式。"
           },
           "text": {
             "type": "string",
-            "description": "编辑指令。支持中英文。"
+            "maxLength": 5000,
+            "description": "编辑指令。支持中英文，最长 5000 字符，超出部分将自动截断。"
           }
         }
       },
@@ -341,30 +342,30 @@
         "properties": {
           "size": {
             "type": "string",
-            "description": "输出图像分辨率。图像编辑场景建议使用官方规格如 `1K`、`2K`。"
+            "description": "控制输出图像分辨率。图像编辑场景支持 `1K`（默认）、`2K`。"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 4,
-            "description": "生成图像数量。"
+            "description": "输出图片数量。重要：`n` 直接影响费用。费用 = 单价 × 成功生成的图片数量。调用前请确认模型定价。"
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。",
+            "description": "是否添加水印。水印位于图片右下角，文字为 'AI生成'。`false`（默认）：无水印。`true`：添加水印。",
             "default": false
           },
           "negative_prompt": {
             "type": "string",
-            "description": "反向提示词。"
+            "description": "反向提示词，描述输出中应避免的内容。"
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子，取值范围 [0, 2147483647]。"
+            "description": "随机种子。取值范围 [0, 2147483647]。使用相同的种子有助于保持生成结果相对稳定。注意：生成过程具有概率性，相同的种子也不能保证每次结果完全一致。"
           },
           "bbox_list": {
             "type": "array",
-            "description": "交互式编辑框选区域，按输入图片顺序对应。",
+            "description": "交互式编辑框选区域，按输入图片顺序对应。每个元素是该图片对应的框选数组 `[x1, y1, x2, y2]`，空数组 `[]` 表示该图片不做框选。",
             "items": {
               "type": "array",
               "items": {
@@ -383,18 +384,18 @@
           "created": {
             "type": "integer",
             "format": "int64",
-            "description": "创建时间的 Unix 时间戳（秒）。"
+            "description": "响应生成时间戳。"
           },
           "data": {
             "type": "array",
-            "description": "生成的图像列表。",
+            "description": "生成后的图片结果列表。",
             "items": {
               "$ref": "#/components/schemas/ImageData"
             }
           },
           "metadata": {
             "type": "object",
-            "description": "附加结果信息。字段内容会随能力不同而变化。"
+            "description": "透传的上游原始响应元数据。"
           }
         }
       },
@@ -403,15 +404,15 @@
         "properties": {
           "url": {
             "type": "string",
-            "description": "图片下载链接。有效期 24 小时。"
+            "description": "当结果以 URL 返回时使用。"
           },
           "b64_json": {
             "type": "string",
-            "description": "Base64 编码的图片数据。"
+            "description": "当结果以 Base64 返回时使用。"
           },
           "revised_prompt": {
             "type": "string",
-            "description": "优化后的提示词。"
+            "description": "上游返回的改写提示词。"
           }
         }
       },
