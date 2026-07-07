@@ -49,23 +49,51 @@
                 "schema": {
                   "$ref": "#/components/schemas/TaskQueryResponse"
                 },
-                "example": {
-                  "request_id": "2ca1c497-f9e0-449d-9a3f-xxxxxx",
-                  "output": {
-                    "task_id": "af6efbc0-4bef-4194-8246-xxxxxx",
-                    "task_status": "SUCCEEDED",
-                    "submit_time": "2025-09-25 11:07:28.590",
-                    "scheduled_time": "2025-09-25 11:07:35.349",
-                    "end_time": "2025-09-25 11:17:11.650",
-                    "orig_prompt": "一幅都市奇幻艺术的场景。一个充满动感的涂鸦艺术角色。一个由喷漆所画成的少年，正从一面混凝土墙上活过来。他一边用极快的语速演唱一首英文rap，一边摆着一个经典的、充满活力的说唱歌手姿势。场景设定在夜晚一个充满都市感的铁路桥下。灯光来自一盏孤零零的街灯，营造出电影般的氛围，充满高能量和惊人的细节。视频的音频部分完全由他的rap构成，没有其他对话或杂音。",
-                    "video_url": "https://dashscope-result-sh.oss-cn-shanghai.aliyuncs.com/xxx.mp4?Expires=xxx"
+                "examples": {
+                  "success": {
+                    "summary": "Task executed successfully",
+                    "value": {
+                      "request_id": "52cade0d-905e-9b7d-a01e-xxxxxx",
+                      "output": {
+                        "task_id": "18814247-f944-4102-aa4a-xxxxxx",
+                        "task_status": "SUCCEEDED",
+                        "submit_time": "2026-04-02 22:53:19.537",
+                        "scheduled_time": "2026-04-02 22:53:30.427",
+                        "end_time": "2026-04-02 23:00:39.287",
+                        "orig_prompt": "视频2抱着图片3在咖啡厅里弹奏一支舒缓的美式乡村民谣，视频1笑着看着视频2，并缓缓向他走去",
+                        "video_url": "https://dashscope-a717.oss-accelerate.aliyuncs.com/xxx.mp4?xxxx"
+                      },
+                      "usage": {
+                        "duration": 15,
+                        "input_video_duration": 5,
+                        "output_video_duration": 10,
+                        "video_count": 1,
+                        "SR": 720,
+                        "ratio": "16:9"
+                      }
+                    }
                   },
-                  "usage": {
-                    "duration": 15,
-                    "input_video_duration": 0,
-                    "output_video_duration": 15,
-                    "video_count": 1,
-                    "SR": 720
+                  "failure": {
+                    "summary": "Task execution failed",
+                    "value": {
+                      "request_id": "e5d70b02-ebd3-98ce-9fe8-759d7d7b107d",
+                      "output": {
+                        "task_id": "86ecf553-d340-4e21-af6e-a0c6a421c010",
+                        "task_status": "FAILED",
+                        "code": "InvalidParameter",
+                        "message": "The size is not match xxxxxx"
+                      }
+                    }
+                  },
+                  "expired": {
+                    "summary": "Task query expired",
+                    "value": {
+                      "request_id": "a4de7c32-7057-9f82-8581-xxxxxx",
+                      "output": {
+                        "task_id": "502a00b1-19d9-4839-a82f-xxxxxx",
+                        "task_status": "UNKNOWN"
+                      }
+                    }
                   }
                 }
               }
@@ -159,7 +187,7 @@
               },
               "video_url": {
                 "type": "string",
-                "description": "Video URL. Only returned when task_status is SUCCEEDED.\n\nThe link is valid for 24 hours. Download the video via this URL. The video format is MP4 (H.264 encoding)."
+                "description": "Video URL. Only returned when task_status is SUCCEEDED.\n\nThe link is valid for 14 days. Download the video via this URL. The video format is MP4 (H.264 encoding)."
               },
               "orig_prompt": {
                 "type": "string",
@@ -189,7 +217,7 @@
               },
               "duration": {
                 "type": "integer",
-                "description": "Total video duration, used for billing."
+                "description": "Total video duration, used for billing.\n\nFor reference video generation tasks, duration = input_video_duration + output_video_duration."
               },
               "SR": {
                 "type": "integer",
@@ -198,6 +226,10 @@
               "video_count": {
                 "type": "integer",
                 "description": "Number of output videos. Fixed at 1."
+              },
+              "ratio": {
+                "type": "string",
+                "description": "Aspect ratio of the generated video. Example value: 16:9."
               }
             }
           },
