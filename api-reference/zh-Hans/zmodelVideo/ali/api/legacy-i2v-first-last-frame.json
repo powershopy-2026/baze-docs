@@ -58,7 +58,7 @@
                 "$ref": "#/components/schemas/LegacyKf2VRequest"
               },
               "examples": {
-                "first_last_frame": {
+                "首尾帧生视频": {
                   "summary": "首尾帧生视频",
                   "value": {
                     "model": "wan2.2-kf2v-flash",
@@ -73,7 +73,7 @@
                     }
                   }
                 },
-                "base64": {
+                "使用Base64": {
                   "summary": "使用Base64",
                   "value": {
                     "model": "wan2.1-kf2v-plus",
@@ -88,7 +88,7 @@
                     }
                   }
                 },
-                "template": {
+                "使用视频特效": {
                   "summary": "使用视频特效",
                   "value": {
                     "model": "wan2.1-kf2v-plus",
@@ -102,7 +102,7 @@
                     }
                   }
                 },
-                "negative_prompt": {
+                "使用反向提示词": {
                   "summary": "使用反向提示词",
                   "value": {
                     "model": "wan2.1-kf2v-plus",

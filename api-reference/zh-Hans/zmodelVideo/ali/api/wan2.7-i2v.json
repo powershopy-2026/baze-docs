@@ -64,7 +64,7 @@
                 "$ref": "#/components/schemas/Wan27I2VRequest"
               },
               "examples": {
-                "first_frame_with_audio": {
+                "首帧生视频": {
                   "summary": "首帧生视频",
                   "value": {
                     "model": "wan2.7-i2v-2026-04-25",
@@ -89,7 +89,7 @@
                     }
                   }
                 },
-                "first_last_frame": {
+                "首尾帧生视频": {
                   "summary": "首尾帧生视频",
                   "value": {
                     "model": "wan2.7-i2v-2026-04-25",
@@ -114,7 +114,7 @@
                     }
                   }
                 },
-                "video_continuation": {
+                "视频续写": {
                   "summary": "视频续写",
                   "value": {
                     "model": "wan2.7-i2v-2026-04-25",

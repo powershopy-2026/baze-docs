@@ -48,7 +48,7 @@
                 "$ref": "#/components/schemas/AliSpeechRequest"
               },
               "examples": {
-                "basic": {
+                "非流式请求": {
                   "summary": "非流式请求",
                   "value": {
                     "model": "qwen3-tts-flash",
@@ -59,7 +59,7 @@
                     }
                   }
                 },
-                "stream": {
+                "流式请求": {
                   "summary": "流式请求",
                   "value": {
                     "model": "qwen3-tts-flash",
@@ -70,7 +70,7 @@
                     "language_type": "Auto"
                   }
                 },
-                "qwen-tts": {
+                "qwen-tts 请求": {
                   "summary": "qwen-tts 请求",
                   "value": {
                     "model": "qwen-tts",
@@ -94,7 +94,7 @@
                   "$ref": "#/components/schemas/AliSpeechResponse"
                 },
                 "examples": {
-                  "qwen3_tts_flash": {
+                  "qwen3-tts-flash 响应示例": {
                     "summary": "qwen3-tts-flash 响应示例",
                     "value": {
                       "status_code": 200,
@@ -119,7 +119,7 @@
                       }
                     }
                   },
-                  "qwen_tts": {
+                  "qwen-tts 响应示例": {
                     "summary": "qwen-tts 响应示例",
                     "value": {
                       "status_code": 200,

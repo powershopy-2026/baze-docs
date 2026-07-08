@@ -58,7 +58,7 @@
                 "$ref": "#/components/schemas/Wan27R2VRequest"
               },
               "examples": {
-                "multi_reference": {
+                "多主体参考（图像+视频+音色）": {
                   "summary": "多主体参考（图像+视频+音色）",
                   "value": {
                     "model": "wan2.7-r2v",
@@ -98,7 +98,7 @@
                     }
                   }
                 },
-                "single_image_storyboard": {
+                "单图参考（多宫格图像）": {
                   "summary": "单图参考（多宫格图像）",
                   "value": {
                     "model": "wan2.7-r2v-2026-06-12",
