@@ -128,17 +128,18 @@
         "properties": {
           "model": {
             "type": "string",
+            "description": "Model name. Available options: `qwen3-tts-instruct-flash`.",
             "enum": [
               "qwen3-tts-instruct-flash"
             ]
           },
           "input": {
             "type": "string",
-            "description": "Text to synthesize, supporting multilingual input. Maximum input length: 512 tokens for qwen-TTS models, 600 characters for other models."
+            "description": "Text to synthesize. This field accepts multilingual input."
           },
           "voice": {
             "type": "string",
-            "description": "Voice to use. See supported system voices. Only the enum values listed here are currently supported on this channel.",
+            "description": "Voice to use. See supported system voices.",
             "enum": [
               "Cherry",
               "Serena",
@@ -202,42 +203,43 @@
           },
           "request_id": {
             "type": "string",
-            "description": "Unique request identifier."
+            "description": "Unique request identifier for this request, useful for troubleshooting."
           },
           "code": {
             "type": "string",
-            "description": "Error code. Returned on failure."
+            "description": "Error code. Returned when the request fails."
           },
           "message": {
             "type": "string",
-            "description": "Error message. Returned on failure."
+            "description": "Error message. Returned when the request fails."
           },
           "output": {
             "type": "object",
+            "description": "Model output.",
             "properties": {
               "text": {
                 "nullable": true,
-                "description": "Always null."
+                "description": "Always null and can be ignored."
               },
               "finish_reason": {
                 "type": "string",
-                "description": "Finish reason, `stop` or null."
+                "description": "Generation status identifier. It is `null` while still generating; it becomes `stop` when the model naturally finishes or a stop condition is triggered."
               },
               "choices": {
                 "nullable": true,
-                "description": "Always null."
+                "description": "Always null and can be ignored."
               },
               "audio": {
                 "type": "object",
                 "properties": {
                   "data": {
                     "type": "string",
-                    "description": "Streaming Base64 audio data. Usually empty in non-streaming mode."
+                    "description": "Base64 audio data for streaming output."
                   },
                   "url": {
                     "type": "string",
                     "format": "uri",
-                    "description": "Audio file URL in WAV format, valid for 24 hours."
+                    "description": "Full audio file URL, valid for 24 hours."
                   },
                   "id": {
                     "type": "string",
@@ -245,7 +247,7 @@
                   },
                   "expires_at": {
                     "type": "integer",
-                    "description": "URL expiration timestamp."
+                    "description": "UNIX timestamp of the URL expiration time."
                   }
                 }
               }
@@ -253,14 +255,15 @@
           },
           "usage": {
             "type": "object",
+            "description": "Token or character consumption for this request. qwen-TTS returns token consumption information, while qwen3-TTS-Flash returns character consumption information.",
             "properties": {
               "input_tokens": {
                 "type": "integer",
-                "description": "Input token count."
+                "description": "Input token count. For `qwen3-tts-flash`, this field is fixed at 0."
               },
               "output_tokens": {
                 "type": "integer",
-                "description": "Output token count."
+                "description": "Output audio token count. For `qwen3-tts-flash`, this field is fixed at 0."
               },
               "total_tokens": {
                 "type": "integer",
@@ -268,7 +271,7 @@
               },
               "characters": {
                 "type": "integer",
-                "description": "Input character count. Only returned by `qwen3-tts-flash`; primarily used for billing."
+                "description": "Input character count. Only returned by `qwen3-tts-flash`."
               }
             }
           }

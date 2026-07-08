@@ -3,7 +3,7 @@
   "info": {
     "title": "Ali Text-to-Speech",
     "version": "1.0.0",
-    "description": "Ali channel text-to-speech capability exposed through the unified `/ali/api/v1/services/aigc/video-generation/video-synthesis` endpoint. Supports `qwen3-tts-instruct-flash` model.\n\nThe request body follows the official Ali-compatible structure: `model`, `input` (object), `voice`, `language_type`, `instructions`, and `optimize_instructions`.\n\nStreaming follows the official Ali HTTP contract: clients must explicitly send `X-DashScope-SSE: enable` in the request header. This channel does not expose `stream_format`.\n\nModel differences:\n- `qwen3-tts-instruct-flash` supports the `instructions` and `optimize_instructions` fields;\n- `qwen3-tts-flash` returns `characters` in usage;\n- `qwen-tts` returns `total_tokens` and token detail fields in usage.\n\nBilling note: the gateway maps upstream `usage.characters` to unified `usage.prompt_tokens_details.audio_tokens`, keeps `usage.output_tokens` in `usage.completion_tokens_details.audio_tokens`, and stores both raw Ali usage and normalized usage snapshots in consume_detail for billing traceability."
+    "description": "Ali channel text-to-speech capability exposed through the unified `/ali/api/v1/services/aigc/multimodal-generation/generation` endpoint. Supports `qwen3-tts-instruct-flash` model.\n\nThe request body follows the official Ali-compatible structure: `model`, `input` (object), `voice`, `language_type`, `instructions`, and `optimize_instructions`.\n\nStreaming follows the official Ali HTTP contract: clients must explicitly send `X-DashScope-SSE: enable` in the request header. This channel does not expose `stream_format`.\n\nModel differences:\n- `qwen3-tts-instruct-flash` supports the `instructions` and `optimize_instructions` fields;\n- `qwen3-tts-flash` returns `characters` in usage;\n- `qwen-tts` returns `total_tokens` and token detail fields in usage.\n\nBilling note: the gateway maps upstream `usage.characters` to unified `usage.prompt_tokens_details.audio_tokens`, keeps `usage.output_tokens` in `usage.completion_tokens_details.audio_tokens`, and stores both raw Ali usage and normalized usage snapshots in consume_detail for billing traceability."
   },
   "servers": [
     {
@@ -18,10 +18,10 @@
     }
   ],
   "paths": {
-    "/ali/api/v1/services/aigc/video-generation/video-synthesis": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
       "post": {
         "summary": "Ali text-to-speech",
-        "description": "Call Ali `qwen3-tts-instruct-flash` through the unified `/ali/api/v1/services/aigc/video-generation/video-synthesis` endpoint.\n\nResponse contract:\n- non-streaming returns the official Ali JSON response;\n- streaming returns `text/event-stream` and forwards Ali SSE payloads.",
+        "description": "Call Ali `qwen3-tts-instruct-flash` through the unified `/ali/api/v1/services/aigc/multimodal-generation/generation` endpoint.\n\nResponse contract:\n- non-streaming returns the official Ali JSON response;\n- streaming returns `text/event-stream` and forwards Ali SSE payloads.",
         "operationId": "aliAudioSpeechCompat",
         "tags": [
           "Ali Audio"
@@ -94,8 +94,8 @@
                   "$ref": "#/components/schemas/AliSpeechResponse"
                 },
                 "examples": {
-                  "response": {
-                    "summary": "Successful response example",
+                  "qwen3_tts_flash": {
+                    "summary": "qwen3-tts-flash response",
                     "value": {
                       "status_code": 200,
                       "request_id": "5c63c65c-cad8-4bf4-959d-xxxxxxxxxxxx",
@@ -116,6 +116,39 @@
                         "input_tokens": 0,
                         "output_tokens": 0,
                         "characters": 195
+                      }
+                    }
+                  },
+                  "qwen_tts": {
+                    "summary": "qwen-tts response",
+                    "value": {
+                      "status_code": 200,
+                      "request_id": "f4e8139b-3203-4887-92cb-xxxxxxxxxxxx",
+                      "code": "",
+                      "message": "",
+                      "output": {
+                        "text": null,
+                        "finish_reason": "stop",
+                        "choices": null,
+                        "audio": {
+                          "data": "",
+                          "url": "http://dashscope-result-wlcb.oss-cn-wulanchabu.aliyuncs.com/1d/50/20251218/e6c1b9cc/9acec74e-e317-4dbd-9e76-745c47bcbf2d.wav?Expires=1766116806&OSSAccessKeyId=LTAxxxxxxxxx&Signature=afYZxxxxxxxxx%2FAX9bk%3D",
+                          "id": "audio_f4e8139b-3203-4887-92cb-xxxxxxxxxxxx",
+                          "expires_at": 1766116806
+                        }
+                      },
+                      "usage": {
+                        "input_tokens": 76,
+                        "output_tokens": 1045,
+                        "characters": 0,
+                        "input_tokens_details": {
+                          "text_tokens": 76
+                        },
+                        "output_tokens_details": {
+                          "audio_tokens": 1045,
+                          "text_tokens": 0
+                        },
+                        "total_tokens": 1121
                       }
                     }
                   }
@@ -254,30 +287,31 @@
           },
           "request_id": {
             "type": "string",
-            "description": "Unique request identifier."
+            "description": "Unique request identifier for this request, useful for troubleshooting."
           },
           "code": {
             "type": "string",
-            "description": "Error code. Returned on failure."
+            "description": "Error code. Returned when the request fails."
           },
           "message": {
             "type": "string",
-            "description": "Error message. Returned on failure."
+            "description": "Error message. Returned when the request fails."
           },
           "output": {
             "type": "object",
+            "description": "Model output.",
             "properties": {
               "text": {
                 "nullable": true,
-                "description": "Always null."
+                "description": "Always null and can be ignored."
               },
               "choices": {
                 "nullable": true,
-                "description": "Always null."
+                "description": "Always null and can be ignored."
               },
               "finish_reason": {
                 "type": "string",
-                "description": "Finish reason, `stop` or null."
+                "description": "Generation status identifier. It is `null` while still generating; it becomes `stop` when the model naturally finishes or a stop condition is triggered."
               },
               "audio": {
                 "type": "object",
@@ -285,11 +319,11 @@
                   "url": {
                     "type": "string",
                     "format": "uri",
-                    "description": "Audio file URL in WAV format, valid for 24 hours."
+                    "description": "Full audio file URL, valid for 24 hours."
                   },
                   "data": {
                     "type": "string",
-                    "description": "Streaming Base64 audio data. Usually empty in non-streaming mode."
+                    "description": "Base64 audio data for streaming output."
                   },
                   "id": {
                     "type": "string",
@@ -297,7 +331,7 @@
                   },
                   "expires_at": {
                     "type": "integer",
-                    "description": "URL expiration timestamp."
+                    "description": "UNIX timestamp of the URL expiration time."
                   }
                 }
               }
@@ -305,18 +339,19 @@
           },
           "usage": {
             "type": "object",
+            "description": "Token or character consumption for this request. qwen-TTS returns token consumption information, while qwen3-TTS-Flash returns character consumption information.",
             "properties": {
               "input_tokens": {
                 "type": "integer",
-                "description": "Input token count."
+                "description": "Input token count. For `qwen3-tts-flash`, this field is fixed at 0."
               },
               "output_tokens": {
                 "type": "integer",
-                "description": "Output token count."
+                "description": "Output audio token count. For `qwen3-tts-flash`, this field is fixed at 0."
               },
               "characters": {
                 "type": "integer",
-                "description": "Input character count. Only returned by `qwen3-tts-flash`; primarily used for billing."
+                "description": "Input character count. Only returned by `qwen3-tts-flash`."
               },
               "total_tokens": {
                 "type": "integer",
@@ -324,25 +359,25 @@
               },
               "input_tokens_details": {
                 "type": "object",
-                "description": "Input token details. Only returned by `qwen-tts`.",
+                "description": "Input token consumption details. Only returned by `qwen-tts`.",
                 "properties": {
                   "text_tokens": {
                     "type": "integer",
-                    "description": "Input text token count. Only returned by `qwen-tts`."
+                    "description": "Input text token consumption."
                   }
                 }
               },
               "output_tokens_details": {
                 "type": "object",
-                "description": "Output token details. Only returned by `qwen-tts`.",
+                "description": "Output token consumption details. Only returned by `qwen-tts`.",
                 "properties": {
                   "audio_tokens": {
                     "type": "integer",
-                    "description": "Output audio token count. Only returned by `qwen-tts`."
+                    "description": "Output audio token consumption."
                   },
                   "text_tokens": {
                     "type": "integer",
-                    "description": "Output text token count, fixed at 0. Only returned by `qwen-tts`."
+                    "description": "Output text token consumption, currently fixed at 0."
                   }
                 }
               }
