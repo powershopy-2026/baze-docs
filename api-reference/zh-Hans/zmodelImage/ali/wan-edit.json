@@ -223,7 +223,7 @@
             "enum": [
               "wan2.7-image-pro"
             ],
-            "description": "图像编辑模型名称。"
+            "description": "模型名称。可选值：`wan2.7-image-pro`。"
           },
           "response_format": {
             "type": "string",
@@ -231,7 +231,7 @@
               "url",
               "b64_json"
             ],
-            "description": "统一响应格式。",
+            "description": "统一响应格式。支持的值：`url` 或 `b64_json`。",
             "default": "url"
           },
           "input": {
@@ -239,7 +239,7 @@
           },
           "size": {
             "type": "string",
-            "description": "控制输出图像分辨率。图像编辑场景支持 `1K`（默认）、`2K`。网关会映射到上游 `parameters.size`。",
+            "description": "控制输出图像分辨率。图像编辑场景支持 `1K`（默认）或 `2K`。网关会映射到上游 `parameters.size`。",
             "x-enum": [
               "1K",
               "2K"
@@ -250,7 +250,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 4,
-            "description": "输出图片数量。重要：`n` 直接影响费用。费用 = 单价 × 成功生成的图片数量。调用前请确认模型定价。网关会映射到上游 `parameters.n`。"
+            "description": "重要：`n` 直接影响费用。费用 = 单价 × 成功生成的图片张数，请在调用前确认模型价格。网关会映射到上游 `parameters.n`。"
           },
           "watermark": {
             "type": "boolean",
@@ -263,14 +263,14 @@
           },
           "seed": {
             "type": "integer",
-            "description": "随机种子。取值范围 [0, 2147483647]。使用相同的种子有助于保持生成结果相对稳定。注意：生成过程具有概率性，相同的种子也不能保证每次结果完全一致。网关会映射到上游 `parameters.seed`。",
+            "description": "随机数种子，取值范围 [0, 2147483647]。使用相同的 seed 参数值可使生成内容保持相对稳定。注意：模型生成过程具有概率性，即使使用相同的 seed，也不能保证每次生成结果完全一致。网关会映射到上游 `parameters.seed`。",
             "default": 0,
             "minimum": 0,
             "maximum": 2147483647
           },
           "bbox_list": {
             "type": "array",
-            "description": "交互式编辑框选区域，按输入图片顺序对应。每个元素是该图片对应的框选数组 `[x1, y1, x2, y2]`，空数组 `[]` 表示该图片不做框选。网关会映射到上游 `parameters.bbox_list`。",
+            "description": "交互式编辑框选区域。列表长度必须与输入图片数量一致。若某张图片无需编辑，请在对应位置传入空列表 `[]`。每个框选区域使用原图绝对像素坐标 `[x1, y1, x2, y2]`。网关会映射到上游 `parameters.bbox_list`。",
             "items": {
               "type": "array",
               "items": {
@@ -328,12 +328,12 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "输入图片 URL 或 Data URL。支持 PNG、JPG、JPEG、WEBP 格式。"
+            "description": "输入图片的 URL 或 Base64 编码字符串。支持的格式：JPEG、JPG、PNG、BMP、WEBP。"
           },
           "text": {
             "type": "string",
             "maxLength": 5000,
-            "description": "编辑指令。支持中英文，最长 5000 字符，超出部分将自动截断。"
+            "description": "编辑指令。支持中英文，最多 5000 个字符（每个字符、字母、数字或符号均计为一个字符）。超出部分将自动截断。"
           }
         }
       },
@@ -348,7 +348,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 4,
-            "description": "输出图片数量。重要：`n` 直接影响费用。费用 = 单价 × 成功生成的图片数量。调用前请确认模型定价。"
+            "description": "重要：`n` 直接影响费用。费用 = 单价 × 成功生成的图片张数，请在调用前确认模型价格。"
           },
           "watermark": {
             "type": "boolean",
@@ -365,7 +365,7 @@
           },
           "bbox_list": {
             "type": "array",
-            "description": "交互式编辑框选区域，按输入图片顺序对应。每个元素是该图片对应的框选数组 `[x1, y1, x2, y2]`，空数组 `[]` 表示该图片不做框选。",
+            "description": "交互式编辑框选区域。列表长度必须与输入图片数量一致。若某张图片无需编辑，请在对应位置传入空列表 `[]`。每个框选区域使用原图绝对像素坐标 `[x1, y1, x2, y2]`。",
             "items": {
               "type": "array",
               "items": {

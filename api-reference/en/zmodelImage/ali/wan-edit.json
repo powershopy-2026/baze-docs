@@ -223,7 +223,7 @@
             "enum": [
               "wan2.7-image-pro"
             ],
-            "description": "Image editing model name."
+            "description": "Model name. Available value: `wan2.7-image-pro`."
           },
           "response_format": {
             "type": "string",
@@ -231,7 +231,7 @@
               "url",
               "b64_json"
             ],
-            "description": "Unified response format.",
+            "description": "Unified response format. Supported values: `url` or `b64_json`.",
             "default": "url"
           },
           "input": {
@@ -250,7 +250,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 4,
-            "description": "Number of images to generate. Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling. The gateway maps this to upstream `parameters.n`."
+            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling. The gateway maps this to upstream `parameters.n`."
           },
           "watermark": {
             "type": "boolean",
@@ -270,7 +270,7 @@
           },
           "bbox_list": {
             "type": "array",
-            "description": "Interactive editing bounding box regions, corresponding to input images in order. Each element is an array of bounding boxes `[x1, y1, x2, y2]` for that image. Empty array `[]` means no selection for that image. The gateway maps this to upstream `parameters.bbox_list`.",
+            "description": "Interactive editing bounding box regions. The length must match the number of input images. Pass an empty array `[]` for images that do not require selection. Each bounding box uses the absolute pixel coordinates `[x1, y1, x2, y2]`. The gateway maps this to upstream `parameters.bbox_list`.",
             "items": {
               "type": "array",
               "items": {
@@ -328,12 +328,12 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "Input image URL or Data URL. Supports PNG, JPG, JPEG, WEBP."
+            "description": "Input image URL or Base64 encoded string. Supported formats: JPEG, JPG, PNG, BMP, or WEBP. The gateway maps this to upstream input images."
           },
           "text": {
             "type": "string",
             "maxLength": 5000,
-            "description": "Editing instruction. Supports Chinese and English, up to 5000 characters. Excess characters will be automatically truncated."
+            "description": "Editing instruction. Supports Chinese and English, up to 5000 characters (each character, letter, digit, or symbol counts as one). Excess characters will be automatically truncated."
           }
         }
       },
@@ -342,13 +342,13 @@
         "properties": {
           "size": {
             "type": "string",
-            "description": "Controls output image resolution. For image editing, supports `1K` (default) or `2K`."
+            "description": "Controls output image resolution. For image editing, supports `1K` (default) or `2K`. The gateway maps this to upstream `parameters.size`."
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 4,
-            "description": "Number of images to generate. Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling."
+            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling. The gateway maps this to upstream `parameters.n`."
           },
           "watermark": {
             "type": "boolean",
@@ -357,15 +357,15 @@
           },
           "negative_prompt": {
             "type": "string",
-            "description": "Negative prompt. Describes what should be avoided in the output."
+            "description": "Negative prompt. Describes what should be avoided in the output. The gateway maps this to upstream `parameters.negative_prompt`."
           },
           "seed": {
             "type": "integer",
-            "description": "Random seed. Range [0, 2147483647]. Using the same seed helps keep generation results relatively stable. Note: the generation process is probabilistic; the same seed does not guarantee identical results every time."
+            "description": "Random seed. Range [0, 2147483647]. Using the same seed helps keep generation results relatively stable. Note: the generation process is probabilistic; the same seed does not guarantee identical results every time. The gateway maps this to upstream `parameters.seed`."
           },
           "bbox_list": {
             "type": "array",
-            "description": "Interactive editing bounding box regions, corresponding to input images in order. Each element is an array of bounding boxes `[x1, y1, x2, y2]` for that image. Empty array `[]` means no selection for that image.",
+            "description": "Interactive editing bounding box regions. The length must match the number of input images. Pass an empty array `[]` for images that do not require selection. Each bounding box uses the absolute pixel coordinates `[x1, y1, x2, y2]`. The gateway maps this to upstream `parameters.bbox_list`.",
             "items": {
               "type": "array",
               "items": {
