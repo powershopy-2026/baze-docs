@@ -153,12 +153,6 @@
                     }
                   }
                 }
-              },
-              "text/event-stream": {
-                "schema": {
-                  "type": "string",
-                  "description": "Ali SSE event stream. Each event body can be parsed as an Ali audio response chunk."
-                }
               }
             }
           },
