@@ -319,7 +319,7 @@
                   "url": {
                     "type": "string",
                     "format": "uri",
-                    "description": "Full audio file URL, valid for 24 hours."
+                    "description": "Full audio file URL, valid for 24 hours.\n\nStreaming note: In streaming mode, the API returns multiple chunks. Middle chunks set `audio.data` to a Base64-encoded audio segment and leave `audio.url` empty; the final chunk sets `audio.data` to an empty string and exposes the full OSS audio URL in `audio.url`. Download the complete audio from the `url` field of the last chunk. In non-streaming mode, `url` directly returns the full audio file URL."
                   },
                   "data": {
                     "type": "string",

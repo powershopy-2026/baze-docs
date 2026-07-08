@@ -153,12 +153,6 @@
                     }
                   }
                 }
-              },
-              "text/event-stream": {
-                "schema": {
-                  "type": "string",
-                  "description": "阿里 SSE 事件流。每个事件体可解析为阿里音频响应分片。"
-                }
               }
             }
           },
@@ -319,7 +313,7 @@
                   "url": {
                     "type": "string",
                     "format": "uri",
-                    "description": "完整音频文件的 URL，有效期 24 小时。"
+                    "description": "完整音频文件的 URL，有效期 24 小时。\n\n流式输出说明：流式模式下，API 返回多个 chunk。中间 chunk 的 audio.data 包含 Base64 编码的音频片段，audio.url 为空；最后一个 chunk 的 audio.data 为空字符串，audio.url 包含完整音频文件的 OSS 地址。开发者可在最后一个 chunk 中通过 url 字段下载完整音频。非流式模式下，该字段直接返回完整音频文件 URL。"
                   },
                   "data": {
                     "type": "string",
