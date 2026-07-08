@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan 2.7 First-Last Frame to Video",
     "version": "1.0.0",
-    "description": "Ali `wan2.7-i2v` first-last frame to video capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the first-last frame to video scenario, using the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_frame`, `last_frame`, and `driving_audio`.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
+    "description": "Ali `wan2.7-i2v` first-last frame to video capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the first-last frame to video scenario and uses the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_frame`, `last_frame`, and `driving_audio`.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Create Wan 2.7 First-Last Frame to Video task",
-        "description": "Submit an asynchronous Ali `wan2.7-i2v` first-last frame to video task.\n\nUse `first_frame` to specify the initial frame image and `last_frame` to specify the target ending frame image, optionally paired with `driving_audio`.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
+        "description": "Submit an asynchronous Ali `wan2.7-i2v` first-last frame to video task.\n\nUse `first_frame` to specify the initial frame image and `last_frame` to specify the target ending frame image, optionally paired with `driving_audio`.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
         "operationId": "aliWan27I2VFirstLastFrame",
         "tags": [
           "Wan 2.7 Video"

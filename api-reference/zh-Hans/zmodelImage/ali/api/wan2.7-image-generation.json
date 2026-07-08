@@ -38,7 +38,7 @@
                 "$ref": "#/components/schemas/ImageGenerationRequest"
               },
               "examples": {
-                "text_to_image": {
+                "文生图": {
                   "summary": "文生图",
                   "value": {
                     "model": "wan2.7-image-pro",
@@ -62,7 +62,7 @@
                     }
                   }
                 },
-                "image_edit": {
+                "图像编辑": {
                   "summary": "图像编辑",
                   "value": {
                     "model": "wan2.7-image-pro",
@@ -89,7 +89,7 @@
                     }
                   }
                 },
-                "sequential_images": {
+                "组图模式": {
                   "summary": "组图模式",
                   "value": {
                     "model": "wan2.7-image-pro",

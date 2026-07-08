@@ -58,7 +58,7 @@
                 "$ref": "#/components/schemas/Wan27T2VRequest"
               },
               "examples": {
-                "narrative": {
+                "多镜头叙事": {
                   "summary": "多镜头叙事",
                   "value": {
                     "model": "wan2.7-t2v",
@@ -74,7 +74,7 @@
                     }
                   }
                 },
-                "with_audio": {
+                "传入音频文件": {
                   "summary": "传入音频文件",
                   "value": {
                     "model": "wan2.7-t2v",
@@ -90,7 +90,7 @@
                     }
                   }
                 },
-                "auto_dub": {
+                "自动配音": {
                   "summary": "自动配音",
                   "value": {
                     "model": "wan2.7-t2v",
@@ -105,7 +105,7 @@
                     }
                   }
                 },
-                "with_negative_prompt": {
+                "使用反向提示词": {
                   "summary": "使用反向提示词",
                   "value": {
                     "model": "wan2.7-t2v",

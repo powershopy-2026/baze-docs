@@ -128,17 +128,18 @@
         "properties": {
           "model": {
             "type": "string",
+            "description": "模型名称，可用选项：`qwen3-tts-instruct-flash`。",
             "enum": [
               "qwen3-tts-instruct-flash"
             ]
           },
           "input": {
             "type": "string",
-            "description": "待合成文本。"
+            "description": "要合成的文本。该字段支持多语种输入。"
           },
           "voice": {
             "type": "string",
-            "description": "系统音色名称。当前仅支持本枚举中的音色。",
+            "description": "使用的音色。参见支持的系统音色。",
             "enum": [
               "Cherry",
               "Serena",
@@ -168,15 +169,15 @@
           },
           "instructions": {
             "type": "string",
-            "description": "风格控制指令。默认值：无默认值，不设置不生效,长度限制：长度不得超过 1600 Token,支持语言：仅支持中文和英文"
+            "description": "设置指令，参见指令控制。\n\n默认值：无，不设置时不生效。\n最大长度：1600 Token。\n支持语言：仅支持中文和英文。\n适用范围：该功能仅适用于千问3-TTS-Instruct-Flash-Realtime 系列模型。"
           },
           "optimize_instructions": {
             "type": "boolean",
-            "description": "是否优化 `instructions`。显式 `false` 也会保留并透传。"
+            "description": "对 `instructions` 进行语义优化，以提升语音合成的自然度和表现力。\n\n默认值：`false`。\n行为说明：当设置为 `true` 时，系统将对 `instructions` 的内容进行语义增强与重写，生成更适合语音合成的内部指令。\n推荐在追求高品质、精细化语音表达时开启。\n依赖 `instructions` 参数。若 `instructions` 为空，此参数不生效。\n适用范围：该功能仅适用于千问3-TTS-Instruct-Flash 系列模型。"
           },
           "language_type": {
             "type": "string",
-            "description": "语言类型。",
+            "description": "合成音频的语种。默认为 `Auto`。\n\n- `Auto`：适用于文本包含多种语言或语种不确定的场景。模型自动为不同语言片段匹配发音，但无法保证完全精准。\n- 指定语种：适用于单一语种文本。指定具体语种能显著提升合成质量，效果通常优于 `Auto`。",
             "enum": [
               "Auto",
               "Chinese",
@@ -198,51 +199,55 @@
         "properties": {
           "status_code": {
             "type": "integer",
-            "description": "HTTP 状态码。"
+            "description": "HTTP 状态码。遵循 RFC 9110 标准定义。例如：\n- 200：请求成功，正常返回结果\n- 400：客户端请求参数错误\n- 401：未授权访问\n- 404：资源未找到\n- 500：服务器内部错误"
           },
           "request_id": {
             "type": "string",
-            "description": "阿里请求 ID。"
+            "description": "本次请求的唯一标识，可用于问题排查。"
           },
           "code": {
             "type": "string",
-            "description": "错误码。成功时通常为空字符串。"
+            "description": "请求失败时展示的错误码。"
           },
           "message": {
             "type": "string",
-            "description": "错误信息。成功时通常为空字符串。"
+            "description": "请求失败时展示的错误信息。"
           },
           "output": {
             "type": "object",
+            "description": "模型的输出。",
             "properties": {
               "text": {
-                "nullable": true
+                "nullable": true,
+                "description": "始终为 null，无需关注。"
               },
               "finish_reason": {
-                "type": "string"
+                "type": "string",
+                "description": "生成状态标识：正在生成时为 `null`；模型输出自然结束或触发停止条件时为 `stop`。"
               },
               "choices": {
-                "nullable": true
+                "nullable": true,
+                "description": "始终为 null，无需关注。"
               },
               "audio": {
                 "type": "object",
                 "properties": {
                   "data": {
                     "type": "string",
-                    "description": "流式片段中的 Base64 音频数据。非流式通常为空字符串。"
+                    "description": "流式输出时的 Base64 音频数据。"
                   },
                   "url": {
                     "type": "string",
                     "format": "uri",
-                    "description": "完整音频文件下载地址。"
+                    "description": "完整音频文件的 URL，有效期 24 小时。"
                   },
                   "id": {
                     "type": "string",
-                    "description": "音频对象 ID。"
+                    "description": "音频唯一标识。"
                   },
                   "expires_at": {
                     "type": "integer",
-                    "description": "音频 URL 过期时间戳。"
+                    "description": "URL 过期时间的 UNIX 时间戳。"
                   }
                 }
               }
@@ -250,19 +255,23 @@
           },
           "usage": {
             "type": "object",
+            "description": "本次请求的 Token 或字符消耗信息。千问-TTS 模型返回 Token 消耗信息，千问3-TTS-Flash 模型返回字符消耗信息。",
             "properties": {
               "input_tokens": {
-                "type": "integer"
+                "type": "integer",
+                "description": "输入文本的 token 消耗量。对于 `qwen3-tts-flash`，该字段固定为 0。"
               },
               "output_tokens": {
-                "type": "integer"
+                "type": "integer",
+                "description": "输出音频的 token 消耗量。对于 `qwen3-tts-flash`，该字段固定为 0。"
               },
               "total_tokens": {
-                "type": "integer"
+                "type": "integer",
+                "description": "本次请求总共消耗的 token 量。仅 `qwen-tts` 返回。"
               },
               "characters": {
                 "type": "integer",
-                "description": "输入字符数。`qwen3-tts-instruct-flash` 结算时主要关注该字段。"
+                "description": "输入文本的字符数。仅 `qwen3-tts-flash` 返回。"
               }
             }
           }

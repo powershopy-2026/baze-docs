@@ -58,7 +58,7 @@
                 "$ref": "#/components/schemas/LegacyKf2VRequest"
               },
               "examples": {
-                "first_last_frame": {
+                "首尾帧生视频": {
                   "summary": "首尾帧生视频",
                   "value": {
                     "model": "wan2.2-kf2v-flash",
@@ -73,7 +73,7 @@
                     }
                   }
                 },
-                "base64": {
+                "使用Base64": {
                   "summary": "使用Base64",
                   "value": {
                     "model": "wan2.1-kf2v-plus",
@@ -88,7 +88,7 @@
                     }
                   }
                 },
-                "template": {
+                "使用视频特效": {
                   "summary": "使用视频特效",
                   "value": {
                     "model": "wan2.1-kf2v-plus",
@@ -102,7 +102,7 @@
                     }
                   }
                 },
-                "negative_prompt": {
+                "使用反向提示词": {
                   "summary": "使用反向提示词",
                   "value": {
                     "model": "wan2.1-kf2v-plus",
@@ -302,7 +302,7 @@
           },
           "last_frame_url": {
             "type": "string",
-            "description": "尾帧图像的URL或 Base64 编码数据。\n\n图像限制：\n- 图像格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 图像分辨率：图像的宽度和高度范围为[240,8000]，单位为像素。尾帧图像分辨率可与首帧不同，无需强制对齐。\n- 文件大小：不超过10MB。\n\n支持输入的格式：\n- **公网URL**：支持 HTTP 或 HTTPS 协议。示例值：`https://wanx.alicdn.com/xxxx/last_frame.png`。\n- **临时URL**：支持OSS协议，必须通过上传文件获取临时 URL。示例值：`oss://dashscope-instant/xxx/xxx.png`。\n- **Base64 编码图像后的字符串**：数据格式：`data:{MIME_type};base64,{base64_data}`。示例值：`data:image/png;base64,GDU7MtCZ......`（编码字符串过长，仅展示片段）。\n\n详情请参见如何输入图像。"
+            "description": "尾帧图像的URL或 Base64 编码数据。\n\n图像限制：\n- 图像格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 图像分辨率：图像的宽度和高度范围为[240,8000]，单位为像素。尾帧图像分辨率可与首帧不同，无需强制对齐。\n- 文件大小：不超过10MB。\n\n支持输入的格式：\n- **公网URL**：支持 HTTP 或 HTTPS 协议。示例值：`https://wanx.alicdn.com/xxxx/last_frame.png`。\n- **临时URL**：支持OSS协议，必须通过上传文件获取临时 URL。示例值：`oss://dashscope-instant/xxx/xxx.png`。\n- **Base64 编码图像后的字符串**：数据格式：`data:{MIME_type};base64,{base64_data}`。示例值：`data:image/png;base64,GDU7MtCZ......`（编码字符串过长，仅展示片段）。"
           },
           "template": {
             "type": "string",

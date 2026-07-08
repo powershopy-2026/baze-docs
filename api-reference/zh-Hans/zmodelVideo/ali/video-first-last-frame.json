@@ -3,7 +3,7 @@
   "info": {
     "title": "wan2.2-kf2v-flash 首尾帧图生视频",
     "version": "1.0.0",
-    "description": "Wan 系列首尾帧图生视频能力文档。公开统一入口为 `/v1/videos`，用于创建异步视频生成任务。",
+    "description": "Wan 系列首尾帧图生视频能力文档。公开统一入口为 `/v1/videos`，用于创建异步视频生成任务。该场景通过首帧与尾帧图像来驱动生成的视频内容。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "wan2.2-kf2v-flash 首尾帧图生视频",
-        "description": "wan2.2-kf2v-flash \n\n适用于 Wan 系列首尾帧图生视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`images`、`prompt`、`seconds`、`size`、`prompt_extend`、`watermark`、`seed`、`negative_prompt`。其中 `images` 必须按顺序传入 2 张图：`images[0]` 为首帧，`images[1]` 为尾帧。首帧决定基础构图，尾帧用于控制收束画面。",
+        "description": "wan2.2-kf2v-flash\n\n适用于 Wan 系列首尾帧图生视频模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。\n\n公开字段：`model`、`images`、`prompt`、`seconds`、`size`、`prompt_extend`、`watermark`、`seed` 与 `negative_prompt`。其中 `images` 必须按顺序传入 2 张图：`images[0]` 为首帧，`images[1]` 为尾帧。首帧决定基础构图，尾帧用于控制收束画面。",
         "operationId": "aliFirstLastFrameToVideo",
         "tags": [
           "Wan Video"
