@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Create Wan Reference-to-Video Task",
-        "description": "Submit an asynchronous Ali `wan2.7-r2v` generation task.\n\nThis capability uses the top-level `media` array as the public multimodal input. Supported `media.type` values are `reference_image`, `reference_video`, and `first_frame`.\n\nCurrent public rules:\n- `prompt` is required;\n- include at least one `reference_image` or `reference_video` item;\n- you may provide at most five `reference_image` / `reference_video` items in total;\n- `first_frame` is optional and can appear at most once;\n- `size` supports only `720P` and `1080P`;\n- `ratio` supports `16:9`, `9:16`, `1:1`, `4:3`, and `3:4`;\n- `seconds` accepts integer strings from `2` to `15`, but when any `reference_video` is included the allowed range is `2` to `10`.\n\nPrompt referencing follows the submitted `media` order. Refer to image references as `Image 1`, `Image 2`, and to video references as `Video 1`, `Video 2`, counting separately within each media type.",
+        "description": "Submit an asynchronous Ali `wan2.7-r2v` reference-to-video generation task.\n\nThis capability uses the top-level `media` array as the public multimodal input. Supported `media.type` values are `reference_image`, `reference_video`, and `first_frame`.\n\nCurrent public rules:\n- `prompt` is required;\n- include at least one `reference_image` or `reference_video` item;\n- you may provide at most five `reference_image` / `reference_video` items in total;\n- `first_frame` is optional and can appear at most once;\n- `size` supports only `720P` and `1080P`;\n- `ratio` supports `16:9`, `9:16`, `1:1`, `4:3`, and `3:4`;\n- `seconds` accepts integer strings from `2` to `15`, but when any `reference_video` is included the allowed range is `2` to `10`.\n\nPrompt referencing follows the submitted `media` order. Refer to image references as `Image 1`, `Image 2`, and to video references as `Video 1`, `Video 2`, counting separately within each media type. If only one reference image or video is provided, you can simply use \"reference image\" or \"reference video\" in the prompt.",
         "operationId": "aliReferenceToVideoCreate",
         "tags": [
           "Wan 2.7 Video"
@@ -450,11 +450,11 @@
             "enum": [
               "wan2.7-r2v"
             ],
-            "description": "Ali wan2.7-r2v model."
+            "description": "Ali wan2.7-r2v model. Available value: `wan2.7-r2v`."
           },
           "prompt": {
             "type": "string",
-            "description": "Text prompt describing the desired video. Use `Image x` and `Video x` references when multiple reference media items are provided."
+            "description": "Text prompt describing the desired video content and visual characteristics. Supports Chinese and English; each character, letter, or punctuation mark counts as one character. Excess characters are automatically truncated.\n\n- `wan2.7-r2v`: up to 5000 characters.\n\nReference naming conventions:\n- For Chinese prompts, reference images with markers like \"图1\", \"图2\" and reference videos with markers like \"视频1\", \"视频2\".\n- For English prompts, use markers like \"Image 1\", \"Video 1\" (capitalized first letter, space between letter and number).\n- The order matches the `media` array order. Images and videos are counted separately, e.g. \"图1\" and \"视频1\" can exist simultaneously.\n- If only one reference image or video is provided, you can simply use \"reference image\" or \"reference video\".\n\nScene description examples:\n- Direct reference: \"图1 in 图2\" (Image 1 is playing in Image 2).\n- Combined description: \"The cat from Image 1 plays in the room from Image 2\".\n\nMulti-panel/storyboard images:\nWhen the reference image is a multi-panel (storyboard) image, describe the content in a multi-shot narrative format. You do not need to describe every panel; provide key shot content and the model will automatically identify the panel logic and intelligently fill in the details. For best results, it is recommended to provide only one multi-panel image per request."
           },
           "size": {
             "type": "string",
@@ -462,12 +462,12 @@
               "720P",
               "1080P"
             ],
-            "description": "Output resolution tier for the current public implementation.",
+            "description": "Important: `size` directly affects cost. Confirm the model pricing before calling.\n\nOutput video resolution tier, controlling video clarity (total pixels).\n\n`wan2.7-r2v`: available values `720P`, `1080P`. Default: `1080P`.",
             "default": "1080P"
           },
           "seconds": {
             "type": "string",
-            "description": "Video duration (seconds) as a string. Default is `\"5\"`.Range: [2, 15] for reference videos containing video, [2, 10] for reference videos without video.",
+            "description": "Important: `seconds` directly affects cost. Confirm the model pricing before calling.\n\nVideo duration in seconds.\n\n- `wan2.7-r2v`: default `5`.\n- When reference assets include a video: range [2, 10].\n- When reference assets do not include a video: range [2, 15].",
             "default": "5",
             "enum": [
               "2",
@@ -495,31 +495,31 @@
               "4:3",
               "3:4"
             ],
-            "description": "Output aspect ratio.",
+            "description": "Video aspect ratio.\n\nBehavior logic:\n- If no first frame image is provided: generates video at the specified `ratio`.\n- If a first frame image is provided: the `ratio` parameter is ignored and the video is generated at an approximate ratio matching the first frame image's aspect ratio.\n\nAvailable values and corresponding output resolutions:\n\n**720P:**\n- `16:9` → 1280×720\n- `9:16` → 720×1280\n- `1:1` → 960×960\n- `4:3` → 1104×832\n- `3:4` → 832×1104\n\n**1080P:**\n- `16:9` → 1920×1080\n- `9:16` → 1080×1920\n- `1:1` → 1440×1440\n- `4:3` → 1648×1248\n- `3:4` → 1248×1648",
             "default": "16:9"
           },
           "negative_prompt": {
             "type": "string",
-            "description": "Optional negative prompt describing content that should not appear in the generated video."
+            "description": "Negative prompt describing content you do not want to see in the video. Limits unwanted visual elements. Supports Chinese and English, up to 500 characters.\n\nExample: low resolution, error, worst quality, low quality, deformed, extra fingers, bad proportions, etc."
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "Whether to enable prompt rewriting. The default value is `true`."
+            "description": "Whether to enable intelligent prompt rewriting. When enabled, a large language model rewrites the input prompt for better results. Particularly effective for short prompts, but increases processing time.\n- `true` (default): enable intelligent rewriting.\n- `false`: disable intelligent rewriting."
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a watermark. The default value is `false`.",
+            "description": "Whether to add a watermark to the video. The watermark is positioned at the bottom-right corner with the text 'AI生成'.\n- `false` (default): no watermark.\n- `true`: add watermark.",
             "default": false
           },
           "seed": {
             "type": "integer",
             "minimum": 0,
             "maximum": 2147483647,
-            "description": "Random seed. If omitted, the system generates one automatically."
+            "description": "Random seed, range [0, 2147483647]. If not specified, the system automatically generates a random seed. To improve reproducibility of generation results, it is recommended to fix the seed value.\n\nNote: Due to the probabilistic nature of model generation, the same seed does not guarantee identical results every time."
           },
           "media": {
             "type": "array",
-            "description": "Public multimodal input for `wan2.7-r2v`. Include one or more `reference_image` or `reference_video` items, optionally plus one `first_frame` item.",
+            "description": "Array of media assets, including images, videos, and audio. Supports image/video input as visual reference, and images can provide multi-view references for characters, props, scenes, etc.\n\nEach element in the array is a media object containing `type` and `url` fields.\n\nThe order in the array defines the reference mapping order in the prompt. Images and videos are counted separately, so \"Image 1\" and \"Video 1\" can exist simultaneously.\n- The 1st `reference_video` in the array corresponds to \"Video 1\", the 2nd to \"Video 2\", etc.\n- The 1st `reference_image` in the array corresponds to \"Image 1\", the 2nd to \"Image 2\", etc.",
             "items": {
               "$ref": "#/components/schemas/ReferenceToVideoMediaInput"
             }
@@ -540,15 +540,15 @@
               "reference_video",
               "first_frame"
             ],
-            "description": "Reference media type."
+            "description": "Media asset type. Available values:\n\nreference_image: Reference image. Provides subject (person/animal/object) and scene reference.\n\nreference_video: Reference video. Provides subject (person/animal/object) and voice reference. B-roll/empty scene videos are not recommended.\n\nfirst_frame: First frame image. Generates video based on the first frame, typically containing the subject (person/animal/object). Supports combined use with subject reference for consistency, or voice reference.\n\nFirst frame: already contains the subject to reference; you can pair it with subject reference for enhanced consistency, or use voice reference.\n\nFirst frame: does not yet contain the subject to reference; you can use subject reference to define the characteristics of the new subject appearing during the video.\n\nMaterial constraints:\n\nFirst frame image: max 1.\n\nAt least 1 reference image or reference video must be provided. Total reference images + reference videos ≤ 5.\n\nWhen a reference asset contains a subject character, it should contain only a single character."
           },
           "url": {
             "type": "string",
-            "description": "Publicly accessible media URL."
+            "description": "Media asset URL. Each value points to an image or video.\n\n**For reference image (`type=reference_image`):**\nReference image URL or Base64 encoded data. The reference image can be a subject (person/animal/object) or a background. When it contains a subject, it should include only one character.\n\nImage constraints:\n- Formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n- Resolution: width and height range [240, 8000] pixels.\n- Aspect ratio: 1:8 to 8:1.\n- File size: up to 20MB.\n\nSupported input formats:\n- Public URL: HTTP or HTTPS, e.g. `https://xxx/xxx.png`.\n- Temporary URL (OSS): `oss://dashscope-instant/xxx/xxx.png` (must be obtained by uploading the file).\n- Base64 encoded string: `data:{MIME_type};base64,{base64_data}`, e.g. `data:image/png;base64,...`.\n\n**For reference video (`type=reference_video`):**\nReference video URL. The video should contain a subject (person/animal/object). B-roll or empty scene videos are not recommended. When it contains a subject, it should include only one character. If the video has audio, the voice can also be referenced.\n\nVideo constraints:\n- Formats: mp4, mov.\n- Duration: 1 to 30 seconds.\n- Resolution: width and height range [240, 4096] pixels.\n- Aspect ratio: 1:8 to 8:1.\n- File size: up to 100MB.\n\nSupported input formats:\n- Public URL: HTTP or HTTPS, e.g. `https://xxx/xxx.mp4`.\n- Temporary URL (OSS): `oss://dashscope-instant/xxx/xxx.mp4` (must be obtained by uploading the file)."
           },
           "reference_voice": {
             "type": "string",
-            "description": "Optional voice reference URL. Use it with `reference_image` or `reference_video` when the generated speaker voice should follow that reference."
+            "description": "Audio URL for voice reference. Used to specify the voice of the subject character in the reference asset (image/video). Used together with `reference_image` or `reference_video`. The audio is only used for voice timbre reference, unrelated to the speech content. It is recommended to match the language of the reference audio with the prompt language for better results.\n\n**Voice activation logic:**\n- Default behavior: If the `reference_video` contains audio and no `reference_voice` is specified, the original video audio is used by default.\n- Priority: If both `reference_video` (with audio) and `reference_voice` are provided, `reference_voice` takes priority and overrides the video's original audio.\n\nAudio constraints:\n- Formats: wav, mp3.\n- Duration: 1 to 10 seconds.\n- File size: up to 15MB.\n\nSupported input formats:\n- Public URL: HTTP or HTTPS, e.g. `https://xxx/xxx.mp3`.\n- Temporary URL (OSS): `oss://dashscope-instant/xxx/xxx.mp3` (must be obtained by uploading the file)."
           }
         }
       },

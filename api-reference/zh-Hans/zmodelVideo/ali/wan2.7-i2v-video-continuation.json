@@ -3,7 +3,7 @@
   "info": {
     "title": "wan2.7-i2v 视频续写",
     "version": "1.0.0",
-    "description": "面向客户的 Ali `wan2.7-i2v` 视频续写渠道文档，统一公开入口为 `/v1/videos`。\n\n本文档描述视频续写场景，使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n本场景支持的 `media.type` 为 `first_clip`、`last_frame`。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark`、`seed`。",
+    "description": "面向客户的 Ali `wan2.7-i2v` 视频续写渠道文档，统一公开入口为 `/v1/videos`。\n\n本文档描述视频续写场景，并使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n本场景支持的 `media.type` 为 `first_clip`、`last_frame`。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建 wan2.7-i2v 视频续写任务",
-        "description": "提交一个异步的 Ali `wan2.7-i2v` 视频续写任务。\n\n使用 `first_clip` 指定要续写的首段视频，可选搭配 `last_frame` 指定目标尾帧图像来控制续写方向。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark`、`seed`。",
+        "description": "提交一个异步的 Ali `wan2.7-i2v` 视频续写任务。\n\n使用 `first_clip` 指定要续写的首段视频，可选搭配 `last_frame` 指定目标尾帧图像来控制续写方向。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
         "operationId": "aliWan27I2VVideoContinuation",
         "tags": [
           "Wan 2.7 Video"

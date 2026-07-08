@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan 2.7 Video Continuation",
     "version": "1.0.0",
-    "description": "Ali `wan2.7-i2v` video continuation capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the video continuation scenario, using the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_clip` and `last_frame`.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
+    "description": "Ali `wan2.7-i2v` video continuation capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the video continuation scenario and uses the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_clip` and `last_frame`.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Create Wan 2.7 Video Continuation task",
-        "description": "Submit an asynchronous Ali `wan2.7-i2v` video continuation task.\n\nUse `first_clip` to specify the initial video clip to continue from, optionally paired with `last_frame` to guide the continuation toward a target ending frame.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, `seed`.",
+        "description": "Submit an asynchronous Ali `wan2.7-i2v` video continuation task.\n\nUse `first_clip` to specify the initial video clip to continue from, optionally paired with `last_frame` to guide the continuation toward a target ending frame.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
         "operationId": "aliWan27I2VVideoContinuation",
         "tags": [
           "Wan 2.7 Video"
