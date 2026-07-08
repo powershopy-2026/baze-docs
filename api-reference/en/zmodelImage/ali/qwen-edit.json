@@ -318,10 +318,6 @@
       },
       "QwenImageContent": {
         "type": "object",
-        "required": [
-          "image",
-          "text"
-        ],
         "properties": {
           "image": {
             "type": "string",
