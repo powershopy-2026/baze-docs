@@ -112,7 +112,7 @@
           },
           "seconds": {
             "type": "string",
-            "description": "> duration 和 frames 二选一即可，frames 的优先级高于 duration。如果您希望生成整数秒的视频，建议指定 duration。\n\n生成视频时长，仅支持整数，单位：秒。\n\n* Seedance 1.0 pro、Seedance 1.0 pro fast: [2, 12] s。\n* Seedance 1.5 pro: [4,12] 或设置为 -1\n* Seedance 2.0 系列: [4,15] 或设置为 -1\n\n**注意**\n\nSeedance 2.0 系列、Seedance 1.5 pro 支持两种配置方法\n* 指定具体时长：支持有效范围内的任一整数。\n* 智能指定：设置为 -1，表示由模型在有效范围内自主选择合适的视频长度（整数秒）。实际生成视频的时长可通过查询视频生成任务 API 返回的 duration 字段获取。注意视频时长与计费相关，请谨慎设置。",
+            "description": "生成视频时长，仅支持整数，单位：秒。\n\n* Seedance 1.0 pro、Seedance 1.0 pro fast: [2, 12] s。\n* Seedance 1.5 pro: [4,12] 或设置为 -1\n* Seedance 2.0 系列: [4,15] 或设置为 -1\n\n**注意**\n\nSeedance 2.0 系列、Seedance 1.5 pro 支持两种配置方法\n* 指定具体时长：支持有效范围内的任一整数。\n* 智能指定：设置为 -1，表示由模型在有效范围内自主选择合适的视频长度（整数秒）。实际生成视频的时长可通过查询视频生成任务 API 返回的 duration 字段获取。注意视频时长与计费相关，请谨慎设置。",
             "default": "5",
             "example": "5",
             "enum": [
