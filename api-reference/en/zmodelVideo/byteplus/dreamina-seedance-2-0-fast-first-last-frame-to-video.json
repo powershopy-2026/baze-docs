@@ -100,7 +100,7 @@
             "enum": [
               "dreamina-seedance-2-0-fast-260128"
             ],
-            "description": "Video generation model name. Fixed to `dreamina-seedance-2-0-fast-260128`."
+            "description": "ID of the model you need to call. You can activate a model service and query the model ID.\n\nYou can also use an endpoint ID to call a model for advanced capabilities such as rate limiting, billing type (prepaid/postpaid), runtime status query, monitoring, and security."
           },
           "media": {
             "type": "array",
@@ -112,7 +112,7 @@
           },
           "seconds": {
             "type": "string",
-            "description": "Video generation duration (seconds) as a string. Supports `\"-1\"` (smart selection) or `\"4\"` to `\"15\"`.",
+            "description": "> You only need to specify either duration or frames, and frames takes precedence over duration. If you want to generate a video with integer seconds, it is recommended to specify duration.\n\nGenerated video duration. Only integers are supported. Unit: second.\n\n* Seedance 1.0 Pro, Seedance 1.0 Pro Fast: [2, 12] s.\n* Seedance 1.5 Pro: [4,12] or set to -1.\n* Seedance 2.0 series: [4,15] or set to -1.\n\n> Seedance 2.0 series and Seedance 1.5 Pro support two configuration methods:\n* Specify specific duration: Any integer within the valid range is supported.\n* Intelligent specification: Set to -1, which means the model independently selects the appropriate video length (integer seconds) within the valid range. The actual duration of the generated video can be obtained from the duration parameter returned by the Retrieve a video generation task API. Note that video duration is related to billing, please set it carefully.",
             "default": "5",
             "example": "5",
             "enum": [
@@ -135,7 +135,7 @@
               "480p",
               "720p"
             ],
-            "description": "Video output resolution specification. Defaults to 720p.",
+            "description": "> Default value for Seedance 2.0 series and Seedance 1.5 Pro: 720p\n> Default value for Seedance 1.0 Pro & Pro Fast: 1080p\n\nVideo resolution. Valid values:\n\n* 480p\n* 720p\n* 1080p: Not supported by Seedance 2.0 Fast and Seedance 2.0 Mini.\n* 4k: Only supported by Seedance 2.0 series.\n\n```Note\n- Compared to standard 8-bit depth, the 4K videos output by Seedance 2.0 use 10-bit depth encoding, which fully preserves rich color gradations and smooth transitions, meeting the requirements of professional video production and HDR video content.\n- 4K videos are output in H.265 (HEVC) encoding format, which may not be playable directly in some players/browsers.```",
             "default": "720p"
           },
           "ratio": {
@@ -149,34 +149,34 @@
               "21:9",
               "adaptive"
             ],
-            "description": "Video aspect ratio. Text-to-Video defaults to 16:9, Image-to-Video defaults to `adaptive`.",
+            "description": "> Default value for Seedance 2.0 series and Seedance 1.5 Pro: adaptive\n> Other models: Default value for text to video is 16:9; default value for image to video is adaptive.\n\nAspect ratio of the generated video. The width and height pixel values corresponding to different aspect ratios are shown in the table below.\n\n* 16:9\n* 4:3\n* 1:1\n* 3:4\n* 9:16\n* 21:9\n* adaptive: Automatically select the most appropriate aspect ratio based on the input\n\n**Adaptive rules:**\n\nWhen ratio is set to adaptive, the model will automatically adapt the aspect ratio according to the generation scenario. The actual aspect ratio of the generated video can be obtained from the ratio parameter returned by the Retrieve a video generation task API.\n\n**Supported models:**\n* Supported by Seedance 2.0 series and Seedance 1.5 Pro\n* Only supported for image-to-video tasks by other models\n\n**Value rules:**\n* Text to video: Intelligently select the most appropriate aspect ratio based on the input prompt.\n* First frame / first and last frames to video: Automatically select the closest aspect ratio based on the ratio of the uploaded first frame image.\n* Multimodal reference video generation: Judged based on the intent of the user's prompt. If it is first-frame video generation/video editing/video extension, select the closest aspect ratio based on the corresponding image/video; otherwise, select the closest aspect ratio based on the first uploaded media file (priority: video > image).\n\nWidth and height pixel values corresponding to different aspect ratios\n\nNote: For image to video tasks, when the selected video aspect ratio is inconsistent with the aspect ratio of your uploaded image, ModelArk will crop your image, and the cropping will be centered.\n\n| Resolution | Aspect ratio | Width and height pixel value Seedance 2.0 series | Width and height pixel value Seedance 1.5 Pro | Width and height pixel value Seedance 1.0 series |\n|---|---|---|---|---|\n| 480p | 16:9 | 864×496 | 864×496 | 864×480 |\n| | 4:3 | 752×560 | 752×560 | 736×544 |\n| | 1:1 | 640×640 | 640×640 | 640×640 |\n| | 3:4 | 560×752 | 560×752 | 544×736 |\n| | 9:16 | 496×864 | 496×864 | 480×864 |\n| | 21:9 | 992×432 | 992×432 | 960×416 |\n| 720p | 16:9 | 1280×720 | 1280×720 | 1248×704 |\n| | 4:3 | 1112×834 | 1112×834 | 1120×832 |\n| | 1:1 | 960×960 | 960×960 | 960×960 |\n| | 3:4 | 834×1112 | 834×1112 | 832×1120 |\n| | 9:16 | 720×1280 | 720×1280 | 704×1248 |\n| | 21:9 | 1470×630 | 1470×630 | 1504×640 |\n| 1080p (Not supported by Seedance 2.0 Fast and Seedance 2.0 Mini) | 16:9 | 1920×1080 | 1920×1080 | 1920×1088 |\n| | 4:3 | 1664×1248 | 1664×1248 | 1664×1248 |\n| | 1:1 | 1440×1440 | 1440×1440 | 1440×1440 |\n| | 3:4 | 1248×1664 | 1248×1664 | 1248×1664 |\n| | 9:16 | 1080×1920 | 1080×1920 | 1088×1920 |\n| | 21:9 | 2206×946 | 2206×946 | 2176×928 |\n| 4K (Only supported by Seedance 2.0 series) | 16:9 | 3840×2160 | - | - |\n| | 4:3 | 3326×2494 | - | - |\n| | 1:1 | 2880×2880 | - | - |\n| | 3:4 | 2494×3326 | - | - |\n| | 9:16 | 2160×3840 | - | - |\n| | 21:9 | 4398×1886 | - | - |",
             "default": "adaptive"
           },
           "seed": {
             "type": "integer",
-            "description": "Random seed, range [-1, 4294967295].",
+            "description": "Seed integer, used to control the randomness of generated content.\n\nValue range: Integer between [-1, 2^32-1].\n\nNotes:\n* For the same request, if the model receives different seed values, such as not specifying a seed value, setting the seed to -1 (which will be replaced by a random number), or manually changing the seed value, different results will be generated.\n* For the same request, if the model receives the same seed value, similar results will be generated, but complete consistency is not guaranteed.",
             "default": -1,
             "minimum": -1,
             "maximum": 4294967295
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a watermark.",
+            "description": "Whether the generated video contains a watermark. Valid values:\n\n* false: The generated video does not contain a watermark.\n* true: An AI Generated watermark will be displayed in the lower right corner of the generated video.",
             "default": false
           },
           "generate_audio": {
             "type": "boolean",
-            "description": "Whether to generate sound synchronized with the visuals. Supported by the 2.0 series.",
+            "description": "> Only supported by Seedance 2.0 series and Seedance 1.5 Pro\n\nControls whether the generated video includes sound synchronized with the footage.\n\n* true: The video output by the model includes synchronized audio. The model will automatically generate matching human voice, sound effects and background music based on the text prompt and visual content. It is recommended to put dialogue content in double quotes to optimize the audio generation effect.\n* false: The video output by the model is a silent video.\n\nNote: All generated videos with audio are mono, regardless of the number of channels of the input audio.",
             "default": true
           },
           "return_last_frame": {
             "type": "boolean",
-            "description": "Whether to return the last frame image.",
+            "description": "true: Return the last frame image of the generated video. After setting it to true, you can get the last frame image of the video. The last frame image is in PNG format. Its width and height pixels are consistent with the generated video, and it has no watermark.\n\nThis parameter can be used to generate multiple consecutive videos: use the last frame of the previously generated video as the first frame of the next video task to quickly generate multiple consecutive videos.\n\nfalse: Do not return the last frame image of the generated video.",
             "default": false
           },
           "safety_identifier": {
             "type": "string",
-            "description": "Unique identifier for the end user, used for compliance checks. Supported only by the 2.0 series, length not exceeding 64 characters."
+            "description": "Unique identifier of end users, used to help the platform detect users in your application who may violate the ModelArk usage policy. This identifier is an English string, which must be fixed and unique for a single user, and the length cannot exceed 64 characters. It is recommended to pass in a string generated by hashing the username, user ID or email address to avoid leaking user privacy information."
           }
         }
       },

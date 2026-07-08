@@ -39,35 +39,11 @@
         ],
         "responses": {
           "200": {
-            "description": "response",
+            "description": "提交成功，返回视频任务对象。",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueryVideoTaskResponse"
-                },
-                "example": {
-                  "id": "cgt-2026****-****",
-                  "model": "doubao-seedance-2-0-260128",
-                  "status": "succeeded",
-                  "content": {
-                    "video_url": "https://ark-content-generation-cn-beijing.tos-cn-beijing.volces.com/xxx"
-                  },
-                  "usage": {
-                    "completion_tokens": 108900,
-                    "total_tokens": 108900
-                  },
-                  "created_at": 1779348818,
-                  "updated_at": 1779348874,
-                  "seed": 78674,
-                  "resolution": "720p",
-                  "ratio": "16:9",
-                  "duration": 5,
-                  "framespersecond": 24,
-                  "service_tier": "default",
-                  "execution_expires_after": 172800,
-                  "generate_audio": true,
-                  "draft": false,
-                  "priority": 0
+                  "$ref": "#/components/schemas/VideoTaskResponse"
                 }
               }
             }
@@ -285,6 +261,15 @@
           "web_search": {
             "type": "integer",
             "description": "实际调用联网搜索工具的次数，仅开启联网搜索时返回。"
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "视频生成任务 ID 。仅保存 7 天（从 created at 时间戳开始计算），超时后将自动清除。\n\n* 设置 \"draft\": true，为 Draft 视频任务 ID。\n* 设置 \"draft\": false，为正常视频任务 ID。\n\n创建视频生成任务为异步接口，获取 ID 后，需要通过查询视频生成任务 API 来查询视频生成任务的状态。任务成功后，会输出生成视频的 video_url。"
           }
         }
       }
