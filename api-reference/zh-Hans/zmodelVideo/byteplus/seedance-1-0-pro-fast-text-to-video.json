@@ -30,7 +30,26 @@
         },
         "responses": {
           "200": {
-            "description": "提交成功，返回视频任务对象。"
+            "description": "提交成功，返回视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。"
+          },
+          "401": {
+            "description": "鉴权失败。"
+          },
+          "429": {
+            "description": "请求频率超限。"
+          },
+          "500": {
+            "description": "服务端内部错误。"
           }
         },
         "security": [
@@ -155,6 +174,15 @@
           "text": {
             "type": "string",
             "description": "文本内容。`type=text` 时必填；其他类型不需要。"
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "视频生成任务 ID 。仅保存 7 天（从 created at 时间戳开始计算），超时后将自动清除。\n\n* 设置 \"draft\": true，为 Draft 视频任务 ID。\n* 设置 \"draft\": false，为正常视频任务 ID。\n\n创建视频生成任务为异步接口，获取 ID 后，需要通过查询视频生成任务 API 来查询视频生成任务的状态。任务成功后，会输出生成视频的 video_url。"
           }
         }
       }
