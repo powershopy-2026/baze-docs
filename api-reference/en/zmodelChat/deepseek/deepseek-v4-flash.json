@@ -486,7 +486,6 @@
           }
         }
       },
-
       "ThinkingConfig": {
         "type": "object",
         "description": "Controls the switch between thinking mode and non-thinking mode.",
@@ -777,7 +776,7 @@
             "type": "array",
             "description": "A list of the top N tokens by output probability at this position, along with their log probabilities. In rare cases, the number of tokens returned may be fewer than the top_logprobs value specified in the request.",
             "items": {
-              "$ref": "#/components/schemas/LogprobToken"
+              "$ref": "#/components/schemas/TopLogprobItem"
             }
           }
         }
@@ -871,6 +870,33 @@
           "code": {
             "type": "string",
             "description": "Error code."
+          }
+        }
+      },
+      "TopLogprobItem": {
+        "type": "object",
+        "description": "A top log probability token for the reasoning content, containing the token, its log probability, and its UTF-8 byte representation.",
+        "required": [
+          "token",
+          "logprob",
+          "bytes"
+        ],
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The output token."
+          },
+          "logprob": {
+            "type": "number",
+            "description": "The log probability of this token. -9999.0 means the token has a very small output probability and is not among the top 20 most likely output tokens."
+          },
+          "bytes": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer"
+            },
+            "description": "A list of integers representing the UTF-8 bytes representation of the token. Useful when a UTF-8 character is split into multiple tokens. If the token has no byte representation, this value is null."
           }
         }
       }
