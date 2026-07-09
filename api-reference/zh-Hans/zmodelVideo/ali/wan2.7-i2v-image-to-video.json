@@ -254,7 +254,7 @@
               "720P",
               "1080P"
             ],
-            "description": "当前项目实现支持的输出分辨率档位。",
+            "description": "指定生成的视频分辨率档位，用于控制视频的清晰度（总像素）。\n\n模型根据选择的分辨率档位，自动缩放至相近总像素。视频宽高比尽量与输入素材（首帧或首段视频）保持一致。",
             "default": "1080P"
           },
           "seconds": {
@@ -323,7 +323,7 @@
           },
           "url": {
             "type": "string",
-            "description": "媒体素材URL。素材包括图像和音频。\n\n**传入图像（type=first_frame）**\n\n首帧URL，或 Base64 编码数据。\n\n图像限制：\n\n- 格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 或 HTTPS 协议。\n\n示例值：https://xxx/xxx.png。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：oss://dashscope-instant/xxx/xxx.png。\n\nBase64 编码图像后的字符串：\n\n数据格式：data:{MIME_type};base64,{base64_data}。\n\n示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ......（示例已截断，仅做演示）。\n\nBase64编码数据格式\n\n格式： data:{MIME_type};base64,{base64_data} 。\n\n{base64_data}：图像文件经过 Base64 编码后的字符串。\n\n{MIME_type}：图像的媒体类型，需与文件格式对应。\n\n图像格式与MIME Type对照\n\n| 图像格式 | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
+            "description": "媒体素材URL。素材包括图像和音频。\n\n**传入图像（type=first_frame）**\n\n首帧URL，或 Base64 编码数据。\n\n图像限制：\n\n- 格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 或 HTTPS 协议。\n\n示例值：`https://xxx/xxx.png`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：`oss://dashscope-instant/xxx/xxx.png`。\n\nBase64 编码图像后的字符串：\n\n数据格式：data:{MIME_type};base64,{base64_data}。\n\n示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ......（示例已截断，仅做演示）。\n\nBase64编码数据格式\n\n格式： data:{MIME_type};base64,{base64_data} 。\n\n{base64_data}：图像文件经过 Base64 编码后的字符串。\n\n{MIME_type}：图像的媒体类型，需与文件格式对应。\n\n图像格式与MIME Type对照\n\n| 图像格式 | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
           }
         }
       },

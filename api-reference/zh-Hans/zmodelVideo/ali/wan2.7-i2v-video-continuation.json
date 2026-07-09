@@ -3,7 +3,7 @@
   "info": {
     "title": "wan2.7-i2v 视频续写",
     "version": "1.0.0",
-    "description": "面向客户的 Ali `wan2.7-i2v` 视频续写渠道文档，统一公开入口为 `/v1/videos`。\n\n本文档描述视频续写场景，并使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n本场景支持的 `media.type` 为 `first_clip`、`last_frame`。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
+    "description": "面向客户的 Ali `wan2.7-i2v` 视频续写渠道文档，统一公开入口为 `/v1/videos`。\n\n本文档描述视频续写场景，并使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n本场景支持的 `media.type` 为 `first_clip`、`last_frame`、`driving_audio`。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n- `first_clip + driving_audio`\n- `first_clip + last_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建 wan2.7-i2v 视频续写任务",
-        "description": "提交一个异步的 Ali `wan2.7-i2v` 视频续写任务。\n\n使用 `first_clip` 指定要续写的首段视频，可选搭配 `last_frame` 指定目标尾帧图像来控制续写方向。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
+        "description": "提交一个异步的 Ali `wan2.7-i2v` 视频续写任务。\n\n使用 `first_clip` 指定初始视频片段，可选搭配 `last_frame` 作为尾帧参考图和/或 `driving_audio` 驱动音频。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n- `first_clip + driving_audio`\n- `first_clip + last_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
         "operationId": "aliWan27I2VVideoContinuation",
         "tags": [
           "Wan 2.7 Video"
@@ -39,13 +39,14 @@
               },
               "examples": {
                 "first_clip_only": {
-                  "summary": "仅使用首段视频续写",
+                  "summary": "仅使用首段视频",
                   "value": {
                     "model": "wan2.7-i2v",
+                    "prompt": "角色继续自然地向前行走，保持与输入片段一致的风格。",
                     "media": [
                       {
                         "type": "first_clip",
-                        "url": "https://example.com/assets/opening-clip.mp4"
+                        "url": "https://example.com/assets/input.mp4"
                       }
                     ],
                     "seconds": "5",
@@ -53,22 +54,37 @@
                   }
                 },
                 "first_clip_with_last_frame": {
-                  "summary": "首段视频 + 尾帧定向续写",
+                  "summary": "首段视频 + 尾帧",
                   "value": {
                     "model": "wan2.7-i2v",
-                    "prompt": "镜头逐渐推向远处的山脉。",
-                    "negative_prompt": "模糊，低质量",
-                    "prompt_extend": true,
-                    "watermark": false,
-                    "seed": 42,
+                    "prompt": "角色从行走自然过渡到站立姿态。",
                     "media": [
                       {
                         "type": "first_clip",
-                        "url": "https://example.com/assets/opening-clip.mp4"
+                        "url": "https://example.com/assets/input.mp4"
                       },
                       {
                         "type": "last_frame",
-                        "url": "https://example.com/assets/target-end.png"
+                        "url": "https://example.com/assets/end-pose.png"
+                      }
+                    ],
+                    "seconds": "5",
+                    "size": "1080P"
+                  }
+                },
+                "first_clip_with_audio": {
+                  "summary": "首段视频 + 驱动音频",
+                  "value": {
+                    "model": "wan2.7-i2v",
+                    "prompt": "角色自然地继续动作，伴随音频。",
+                    "media": [
+                      {
+                        "type": "first_clip",
+                        "url": "https://example.com/assets/input.mp4"
+                      },
+                      {
+                        "type": "driving_audio",
+                        "url": "https://example.com/assets/voice.mp3"
                       }
                     ],
                     "seconds": "8",
@@ -253,7 +269,7 @@
               "720P",
               "1080P"
             ],
-            "description": "当前项目实现支持的输出分辨率档位。",
+            "description": "指定生成的视频分辨率档位，用于控制视频的清晰度（总像素）。\n\n模型根据选择的分辨率档位，自动缩放至相近总像素。视频宽高比尽量与输入素材（首帧或首段视频）保持一致。",
             "default": "1080P"
           },
           "seconds": {
@@ -298,7 +314,7 @@
           },
           "media": {
             "type": "array",
-            "description": "媒体素材列表，用于指定视频生成所需的参考素材（图像、音频和视频）。数组的每个元素为一个媒体对象，包含 type 与 url 字段。\n\n素材组合（仅支持以下特定的组合，非法组合将报错）：\n- **视频续写**：`first_clip`\n- **首段视频+尾帧续写**：`first_clip` + `last_frame`\n\n每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_clip）。",
+            "description": "媒体素材列表，用于指定视频生成所需的参考素材（图像、音频和视频）。数组的每个元素为一个媒体对象，包含 type 与 url 字段。\n\n素材组合（仅支持以下特定的组合，非法组合将报错）：\n- **仅首段视频**：`first_clip`\n- **首段视频 + 尾帧**：`first_clip` + `last_frame`\n- **首段视频 + 音频**：`first_clip` + `driving_audio`\n- **首段视频 + 尾帧 + 音频**：`first_clip` + `last_frame` + `driving_audio`\n\n每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_clip）。",
             "items": {
               "$ref": "#/components/schemas/Wan27MediaInput"
             }
@@ -316,13 +332,14 @@
             "type": "string",
             "enum": [
               "first_clip",
-              "last_frame"
+              "last_frame",
+              "driving_audio"
             ],
-            "description": "媒体素材类型。可选值为：\n- `first_clip`：首视频片段。\n- `last_frame`：尾帧。\n\n使用限制：每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_clip）。"
+            "description": "媒体素材类型。可选值为：\n- `first_clip`：首段视频。\n- `last_frame`：尾帧。\n- `driving_audio`：驱动音频。\n\n使用限制：每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_clip）。"
           },
           "url": {
             "type": "string",
-            "description": "媒体素材URL。素材包括图像、音频和视频。\n\n**传入图像（type=first_frame或last_frame）**\n\n首帧或尾帧URL，或 Base64 编码数据。目前支持首帧生视频、首尾帧生视频。\n\n图像限制：\n\n- 格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 或 HTTPS 协议。\n\n示例值：https://xxx/xxx.png。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：oss://dashscope-instant/xxx/xxx.png。\n\nBase64 编码图像后的字符串：\n\n数据格式：data:{MIME_type};base64,{base64_data}。\n\n示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ......（示例已截断，仅做演示）。\n\nBase64编码数据格式\n\n格式： data:{MIME_type};base64,{base64_data} 。\n\n{base64_data}：图像文件经过 Base64 编码后的字符串。\n\n{MIME_type}：图像的媒体类型，需与文件格式对应。\n\n图像格式与MIME Type对照\n\n| 图像格式 | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
+            "description": "媒体素材URL。素材包括图像、音频和视频。\n\n**传入视频（type=first_clip）**\n\n首段视频URL。\n\n视频限制：\n\n- 格式：MP4。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过100MB。\n- 时长：不超过30秒。\n\n**传入图像（type=last_frame）**\n\n尾帧 URL，或 Base64 编码数据。\n\n图像限制：\n\n- 格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 或 HTTPS 协议。\n\n示例值：`https://xxx/xxx.png`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：`oss://dashscope-instant/xxx/xxx.png`。\n\nBase64 编码图像后的字符串：\n\n数据格式：data:{MIME_type};base64,{base64_data}。\n\n示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ......（示例已截断，仅做演示）。\n\nBase64编码数据格式\n\n格式： data:{MIME_type};base64,{base64_data} 。\n\n{base64_data}：图像文件经过 Base64 编码后的字符串。\n\n{MIME_type}：图像的媒体类型，需与文件格式对应。\n\n图像格式与MIME Type对照\n\n| 图像格式 | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
           }
         }
       },

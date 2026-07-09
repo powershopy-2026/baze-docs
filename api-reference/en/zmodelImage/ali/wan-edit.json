@@ -259,7 +259,7 @@
           },
           "negative_prompt": {
             "type": "string",
-            "description": "Negative prompt. Describes what should be avoided in the output. The gateway maps this to upstream `parameters.negative_prompt`."
+            "description": "Negative prompt. Describes what should be avoided in the output."
           },
           "seed": {
             "type": "integer",
@@ -270,7 +270,7 @@
           },
           "bbox_list": {
             "type": "array",
-            "description": "Interactive editing bounding box regions.\n\nCorrespondence: The list length must match the number of input images. If an image does not need editing, pass an empty array `[]` at the corresponding position.\n\nCoordinate format: `[x1, y1, x2, y2]` (top-left x, top-left y, bottom-right x, bottom-right y), using absolute pixel coordinates of the original image, with (0,0) at the top-left corner.\n\nConstraint: Maximum 2 bounding boxes per image.\n\nExample: Input 3 images where the 2nd image has no selection, and the 1st has two selections:\n\n```\n[\n  [[0, 0, 12, 12], [25, 25, 100, 100]],  # Image 1 (2 boxes)\n  [],                                    # Image 2 (no box)\n  [[10, 10, 50, 50]]                    # Image 3 (1 box)\n]\n```\n\nThe gateway maps this to upstream `parameters.bbox_list`.",
+            "description": "Interactive editing bounding box regions.\n\nCorrespondence: The list length must match the number of input images. If an image does not need editing, pass an empty array `[]` at the corresponding position.\n\nCoordinate format: `[x1, y1, x2, y2]` (top-left x, top-left y, bottom-right x, bottom-right y), using absolute pixel coordinates of the original image, with (0,0) at the top-left corner.\n\nConstraint: Maximum 2 bounding boxes per image.\n\nExample: Input 3 images where the 2nd image has no selection, and the 1st has two selections:\n\n```\n[\n  [[0, 0, 12, 12], [25, 25, 100, 100]],  # Image 1 (2 boxes)\n  [],                                    # Image 2 (no box)\n  [[10, 10, 50, 50]]                    # Image 3 (1 box)\n]\n```\n\n",
             "items": {
               "type": "array",
               "items": {

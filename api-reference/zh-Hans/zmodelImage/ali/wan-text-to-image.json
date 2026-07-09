@@ -255,7 +255,7 @@
           },
           "enable_sequential": {
             "type": "boolean",
-            "description": "控制生成模式。`false`（默认）：普通模式。`true`：开启组图输出模式。网关会映射到上游 `parameters.enable_sequential`。"
+            "description": "控制生成模式。`false`（默认）：普通模式。`true`：开启组图输出模式。"
           },
           "color_palette": {
             "type": "array",

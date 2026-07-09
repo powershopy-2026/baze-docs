@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Wan 2.7 First-Last Frame to Video",
+    "title": "Wan 2.7 First & Last Frame",
     "version": "1.0.0",
-    "description": "Ali `wan2.7-i2v` first-last frame to video capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the first-last frame to video scenario and uses the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_frame`, `last_frame`, and `driving_audio`.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
+    "description": "Ali `wan2.7-i2v` first and last frame video generation capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the first-and-last-frame video generation scenario and uses the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_frame`, `last_frame`, and `driving_audio`.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "Wan 2.7 Video",
-      "description": "Ali wan2.7-i2v first-last frame to video capability"
+      "description": "Ali wan2.7-i2v first and last frame video generation capability"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "Create Wan 2.7 First-Last Frame to Video task",
-        "description": "Submit an asynchronous Ali `wan2.7-i2v` first-last frame to video task.\n\nUse `first_frame` to specify the initial frame image and `last_frame` to specify the target ending frame image, optionally paired with `driving_audio`.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
+        "summary": "Create Wan 2.7 First & Last Frame task",
+        "description": "Submit an asynchronous Ali `wan2.7-i2v` first-and-last-frame video generation task.\n\nUse `first_frame` to specify the start frame, `last_frame` to specify the end frame, optionally paired with `driving_audio` for audio-driven generation.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
         "operationId": "aliWan27I2VFirstLastFrame",
         "tags": [
           "Wan 2.7 Video"
@@ -39,10 +39,10 @@
               },
               "examples": {
                 "first_last_frame": {
-                  "summary": "First frame + last frame",
+                  "summary": "First frame + Last frame",
                   "value": {
                     "model": "wan2.7-i2v",
-                    "prompt": "A cat walks from one end of the hallway to the other.",
+                    "prompt": "A cat walking from one end of the hallway to the other.",
                     "media": [
                       {
                         "type": "first_frame",
@@ -58,10 +58,10 @@
                   }
                 },
                 "first_last_frame_with_audio": {
-                  "summary": "First frame + last frame + driving audio",
+                  "summary": "First frame + Last frame + Driving audio",
                   "value": {
                     "model": "wan2.7-i2v",
-                    "prompt": "A person gradually looks up and smiles, accompanied by narration.",
+                    "prompt": "A person slowly lifts their head and smiles, accompanied by a narration.",
                     "negative_prompt": "blurry, low quality",
                     "prompt_extend": true,
                     "watermark": false,
@@ -161,8 +161,8 @@
     },
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "Query Wan 2.7 First-Last Frame to Video task",
-        "description": "Query the latest status of a `wan2.7-i2v` first-last frame to video asynchronous task by its public task ID.",
+        "summary": "Query Wan 2.7 First & Last Frame task",
+        "description": "Query the latest status of a `wan2.7-i2v` first-and-last-frame video generation asynchronous task by its public task ID.",
         "operationId": "aliWan27I2VFirstLastFrameQuery",
         "tags": [
           "Wan 2.7 Video"
@@ -262,7 +262,7 @@
               "720P",
               "1080P"
             ],
-            "description": "Supported output resolution tiers.",
+            "description": "Specifies the output resolution tier for controlling video clarity (total pixels).\n\nThe model automatically scales to a similar total pixel count based on the selected resolution tier. The video aspect ratio will attempt to stay consistent with the input material (first frame or first clip).",
             "default": "1080P"
           },
           "seconds": {
@@ -307,7 +307,7 @@
           },
           "media": {
             "type": "array",
-            "description": "List of media assets (images, audio, video) for video generation. Each element is a media object with `type` and `url`.\n\nSupported combinations (invalid combinations will return an error):\n- **First + last frame**: `first_frame` + `last_frame`\n- **First + last frame + audio**: `first_frame` + `last_frame` + `driving_audio`\n\nEach `type` can appear at most once in the array.",
+            "description": "List of media assets (images, audio) for video generation. Each element is a media object with `type` and `url`.\n\nSupported combinations (invalid combinations will return an error):\n- **First & last frame**: `first_frame` + `last_frame`\n- **First & last frame + audio**: `first_frame` + `last_frame` + `driving_audio`\n\nEach `type` can appear at most once in the array.",
             "items": {
               "$ref": "#/components/schemas/Wan27MediaInput"
             }
@@ -332,7 +332,7 @@
           },
           "url": {
             "type": "string",
-            "description": "Media asset URL. Supports images, audio, and video.\n\n**Image** (type=`first_frame` or `last_frame`): First frame or last frame URL, or Base64 encoded data. Currently supports generating videos from the first frame or from the first and last frames.\n\nImage restrictions:\n- Formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n- Resolution: width and height range [240, 8000] pixels.\n- Aspect ratio: 1:8 ~ 8:1.\n- File size: up to 20MB.\n\nSupported input formats:\n\nPublic URL:\n\nSupports HTTP or HTTPS protocols.\n\nExample: https://xxx/xxx.png.\n\nTemporary URL:\n\nSupports OSS protocol. Must obtain the temporary URL via file upload.\n\nExample: oss://dashscope-instant/xxx/xxx.png.\n\nBase64 encoded image string:\n\nData format: data:{MIME_type};base64,{base64_data}.\n\nExample: data:image/png;base64,GDU7MtCZzEbTbmRZ...... (truncated for demonstration).\n\nBase64 encoded data format\n\nFormat: data:{MIME_type};base64,{base64_data}.\n\n{base64_data}: The Base64 encoded string of the image file.\n\n{MIME_type}: The media type of the image, corresponding to the file format.\n\nImage format to MIME Type mapping:\n\n| Image Format | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
+            "description": "Media asset URL. Supports images and audio.\n\n**Image** (type=`first_frame` or `last_frame`): First or last frame URL, or Base64 encoded data.\n\nImage restrictions:\n- Formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n- Resolution: width and height range [240, 8000] pixels.\n- Aspect ratio: 1:8 ~ 8:1.\n- File size: up to 20MB.\n\nSupported input formats:\n\nPublic URL:\n\nSupports HTTP or HTTPS protocols.\n\nExample: `https://xxx/xxx.png`.\n\nTemporary URL:\n\nSupports OSS protocol. Must obtain the temporary URL via file upload.\n\nExample: `oss://dashscope-instant/xxx/xxx.png`.\n\nBase64 encoded image string:\n\nData format: data:{MIME_type};base64,{base64_data}.\n\nExample: data:image/png;base64,GDU7MtCZzEbTbmRZ...... (truncated for demonstration).\n\nBase64 encoded data format\n\nFormat: data:{MIME_type};base64,{base64_data}.\n\n{base64_data}: The Base64 encoded string of the image file.\n\n{MIME_type}: The media type of the image, corresponding to the file format.\n\nImage format to MIME Type mapping:\n\n| Image Format | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
           }
         }
       },

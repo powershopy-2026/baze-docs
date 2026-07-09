@@ -255,7 +255,7 @@
           },
           "enable_sequential": {
             "type": "boolean",
-            "description": "Controls generation mode. `false` (default): normal mode. `true`: enable sequential (group) image output mode. The gateway maps this to upstream `parameters.enable_sequential`."
+            "description": "Controls generation mode. `false` (default): normal mode. `true`: enable sequential (group) image output mode."
           },
           "color_palette": {
             "type": "array",
