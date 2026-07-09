@@ -486,7 +486,6 @@
           }
         }
       },
-
       "ThinkingConfig": {
         "type": "object",
         "description": "控制思考模式与非思考模式的转换。",
@@ -777,7 +776,7 @@
             "type": "array",
             "description": "一个包含在该输出位置上，输出概率 top N 的 token 的列表，以及它们的对数概率。在罕见情况下，返回的 token 数量可能少于请求参数中指定的 top_logprobs 值。",
             "items": {
-              "$ref": "#/components/schemas/LogprobToken"
+              "$ref": "#/components/schemas/TopLogprobItem"
             }
           }
         }
@@ -871,6 +870,33 @@
           "code": {
             "type": "string",
             "description": "错误码。"
+          }
+        }
+      },
+      "TopLogprobItem": {
+        "type": "object",
+        "description": "推理内容的 top 对数概率 token，包含该 token、其对数概率以及 UTF-8 字节表示。",
+        "required": [
+          "token",
+          "logprob",
+          "bytes"
+        ],
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "输出的 token。"
+          },
+          "logprob": {
+            "type": "number",
+            "description": "该 token 的对数概率。-9999.0 代表该 token 的输出概率极小，不在 top 20 最可能输出的 token 中。"
+          },
+          "bytes": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer"
+            },
+            "description": "一个包含该 token UTF-8 字节表示的整数列表。一般在一个 UTF-8 字符被拆分成多个 token 来表示时有用。如果 token 没有对应的字节表示，则该值为 null。"
           }
         }
       }
