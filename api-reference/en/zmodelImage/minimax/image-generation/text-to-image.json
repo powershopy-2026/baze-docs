@@ -245,7 +245,7 @@
         "properties": {
           "status_code": {
             "type": "integer",
-            "description": "Status codes:\n- 0: Request succeeded\n- 1002: Rate limit triggered, please retry later\n- 1004: Authentication failed, please check if the API-Key is correct\n- 1008: Insufficient balance\n- 1026: Image description involves sensitive content\n- 2013: Invalid input parameters, please check if the parameters are filled in correctly\n- 2049: Invalid API key\n\nSee [Error Code Reference](/api-reference/errorcode) for more details.  "
+            "description": "Status codes:\n- 0: Request succeeded\n- 1002: Rate limit triggered, please retry later\n- 1004: Authentication failed, please check if the API-Key is correct\n- 1008: Insufficient balance\n- 1026: Image description involves sensitive content\n- 2013: Invalid input parameters, please check if the parameters are filled in correctly\n- 2049: Invalid API key"
           },
           "status_msg": {
             "type": "string",
