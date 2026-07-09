@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax 图片生成 API",
-    "description": "使用本接口，输出文本内容，进行图片生成。",
+    "title": "MiniMax Image Generation API",
+    "description": "Use this API to input text content for image generation.",
     "license": {
       "name": "MIT"
     },
@@ -24,14 +24,14 @@
         "tags": [
           "Image"
         ],
-        "summary": "文生图",
+        "summary": "Image Generation",
         "operationId": "imageGeneration",
         "parameters": [
           {
             "name": "Content-Type",
             "in": "header",
             "required": true,
-            "description": "请求体的媒介类型，请设置为 `application/json` 确保请求数据的格式为 JSON.",
+            "description": "Media type of the request body. Set to `application/json` to ensure the request data is in JSON format.",
             "schema": {
               "type": "string",
               "enum": [
@@ -78,14 +78,14 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称。可选值：`image-01`",
+            "description": "Model name. Available value: `image-01`.",
             "enum": [
               "image-01"
             ]
           },
           "prompt": {
             "type": "string",
-            "description": "图像的文本描述，最长 1500 字符"
+            "description": "Text description of the image, up to 1500 characters."
           },
           "style": {
             "allOf": [
@@ -93,11 +93,11 @@
                 "$ref": "#/components/schemas/StyleObject"
               }
             ],
-            "description": "画风设置，仅当 `model` 为 `image-01-live` 时生效"
+            "description": "Style settings. Only takes effect when `model` is `image-01-live`."
           },
           "aspect_ratio": {
             "type": "string",
-            "description": "图像宽高比，默认为 1:1。可选值：\n- `1:1` (1024x1024)\n- `16:9` (1280x720)\n- `4:3` (1152x864)\n- `3:2` (1248x832)\n- `2:3` (832x1248)\n- `3:4` (864x1152)\n- `9:16` (720x1280)\n- `21:9` (1344x576) (仅适用于`image-01`)",
+            "description": "Image aspect ratio. Defaults to `1:1`. Available values:\n- `1:1` (1024x1024)\n- `16:9` (1280x720)\n- `4:3` (1152x864)\n- `3:2` (1248x832)\n- `2:3` (832x1248)\n- `3:4` (864x1152)\n- `9:16` (720x1280)\n- `21:9` (1344x576) (only for `image-01`)",
             "enum": [
               "1:1",
               "16:9",
@@ -111,11 +111,11 @@
           },
           "width": {
             "type": "integer",
-            "description": "生成图片的宽度（像素）。仅当 model 为 `image-01` 时生效。注意：`width` 和 `height`\n需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 `aspect_ratio` 同时设置，则优先使用\n`aspect_ratio`"
+            "description": "Width of the generated image in pixels. Only takes effect when model is `image-01`. Note: `width` and `height` must be set together, value range [512, 2048], and must be a multiple of 8. If set together with `aspect_ratio`, `aspect_ratio` takes precedence."
           },
           "height": {
             "type": "integer",
-            "description": "生成图片的高度（像素）。仅当 model 为 `image-01` 时生效。注意：`width` 和 `height`\n需同时设置，取值范围[512, 2048]，且必须是 8 的倍数。若与 `aspect_ratio` 同时设置，则优先使用\n`aspect_ratio`"
+            "description": "Height of the generated image in pixels. Only takes effect when model is `image-01`. Note: `width` and `height` must be set together, value range [512, 2048], and must be a multiple of 8. If set together with `aspect_ratio`, `aspect_ratio` takes precedence."
           },
           "response_format": {
             "type": "string",
@@ -124,28 +124,28 @@
               "base64"
             ],
             "default": "url",
-            "description": "返回图片的形式，默认为 url。可选值：url, base64。\n⚠️ 注意：url 的有效期为 24 小时"
+            "description": "Format of the returned image. Defaults to `url`. Available values: `url`, `base64`.\n⚠️ Note: URLs are valid for 24 hours."
           },
           "seed": {
             "type": "integer",
             "format": "int64",
-            "description": "随机种子。使用相同的 seed 和参数，可以生成内容相近的图片，用于复现结果。如未提供，算法会对 n 张图单独生成随机种子"
+            "description": "Random seed. Using the same seed and parameters can generate images with similar content for reproducible results. If not provided, a random seed is generated for each of the n images."
           },
           "n": {
             "type": "integer",
             "default": 1,
             "minimum": 1,
             "maximum": 9,
-            "description": "单次请求生成的图片数量，取值范围[1, 9]，默认为 1"
+            "description": "Number of images to generate per request, range [1, 9]. Defaults to 1."
           },
           "prompt_optimizer": {
             "type": "boolean",
             "default": false,
-            "description": "是否开启 prompt 自动优化，默认为 `false`."
+            "description": "Whether to enable automatic prompt optimization. Defaults to `false`."
           },
           "aigc_watermark": {
             "type": "boolean",
-            "description": "是否在生成的图片中添加水印，默认为 `false`"
+            "description": "Whether to add a watermark to the generated image. Defaults to `false`."
           }
         },
         "example": {
@@ -168,18 +168,18 @@
             "properties": {
               "success_count": {
                 "type": "integer",
-                "description": "N成功生成的图片数量"
+                "description": "Number of successfully generated images"
               },
               "failed_count": {
                 "type": "integer",
-                "description": "因内容安全检查而被拦截的图片数量"
+                "description": "Number of images blocked due to content safety."
               }
             },
-            "description": "因内容安全检查失败而未返回的图片数量"
+            "description": "Number of images not returned due to content safety check failures."
           },
           "id": {
             "type": "string",
-            "description": "生成任务的 ID，用于后续查询任务状态"
+            "description": "ID of the generation task, used for subsequent task status queries."
           },
           "base_resp": {
             "$ref": "#/components/schemas/BaseResp"
@@ -212,12 +212,12 @@
         "properties": {
           "style_type": {
             "type": "string",
-            "description": "画风风格类型。可选值：`漫画`, `元气`, `中世纪`, `水彩`"
+            "description": "Style type. Available values: `漫画` (comic), `元气` (vibrant), `中世纪` (medieval), `水彩` (watercolor)."
           },
           "style_weight": {
             "type": "number",
             "format": "float",
-            "description": "画风权重，取值范围 `(0, 1]`，默认 `0.8`"
+            "description": "Style weight. Value range `(0, 1]`. Defaults to `0.8`."
           }
         }
       },
@@ -229,14 +229,14 @@
             "items": {
               "type": "string"
             },
-            "description": "当 `response_format` 为 `url` 时返回，包含图片链接的数组"
+            "description": "Returned when `response_format` is `url`. Array of image URLs."
           },
           "image_base64": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "当 `response_format` 为 `base64` 时返回，包含图片 Base64 编码的数组"
+            "description": "Returned when `response_format` is `base64`. Array of Base64-encoded images."
           }
         }
       },
@@ -245,11 +245,11 @@
         "properties": {
           "status_code": {
             "type": "integer",
-            "description": "状态码及其分别含义如下：\n- 0，请求成功\n- 1002，触发限流，请稍后再试\n- 1004，账号鉴权失败，请检查 API-Key 是否填写正确\n- 1008，账号余额不足\n- 1026，图片描述涉及敏感内容\n- 2013，传入参数异常，请检查入参是否按要求填写\n- 2049，无效的api key"
+            "description": "Status codes:\n- 0: Request succeeded\n- 1002: Rate limit triggered, please retry later\n- 1004: Authentication failed, please check if the API-Key is correct\n- 1008: Insufficient balance\n- 1026: Image description involves sensitive content\n- 2013: Invalid input parameters, please check if the parameters are filled in correctly\n- 2049: Invalid API key"
           },
           "status_msg": {
             "type": "string",
-            "description": "具体错误详情"
+            "description": "Error details"
           }
         }
       }
@@ -259,7 +259,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
       }
     }
   }

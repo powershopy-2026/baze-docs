@@ -1,0 +1,174 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "Use this API to upload first and last frame images along with text content to create a video generation task.",
+    "license": {
+      "name": "MIT"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/minimax/v1/video_generation": {
+      "post": {
+        "tags": [
+          "Video"
+        ],
+        "summary": "Video Generation",
+        "operationId": "videoGeneration",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "description": "Media type of the request body. Set to `application/json` to ensure the request data is in JSON format.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "application/json"
+              ],
+              "default": "application/json"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoGenerationReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoGenerationResp"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "VideoGenerationReq": {
+        "type": "object",
+        "required": [
+          "model",
+          "last_frame_image"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model name. Available value: `MiniMax-Hailuo-02`.\n\nNote: The first/last frame generation feature does not support 512P resolution.",
+            "enum": [
+              "MiniMax-Hailuo-02"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text description of the video, up to 2000 characters. For `MiniMax-Hailuo-02`, the `[command]` syntax is supported for camera movement control.\nYou can add camera movement commands in the prompt using the `[command]` format for precise camera control.\n\n- 15 supported camera movement commands:\n\t - Pan left/right: [Pan left], [Pan right]\n\t - Tilt left/right: [Tilt left], [Tilt right]\n\t - Dolly: [Dolly in], [Dolly out]\n\t - Pedestal: [Pedestal up], [Pedestal down]\n\t - Tilt up/down: [Tilt up], [Tilt down]\n\t - Zoom: [Zoom in], [Zoom out]\n\t - Others: [Shake], [Follow], [Static]\n\n - Usage rules:\n\t - Combined movements: Multiple commands within the same pair of `[]` take effect simultaneously, e.g. [Tilt left, Pedestal up]. It is recommended to combine no more than 3 commands.\n\t - Sequential movements: Commands appearing sequentially in the prompt take effect in order, e.g. \"...[Dolly in], then...[Dolly out]\"\n\t - Natural language: Natural language descriptions of camera movements are also supported, but using standard commands yields more accurate results. "
+          },
+          "first_frame_image": {
+            "type": "string",
+            "description": "Use the specified image as the **first frame** of the video. Supports public URL or Base64-encoded [Data URL](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data) (`data:image/jpeg;base64,...`)\n\n- Image requirements:\n\t- Format: JPG, JPEG, PNG, WebP\n\t- Size: less than 20MB\n\t- Dimensions: Short side greater than 300px, aspect ratio between 2:5 and 5:2 \n\n⚠️ The generated video dimensions follow the first frame image."
+          },
+          "last_frame_image": {
+            "type": "string",
+            "description": "Use the specified image as the **last frame** of the video. Supports public URL or Base64-encoded [Data URL](https://developer.mozilla.org/en-US/docs/Web/URI/Reference/Schemes/data) (`data:image/jpeg;base64,...`)\n\n- Image requirements:\n\t- Format: JPG, JPEG, PNG, WebP\n\t- Size: less than 20MB\n\t- Dimensions: Short side greater than 300px, aspect ratio between 2:5 and 5:2\n\n⚠️ The generated video dimensions follow the first frame image. When the first and last frame images have different dimensions, the model crops the last frame image based on the first frame."
+          },
+          "prompt_optimizer": {
+            "type": "boolean",
+            "description": "Whether to automatically optimize the `prompt`. Defaults to `true`. Set to `false` for more precise control."
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds. Defaults to 6. Available values for first/last frame generation depend on resolution:\n\n| Model | 768P | 1080P |\n| :--- | :--- | :--- |\n| MiniMax-Hailuo-02 | `6` or `10` | `6` |"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Video resolution. First/last frame generation supports 768P and 1080P:\n| Model | 6s | 10s |\n| :--- | :--- | :--- |\n| MiniMax-Hailuo-02 | `768P` (default), `1080P` | `768P` |",
+            "enum": [
+              "768P",
+              "1080P"
+            ]
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback URL for receiving task status update notifications. You can configure a callback via the `callback_url` parameter to receive asynchronous notifications of task status updates.\n\nAddress verification: After configuration, the MiniMax server sends a POST request to `callback_url` with a `challenge` field in the request body. Your server must echo back the challenge value within 3 seconds to complete verification.\nStatus updates: After successful verification, whenever the task status changes, MiniMax pushes the latest task status to this URL. The pushed data structure matches the response body of the query video generation task API.\n\nThe callback returns the following \"status\" values:\n- `\"processing\"` - Generating\n- `\"success\"` - Success\n- `\"failed\"` - Failed\n\n```python\nfrom fastapi import FastAPI, HTTPException, Request\r\nimport json\r\n\r\napp = FastAPI()\r\n\r\n@app.post(\"/get_callback\")\r\nasync def get_callback(request: Request):\r\n    try:\r\n        json_data = await request.json()\r\n        challenge = json_data.get(\"challenge\")\r\n        if challenge is not None:\r\n            # Validation request, echo back challenge\r\n            return {\"challenge\": challenge}\r\n        else:\r\n            # Status update request, handle accordingly\r\n            # {\r\n            #     \"task_id\": \"115334141465231360\",\r\n            #     \"status\": \"success\",\r\n            #     \"file_id\": \"205258526306433\",\r\n            #     \"base_resp\": {\r\n            #         \"status_code\": 0,\r\n            #         \"status_msg\": \"success\"\r\n            #     }\r\n            # }\r\n            return {\"status\": \"success\"}\r\n    except Exception as e:\r\n        raise HTTPException(status_code=500, detail=str(e))\r\n\r\nif __name__ == \"__main__\":\r\n    import uvicorn\r\n    uvicorn.run(\r\n        app,  # Required\r\n        host=\"0.0.0.0\",  # Required\r\n        port=8000,  # Required, port is configurable\r\n        # ssl_keyfile=\"yourname.yourDomainName.com.key\",  # Optional, depends on whether SSL is enabled\r\n        # ssl_certfile=\"yourname.yourDomainName.com.key\",  # Optional, depends on whether SSL is enabled\r\n    )\n```"
+          },
+          "aigc_watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark to the generated video. Defaults to `false`."
+          }
+        },
+        "example": {
+          "prompt": "A little girl grow up.",
+          "first_frame_image": "https://filecdn.minimax.chat/public/fe9d04da-f60e-444d-a2e0-18ae743add33.jpeg",
+          "last_frame_image": "https://filecdn.minimax.chat/public/97b7cd08-764e-4b8b-a7bf-87a0bd898575.jpeg",
+          "model": "MiniMax-Hailuo-02",
+          "duration": 6,
+          "resolution": "1080P"
+        }
+      },
+      "VideoGenerationResp": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "ID of the video generation task, used for subsequent task status queries."
+          },
+          "base_resp": {
+            "$ref": "#/components/schemas/BaseResp"
+          }
+        },
+        "example": {
+          "task_id": "106916112212032",
+          "base_resp": {
+            "status_code": 0,
+            "status_msg": "success"
+          }
+        }
+      },
+      "BaseResp": {
+        "type": "object",
+        "properties": {
+          "status_code": {
+            "type": "integer",
+            "description": "Status codes:\n- 0: Request succeeded\n- 1002: Rate limit triggered, please retry later\n- 1004: Authentication failed, please check if the API-Key is correct\n- 1008: Insufficient balance\n- 1026: Video description involves sensitive content, please adjust\n- 2013: Invalid input parameters, please check if the parameters are filled in correctly\n- 2049: Invalid API key, please check the API key\n\nSee [Error Code Reference](/api-reference/errorcode) for more details.  "
+          },
+          "status_msg": {
+            "type": "string",
+            "description": "Error details"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    }
+  }
+}

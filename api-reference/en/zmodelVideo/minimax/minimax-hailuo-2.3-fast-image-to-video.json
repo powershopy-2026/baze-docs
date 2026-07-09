@@ -284,7 +284,8 @@
             "type": "string"
           },
           "task_id": {
-            "type": "string"
+            "type": "string",
+            "description": "ID of the video generation task, used for subsequent task status queries."
           },
           "object": {
             "type": "string",

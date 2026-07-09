@@ -279,7 +279,8 @@
             "type": "string"
           },
           "task_id": {
-            "type": "string"
+            "type": "string",
+            "description": "视频生成任务的 ID，用于后续查询任务状态"
           },
           "object": {
             "type": "string",

@@ -1,0 +1,137 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "Download generated video files through this API.",
+    "license": {
+      "name": "MIT"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/minimax/v1/files/retrieve": {
+      "get": {
+        "tags": [
+          "Files"
+        ],
+        "summary": "Retrieve File",
+        "operationId": "retrieveFile",
+        "parameters": [
+          {
+            "name": "file_id",
+            "in": "query",
+            "required": true,
+            "description": "Unique identifier of the file.\nSupports `file_id` obtained from the video task status query API.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetrieveFileResp"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RetrieveFileResp": {
+        "type": "object",
+        "properties": {
+          "file": {
+            "$ref": "#/components/schemas/FileObject"
+          },
+          "base_resp": {
+            "$ref": "#/components/schemas/RetrieveFileBaseResp"
+          }
+        },
+        "example": {
+          "file": {
+            "file_id": "${file_id}",
+            "bytes": 0,
+            "created_at": 1700469398,
+            "filename": "output_aigc.mp4",
+            "purpose": "video_generation",
+            "download_url": "www.downloadurl.com"
+          },
+          "base_resp": {
+            "status_code": 0,
+            "status_msg": "success"
+          }
+        }
+      },
+      "FileObject": {
+        "type": "object",
+        "properties": {
+          "file_id": {
+            "type": "string",
+            "description": "Unique identifier of the file"
+          },
+          "bytes": {
+            "type": "integer",
+            "format": "int64",
+            "description": "File size in bytes"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp when the file was created, in seconds"
+          },
+          "filename": {
+            "type": "string",
+            "description": "File name"
+          },
+          "purpose": {
+            "type": "string",
+            "description": "Purpose of the file"
+          },
+          "download_url": {
+            "type": "string",
+            "format": "url",
+            "description": "URL for downloading the file, valid for 14 days"
+          }
+        }
+      },
+      "RetrieveFileBaseResp": {
+        "type": "object",
+        "properties": {
+          "status_code": {
+            "type": "integer",
+            "description": "Status codes:\n- 1000: Unknown error\n- 1001: Timeout\n- 1002: RPM rate limit triggered\n- 1004: Authentication failed\n- 1008: Insufficient balance\n- 1013: Internal server error\n- 1026: Input content error\n- 1027: Output content error\n- 1039: TPM rate limit triggered\n- 2013: Input format error\n\n"
+          },
+          "status_msg": {
+            "type": "string",
+            "description": "Status details"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    }
+  }
+}
