@@ -249,8 +249,8 @@
           "n": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 4,
-            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling. The gateway maps this to upstream `parameters.n`."
+            "maximum": 12,
+            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling.\n\nRequired range: 1 <= n <= 12.\n\nThe gateway maps this to upstream `parameters.n`."
           },
           "watermark": {
             "type": "boolean",
@@ -263,14 +263,14 @@
           },
           "seed": {
             "type": "integer",
-            "description": "Random seed. Range [0, 2147483647]. Using the same seed helps keep generation results relatively stable. Note: the generation process is probabilistic; the same seed does not guarantee identical results every time.",
+            "description": "Random seed. Range [0, 2147483647].\n\nUsing the same seed value helps keep generation results relatively stable. If not provided, the algorithm automatically uses a random seed.\n\nNote: the generation process is probabilistic; the same seed does not guarantee identical results every time.",
             "default": 0,
             "minimum": 0,
             "maximum": 2147483647
           },
           "bbox_list": {
             "type": "array",
-            "description": "Interactive editing bounding box regions. The length must match the number of input images. Pass an empty array `[]` for images that do not require selection. Each bounding box uses the absolute pixel coordinates `[x1, y1, x2, y2]`. The gateway maps this to upstream `parameters.bbox_list`.",
+            "description": "Interactive editing bounding box regions.\n\nCorrespondence: The list length must match the number of input images. If an image does not need editing, pass an empty array `[]` at the corresponding position.\n\nCoordinate format: `[x1, y1, x2, y2]` (top-left x, top-left y, bottom-right x, bottom-right y), using absolute pixel coordinates of the original image, with (0,0) at the top-left corner.\n\nConstraint: Maximum 2 bounding boxes per image.\n\nExample: Input 3 images where the 2nd image has no selection, and the 1st has two selections:\n\n```\n[\n  [[0, 0, 12, 12], [25, 25, 100, 100]],  # Image 1 (2 boxes)\n  [],                                    # Image 2 (no box)\n  [[10, 10, 50, 50]]                    # Image 3 (1 box)\n]\n```\n\nThe gateway maps this to upstream `parameters.bbox_list`.",
             "items": {
               "type": "array",
               "items": {
@@ -293,7 +293,7 @@
             "type": "array",
             "minItems": 1,
             "maxItems": 1,
-            "description": "Currently only single-turn conversation is supported, i.e. one set of `role`/`content` parameters.",
+            "description": "Message content array. Currently only single-turn conversation is supported, i.e. one set of `role`/`content` parameters. Multi-turn conversation is not supported.",
             "items": {
               "$ref": "#/components/schemas/WanImageMessage"
             }
@@ -316,7 +316,7 @@
           },
           "content": {
             "type": "array",
-            "description": "Message content array. Contains `text` and/or `image` objects. Supports 0-9 images.",
+            "description": "Message content array. Contains `text` and/or `image` objects.",
             "items": {
               "$ref": "#/components/schemas/WanImageContent"
             }
@@ -328,7 +328,7 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "Input image URL or Base64 encoded string.\n\nImage formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\nResolution: width and height range [240, 8000] pixels, aspect ratio [1:8, 8:1].\nFile size: up to 20MB.\nSupports 0-9 images per request. When using multiple images, pass multiple `image` objects in the `content` array in order.\n\nURL format: HTTP or HTTPS URL, e.g. `http://wanx.alicdn.com/material/xxx.jpeg`.\nBase64 format: `data:{MIME_type};base64,{base64_data}`, e.g. `data:image/jpeg;base64,...`."
+            "description": "Input image URL or Base64 encoded string.\n\nImage restrictions:\n\nImage formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n\nImage resolution: width and height must both be in the range [240, 8000] pixels, aspect ratio [1:8, 8:1].\n\nFile size: up to 20MB.\n\nImage count limits:\n\n0-9 images can be provided. When inputting multiple images, pass multiple `image` objects in the `content` array in sequential order.\n\nSupported input formats:\n\n- Publicly accessible URL\n  Supports HTTP or HTTPS.\n  Example: `http://wanx.alicdn.com/material/xxx.jpeg`.\n\n- Base64 encoded image string\n  Format: `data:{MIME_type};base64,{base64_data}`\n  Example: `data:image/jpeg;base64,GDU7MtCZzEbTbmRZ...` (illustration only, actual complete string required)."
           },
           "text": {
             "type": "string",
@@ -347,8 +347,8 @@
           "n": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 4,
-            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling. The gateway maps this to upstream `parameters.n`."
+            "maximum": 12,
+            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling.\n\nRequired range: 1 <= n <= 12."
           },
           "watermark": {
             "type": "boolean",
@@ -361,11 +361,11 @@
           },
           "seed": {
             "type": "integer",
-            "description": "Random seed. Range [0, 2147483647]. Using the same seed helps keep generation results relatively stable. Note: the generation process is probabilistic; the same seed does not guarantee identical results every time. The gateway maps this to upstream `parameters.seed`."
+            "description": "Random seed. Range [0, 2147483647].\n\nUsing the same seed value helps keep generation results relatively stable. If not provided, the algorithm automatically uses a random seed.\n\nNote: the generation process is probabilistic; the same seed does not guarantee identical results every time. The gateway maps this to upstream `parameters.seed`."
           },
           "bbox_list": {
             "type": "array",
-            "description": "Interactive editing bounding box regions. The length must match the number of input images. Pass an empty array `[]` for images that do not require selection. Each bounding box uses the absolute pixel coordinates `[x1, y1, x2, y2]`. The gateway maps this to upstream `parameters.bbox_list`.",
+            "description": "Interactive editing bounding box regions.\n\nCorrespondence: The list length must match the number of input images. If an image does not need editing, pass an empty array `[]` at the corresponding position.\n\nCoordinate format: `[x1, y1, x2, y2]` (top-left x, top-left y, bottom-right x, bottom-right y), using absolute pixel coordinates of the original image, with (0,0) at the top-left corner.\n\nConstraint: Maximum 2 bounding boxes per image.\n\nExample: Input 3 images where the 2nd image has no selection, and the 1st has two selections:\n\n```\n[\n  [[0, 0, 12, 12], [25, 25, 100, 100]],  # Image 1 (2 boxes)\n  [],                                    # Image 2 (no box)\n  [[10, 10, 50, 50]]                    # Image 3 (1 box)\n]\n```",
             "items": {
               "type": "array",
               "items": {

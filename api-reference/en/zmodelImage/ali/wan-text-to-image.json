@@ -242,7 +242,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 12,
-            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling.\n\nNon-sequential mode: range 1-4, default 1.\nSequential mode: range 1-12, default 12. The actual count is determined by the model and will not exceed `n`."
+            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling.\n\nRequired range: 1 <= n <= 12.\n\nNon-sequential mode: range 1-4, default 1.\nSequential mode: range 1-12, default 12. The actual count is determined by the model and will not exceed `n`."
           },
           "watermark": {
             "type": "boolean",
@@ -267,7 +267,7 @@
           "seed": {
             "type": "integer",
             "format": "int64",
-            "description": "Random seed. Range [0, 2147483647]. Using the same seed helps keep generation results relatively stable. Note: the generation process is probabilistic; the same seed does not guarantee identical results every time.",
+            "description": "Random seed. Range [0, 2147483647].\n\nUsing the same seed value helps keep generation results relatively stable. If not provided, the algorithm automatically uses a random seed.\n\nNote: the generation process is probabilistic; the same seed does not guarantee identical results every time.",
             "minimum": 0
           }
         }
@@ -282,7 +282,7 @@
             "type": "array",
             "minItems": 1,
             "maxItems": 1,
-            "description": "Currently only single-turn conversation is supported, i.e. one set of `role`/`content` parameters.",
+            "description": "Message content array. Currently only single-turn conversation is supported, i.e. one set of `role`/`content` parameters. Multi-turn conversation is not supported.",
             "items": {
               "$ref": "#/components/schemas/WanTextToImageMessage"
             }
@@ -306,8 +306,7 @@
           "content": {
             "type": "array",
             "minItems": 1,
-            "maxItems": 1,
-            "description": "Message content array. Contains `text` and/or `image` objects. Supports 0-9 images.",
+            "description": "Message content array. Contains `text` and/or `image` objects.",
             "items": {
               "$ref": "#/components/schemas/WanTextToImageContentItem"
             }
@@ -338,7 +337,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 12,
-            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling.\n\nNon-sequential mode: range 1-4, default 1.\nSequential mode: range 1-12, default 12. The actual count is determined by the model and will not exceed `n`."
+            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling.\n\nRequired range: 1 <= n <= 12.\n\nNon-sequential mode: range 1-4, default 1.\nSequential mode: range 1-12, default 12. The actual count is determined by the model and will not exceed `n`."
           },
           "watermark": {
             "type": "boolean",
@@ -363,7 +362,7 @@
           "seed": {
             "type": "integer",
             "format": "int64",
-            "description": "Random seed. Range [0, 2147483647]. Using the same seed helps keep generation results relatively stable. Note: the generation process is probabilistic; the same seed does not guarantee identical results every time."
+            "description": "Random seed. Range [0, 2147483647].\n\nUsing the same seed value helps keep generation results relatively stable. If not provided, the algorithm automatically uses a random seed.\n\nNote: the generation process is probabilistic; the same seed does not guarantee identical results every time."
           }
         }
       },
