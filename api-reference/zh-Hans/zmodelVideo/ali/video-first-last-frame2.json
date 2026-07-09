@@ -450,7 +450,7 @@
             "enum": [
               "wan2.1-kf2v-plus"
             ],
-            "description": "模型名称。示例值：`wan2.2-kf2v-flash`。详情参见百炼控制台。"
+            "description": "模型名称。"
           },
           "images": {
             "type": "array",

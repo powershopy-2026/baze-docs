@@ -450,7 +450,7 @@
             "enum": [
               "wan2.1-kf2v-plus"
             ],
-            "description": "Model name. Example: `wan2.2-kf2v-flash`. See the Bailian console for details."
+            "description": "Model name. "
           },
           "images": {
             "type": "array",
