@@ -450,7 +450,7 @@
             "enum": [
               "wan2.1-kf2v-plus"
             ],
-            "description": "万相首尾帧图生视频模型。"
+            "description": "模型名称。示例值：`wan2.2-kf2v-flash`。详情参见百炼控制台。"
           },
           "images": {
             "type": "array",
@@ -463,7 +463,7 @@
           },
           "prompt": {
             "type": "string",
-            "description": "文本提示词，描述首帧到尾帧的变化过程。支持中英文，长度不超过 800 个字符。"
+            "description": "文本提示词。支持中英文，长度不超过800个字符，每个汉字/字母占一个字符，超过部分会自动截断。\n\n如果首尾帧的主体和场景变化较大，建议描写变化过程，例如运镜过程（镜头向左移动）或者主体运动过程（人向前奔跑）。\n\n示例值：一只黑色小猫好奇地看向天空，镜头从平视逐渐上升，最后俯拍它的好奇的眼神。"
           },
           "seconds": {
             "type": "string",
@@ -483,21 +483,21 @@
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "是否开启提示词智能改写。",
+            "description": "是否开启prompt智能改写。开启后使用大模型对输入prompt进行智能改写。对于较短的prompt生成效果提升明显，但会增加耗时。\n\n- `true`：默认值，开启智能改写。\n- `false`：不开启智能改写。\n\n示例值：true。",
             "default": true
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否在视频中添加水印。",
+            "description": "是否添加水印标识，水印位于图片右下角，文案为「AI生成」。\n\n- `false`：默认值，不添加水印。\n- `true`：添加水印。\n\n示例值：false。",
             "default": false
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子，取值范围 [0, 2147483647]。"
+            "description": "随机数种子，取值范围为[0, 2147483647]。\n\n未指定时，系统自动生成随机种子。若需提升生成结果的可复现性，建议固定seed值。\n\n请注意，由于模型生成具有概率性，即使使用相同 seed，也不能保证每次生成结果完全一致。"
           },
           "negative_prompt": {
             "type": "string",
-            "description": "反向提示词，描述不希望在视频中看到的内容。长度不超过 500 个字符。"
+            "description": "反向提示词，用来描述不希望在视频画面中看到的内容，可以对视频画面进行限制。\n\n支持中英文，长度不超过500个字符，超过部分会自动截断。\n\n示例值：低分辨率、错误、最差质量、低质量、残缺、多余的手指、比例不良等。"
           }
         }
       },
@@ -577,7 +577,7 @@
           },
           "video_url": {
             "type": "string",
-            "description": "生成视频的下载链接。有效期 24 小时。"
+            "description": "生成视频的下载链接。仅在任务成功时返回。"
           },
           "metadata": {
             "type": "object",
