@@ -250,7 +250,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 12,
-            "description": "重要：`n` 直接影响费用。费用 = 单价 × 成功生成的图片张数，请在调用前确认模型价格。\n\n必填范围：1 <= n <= 12。\n\n网关会映射到上游 `parameters.n`。"
+            "description": "重要：n 直接影响费用。费用 = 单价 × 成功生成的图片张数，请在调用前确认模型价格。\n\n关闭组图模式时，该数值代表生成图像数量，取值范围 1-4，默认为 1；\n\n开启组图模式时，该数值代表最大生成图像数量，取值范围 1-12，默认为 12。实际数量由模型决定且不超过 n。"
           },
           "watermark": {
             "type": "boolean",
@@ -328,7 +328,7 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "输入图像的URL或Base64编码字符串。\n\n图像限制：\n\n图像格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n\n图像分辨率：图像的宽高范围均为[240, 8000]像素，宽高比范围[1:8, 8:1]。\n\n文件大小：不超过20MB。\n\n图像数量限制：\n\n可传入0-9张图片。\n\n当输入多张图像时，需在content数组中传入多个image对象，并按照数组顺序定义图像顺序。\n\n支持的输入格式：\n\n- 使用公网可访问URL\n  支持HTTP或HTTPS协议。\n  示例值：http://wanx.alicdn.com/material/xxx.jpeg。\n\n- 传入 Base64 编码图像后的字符串\n  格式：data:{MIME_type};base64,{base64_data}\n  示例：data:image/jpeg;base64,GDU7MtCZzEbTbmRZ...（仅示意，实际需传入完整字符串）。"
+            "description": "输入图像的URL或Base64编码字符串。\n\n图像限制：\n\n图像格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n\n图像分辨率：图像的宽高范围均为[240, 8000]像素，宽高比范围[1:8, 8:1]。\n\n文件大小：不超过20MB。\n\n图像数量限制：\n\n可传入0-9张图片。\n\n当输入多张图像时，需在content数组中传入多个image对象，并按照数组顺序定义图像顺序。\n\n支持的输入格式：\n\n- 使用公网可访问URL\n  支持HTTP或HTTPS协议。\n  示例值：`http://wanx.alicdn.com/material/xxx.jpeg`。\n\n- 传入 Base64 编码图像后的字符串\n  格式：data:{MIME_type};base64,{base64_data}\n  示例：data:image/jpeg;base64,GDU7MtCZzEbTbmRZ...（仅示意，实际需传入完整字符串）。"
           },
           "text": {
             "type": "string",
@@ -348,7 +348,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 12,
-            "description": "重要：`n` 直接影响费用。费用 = 单价 × 成功生成的图片张数，请在调用前确认模型价格。\n\n必填范围：1 <= n <= 12。"
+            "description": "重要：n 直接影响费用。费用 = 单价 × 成功生成的图片张数，请在调用前确认模型价格。\n\n关闭组图模式时，该数值代表生成图像数量，取值范围 1-4，默认为 1；\n\n开启组图模式时，该数值代表最大生成图像数量，取值范围 1-12，默认为 12。实际数量由模型决定且不超过 n。"
           },
           "watermark": {
             "type": "boolean",
