@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "MiniMax Image Generation API",
+    "title": "MiniMax 图片生成 API",
     "description": "使用本接口，上传图片内容，进行图片生成。",
     "license": {
       "name": "MIT"
@@ -24,7 +24,7 @@
         "tags": [
           "Image"
         ],
-        "summary": "Image Generation",
+        "summary": "图生图",
         "operationId": "imageGeneration",
         "parameters": [
           {
@@ -183,7 +183,7 @@
               },
               "failed_count": {
                 "type": "integer",
-                "description": "Number of images blocked due to content safety."
+                "description": "因内容安全检查而被拦截的图片数量"
               }
             },
             "description": "因内容安全检查失败而未返回的图片数量"
