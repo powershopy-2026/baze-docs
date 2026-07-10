@@ -1,0 +1,129 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "Use this API to query the status of a video generation task.",
+    "license": {
+      "name": "MIT"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/minimax/v1/query/video_generation": {
+      "get": {
+        "tags": [
+          "Video"
+        ],
+        "summary": "Query Video Generation Task",
+        "operationId": "queryVideoGenerationTask",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "query",
+            "required": true,
+            "description": "The task ID to query. Only tasks created by the current account can be queried.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryVideoGenerationTaskResp"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "QueryVideoGenerationTaskResp": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "The queried task ID"
+          },
+          "status": {
+            "$ref": "#/components/schemas/VideoProcessStatus"
+          },
+          "file_id": {
+            "type": "string",
+            "description": "Returned on success. File ID for retrieving the video file."
+          },
+          "video_width": {
+            "type": "integer",
+            "description": "Returned on success. Width of the generated video in pixels."
+          },
+          "video_height": {
+            "type": "integer",
+            "description": "Returned on success. Height of the generated video in pixels."
+          },
+          "base_resp": {
+            "$ref": "#/components/schemas/QueryVideoGenerationTaskBaseResp"
+          }
+        },
+        "example": {
+          "task_id": "176843862716480",
+          "status": "Success",
+          "file_id": "176844028768320",
+          "video_width": 1920,
+          "video_height": 1080,
+          "base_resp": {
+            "status_code": 0,
+            "status_msg": "success"
+          }
+        }
+      },
+      "VideoProcessStatus": {
+        "type": "string",
+        "enum": [
+          "Preparing",
+          "Queueing",
+          "Processing",
+          "Success",
+          "Fail"
+        ],
+        "description": "Current status of the task. Possible values:\n- `Preparing` – Preparing\n- `Queueing` – Queueing\n- `Processing` – Processing\n- `Success` – Success\n- `Fail` – Failed"
+      },
+      "QueryVideoGenerationTaskBaseResp": {
+        "type": "object",
+        "properties": {
+          "status_code": {
+            "type": "integer",
+            "description": "Status codes:\n- 0: Request succeeded\n- 1002: Rate limit triggered, please retry later\n- 1004: Authentication failed, please check if the API key is correct\n- 1026: Input content involves sensitive content\n- 1027: Generated video involves sensitive content\n\n"
+          },
+          "status_msg": {
+            "type": "string",
+            "description": "Status message. `success` when the request succeeds."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    }
+  }
+}

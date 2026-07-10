@@ -1,0 +1,433 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Qwen image edit",
+    "version": "1.0.0",
+    "description": "Ali Qwen image edit capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/multimodal-generation/generation`. This document describes the public gateway contract for `qwen-image-2.0-pro`: `input.messages[].content[]` carries 1-3 input images and 1 edit instruction, and `parameters` controls negative prompt, count, watermark, and random seed.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Qwen Image",
+      "description": "Qwen image edit capability"
+    }
+  ],
+  "paths": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
+      "post": {
+        "summary": "Qwen image edit",
+        "description": "Calls the Ali `qwen-image-2.0-pro` model to perform image editing. The `input.messages[0].content[]` array must contain 1-3 `image` objects (input image URL or Base64 data) and 1 `text` object (edit instruction). The `parameters` field controls output count `n`, negative prompt `negative_prompt`, resolution `size`, smart prompt rewriting `prompt_extend`, watermark `watermark`, and random seed `seed`.",
+        "operationId": "aliQwenImageEdit",
+        "tags": [
+          "Qwen Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageEditRequest"
+              },
+              "examples": {
+                "qwen_image_2_pro_edit": {
+                  "summary": "Qwen-Image-2.0 Pro image edit",
+                  "value": {
+                    "model": "qwen-image-2.0-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20260310/jiydyi/image+%2818%29-2026-03-10-16-39-59.webp"
+                            },
+                            {
+                              "text": "在画面右下角石板路旁、靠近树干根部的位置，以浅灰墨色手写体题写一首七言绝句，字体为行楷风格，笔触自然流畅、略带飞白，大小适中（约占画面高度1/10），与整体水墨淡雅氛围协调。诗文内容为：“青石桥畔柳风轻， 素手拈花闭目听。 一水碧痕浮旧梦， 半篙烟雨入空舲。”诗句横向排列，四句分两行书写（前两句一行，后两句一行），末句“舲”字右下角钤一枚朱红小印，印文为“江南”二字篆书，尺寸约等于单字高度的1/3。"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "n": 1,
+                      "negative_prompt": " ",
+                      "prompt_extend": true,
+                      "watermark": false,
+                      "size": "2048*2048"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Returns the image edit result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Success response",
+                    "value": {
+                      "output": {
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "message": {
+                              "content": [
+                                {
+                                  "image": "https://dashscope-result-sz.oss-cn-shenzhen.aliyuncs.com/xxx.png?Expires=xxx"
+                                }
+                              ],
+                              "role": "assistant"
+                            }
+                          }
+                        ]
+                      },
+                      "usage": {
+                        "height": 2048,
+                        "image_count": 1,
+                        "width": 2048
+                      },
+                      "request_id": "571ae02f-5c9d-436c-83c2-f221e6df0xxx"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request body too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream provider returned an abnormal response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream provider is temporarily unavailable, or no available channel for the current model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ImageEditRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen-image-2.0-pro"
+            ],
+            "description": "Model name. Example: `qwen-image-2.0-pro`."
+          },
+          "input": {
+            "$ref": "#/components/schemas/QwenImageEditInput"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/QwenImageEditParameters"
+          }
+        }
+      },
+      "QwenImageEditInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Request content array. Currently only single-turn conversations are supported, so the array must contain exactly one object with `role` and `content` properties.",
+            "items": {
+              "$ref": "#/components/schemas/QwenImageEditMessage"
+            }
+          }
+        },
+        "description": "Input parameter object."
+      },
+      "QwenImageEditMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "Message sender role. Must be set to `user`."
+          },
+          "content": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 4,
+            "description": "Message content. Includes 1-3 images in `{\"image\":\"...\"}` format and a single edit instruction in `{\"text\":\"...\"}` format.",
+            "items": {
+              "$ref": "#/components/schemas/QwenImageEditContentItem"
+            }
+          }
+        }
+      },
+      "QwenImageEditContentItem": {
+        "type": "object",
+        "required": [
+          "image",
+          "text"
+        ],
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "输入图像的 URL 或 Base64 编码数据。支持传入1-3张图像。\n\n多图输入时，按照数组顺序定义图像顺序，输出图像的比例以最后一张为准。\n\n图像要求：\n\n图像格式：JPG、JPEG、PNG、BMP、TIFF、WEBP和GIF。\n\n输出图像为PNG格式，对于GIF动图，仅处理其第一帧。\n图像分辨率：为获得最佳效果，建议图像的宽和高均在384像素至3072像素之间。分辨率过低可能导致生成效果模糊，过高则会增加处理时长。\n\n图像大小：不超过10MB。\n\n支持的输入格式\n\n公网URL：\n\n支持 HTTP 和 HTTPS 协议。\n\n示例值：`https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/fpakfo/image36.webp`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：oss://dashscope-instant/xxx/2024-07-18/xxx/cat.png。\n\n传入 Base64 编码图像后的字符串\n\n示例值：data:image/jpeg;base64,GDU7MtCZz...（示例已截断，仅做演示）"
+          },
+          "text": {
+            "type": "string",
+            "description": "Positive prompt used to describe the image content, style, and composition you want to generate. Chinese and English are supported. The `qwen-image-2.0` series supports up to 1300 tokens; extra content is automatically truncated. Note: only one `text` item is supported; omitting it or passing multiple text items causes an error."
+          }
+        }
+      },
+      "QwenImageEditParameters": {
+        "type": "object",
+        "properties": {
+          "negative_prompt": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Negative prompt used to describe content you do not want to see in the image and to constrain the image. Chinese and English are supported. Maximum length is 500 characters; each Chinese character, letter, number, or symbol counts as one character, and extra content is automatically truncated. Example: low resolution, errors, worst quality, low quality, incomplete content, extra fingers, poor proportions, etc."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "default": 1,
+            "description": "Number of output images. Default is 1. For the `qwen-image-2.0` series, you can generate 1-6 images."
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to add a \"Qwen-Image\" watermark in the lower-right corner of the image. Default is `false`."
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed. Range [0, 2147483647]. Using the same `seed` value can make generated content relatively stable. If omitted, the algorithm automatically uses a random seed. Note: generation is probabilistic, so the same `seed` cannot guarantee identical results every time."
+          },
+          "size": {
+            "type": "string",
+            "description": "Output image resolution in `width*height` format, for example `1024*1536`. For the `qwen-image-2.0` series, total pixels must be between `512*512` and `2048*2048`. By default, total pixels are close to `1024*1024`, and the aspect ratio is close to the input image (for multi-image input, the last image). Recommended common resolutions: 1:1 `1024*1024`, `1536*1536`; 2:3 `768*1152`, `1024*1536`; 3:2 `1152*768`, `1536*1024`; 3:4 `960*1280`, `1080*1440`; 4:3 `1280*960`, `1440*1080`; 9:16 `720*1280`, `1080*1920`; 16:9 `1280*720`, `1920*1080`; 21:9 `1344*576`, `2048*872`."
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable smart prompt rewriting. Default is `true`. When enabled, the model optimizes the positive prompt (`text`), which is especially helpful for simple prompts."
+          }
+        },
+        "description": "Additional parameters controlling image generation."
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "$ref": "#/components/schemas/ImageOutput",
+            "description": "Contains model generation results."
+          },
+          "usage": {
+            "$ref": "#/components/schemas/ImageUsage"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Unique request identifier. It can be used for request traceability and troubleshooting."
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code returned when the request fails. This parameter is not returned on success."
+          },
+          "message": {
+            "type": "string",
+            "description": "Detailed error message returned when the request fails. This parameter is not returned on success."
+          }
+        }
+      },
+      "ImageOutput": {
+        "type": "object",
+        "properties": {
+          "choices": {
+            "type": "array",
+            "description": "Result choices list.",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoice"
+            }
+          }
+        }
+      },
+      "ImageChoice": {
+        "type": "object",
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "description": "Reason the task stopped. `stop` indicates a natural stop."
+          },
+          "message": {
+            "$ref": "#/components/schemas/ImageChoiceMessage"
+          }
+        }
+      },
+      "ImageChoiceMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Message role. Fixed to `assistant`."
+          },
+          "content": {
+            "type": "array",
+            "description": "Message content containing generated image information.",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoiceContentItem"
+            }
+          }
+        },
+        "description": "Message returned by the model."
+      },
+      "ImageChoiceContentItem": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Generated image URL in PNG format. The link is valid for 24 hours; download and save the image promptly."
+          }
+        }
+      },
+      "ImageUsage": {
+        "type": "object",
+        "properties": {
+          "image_count": {
+            "type": "integer",
+            "description": "Number of generated images."
+          },
+          "width": {
+            "type": "integer",
+            "description": "Generated image width in pixels."
+          },
+          "height": {
+            "type": "integer",
+            "description": "Generated image height in pixels."
+          }
+        },
+        "description": "Resource usage for this call. Returned only when the call succeeds."
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code returned when the request fails. This parameter is not returned on success."
+          },
+          "message": {
+            "type": "string",
+            "description": "Detailed error message returned when the request fails. This parameter is not returned on success."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Unique request identifier. It can be used for request traceability and troubleshooting."
+          }
+        }
+      }
+    }
+  }
+}

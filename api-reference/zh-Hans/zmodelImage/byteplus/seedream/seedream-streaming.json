@@ -1,0 +1,220 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "流式响应",
+    "version": "1.0.0",
+    "description": "Seedream-5.0/4.5/4.0 支持流式输出模式。当您调用图片生成 API 并将 **stream** 设置为 `true` 时，服务器会在生成响应的过程中，通过 Server-Sent Events（SSE）实时向客户端推送事件。本节内容介绍服务器会推送的各类事件。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Seedream API Compat",
+      "description": "Seedream 流式响应接口"
+    }
+  ],
+    "paths": {
+    "/byteplus/api/v3/images/generations": {
+      "post": {
+        "summary": "流式响应事件",
+        "operationId": "seedreamStreaming",
+        "description": "Seedream-5.0/4.5/4.0 支持流式输出模式。当您调用图片生成 API 并将 **stream** 设置为 `true` 时，服务器会在生成响应的过程中，通过 Server-Sent Events（SSE）实时向客户端推送事件。本节内容介绍服务器会推送的各类事件。",
+        "tags": [
+          "Seedream API Compat"
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE 流式响应。响应类型为 `text/event-stream`。\n\n## image_generation.partial_succeeded\n\n> 当前仅 Seedream-5.0/4.5/4.0 支持流式响应。\n\n在流式响应模式下，当任意图片生成成功时返回该事件。\n\n**type** `string`\n\n此处应为 `image_generation.partial_succeeded`。\n\n---\n\n**model** `string`\n\n本次请求使用的模型 ID，格式为 `<模型名称>-<版本>`。\n\n---\n\n**created** `integer`\n\n本次请求创建时间的 Unix 时间戳（秒）。\n\n---\n\n**image_index** `integer`\n\n本次生图请求中，本次事件对应图片在请求中的序号。\n从 `0` 开始累加，不管生图是否成功，即在 `image_generation.partial_succeeded`、`image_generation.partial_failed` 事件，均会自动累加 1。\n\n---\n\n**url** `string`\n\n本次事件对应图片的下载 URL。当请求中配置字段 `response_format` 为 `url` 时返回。\n\n---\n\n**b64_json** `string`\n\n本次事件对应图片的 Base64 编码。当请求中配置字段 `response_format` 为 `b64_json` 时返回。\n\n---\n\n**size** `string`\n\n图像的宽高像素值，格式 `<宽像素>×<高像素>`，如 `2048×2048`。\n\n---\n\n### 返回示例\n\n```Shell\n{\n  \"type\": \"image_generation.partial_succeeded\",\n  \"model\": \"doubao-seedream-5-0-260128\",\n  \"created\": 1589478378,\n  \"image_index\": 0,\n  \"url\": \"https://...\",\n  \"size\": \"2048×2048\"\n}\n```\n\n---\n\n## image_generation.partial_failed\n\n> 当前仅 Seedream-5.0/4.5/4.0 支持流式响应。\n\n在流式返回模式下，当任意图片生成失败时返回该事件。\n\n- 若失败原因为审核不通过：仍会继续请求下一个图片生成任务，即不影响同请求内其他图片的生成流程。\n- 若失败原因为内部服务异常（500）：不会继续请求下一个图片生成任务。\n\n**type** `string`\n\n此处应为 `image_generation.partial_failed`。\n\n---\n\n**model** `string`\n\n本次请求使用的模型 ID，格式为 `<模型名称>-<版本>`。\n\n---\n\n**created** `integer`\n\n本次请求创建时间的 Unix 时间戳（秒）。\n\n---\n\n**image_index** `integer`\n\n本次生图请求中，本次事件对应图片在请求中的序号。\n从 `0` 开始累加，不管图片是否生成成功，即在 `image_generation.partial_succeeded`、`image_generation.partial_failed` 事件，均会自动累加 1。\n\n---\n\n**error** `object`\n\n本次生图请求中，本次事件对应的错误原因。\n\nerror. **code** `string`\n\n错误码。\n\nerror. **message** `string`\n\n错误提示信息。\n\n### 返回示例\n\n```Shell\n{\n  \"type\": \"image_generation.partial_failed\",\n  \"model\": \"doubao-seedream-5-0-260128\",\n  \"created\": 1589478378,\n  \"image_index\": 2,\n  \"error\": {\n      \"code\":\"OutputImageSensitiveContentDetected\",\n      \"message\":\"The request failed because the output image may contain sensitive information.\"\n  }\n}\n```\n\n---\n\n## image_generation.completed\n\n> 当前仅 Seedream-5.0/4.5/4.0 支持流式响应。\n\n请求的所有图片（无论成功或失败）均处理完毕后返回，是该流式返回的最后一个响应事件。\n\n**type** `string`\n\n此处应为 `image_generation.completed`。\n\n---\n\n**model** `string`\n\n本次请求使用的模型 ID，格式为 `<模型名称>-<版本>`。\n\n---\n\n**created** `integer`\n\n本次请求创建时间的 Unix 时间戳（秒）。\n\n---\n\n**tools** `array of object`\n\n本次请求配置的模型调用工具。\n\ntools. **type** `string`\n\n配置的调用工具类型。\n\n- web_search：联网搜索工具。\n\n---\n\n**usage** `object`\n\n本次请求的用量信息。\n\nusage. **generated_images** `integer`\n\n模型成功生成的图片张数，不包含生成失败的图片。仅对成功生成图片按张数进行计费。\n\nusage. **output_tokens** `integer`\n\n模型生成的图片花费的 token 数量。计算逻辑为：计算 `sum(图片长*图片宽)/256` ，然后取整。\n\nusage. **total_tokens** `integer`\n\n本次请求消耗的总 token 数量。当前不计算输入 token，故与 **output_tokens** 值一致。\n\nusage. **tool_usage** `object`\n\n使用工具的用量信息。\n\nusage.tool_usage. **web_search** `integer`\n\n调用联网搜索工具次数，仅开启联网搜索时返回。\n\n### 返回示例\n\n```Shell\n{\n  \"type\": \"image_generation.completed\",\n  \"model\": \"doubao-seedream-5-0-260128\",\n  \"created\": 1589478378,\n  \"tools\": [\n         {\n             \"type\": \"web_search\",\n         }\n     ],\n  \"usage\": {\n      \"generated_images\": 2,\n      \"output_tokens\": xx,\n      \"total_tokens\": xx,\n      \"tool_usage\":{\n        \"web_search\":1\n    }\n  }\n}\n```\n\n---\n\n## error\n\n本次请求如发生错误，对应的错误信息。\n\n**error** `object`\n\n本次请求错误返回的错误信息。\n\nerror. **code** `string`\n\n错误码。\n\nerror. **message** `string`\n\n错误提示信息。\n\n### 返回示例\n\n```Shell\n\"error\": {\n  \"code\":\"BadRequest\",\n  \"message\":\"The request failed because it is missing one or multiple required parameters. Request ID: {id}\"\n}\n```",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": ""
+                },
+                "examples": {
+                  "seedream-5.0-流式输出": {
+                    "summary": "seedream-5.0-流式输出",
+                    "value": "event: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396757,\"image_index\":0,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396785,\"image_index\":1,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.partial_succeeded\ndata: {\"type\":\"image_generation.partial_succeeded\",\"model\":\"seedream-5-0-260128\",\"created\":1757396825,\"image_index\":2,\"url\":\"https://...\",\"size\":\"2496x1664\"}\n\nevent: image_generation.completed\ndata: {\"type\":\"image_generation.completed\",\"model\":\"seedream-5-0-260128\",\"created\":1757396825,\"usage\":{\"generated_images\":3,\"output_tokens\":48672,\"total_tokens\":48672}}\n\ndata: [DONE]\n"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PartialSucceededEvent": {
+        "type": "object",
+        "description": "> 当前仅 Seedream-5.0/4.5/4.0 支持流式响应。\n\n在流式响应模式下，当任意图片生成成功时返回该事件。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "此处应为 `image_generation.partial_succeeded`。",
+            "enum": [
+              "image_generation.partial_succeeded"
+            ]
+          },
+          "model": {
+            "type": "string",
+            "description": "本次请求使用的模型 ID，格式为 `<模型名称>-<版本>`。"
+          },
+          "created": {
+            "type": "integer",
+            "description": "本次请求创建时间的 Unix 时间戳（秒）。"
+          },
+          "image_index": {
+            "type": "integer",
+            "description": "本次生图请求中，本次事件对应图片在请求中的序号。\n从 `0` 开始累加，不管生图是否成功，即在 `image_generation.partial_succeeded`、`image_generation.partial_failed` 事件，均会自动累加 1。"
+          },
+          "url": {
+            "type": "string",
+            "description": "本次事件对应图片的下载 URL。当请求中配置字段 `response_format` 为 `url` 时返回。"
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "本次事件对应图片的 Base64 编码。当请求中配置字段 `response_format` 为 `b64_json` 时返回。"
+          },
+          "size": {
+            "type": "string",
+            "description": "图像的宽高像素值，格式 `<宽像素>×<高像素>`，如 `2048×2048`。"
+          }
+        }
+      },
+      "PartialFailedEvent": {
+        "type": "object",
+        "description": "> 当前仅 Seedream-5.0/4.5/4.0 支持流式响应。\n\n在流式返回模式下，当任意图片生成失败时返回该事件。\n\n- 若失败原因为审核不通过：仍会继续请求下一个图片生成任务，即不影响同请求内其他图片的生成流程。\n- 若失败原因为内部服务异常（500）：不会继续请求下一个图片生成任务。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "此处应为 `image_generation.partial_failed`。",
+            "enum": [
+              "image_generation.partial_failed"
+            ]
+          },
+          "model": {
+            "type": "string",
+            "description": "本次请求使用的模型 ID，格式为 `<模型名称>-<版本>`。"
+          },
+          "created": {
+            "type": "integer",
+            "description": "本次请求创建时间的 Unix 时间戳（秒）。"
+          },
+          "image_index": {
+            "type": "integer",
+            "description": "本次生图请求中，本次事件对应图片在请求中的序号。\n从 `0` 开始累加，不管图片是否生成成功，即在 `image_generation.partial_succeeded`、`image_generation.partial_failed` 事件，均会自动累加 1。"
+          },
+          "error": {
+            "type": "object",
+            "description": "本次生图请求中，本次事件对应的错误原因。",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "错误码。"
+              },
+              "message": {
+                "type": "string",
+                "description": "错误提示信息。"
+              }
+            }
+          }
+        }
+      },
+      "CompletedEvent": {
+        "type": "object",
+        "description": "> 当前仅 Seedream-5.0/4.5/4.0 支持流式响应。\n\n请求的所有图片（无论成功或失败）均处理完毕后返回，是该流式返回的最后一个响应事件。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "此处应为 `image_generation.completed`。",
+            "enum": [
+              "image_generation.completed"
+            ]
+          },
+          "model": {
+            "type": "string",
+            "description": "本次请求使用的模型 ID，格式为 `<模型名称>-<版本>`。"
+          },
+          "created": {
+            "type": "integer",
+            "description": "本次请求创建时间的 Unix 时间戳（秒）。"
+          },
+          "tools": {
+            "type": "array",
+            "description": "本次请求配置的模型调用工具。",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "配置的调用工具类型。\n\n- web_search：联网搜索工具。",
+                  "enum": [
+                    "web_search"
+                  ]
+                }
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "description": "本次请求的用量信息。",
+            "properties": {
+              "generated_images": {
+                "type": "integer",
+                "description": "模型成功生成的图片张数，不包含生成失败的图片。仅对成功生成图片按张数进行计费。"
+              },
+              "output_tokens": {
+                "type": "integer",
+                "description": "模型生成的图片花费的 token 数量。计算逻辑为：计算 `sum(图片长*图片宽)/256` ，然后取整。"
+              },
+              "total_tokens": {
+                "type": "integer",
+                "description": "本次请求消耗的总 token 数量。当前不计算输入 token，故与 **output_tokens** 值一致。"
+              },
+              "tool_usage": {
+                "type": "object",
+                "description": "使用工具的用量信息。",
+                "properties": {
+                  "web_search": {
+                    "type": "integer",
+                    "description": "调用联网搜索工具次数，仅开启联网搜索时返回。"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "description": "本次请求如发生错误，对应的错误信息。",
+        "properties": {
+          "error": {
+            "type": "object",
+            "description": "本次请求错误返回的错误信息。",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "错误码。"
+              },
+              "message": {
+                "type": "string",
+                "description": "错误提示信息。"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

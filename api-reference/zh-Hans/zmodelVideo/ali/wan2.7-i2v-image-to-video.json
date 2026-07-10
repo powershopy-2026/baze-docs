@@ -3,7 +3,7 @@
   "info": {
     "title": "wan2.7-i2v 图生视频",
     "version": "1.0.0",
-    "description": "面向客户的 Ali `wan2.7-i2v` 图生视频渠道文档，统一公开入口为 `/v1/videos`。\n\n本文档描述图生视频场景，使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n本场景支持的 `media.type` 为 `first_frame`、`driving_audio`。\n\n支持的 `media` 组合为：\n- `first_frame`\n- `first_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark`、`seed`。",
+    "description": "面向客户的 Ali `wan2.7-i2v` 图生视频渠道文档，统一公开入口为 `/v1/videos`。\n\n本文档描述图生视频场景，并使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n本场景支持的 `media.type` 为 `first_frame`、`driving_audio`。\n\n支持的 `media` 组合为：\n- `first_frame`\n- `first_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://api.powertokens.ai",
+      "url": "https://baze-api.powerbuyin.top",
       "description": "Baze API 服务地址"
     }
   ],
@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "创建 wan2.7-i2v 图生视频任务",
-        "description": "提交一个异步的 Ali `wan2.7-i2v` 图生视频任务。\n\n使用 `first_frame` 指定首帧图像，可选搭配 `driving_audio` 驱动音频实现音频驱动视频生成。\n\n支持的 `media` 组合为：\n- `first_frame`\n- `first_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark`、`seed`。",
+        "description": "提交一个异步的 Ali `wan2.7-i2v` 图生视频任务。\n\n使用 `first_frame` 指定首帧图像，可选搭配 `driving_audio` 驱动音频实现音频驱动视频生成。\n\n支持的 `media` 组合为：\n- `first_frame`\n- `first_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
         "operationId": "aliWan27I2VImageToVideo",
         "tags": [
           "Wan 2.7 Video"
@@ -242,11 +242,11 @@
             "enum": [
               "wan2.7-i2v"
             ],
-            "description": "Ali wan2.7-i2v 模型。"
+            "description": "模型名称。可选值：`wan2.7-i2v`。"
           },
           "prompt": {
             "type": "string",
-            "description": "可选文本提示词。未提供时，生成过程将主要依赖输入媒体素材。"
+            "description": "文本提示词。用来描述生成视频中期望包含的元素和视觉特点。支持中英文，长度不超过5000个字符。每个汉字/字母占一个字符，超过部分会自动截断。"
           },
           "size": {
             "type": "string",
@@ -254,7 +254,7 @@
               "720P",
               "1080P"
             ],
-            "description": "当前项目实现支持的输出分辨率档位。",
+            "description": "指定生成的视频分辨率档位，用于控制视频的清晰度（总像素）。\n\n模型根据选择的分辨率档位，自动缩放至相近总像素。视频宽高比尽量与输入素材（首帧或首段视频）保持一致。",
             "default": "1080P"
           },
           "seconds": {
@@ -280,26 +280,26 @@
           },
           "negative_prompt": {
             "type": "string",
-            "description": "可选反向提示词，用于描述不希望在视频中出现的内容。"
+            "description": "反向提示词，用来描述不希望在视频画面中看到的内容，可以对视频画面进行限制。支持中英文，长度不超过500个字符，超过部分会自动截断。示例值：低分辨率、错误、最差质量、低质量、残缺、多余的手指、比例不良等。"
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "是否启用提示词智能改写。默认值为 `true`。"
+            "description": "是否开启 prompt 智能改写。开启后使用大模型对输入 prompt 进行智能改写。对于较短的 prompt 生成效果提升明显，但会增加耗时。`true`（默认值）：开启智能改写。`false`：不开启智能改写。"
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。默认值为 `false`。",
+            "description": "是否添加水印标识，水印位于视频右下角，文案固定为 \"AI生成\"。`false`（默认值）：不添加水印。`true`：添加水印。",
             "default": false
           },
           "seed": {
             "type": "integer",
             "minimum": 0,
             "maximum": 2147483647,
-            "description": "随机种子。未提供时由系统自动生成。"
+            "description": "随机数种子，取值范围为 [0, 2147483647]。未指定时，系统自动生成随机种子。若需提升生成结果的可复现性，建议固定 seed 值。请注意，由于模型生成具有概率性，即使使用相同 seed，也不能保证每次生成结果完全一致。"
           },
           "media": {
             "type": "array",
-            "description": "多模态输入字段。本场景仅允许 `first_frame` 和 `driving_audio` 类型。",
+            "description": "媒体素材列表，用于指定视频生成所需的参考素材（图像、音频）。数组的每个元素为一个媒体对象，包含 type 与 url 字段。\n\n素材组合（仅支持以下特定的组合，非法组合将报错）：\n- **首帧生视频**：`first_frame`\n- **首帧+音频**：`first_frame` + `driving_audio`\n\n每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_frame）。",
             "items": {
               "$ref": "#/components/schemas/Wan27MediaInput"
             }
@@ -319,11 +319,11 @@
               "first_frame",
               "driving_audio"
             ],
-            "description": "媒体素材类型。`first_frame` 为首帧图像（必填），`driving_audio` 为驱动音频（可选）。"
+            "description": "媒体素材类型。可选值为：\n- `first_frame`：首帧。\n- `driving_audio`：驱动音频。\n\n使用限制：每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_frame）。"
           },
           "url": {
             "type": "string",
-            "description": "公网可访问的媒体素材地址。"
+            "description": "媒体素材URL。素材包括图像和音频。\n\n**音频**（type=`driving_audio`）\n\n音频文件的 URL。\n\n- **传入音频**：模型将以该音频为驱动源生成视频（如口型同步、动作卡点等）。\n- **未传入音频**：模型将根据视频画面内容，自动生成匹配的背景音乐或音效。\n\n音频限制：\n\n- 格式：wav、mp3。\n- 时长：2～30s。\n- 文件大小：不超过15MB。\n- 截断处理：若音频长度超过 duration 值（如5秒），自动截取前5秒，其余部分丢弃。若音频长度不足视频时长，超出音频长度部分为无声视频。例如，音频为3秒，视频时长为5秒，输出视频前3秒有声，后2秒无声。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 和 HTTPS 协议。\n\n示例值：`https://xxx/xxx.mp3`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：`oss://dashscope-instant/xxx/xxx.mp3`。\n\n**图片**（type=`last_frame`）：尾帧图片的 URL 或 Base64 编码数据。\n\n图片限制：\n- 格式：JPEG、JPG、PNG（无透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 或 HTTPS 协议。\n\n示例值：`https://xxx/xxx.png`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：`oss://dashscope-instant/xxx/xxx.png`。\n\nBase64 编码图片字符串：\n\n数据格式：data:{MIME_type};base64,{base64_data}。\n\n示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ...... （此处省略以演示）。\n\nBase64 编码格式说明\n\n格式：data:{MIME_type};base64,{base64_data}。\n\n{base64_data}：图片文件的 Base64 编码字符串。\n\n{MIME_type}：图片的媒体类型，对应文件格式。\n\n图片格式与 MIME Type 对应关系：\n\n| 图片格式 | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
           }
         }
       },

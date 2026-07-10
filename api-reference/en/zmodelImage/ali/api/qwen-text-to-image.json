@@ -1,0 +1,424 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Qwen text-to-image",
+    "version": "1.0.0",
+    "description": "Ali Qwen text-to-image capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/multimodal-generation/generation`. This document describes the public gateway contract for `qwen-image-2.0-pro`: `input.messages[].content[].text` carries the prompt, and `parameters` controls resolution, count, negative prompt, and other options.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Qwen Image",
+      "description": "Qwen text-to-image capability"
+    }
+  ],
+  "paths": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
+      "post": {
+        "summary": "Qwen text-to-image",
+        "description": "Calls Ali `qwen-image-2.0-pro` model to perform text-to-image generation.\n\nThe request body contains three main fields: `model`, `input`, and `parameters`. The prompt is placed in `input.messages[0].content[0].text`. The `parameters` field controls resolution `size`, count `n`, negative prompt `negative_prompt`, smart prompt rewriting `prompt_extend`, watermark `watermark`, and random seed `seed`.",
+        "operationId": "aliQwenTextToImage",
+        "tags": [
+          "Qwen Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToImageRequest"
+              },
+              "examples": {
+                "qwen_image_2_pro_generation": {
+                  "summary": "Qwen-Image-2.0 Pro text-to-image",
+                  "value": {
+                    "model": "qwen-image-2.0-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "冬日北京的都市街景，青灰瓦顶、朱红色外墙的两间相邻中式商铺比肩而立，檐下悬挂印有剪纸马的暖光灯笼，在阴天漫射光中投下柔和光晕，映照湿润鹅卵石路面泛起细腻反光。左侧为书法店：靛蓝色老旧的牌匾上以遒劲行书刻着“文字渲染”。店门口的玻璃上挂着一幅字，自上而下，用田英章硬笔写着“专业幻灯片 中英文海报 高级信息图”，落款印章为“1k token”朱砂印。店内的墙上，可以模糊的辨认有三幅竖排的书法作品，第一幅写着“阿里巴巴”，第二幅写着“通义千问”，第三幅写着“图像生成”。一位白发苍苍的老人背对着镜头观赏。右侧为花店，牌匾上以鲜花做成文字“真实质感”；店内多层花架陈列红玫瑰、粉洋牡丹和绿植，门上贴了一个圆形花边标识，标识上写着“2k resolution”，门口摆放了一个彩色霓虹灯，上面写着“细腻刻画 人物 自然 建筑”。两家店中间堆放了一个雪人，举了一老式小黑板，上面用粉笔字写着“Qwen-Image-2.0 正式发布”。街道左侧，年轻情侣依偎在一起，女孩是瘦脸，身穿米白色羊绒大衣，肉色光腿神器。女孩举着心形透明气球，气球印有白色的字：“生图编辑二合一”。里面有一个毛茸茸的卡皮巴拉玩偶。男孩身着剪裁合体的深灰色呢子外套，内搭浅色高领毛衣。街道右侧，一个后背上写着“更小模型，更快速度”的骑手疾驰而过。整条街光影交织、动静相宜。"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "negative_prompt": "低分辨率，低画质，肢体畸形，手指畸形，画面过饱和，蜡像感，人脸无细节，过度光滑，画面具有AI感。构图混乱。文字模糊，扭曲。",
+                      "prompt_extend": true,
+                      "watermark": false,
+                      "size": "2048*2048"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Returns the image generation result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Success response",
+                    "value": {
+                      "request_id": "d0250a3d-b07f-49e1-bdc8-6793f4929xxx",
+                      "output": {
+                        "choices": [
+                          {
+                            "message": {
+                              "role": "assistant",
+                              "content": [
+                                {
+                                  "image": "https://dashscope-result-sh.oss-cn-shanghai.aliyuncs.com/xxx.png?Expires=xxx"
+                                }
+                              ]
+                            },
+                            "finish_reason": "stop"
+                          }
+                        ]
+                      },
+                      "usage": {
+                        "image_count": 1,
+                        "height": 2048,
+                        "width": 2048
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request body too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream provider returned an abnormal response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream provider is temporarily unavailable, or no available channel for the current model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "TextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen-image-2.0-pro"
+            ],
+            "description": "Model name. Example: `qwen-image-2.0-pro`."
+          },
+          "input": {
+            "$ref": "#/components/schemas/QwenTextToImageInput"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/QwenTextToImageParameters"
+          }
+        }
+      },
+      "QwenTextToImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Request content array. Currently only single-turn conversations are supported, and the array must contain exactly one element.",
+            "items": {
+              "$ref": "#/components/schemas/QwenTextToImageMessage"
+            }
+          }
+        },
+        "description": "Basic input information."
+      },
+      "QwenTextToImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "Message role. This parameter must be set to `user`."
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Message content array. Only one `text` item is supported; omitting it or passing multiple text items causes an error.",
+            "items": {
+              "$ref": "#/components/schemas/QwenTextToImageContentItem"
+            }
+          }
+        }
+      },
+      "QwenTextToImageContentItem": {
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Positive prompt used to describe the image content, style, and composition you want to generate. Chinese and English are supported. The `qwen-image-2.0` series supports up to 1300 tokens; other models support up to 800 tokens. Extra content is automatically truncated."
+          }
+        }
+      },
+      "QwenTextToImageParameters": {
+        "type": "object",
+        "properties": {
+          "negative_prompt": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "Negative prompt used to describe content that should not appear in the image and to constrain the image. Chinese and English are supported. Maximum length is 500 characters; extra content is automatically truncated. Example: low resolution, low quality, malformed limbs, malformed fingers, oversaturated image, wax figure appearance, no facial details, overly smooth, AI-like image, chaotic composition, blurry or distorted text."
+          },
+          "size": {
+            "type": "string",
+            "description": "Output image resolution in `width*height` format. For the `qwen-image-2.0` series, total output pixels must be between `512*512` and `2048*2048`, and the default resolution is `2048*2048`. Recommended resolutions: `2688*1536` (16:9), `1536*2688` (9:16), `2048*2048` (1:1, default), `2368*1728` (4:3), and `1728*2368` (3:4)."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "default": 1,
+            "description": "Number of output images. Default is 1. For the `qwen-image-2.0` series, you can generate 1-6 images."
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable smart Prompt rewriting. When enabled, the model optimizes and polishes the positive prompt. This feature does not modify the negative prompt. `true`: default, enabled. Recommended when you want more diverse image content and model-added details. `false`: disabled. Recommended when you want more controllable image details. Currently, only async APIs return the actual prompt."
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to add a \"Qwen-Image\" watermark in the lower-right corner of the image. Default is `false`."
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed. Range [0, 2147483647]. Using the same `seed` value can make generated content relatively stable. If omitted, the algorithm automatically uses a random seed. Note: generation is probabilistic, so the same `seed` cannot guarantee identical results every time."
+          }
+        },
+        "description": "Image processing parameters."
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "$ref": "#/components/schemas/ImageOutput",
+            "description": "Task output information."
+          },
+          "usage": {
+            "$ref": "#/components/schemas/ImageUsage"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Unique request identifier. It can be used for request traceability and troubleshooting."
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code. Only returned when the request fails."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message. Only returned when the request fails."
+          }
+        }
+      },
+      "ImageOutput": {
+        "type": "object",
+        "properties": {
+          "choices": {
+            "type": "array",
+            "description": "Generated output content. This array contains only one element.",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoice"
+            }
+          }
+        }
+      },
+      "ImageChoice": {
+        "type": "object",
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "description": "Reason the task stopped. `stop` indicates a natural stop."
+          },
+          "message": {
+            "$ref": "#/components/schemas/ImageChoiceMessage"
+          }
+        }
+      },
+      "ImageChoiceMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Message role. Fixed to `assistant`."
+          },
+          "content": {
+            "type": "array",
+            "description": "Message content array returned by the model.",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoiceContentItem"
+            }
+          }
+        },
+        "description": "Message returned by the model."
+      },
+      "ImageChoiceContentItem": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Generated image URL. The image format is PNG. The link is valid for 24 hours; download and save the image promptly."
+          }
+        }
+      },
+      "ImageUsage": {
+        "type": "object",
+        "properties": {
+          "image_count": {
+            "type": "integer",
+            "description": "Number of generated images. Currently fixed at 1."
+          },
+          "width": {
+            "type": "integer",
+            "description": "Generated image width in pixels."
+          },
+          "height": {
+            "type": "integer",
+            "description": "Generated image height in pixels."
+          }
+        },
+        "description": "Output usage statistics. Only successful results are counted."
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code returned when the request fails. This parameter is not returned on success."
+          },
+          "message": {
+            "type": "string",
+            "description": "Detailed error message returned when the request fails. This parameter is not returned on success."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Unique request identifier. It can be used for request traceability and troubleshooting."
+          }
+        }
+      }
+    }
+  }
+}

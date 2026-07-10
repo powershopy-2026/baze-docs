@@ -23,9 +23,29 @@
           {
             "name": "Authorization",
             "in": "header",
-            "description": "API token值",
-            "required": false,
+            "description": "官网API密钥",
+            "required": true,
             "example": "XQujstE5wKqI0xecMJA8lQiq90OHygNIuI1X57zJqltTlOyY",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "User-Agent",
+            "in": "header",
+            "description": "注意JAVA在不填写该值会被服务器拦截(eg:powertokensAi)",
+            "required": false,
+            "example": "powertokensAi",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "application/json",
+            "required": false,
+            "example": "application/json",
             "schema": {
               "type": "string"
             }
@@ -106,8 +126,8 @@
   },
   "servers": [
     {
-      "url": "https://powertokens.ai/api",
-      "description": "生产环境"
+      "url": "https://baze.powerbuyin.top/api",
+      "description": "测试环境"
     }
   ],
   "security": []

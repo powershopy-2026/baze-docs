@@ -1,0 +1,265 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "阿里任务状态查询",
+    "version": "1.0.0",
+    "description": "阿里渠道任务状态查询接口，通过 `/ali/api/v1/tasks/{task_id}` 查询异步任务的状态和结果。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "阿里视频",
+      "description": "阿里视频任务查询能力"
+    }
+  ],
+  "paths": {
+    "/ali/api/v1/tasks/{task_id}": {
+      "get": {
+        "summary": "查询任务状态",
+        "description": "通过任务ID查询异步任务的状态和结果。\n\n任务状态流转：PENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。\n\n初次查询状态通常为 PENDING（排队中）或 RUNNING（处理中）。\n当状态变为 SUCCEEDED 时，响应中将包含生成的视频URL。\n若状态为 FAILED，请检查错误信息并重试。\n若状态为 CANCELED，表示任务已取消，如需继续请重新提交任务。\n若状态为 UNKNOWN，表示任务不存在或状态未知，可能在 task_id 不存在或超过 24 小时有效期后出现。",
+        "operationId": "aliVideoTaskQuery",
+        "tags": [
+          "阿里视频"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "任务ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功。返回任务状态和结果。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskQueryResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "任务执行成功",
+                    "value": {
+                      "request_id": "52cade0d-905e-9b7d-a01e-xxxxxx",
+                      "output": {
+                        "task_id": "18814247-f944-4102-aa4a-xxxxxx",
+                        "task_status": "SUCCEEDED",
+                        "submit_time": "2026-04-02 22:53:19.537",
+                        "scheduled_time": "2026-04-02 22:53:30.427",
+                        "end_time": "2026-04-02 23:00:39.287",
+                        "orig_prompt": "视频2抱着图片3在咖啡厅里弹奏一支舒缓的美式乡村民谣，视频1笑着看着视频2，并缓缓向他走去",
+                        "video_url": "https://dashscope-a717.oss-accelerate.aliyuncs.com/xxx.mp4?xxxx"
+                      },
+                      "usage": {
+                        "duration": 15,
+                        "input_video_duration": 5,
+                        "output_video_duration": 10,
+                        "video_count": 1,
+                        "SR": 720,
+                        "ratio": "16:9"
+                      }
+                    }
+                  },
+                  "failure": {
+                    "summary": "任务执行失败",
+                    "value": {
+                      "request_id": "e5d70b02-ebd3-98ce-9fe8-759d7d7b107d",
+                      "output": {
+                        "task_id": "86ecf553-d340-4e21-af6e-a0c6a421c010",
+                        "task_status": "FAILED",
+                        "code": "InvalidParameter",
+                        "message": "The size is not match xxxxxx"
+                      }
+                    }
+                  },
+                  "expired": {
+                    "summary": "任务查询过期",
+                    "value": {
+                      "request_id": "a4de7c32-7057-9f82-8581-xxxxxx",
+                      "output": {
+                        "task_id": "502a00b1-19d9-4839-a82f-xxxxxx",
+                        "task_status": "UNKNOWN"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "认证失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在或已过期。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "在请求头传递 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "TaskQueryResponse": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "description": "请求唯一标识。可用于请求明细溯源和问题排查。"
+          },
+          "output": {
+            "type": "object",
+            "description": "任务输出信息。",
+            "properties": {
+              "task_id": {
+                "type": "string",
+                "description": "任务ID。查询有效期24小时。"
+              },
+              "task_status": {
+                "type": "string",
+                "enum": [
+                  "PENDING",
+                  "RUNNING",
+                  "SUCCEEDED",
+                  "FAILED",
+                  "CANCELED",
+                  "UNKNOWN"
+                ],
+                "description": "任务状态。\n\n- `PENDING`：任务排队中\n- `RUNNING`：任务处理中\n- `SUCCEEDED`：任务执行成功\n- `FAILED`：任务执行失败\n- `CANCELED`：任务已取消\n- `UNKNOWN`：任务不存在或状态未知\n\n轮询过程中的状态流转：\nPENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。\n\n初次查询状态通常为 PENDING（排队中）或 RUNNING（处理中）。\n当状态变为 SUCCEEDED 时，响应中将包含生成的视频URL。\n若状态为 FAILED，请检查错误信息并重试。\n若状态为 CANCELED，表示任务已取消，如需继续请重新提交任务。\n若状态为 UNKNOWN，表示任务不存在或状态未知，可能在 task_id 不存在或超过 24 小时有效期后出现。",
+                "x-enum-descriptions": {
+                  "PENDING": "任务排队中",
+                  "RUNNING": "任务处理中",
+                  "SUCCEEDED": "任务执行成功",
+                  "FAILED": "任务执行失败",
+                  "CANCELED": "任务已取消",
+                  "UNKNOWN": "任务不存在或状态未知"
+                }
+              },
+              "submit_time": {
+                "type": "string",
+                "description": "任务提交时间。格式为 YYYY-MM-DD HH:mm:ss.SSS。"
+              },
+              "scheduled_time": {
+                "type": "string",
+                "description": "任务执行时间。格式为 YYYY-MM-DD HH:mm:ss.SSS。"
+              },
+              "end_time": {
+                "type": "string",
+                "description": "任务完成时间。格式为 YYYY-MM-DD HH:mm:ss.SSS。"
+              },
+              "video_url": {
+                "type": "string",
+                "description": "视频URL。仅在 task_status 为 SUCCEEDED 时返回。\n\n链接有效期14天，可通过此URL下载视频。视频格式为MP4（H.264 编码）。"
+              },
+              "orig_prompt": {
+                "type": "string",
+                "description": "原始输入的prompt，对应请求参数 prompt。"
+              },
+              "code": {
+                "type": "string",
+                "description": "请求失败的错误码。请求成功时不会返回此参数，详情请参见错误码。"
+              },
+              "message": {
+                "type": "string",
+                "description": "请求失败的详细信息。请求成功时不会返回此参数，详情请参见错误码。"
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "description": "输出信息统计，只对成功的结果计数。",
+            "properties": {
+              "input_video_duration": {
+                "type": "integer",
+                "description": "输入的视频的时长，单位秒。"
+              },
+              "output_video_duration": {
+                "type": "integer",
+                "description": "输出视频的时长，单位秒。"
+              },
+              "duration": {
+                "type": "integer",
+                "description": "总的视频时长，用于计费。\n\n参考生视频时 duration = input_video_duration + output_video_duration。"
+              },
+              "SR": {
+                "type": "integer",
+                "description": "输出视频的分辨率档位。示例值：720。"
+              },
+              "video_count": {
+                "type": "integer",
+                "description": "输出视频的数量。固定为1。"
+              },
+              "ratio": {
+                "type": "string",
+                "description": "生成视频的宽高比。示例值：16:9。"
+              }
+            }
+          },
+          "code": {
+            "type": "string",
+            "description": "错误码，失败时返回。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息，失败时返回。"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息。"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求ID。"
+          }
+        }
+      }
+    }
+  }
+}

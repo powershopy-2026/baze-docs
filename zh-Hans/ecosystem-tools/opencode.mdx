@@ -13,9 +13,9 @@ opencode 通过 `provider` 配置管理模型。接入 `powertokens 平台` 时�
 
 | 目标 | opencode provider | Base URL | 推荐模型 |
 | --- | --- | --- | --- |
-| 推荐文本路径 | custom provider + `@ai-sdk/openai-compatible` | `https://api.powertokens.ai/v1` | `glm-5.2` |
-| MiniMax 文本路径 | custom provider + `@ai-sdk/openai-compatible` | `https://api.powertokens.ai/v1` | `MiniMax-M3` |
-| Claude/Anthropic 路径 | `@ai-sdk/anthropic` custom provider | `https://api.powertokens.ai/v1` | 仅在你需要复核 `/v1/messages` 时使用 |
+| 推荐文本路径 | custom provider + `@ai-sdk/openai-compatible` | `https://baze-api.powerbuyin.top/v1` | `glm-5.2` |
+| MiniMax 文本路径 | custom provider + `@ai-sdk/openai-compatible` | `https://baze-api.powerbuyin.top/v1` | `MiniMax-M3` |
+| Claude/Anthropic 路径 | `@ai-sdk/anthropic` custom provider | `https://baze-api.powerbuyin.top/v1` | 仅在你需要复核 `/v1/messages` 时使用 |
 
 ## 准备 API Key
 
@@ -41,7 +41,7 @@ export POWERTOKENS_API_KEY="YOUR_POWERTOKENS_API_KEY"
       "npm": "@ai-sdk/openai-compatible",
       "name": "powertokens",
       "options": {
-        "baseURL": "https://api.powertokens.ai/v1",
+        "baseURL": "https://baze-api.powerbuyin.top/v1",
         "apiKey": "{env:POWERTOKENS_API_KEY}"
       },
       "models": {
@@ -85,7 +85,7 @@ OpenAI-compatible 路径默认使用 `glm-5.2`；MiniMax 场景使用 `MiniMax-M
       "npm": "@ai-sdk/anthropic",
       "name": "powertokens Anthropic",
       "options": {
-        "baseURL": "https://api.powertokens.ai/v1",
+        "baseURL": "https://baze-api.powerbuyin.top/v1",
         "apiKey": "{env:POWERTOKENS_API_KEY}"
       },
       "models": {

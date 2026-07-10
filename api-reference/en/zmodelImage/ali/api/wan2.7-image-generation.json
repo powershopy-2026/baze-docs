@@ -1,0 +1,536 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wan2.7 image generation and edit",
+    "version": "1.0.0",
+    "description": "Ali Wan2.7 image generation and edit capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/multimodal-generation/generation`. This document describes the public gateway contract for `wan2.7-image-pro`: `input.messages[].content[]` carries the prompt and/or input images, and `parameters` controls resolution, count, thinking mode, color palette, watermark, and random seed.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan Image",
+      "description": "Wan image generation and edit capability"
+    }
+  ],
+  "paths": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
+      "post": {
+        "summary": "Wan2.7 image generation and edit",
+        "description": "Calls Ali `wan2.7-image-pro` model to perform image generation and editing.\n\nThe `input.messages[0].content[]` array may contain `text` objects (prompt) and/or `image` objects (input images). The `parameters` field controls bbox region `bbox_list`, sequential mode `enable_sequential`, resolution `size`, count `n`, thinking mode `thinking_mode`, color palette `color_palette`, watermark `watermark`, and random seed `seed`. This model supports text-to-image, image-to-image, and interactive editing.",
+        "operationId": "aliWan27ImageGeneration",
+        "tags": [
+          "Wan Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageGenerationRequest"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "Text to image",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "一间有着精致窗户的花店，漂亮的木质门，摆放着花朵"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "2K",
+                      "n": 1,
+                      "watermark": false,
+                      "thinking_mode": true
+                    }
+                  }
+                },
+                "image_edit": {
+                  "summary": "Image edit",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/input.png"
+                            },
+                            {
+                              "text": "将图片中的天空改为星空"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "1K",
+                      "n": 1,
+                      "thinking_mode": true,
+                      "watermark": false
+                    }
+                  }
+                },
+                "sequential_images": {
+                  "summary": "Sequential images mode",
+                  "value": {
+                    "model": "wan2.7-image-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "一组四季风景插画，春、夏、秋、冬"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "size": "1K",
+                      "n": 4,
+                      "enable_sequential": true,
+                      "thinking_mode": true,
+                      "watermark": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Returns the image generation result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                },
+                "example": {
+                  "output": {
+                    "choices": [
+                      {
+                        "finish_reason": "stop",
+                        "message": {
+                          "content": [
+                            {
+                              "image": "https://dashscope-xxx.oss-xxx.aliyuncs.com/xxx.png?Expires=xxx",
+                              "type": "image"
+                            }
+                          ],
+                          "role": "assistant"
+                        }
+                      }
+                    ],
+                    "finished": true
+                  },
+                  "usage": {
+                    "image_count": 1,
+                    "input_tokens": 10867,
+                    "output_tokens": 2,
+                    "size": "1488*704",
+                    "total_tokens": 10869
+                  },
+                  "request_id": "71dfc3c6-f796-9972-97e4-bc4efc4faxxx"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request body too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream provider returned an abnormal response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream provider is temporarily unavailable, or no available channel for the current model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ImageGenerationRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan2.7-image-pro"
+            ],
+            "description": "Model name. Available value: `wan2.7-image-pro`."
+          },
+          "input": {
+            "$ref": "#/components/schemas/WanImageInput"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/WanImageParameters"
+          }
+        }
+      },
+      "WanImageInput": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Currently only single-turn conversation is supported, i.e. one set of `role`/`content` parameters.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageMessage"
+            }
+          }
+        }
+      },
+      "WanImageMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "Fixed to `user`."
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Message content array. Contains `text` and/or `image` objects. Supports 0-9 images.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageContentItem"
+            }
+          }
+        }
+      },
+      "WanImageContentItem": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "Prompt. Supports Chinese and English, up to 5000 characters (each character, letter, digit, or symbol counts as one). Excess characters will be automatically truncated."
+          },
+          "image": {
+            "type": "string",
+            "description": "Input image URL or Base64 encoded string.\n\nImage formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\nResolution: width and height range [240, 8000] pixels, aspect ratio [1:8, 8:1].\nFile size: up to 20MB.\nSupports 0-9 images per request. When using multiple images, pass multiple `image` objects in the `content` array in order.\n\nURL format: HTTP or HTTPS URL, e.g. `http://wanx.alicdn.com/material/xxx.jpeg`.\nBase64 format: `data:{MIME_type};base64,{base64_data}`, e.g. `data:image/jpeg;base64,...`."
+          }
+        }
+      },
+      "WanImageParameters": {
+        "type": "object",
+        "properties": {
+          "bbox_list": {
+            "type": "array",
+            "description": "Interactive editing bbox regions. The length must match the number of input images. Pass an empty array `[]` for images that don't need editing. Each bbox format: `[x1, y1, x2, y2]` (top-left x, top-left y, bottom-right x, bottom-right y) using absolute pixel coordinates, origin at top-left. Max 2 bboxes per image.\n\nExample for 3 images, where the 2nd has no bbox and the 1st has two bboxes:\n```\n[\n  [[0, 0, 12, 12], [25, 25, 100, 100]],  // Image 1 (2 bboxes)\n  [],                                      // Image 2 (no bbox)\n  [[10, 10, 50, 50]]                     // Image 3 (1 bbox)\n]\n```",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "minItems": 4,
+                "maxItems": 4
+              }
+            }
+          },
+          "enable_sequential": {
+            "type": "boolean",
+            "default": false,
+            "description": "Controls generation mode. `false` (default): normal mode. `true`: enable sequential (group) image output mode."
+          },
+          "size": {
+            "type": "string",
+            "description": "Controls output image resolution. Supports two modes (do not mix):\n\n**Mode 1: Resolution preset (recommended)**\nSupported presets: `1K`, `2K` (default), `4K`.\n- Text-to-image (no input image, non-sequential): supports 1K, 2K, 4K.\n- Other scenarios: supports 1K, 2K.\n- Pixel totals: 1K = 1024×1024, 2K = 2048×2048, 4K = 4096×4096.\n- With input image: output aspect ratio matches the last input image, scaled to the selected resolution.\n- Without input image: output is square.\n\n**Mode 2: Custom width×height**\nFormat: `{width}*{height}`, e.g. `1024*768`.\n- Text-to-image: total pixels [768×768, 4096×4096], aspect ratio [1:8, 8:1].\n- Other scenarios: total pixels [768×768, 2048×2048], aspect ratio [1:8, 8:1].\n\nNote: actual output dimensions may differ slightly from the specified values.",
+            "x-options": [
+              {
+                "label": "1K",
+                "value": "1K"
+              },
+              {
+                "label": "2K",
+                "value": "2K"
+              },
+              {
+                "label": "4K",
+                "value": "4K"
+              }
+            ]
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "description": "Important: `n` directly affects cost. Cost = unit price × number of successfully generated images. Confirm the model pricing before calling.\n\nNon-sequential mode: range 1-4, default 1.\nSequential mode: range 1-12, default 12. The actual count is determined by the model and will not exceed `n`."
+          },
+          "thinking_mode": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable thinking mode. Default `true` (enabled). Only effective when sequential mode is disabled and no input image is provided. When enabled, the model enhances reasoning to improve output quality, but increases generation time."
+          },
+          "color_palette": {
+            "type": "array",
+            "description": "Custom color palette. An array of objects containing hex color and ratio. Requires 3-10 colors, recommended 8. Only available when sequential mode is disabled (`enable_sequential=false`).",
+            "items": {
+              "type": "object",
+              "required": [
+                "hex",
+                "ratio"
+              ],
+              "properties": {
+                "hex": {
+                  "type": "string",
+                  "description": "HEX color value, e.g. `#C2D1E6`."
+                },
+                "ratio": {
+                  "type": "string",
+                  "description": "Color percentage, precise to 2 decimal places, e.g. `\"23.51%\"`. All ratios must sum to 100.00%."
+                }
+              }
+            }
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to add a watermark. The watermark is positioned at the bottom-right corner with the text 'AI生成'. `false` (default): no watermark. `true`: add watermark."
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed. Range [0, 2147483647].\n\nUsing the same seed value helps keep generation results relatively stable. If not provided, the system automatically uses a random seed.\n\nNote: the generation process is probabilistic; the same seed does not guarantee identical results every time."
+          }
+        }
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "$ref": "#/components/schemas/WanImageOutput"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/WanImageUsage"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Unique request ID. Can be used for request tracing and issue diagnosis."
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code. Only returned when the request fails."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message. Only returned when the request fails."
+          }
+        }
+      },
+      "WanImageOutput": {
+        "type": "object",
+        "properties": {
+          "choices": {
+            "type": "array",
+            "description": "List of generation results.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageChoice"
+            }
+          },
+          "finished": {
+            "type": "boolean",
+            "description": "Whether the task is finished."
+          }
+        }
+      },
+      "WanImageChoice": {
+        "type": "object",
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "description": "Finish reason. `stop` on success."
+          },
+          "message": {
+            "$ref": "#/components/schemas/WanImageChoiceMessage"
+          }
+        }
+      },
+      "WanImageChoiceMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Role. Fixed to `assistant`."
+          },
+          "content": {
+            "type": "array",
+            "description": "List of generated content items.",
+            "items": {
+              "$ref": "#/components/schemas/WanImageChoiceContentItem"
+            }
+          }
+        }
+      },
+      "WanImageChoiceContentItem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Content type. Fixed to `image`."
+          },
+          "image": {
+            "type": "string",
+            "description": "Generated image URL. PNG format. The URL is valid for 24 hours, please download and save the image promptly."
+          }
+        }
+      },
+      "WanImageUsage": {
+        "type": "object",
+        "properties": {
+          "image_count": {
+            "type": "integer",
+            "description": "Number of generated images."
+          },
+          "size": {
+            "type": "string",
+            "description": "Output image resolution, e.g. `1376*768`."
+          },
+          "input_tokens": {
+            "type": "integer",
+            "description": "Input token count (not billed). Billed by number of images."
+          },
+          "output_tokens": {
+            "type": "integer",
+            "description": "Output token count (not billed). Billed by number of images."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total token count (not billed). Billed by number of images."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request ID."
+          }
+        }
+      }
+    }
+  }
+}

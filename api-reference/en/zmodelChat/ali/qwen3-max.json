@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://api.powertokens.ai",
+      "url": "https://baze-api.powerbuyin.top",
       "description": "Baze API server endpoint"
     }
   ],
@@ -56,7 +56,6 @@
                     "max_tokens": 2000
                   }
                 },
-
                 "streaming_chat": {
                   "summary": "Streaming output",
                   "value": {

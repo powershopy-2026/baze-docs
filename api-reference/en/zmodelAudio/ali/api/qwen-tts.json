@@ -1,0 +1,418 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Ali Text-to-Speech",
+    "version": "1.0.0",
+    "description": "Ali channel text-to-speech capability exposed through the unified `/ali/api/v1/services/aigc/multimodal-generation/generation` endpoint. Supports `qwen3-tts-instruct-flash` model.\n\nThe request body follows the official Ali-compatible structure: `model`, `input` (object), `voice`, `language_type`, `instructions`, and `optimize_instructions`.\n\nStreaming follows the official Ali HTTP contract: clients must explicitly send `X-DashScope-SSE: enable` in the request header. This channel does not expose `stream_format`.\n\nModel differences:\n- `qwen3-tts-instruct-flash` supports the `instructions` and `optimize_instructions` fields;\n- `qwen3-tts-flash` returns `characters` in usage;\n- `qwen-tts` returns `total_tokens` and token detail fields in usage.\n\nBilling note: the gateway maps upstream `usage.characters` to unified `usage.prompt_tokens_details.audio_tokens`, keeps `usage.output_tokens` in `usage.completion_tokens_details.audio_tokens`, and stores both raw Ali usage and normalized usage snapshots in consume_detail for billing traceability."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API service endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Ali Audio",
+      "description": "Ali text-to-speech capability"
+    }
+  ],
+  "paths": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
+      "post": {
+        "summary": "Ali text-to-speech",
+        "description": "Call Ali `qwen3-tts-instruct-flash` through the unified `/ali/api/v1/services/aigc/multimodal-generation/generation` endpoint.\n\nResponse contract:\n- non-streaming returns the official Ali JSON response;\n- streaming returns `text/event-stream` and forwards Ali SSE payloads.",
+        "operationId": "aliAudioSpeechCompat",
+        "tags": [
+          "Ali Audio"
+        ],
+        "parameters": [
+          {
+            "name": "X-DashScope-SSE",
+            "in": "header",
+            "required": false,
+            "description": "Official Ali HTTP streaming switch. Send `enable` to receive `text/event-stream`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "enable"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AliSpeechRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "Non-streaming request",
+                  "value": {
+                    "model": "qwen3-tts-flash",
+                    "input": {
+                      "text": "那我来给大家推荐一款T恤，这款呢真的是超级好看，这个颜色呢很显气质，而且呢也是搭配的绝佳单品，大家可以闭眼入，真的是非常好看，对身材的包容性也很好，不管啥身材的宝宝呢，穿上去都是很好看的。推荐宝宝们下单哦。",
+                      "voice": "Cherry",
+                      "language_type": "Chinese"
+                    }
+                  }
+                },
+                "stream": {
+                  "summary": "Streaming request",
+                  "value": {
+                    "model": "qwen3-tts-flash",
+                    "input": {
+                      "text": "Today is a wonderful day to build something people love.",
+                      "voice": "Cherry"
+                    },
+                    "language_type": "Auto"
+                  }
+                },
+                "qwen-tts": {
+                  "summary": "qwen-tts request",
+                  "value": {
+                    "model": "qwen-tts",
+                    "input": {
+                      "text": "Welcome to the baze platform text-to-speech service.",
+                      "voice": "Cherry"
+                    },
+                    "language_type": "Auto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful call. Non-streaming returns the official Ali JSON response; streaming returns Ali SSE payloads.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AliSpeechResponse"
+                },
+                "examples": {
+                  "qwen3_tts_flash": {
+                    "summary": "qwen3-tts-flash response",
+                    "value": {
+                      "status_code": 200,
+                      "request_id": "5c63c65c-cad8-4bf4-959d-xxxxxxxxxxxx",
+                      "code": "",
+                      "message": "",
+                      "output": {
+                        "text": null,
+                        "finish_reason": "stop",
+                        "choices": null,
+                        "audio": {
+                          "data": "",
+                          "url": "http://dashscope-result-bj.oss-cn-beijing.aliyuncs.com/1d/ab/20251218/d2033070/39b6d8f2-c0db-4daa-9073-5d27bfb66b78.wav?Expires=1766113409&OSSAccessKeyId=LTAI5xxxxxxxxxxxx&Signature=NOrqxxxxxxxxxxxx%3D",
+                          "id": "audio_5c63c65c-cad8-4bf4-959d-xxxxxxxxxxxx",
+                          "expires_at": 1766113409
+                        }
+                      },
+                      "usage": {
+                        "input_tokens": 0,
+                        "output_tokens": 0,
+                        "characters": 195
+                      }
+                    }
+                  },
+                  "qwen_tts": {
+                    "summary": "qwen-tts response",
+                    "value": {
+                      "status_code": 200,
+                      "request_id": "f4e8139b-3203-4887-92cb-xxxxxxxxxxxx",
+                      "code": "",
+                      "message": "",
+                      "output": {
+                        "text": null,
+                        "finish_reason": "stop",
+                        "choices": null,
+                        "audio": {
+                          "data": "",
+                          "url": "http://dashscope-result-wlcb.oss-cn-wulanchabu.aliyuncs.com/1d/50/20251218/e6c1b9cc/9acec74e-e317-4dbd-9e76-745c47bcbf2d.wav?Expires=1766116806&OSSAccessKeyId=LTAxxxxxxxxx&Signature=afYZxxxxxxxxx%2FAX9bk%3D",
+                          "id": "audio_f4e8139b-3203-4887-92cb-xxxxxxxxxxxx",
+                          "expires_at": 1766116806
+                        }
+                      },
+                      "usage": {
+                        "input_tokens": 76,
+                        "output_tokens": 1045,
+                        "characters": 0,
+                        "input_tokens_details": {
+                          "text_tokens": 76
+                        },
+                        "output_tokens_details": {
+                          "audio_tokens": 1045,
+                          "text_tokens": 0
+                        },
+                        "total_tokens": 1121
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "AliSpeechRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model name. Available options: `qwen3-tts-instruct-flash`.",
+            "enum": [
+              "qwen3-tts-instruct-flash"
+            ]
+          },
+          "input": {
+            "type": "object",
+            "required": [
+              "text",
+              "voice"
+            ],
+            "description": "Input object containing the text to synthesize and the voice.",
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "Text to synthesize, supporting multilingual input. Maximum input length: 512 tokens for qwen-TTS models, 600 characters for other models."
+              },
+              "voice": {
+                "type": "string",
+                "description": "Voice to use. See supported system voices.",
+                "enum": [
+                  "Cherry",
+                  "Serena",
+                  "Ethan",
+                  "Chelsie",
+                  "Momo",
+                  "Vivian",
+                  "Moon",
+                  "Maia",
+                  "Kai",
+                  "Nofish",
+                  "Bella",
+                  "Eldric Sage",
+                  "Mia",
+                  "Mochi",
+                  "Bellona",
+                  "Vincent",
+                  "Bunny",
+                  "Neil",
+                  "Elias",
+                  "Arthur",
+                  "Nini",
+                  "Seren",
+                  "Pip",
+                  "Stella"
+                ]
+              },
+              "language_type": {
+                "type": "string",
+                "description": "Language type for the synthesized audio. Defaults to `Auto`.\n\n- `Auto`: Suitable when the text contains multiple languages or the language is uncertain. The model automatically matches pronunciation for different language segments, but accuracy is not guaranteed.\n- Specified language: Suitable for single-language text. Specifying a language significantly improves synthesis quality, generally outperforming `Auto`.",
+                "enum": [
+                  "Auto",
+                  "Chinese",
+                  "English",
+                  "German",
+                  "Italian",
+                  "Portuguese",
+                  "Spanish",
+                  "Japanese",
+                  "Korean",
+                  "French",
+                  "Russian"
+                ],
+                "default": "Auto"
+              },
+              "instructions": {
+                "type": "string",
+                "description": "Sets instructions. See instruction control.\n\nDefault: none, no effect when not set.\nMaximum length: 1600 tokens.\nSupported languages: Chinese and English only.\nScope: This feature is only supported by the qwen3-TTS-Instruct-Flash-Realtime series models."
+              },
+              "optimize_instructions": {
+                "type": "boolean",
+                "description": "Optimizes `instructions` semantically to improve the naturalness and expressiveness of voice synthesis.\n\nDefault: `false`.\nBehavior: When set to `true`, the system semantically enhances and rewrites the `instructions` content to generate internal instructions better suited for voice synthesis.\nRecommended for high-quality, refined voice expression.\nDepends on the `instructions` parameter. If `instructions` is empty, this parameter has no effect.\nScope: This feature is only supported by the qwen3-TTS-Instruct-Flash series models.",
+                "default": false
+              }
+            }
+          }
+        }
+      },
+      "AliSpeechResponse": {
+        "type": "object",
+        "properties": {
+          "status_code": {
+            "type": "integer",
+            "description": "HTTP status code. Follows RFC 9110 definitions. For example:\n- 200: Request successful, normal response returned\n- 400: Client request parameter error\n- 401: Unauthorized access\n- 404: Resource not found\n- 500: Internal server error"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Unique request identifier for this request, useful for troubleshooting."
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code. Returned when the request fails."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message. Returned when the request fails."
+          },
+          "output": {
+            "type": "object",
+            "description": "Model output.",
+            "properties": {
+              "text": {
+                "nullable": true,
+                "description": "Always null and can be ignored."
+              },
+              "choices": {
+                "nullable": true,
+                "description": "Always null and can be ignored."
+              },
+              "finish_reason": {
+                "type": "string",
+                "description": "Generation status identifier. It is `null` while still generating; it becomes `stop` when the model naturally finishes or a stop condition is triggered."
+              },
+              "audio": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Full audio file URL, valid for 24 hours.\n\nStreaming note: In streaming mode, the API returns multiple chunks. Middle chunks set `audio.data` to a Base64-encoded audio segment and leave `audio.url` empty; the final chunk sets `audio.data` to an empty string and exposes the full OSS audio URL in `audio.url`. Download the complete audio from the `url` field of the last chunk. In non-streaming mode, `url` directly returns the full audio file URL."
+                  },
+                  "data": {
+                    "type": "string",
+                    "description": "Base64 audio data for streaming output."
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "Unique audio identifier."
+                  },
+                  "expires_at": {
+                    "type": "integer",
+                    "description": "UNIX timestamp of the URL expiration time."
+                  }
+                }
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "description": "Token or character consumption for this request. qwen-TTS returns token consumption information, while qwen3-TTS-Flash returns character consumption information.",
+            "properties": {
+              "input_tokens": {
+                "type": "integer",
+                "description": "Input token count. For `qwen3-tts-flash`, this field is fixed at 0."
+              },
+              "output_tokens": {
+                "type": "integer",
+                "description": "Output audio token count. For `qwen3-tts-flash`, this field is fixed at 0."
+              },
+              "characters": {
+                "type": "integer",
+                "description": "Input character count. Only returned by `qwen3-tts-flash`."
+              },
+              "total_tokens": {
+                "type": "integer",
+                "description": "Total token count. Only returned by `qwen-tts`."
+              },
+              "input_tokens_details": {
+                "type": "object",
+                "description": "Input token consumption details. Only returned by `qwen-tts`.",
+                "properties": {
+                  "text_tokens": {
+                    "type": "integer",
+                    "description": "Input text token consumption."
+                  }
+                }
+              },
+              "output_tokens_details": {
+                "type": "object",
+                "description": "Output token consumption details. Only returned by `qwen-tts`.",
+                "properties": {
+                  "audio_tokens": {
+                    "type": "integer",
+                    "description": "Output audio token consumption."
+                  },
+                  "text_tokens": {
+                    "type": "integer",
+                    "description": "Output text token consumption, currently fixed at 0."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -13,7 +13,7 @@
 
 - In Chinese docs, use `baze平台` as the platform name
 - In English docs, use `baze platform` when a platform noun is needed
-- Use `https://api.powertokens.ai` as the canonical API base URL
+- Use `https://baze-api.powerbuyin.top` as the canonical API base URL
 - Prefer `平台接口`, `统一接口`, and `上游渠道` in Chinese docs
 - Prefer `platform API`, `unified API`, and `upstream provider` in English docs
 - Describe MiniMax as an upstream capability exposed through the platform, not as a direct official integration guide

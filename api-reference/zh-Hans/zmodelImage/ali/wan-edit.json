@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://api.powertokens.ai",
+      "url": "https://baze-api.powerbuyin.top",
       "description": "Baze API 服务地址"
     }
   ],
@@ -223,7 +223,7 @@
             "enum": [
               "wan2.7-image-pro"
             ],
-            "description": "图像编辑模型名称。"
+            "description": "模型名称。可选值：`wan2.7-image-pro`。"
           },
           "response_format": {
             "type": "string",
@@ -231,7 +231,7 @@
               "url",
               "b64_json"
             ],
-            "description": "统一响应格式。",
+            "description": "统一响应格式。支持的值：`url` 或 `b64_json`。",
             "default": "url"
           },
           "input": {
@@ -239,7 +239,7 @@
           },
           "size": {
             "type": "string",
-            "description": "输出图像分辨率。图像编辑场景建议使用官方规格如 `1K`、`2K`。网关会映射到上游 `parameters.size`。",
+            "description": "关于输出图片分辨率参数，支持以下两种方式，不可混用：\n\n**方式一：指定输出图片的分辨率（推荐）**\n支持 1K、2K（默认）、4K 三种规格。\n- 文生图（无图片输入，非组图生成）：支持 1K、2K、4K。\n- 其他场景：支持 1K、2K。\n- 各规格总像素：1K：1024×1024、2K：2048×2048、4K：4096×4096。\n- 当有图片输入时：输出宽高比与输入图像（多图输入时为最后一张）一致，并缩放到选定分辨率。\n- 当没有图片输入时：输出为正方形。\n\n**方式二：指定生成图像的宽高像素值**\n格式：`{width}*{height}`，例如 `1024*768`。\n- 文生图：总像素在 [768×768, 4096×4096] 之间，宽高比范围 [1:8, 8:1]。\n- 其他场景：总像素在 [768×768, 2048×2048] 之间，宽高比范围 [1:8, 8:1]。\n\n注意：输出图片的像素值可能和指定像素值存在微小差异。",
             "x-enum": [
               "1K",
               "2K"
@@ -249,28 +249,28 @@
           "n": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 4,
-            "description": "生成图像数量。网关会映射到上游 `parameters.n`。"
+            "maximum": 12,
+            "description": "重要：n 直接影响费用。费用 = 单价 × 成功生成的图片张数，请在调用前确认模型价格。\n\n关闭组图模式时，该数值代表生成图像数量，取值范围 1-4，默认为 1；\n\n开启组图模式时，该数值代表最大生成图像数量，取值范围 1-12，默认为 12。实际数量由模型决定且不超过 n。"
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。网关会映射到上游 `parameters.watermark`。",
+            "description": "是否添加水印标识，水印位于图片右下角，文案固定为 \"AI生成\"。`false`（默认值）：不添加水印。`true`：添加水印。",
             "default": false
           },
           "negative_prompt": {
             "type": "string",
-            "description": "反向提示词。网关会映射到上游 `parameters.negative_prompt`。"
+            "description": "反向提示词，描述输出中应避免的内容。"
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子，取值范围 [0, 2147483647]。网关会映射到上游 `parameters.seed`。",
+            "description": "随机数种子，取值范围 [0, 2147483647]。\n\n使用相同的 seed 参数值可使生成内容保持相对稳定。若不提供，算法将自动使用随机数种子。\n\n注意：模型生成过程具有概率性，即使使用相同的 seed，也不能保证每次生成结果完全一致。",
             "default": 0,
             "minimum": 0,
             "maximum": 2147483647
           },
           "bbox_list": {
             "type": "array",
-            "description": "交互式编辑框选区域，按输入图片顺序对应。网关会映射到上游 `parameters.bbox_list`。",
+            "description": "交互式编辑框选区域。\n\n对应关系：列表长度必须与输入图片数量一致。若某张图片无需编辑，请在对应位置传入空列表 `[]`。\n\n坐标格式：[x1, y1, x2, y2]（左上角 x, 左上角 y, 右下角 x, 右下角 y），使用原图绝对像素坐标，左上角坐标为（0，0）。\n\n限制条件：单张图片最多支持 2 个边界框。\n\n示例：输入 3 张图片，其中第 2 张无框选，第 1 张有两个框选：\n\n```\n[\n  [[0, 0, 12, 12], [25, 25, 100, 100]],  # 图 1 (2个框)\n  [],                                    # 图 2 (无框)\n  [[10, 10, 50, 50]]                    # 图 3 (1个框)\n]\n```\n\n",
             "items": {
               "type": "array",
               "items": {
@@ -293,7 +293,7 @@
             "type": "array",
             "minItems": 1,
             "maxItems": 1,
-            "description": "当前仅支持单轮消息。",
+            "description": "请求内容数组。当前仅支持单轮对话，即传入一组 role、content 参数，不支持多轮对话。",
             "items": {
               "$ref": "#/components/schemas/WanImageMessage"
             }
@@ -312,11 +312,11 @@
             "enum": [
               "user"
             ],
-            "description": "消息角色，固定为 `user`。"
+            "description": "固定为 `user`。"
           },
           "content": {
             "type": "array",
-            "description": "内容数组中按顺序放置图片对象和文本指令对象。",
+            "description": "消息内容数组。包含 `text` 和/或 `image` 对象。",
             "items": {
               "$ref": "#/components/schemas/WanImageContent"
             }
@@ -328,11 +328,12 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "输入图片 URL 或 Data URL。"
+            "description": "输入图像的URL或Base64编码字符串。\n\n图像限制：\n\n图像格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n\n图像分辨率：图像的宽高范围均为[240, 8000]像素，宽高比范围[1:8, 8:1]。\n\n文件大小：不超过20MB。\n\n图像数量限制：\n\n可传入0-9张图片。\n\n当输入多张图像时，需在content数组中传入多个image对象，并按照数组顺序定义图像顺序。\n\n支持的输入格式：\n\n- 使用公网可访问URL\n  支持HTTP或HTTPS协议。\n  示例值：`http://wanx.alicdn.com/material/xxx.jpeg`。\n\n- 传入 Base64 编码图像后的字符串\n  格式：data:{MIME_type};base64,{base64_data}\n  示例：data:image/jpeg;base64,GDU7MtCZzEbTbmRZ...（仅示意，实际需传入完整字符串）。"
           },
           "text": {
             "type": "string",
-            "description": "编辑指令。支持中英文。"
+            "maxLength": 5000,
+            "description": "用户输入提示词。支持中英文，长度不超过 5000 个字符，每个汉字、字母、数字或符号计为一个字符，超过部分会自动截断。"
           }
         }
       },
@@ -341,30 +342,30 @@
         "properties": {
           "size": {
             "type": "string",
-            "description": "输出图像分辨率。图像编辑场景建议使用官方规格如 `1K`、`2K`。"
+            "description": "控制输出图像分辨率。图像编辑场景支持 `1K`（默认）、`2K`。"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 4,
-            "description": "生成图像数量。"
+            "maximum": 12,
+            "description": "重要：n 直接影响费用。费用 = 单价 × 成功生成的图片张数，请在调用前确认模型价格。\n\n关闭组图模式时，该数值代表生成图像数量，取值范围 1-4，默认为 1；\n\n开启组图模式时，该数值代表最大生成图像数量，取值范围 1-12，默认为 12。实际数量由模型决定且不超过 n。"
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印。",
+            "description": "是否添加水印。水印位于图片右下角，文字为 'AI生成'。`false`（默认）：无水印。`true`：添加水印。",
             "default": false
           },
           "negative_prompt": {
             "type": "string",
-            "description": "反向提示词。"
+            "description": "反向提示词，描述输出中应避免的内容。"
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子，取值范围 [0, 2147483647]。"
+            "description": "随机数种子，取值范围 [0, 2147483647]。\n\n使用相同的 seed 参数值可使生成内容保持相对稳定。若不提供，算法将自动使用随机数种子。\n\n注意：模型生成过程具有概率性，即使使用相同的 seed，也不能保证每次生成结果完全一致。"
           },
           "bbox_list": {
             "type": "array",
-            "description": "交互式编辑框选区域，按输入图片顺序对应。",
+            "description": "交互式编辑框选区域。\n\n对应关系：列表长度必须与输入图片数量一致。若某张图片无需编辑，请在对应位置传入空列表 `[]`。\n\n坐标格式：[x1, y1, x2, y2]（左上角 x, 左上角 y, 右下角 x, 右下角 y），使用原图绝对像素坐标，左上角坐标为（0，0）。\n\n限制条件：单张图片最多支持 2 个边界框。\n\n示例：输入 3 张图片，其中第 2 张无框选，第 1 张有两个框选：\n\n```\n[\n  [[0, 0, 12, 12], [25, 25, 100, 100]],  # 图 1 (2个框)\n  [],                                    # 图 2 (无框)\n  [[10, 10, 50, 50]]                    # 图 3 (1个框)\n]\n```",
             "items": {
               "type": "array",
               "items": {
@@ -383,18 +384,18 @@
           "created": {
             "type": "integer",
             "format": "int64",
-            "description": "创建时间的 Unix 时间戳（秒）。"
+            "description": "响应生成时间戳。"
           },
           "data": {
             "type": "array",
-            "description": "生成的图像列表。",
+            "description": "生成后的图片结果列表。",
             "items": {
               "$ref": "#/components/schemas/ImageData"
             }
           },
           "metadata": {
             "type": "object",
-            "description": "附加结果信息。字段内容会随能力不同而变化。"
+            "description": "透传的上游原始响应元数据。"
           }
         }
       },
@@ -403,15 +404,15 @@
         "properties": {
           "url": {
             "type": "string",
-            "description": "图片下载链接。有效期 24 小时。"
+            "description": "当结果以 URL 返回时使用。"
           },
           "b64_json": {
             "type": "string",
-            "description": "Base64 编码的图片数据。"
+            "description": "当结果以 Base64 返回时使用。"
           },
           "revised_prompt": {
             "type": "string",
-            "description": "优化后的提示词。"
+            "description": "上游返回的改写提示词。"
           }
         }
       },

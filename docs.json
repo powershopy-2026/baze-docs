@@ -22,7 +22,8 @@
                   "zh-Hans/guides/powertokens-quickstart",
                   "zh-Hans/guides/api-key-and-model-call",
                   "zh-Hans/guides/logs-and-usage",
-                  "zh-Hans/guides/seedance2-quick-start"
+                  "zh-Hans/guides/seedance2-quick-start",
+                  "zh-Hans/guides/powertokens-guide"
                 ]
               }
             ]
@@ -35,6 +36,7 @@
                 "group": "聊天模型",
                 "pages": [
                   "zh-Hans/zmodelChat/claude",
+                  "zh-Hans/zmodelChat/responses",
                   {
                     "group": "MiniMax",
                     "pages": [
@@ -67,6 +69,13 @@
                     ]
                   },
                   {
+                    "group": "DeepSeek",
+                    "pages": [
+                      "zh-Hans/zmodelChat/deepseek/deepseek-v4-flash",
+                      "zh-Hans/zmodelChat/deepseek/deepseek-v4-pro"
+                    ]
+                  },
+                  {
                     "group": "智谱",
                     "pages": [
                       "zh-Hans/zmodelChat/zhipu/glm-4.5-air",
@@ -87,7 +96,14 @@
                     "group": "MiniMax",
                     "pages": [
                       "zh-Hans/zmodelImage/minimax/image01-image-to-image",
-                      "zh-Hans/zmodelImage/minimax/image01-text-to-image"
+                      "zh-Hans/zmodelImage/minimax/image01-text-to-image",
+                      {
+                        "group": "minimax兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelImage/minimax/minimax兼容API/text-to-image",
+                          "zh-Hans/zmodelImage/minimax/minimax兼容API/image-to-image"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -96,7 +112,15 @@
                       "zh-Hans/zmodelImage/ali/qwen-edit",
                       "zh-Hans/zmodelImage/ali/qwen-text-to-image",
                       "zh-Hans/zmodelImage/ali/wan-edit",
-                      "zh-Hans/zmodelImage/ali/wan-text-to-image"
+                      "zh-Hans/zmodelImage/ali/wan-text-to-image",
+                      {
+                        "group": "阿里巴巴兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelImage/ali/api/qwen-text-to-image",
+                          "zh-Hans/zmodelImage/ali/api/qwen-image-edit",
+                          "zh-Hans/zmodelImage/ali/api/wan2.7-image-generation"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -107,7 +131,14 @@
                       "zh-Hans/zmodelImage/byteplus/seedream-4-5-text-to-image",
                       "zh-Hans/zmodelImage/byteplus/seedream-4-5-image-to-image",
                       "zh-Hans/zmodelImage/byteplus/seedream-5-0-text-to-image",
-                      "zh-Hans/zmodelImage/byteplus/seedream-5-0-image-to-image"
+                      "zh-Hans/zmodelImage/byteplus/seedream-5-0-image-to-image",
+                      {
+                        "group": "字节API兼容",
+                        "pages": [
+                          "zh-Hans/zmodelImage/byteplus/seedream/seedream-image-create",
+                          "zh-Hans/zmodelImage/byteplus/seedream/seedream-streaming"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -144,7 +175,17 @@
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
-                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
+                      "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
+                      {
+                        "group": "minimax兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/text-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/image-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/query-video-task",
+                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/download-video-file"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -156,7 +197,17 @@
                       "zh-Hans/zmodelVideo/ali/video-first-last-frame2",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
-                      "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation"
+                      "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      {
+                        "group": "阿里巴巴兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelVideo/ali/api/wan2.7-i2v",
+                          "zh-Hans/zmodelVideo/ali/api/wan2.7-t2v",
+                          "zh-Hans/zmodelVideo/ali/api/wan2.7-r2v",
+                          "zh-Hans/zmodelVideo/ali/api/legacy-i2v-first-last-frame",
+                          "zh-Hans/zmodelVideo/ali/api/task-query"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -241,13 +292,25 @@
                       "zh-Hans/zmodelAudio/minimax/speech-2.8-hd",
                       "zh-Hans/zmodelAudio/minimax/speech-2.8-turbo",
                       "zh-Hans/zmodelAudio/minimax/speech-02-hd",
-                      "zh-Hans/zmodelAudio/minimax/speech-02-turbo"
+                      "zh-Hans/zmodelAudio/minimax/speech-02-turbo",
+                      {
+                        "group": "minimax兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelAudio/minimax/minimax兼容API/t2a-v2"
+                        ]
+                      }
                     ]
                   },
                   {
                     "group": "阿里巴巴",
                     "pages": [
-                      "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash"
+                      "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash",
+                      {
+                        "group": "阿里巴巴兼容API",
+                        "pages": [
+                          "zh-Hans/zmodelAudio/ali/api/qwen-tts"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -312,6 +375,8 @@
               {
                 "group": "Chat Models",
                 "pages": [
+                  "en/zmodelChat/claude",
+                  "en/zmodelChat/responses",
                   {
                     "group": "MiniMax",
                     "pages": [
@@ -344,6 +409,13 @@
                     ]
                   },
                   {
+                    "group": "DeepSeek",
+                    "pages": [
+                      "en/zmodelChat/deepseek/deepseek-v4-flash",
+                      "en/zmodelChat/deepseek/deepseek-v4-pro"
+                    ]
+                  },
+                  {
                     "group": "Zhipu",
                     "pages": [
                       "en/zmodelChat/zhipu/glm-4.5-air",
@@ -364,7 +436,14 @@
                     "group": "MiniMax",
                     "pages": [
                       "en/zmodelImage/minimax/image01-image-to-image",
-                      "en/zmodelImage/minimax/image01-text-to-image"
+                      "en/zmodelImage/minimax/image01-text-to-image",
+                      {
+                        "group": "minimax Compatible API",
+                        "pages": [
+                          "en/zmodelImage/minimax/image-generation/text-to-image",
+                          "en/zmodelImage/minimax/image-generation/image-to-image"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -373,7 +452,15 @@
                       "en/zmodelImage/ali/qwen-edit",
                       "en/zmodelImage/ali/qwen-text-to-image",
                       "en/zmodelImage/ali/wan-edit",
-                      "en/zmodelImage/ali/wan-text-to-image"
+                      "en/zmodelImage/ali/wan-text-to-image",
+                      {
+                        "group": "Alibaba Compatible API",
+                        "pages": [
+                          "en/zmodelImage/ali/api/qwen-text-to-image",
+                          "en/zmodelImage/ali/api/qwen-image-edit",
+                          "en/zmodelImage/ali/api/wan2.7-image-generation"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -384,7 +471,14 @@
                       "en/zmodelImage/byteplus/seedream-4-5-text-to-image",
                       "en/zmodelImage/byteplus/seedream-4-5-image-to-image",
                       "en/zmodelImage/byteplus/seedream-5-0-text-to-image",
-                      "en/zmodelImage/byteplus/seedream-5-0-image-to-image"
+                      "en/zmodelImage/byteplus/seedream-5-0-image-to-image",
+                      {
+                        "group": "BytePlus API Compat",
+                        "pages": [
+                          "en/zmodelImage/byteplus/seedream/seedream-image-create",
+                          "en/zmodelImage/byteplus/seedream/seedream-streaming"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -421,7 +515,17 @@
                       "en/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
                       "en/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
                       "en/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
-                      "en/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
+                      "en/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
+                      {
+                        "group": "minimax Compatible API",
+                        "pages": [
+                          "en/zmodelVideo/minimax/video-generation/text-to-video",
+                          "en/zmodelVideo/minimax/video-generation/image-to-video",
+                          "en/zmodelVideo/minimax/video-generation/first-last-frame-to-video",
+                          "en/zmodelVideo/minimax/video-generation/query-video-task",
+                          "en/zmodelVideo/minimax/video-generation/download-video-file"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -433,7 +537,17 @@
                       "en/zmodelVideo/ali/video-first-last-frame2",
                       "en/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "en/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
-                      "en/zmodelVideo/ali/wan2.7-i2v-video-continuation"
+                      "en/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      {
+                        "group": "Alibaba Compatible API",
+                        "pages": [
+                          "en/zmodelVideo/ali/api/wan2.7-i2v",
+                          "en/zmodelVideo/ali/api/wan2.7-t2v",
+                          "en/zmodelVideo/ali/api/wan2.7-r2v",
+                          "en/zmodelVideo/ali/api/legacy-i2v-first-last-frame",
+                          "en/zmodelVideo/ali/api/task-query"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -518,13 +632,25 @@
                       "en/zmodelAudio/minimax/speech-2.8-hd",
                       "en/zmodelAudio/minimax/speech-2.8-turbo",
                       "en/zmodelAudio/minimax/speech-02-hd",
-                      "en/zmodelAudio/minimax/speech-02-turbo"
+                      "en/zmodelAudio/minimax/speech-02-turbo",
+                      {
+                        "group": "minimax Compatible API",
+                        "pages": [
+                          "en/zmodelAudio/minimax/audio-generation/t2a-v2"
+                        ]
+                      }
                     ]
                   },
                   {
                     "group": "Alibaba",
                     "pages": [
-                      "en/zmodelAudio/ali/qwen3-tts-instruct-flash"
+                      "en/zmodelAudio/ali/qwen3-tts-instruct-flash",
+                      {
+                        "group": "Alibaba Compatible API",
+                        "pages": [
+                          "en/zmodelAudio/ali/api/qwen-tts"
+                        ]
+                      }
                     ]
                   },
                   {

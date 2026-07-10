@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://api.powertokens.ai",
+      "url": "https://baze-api.powerbuyin.top",
       "description": "Baze API server endpoint"
     }
   ],
