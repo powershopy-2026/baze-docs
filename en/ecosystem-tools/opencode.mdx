@@ -13,9 +13,9 @@ If you need to choose the endpoint first, see [Text model protocols and endpoint
 
 | Goal | opencode provider | Base URL | Recommended model |
 | --- | --- | --- | --- |
-| Recommended text path | custom provider + `@ai-sdk/openai-compatible` | `https://baze-api.powerbuyin.top/v1` | `glm-5.2` |
-| MiniMax text path | custom provider + `@ai-sdk/openai-compatible` | `https://baze-api.powerbuyin.top/v1` | `MiniMax-M3` |
-| Claude/Anthropic path | `@ai-sdk/anthropic` custom provider | `https://baze-api.powerbuyin.top/v1` | Use only when you need to validate `/v1/messages` |
+| Recommended text path | custom provider + `@ai-sdk/openai-compatible` | `https://api.powertokens.ai/v1` | `glm-5.2` |
+| MiniMax text path | custom provider + `@ai-sdk/openai-compatible` | `https://api.powertokens.ai/v1` | `MiniMax-M3` |
+| Claude/Anthropic path | `@ai-sdk/anthropic` custom provider | `https://api.powertokens.ai/v1` | Use only when you need to validate `/v1/messages` |
 
 ## Prepare the API key
 
@@ -41,7 +41,7 @@ Create or update `.opencode/opencode.json` in your project:
       "npm": "@ai-sdk/openai-compatible",
       "name": "powertokens",
       "options": {
-        "baseURL": "https://baze-api.powerbuyin.top/v1",
+        "baseURL": "https://api.powertokens.ai/v1",
         "apiKey": "{env:POWERTOKENS_API_KEY}"
       },
       "models": {
@@ -85,7 +85,7 @@ For Claude/Anthropic Messages, configure a separate `@ai-sdk/anthropic` custom p
       "npm": "@ai-sdk/anthropic",
       "name": "powertokens Anthropic",
       "options": {
-        "baseURL": "https://baze-api.powerbuyin.top/v1",
+        "baseURL": "https://api.powertokens.ai/v1",
         "apiKey": "{env:POWERTOKENS_API_KEY}"
       },
       "models": {

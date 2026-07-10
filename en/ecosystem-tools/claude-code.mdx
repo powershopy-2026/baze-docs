@@ -3,7 +3,7 @@ title: "Claude Code setup guide"
 description: "Connect Claude Code to the powertokens platform through the Anthropic Messages-compatible path."
 ---
 
-Claude Code uses the Anthropic Messages protocol. To use it with the `powertokens platform`, point Claude Code at `https://baze-api.powerbuyin.top` and choose a text model available through the Anthropic Messages path. The recommended platform default is `glm-5.2`; the recommended MiniMax coding-agent path is `MiniMax-M3`.
+Claude Code uses the Anthropic Messages protocol. To use it with the `powertokens platform`, point Claude Code at `https://api.powertokens.ai` and choose a text model available through the Anthropic Messages path. The recommended platform default is `glm-5.2`; the recommended MiniMax coding-agent path is `MiniMax-M3`.
 
 If you need to choose the endpoint first, see [Text model protocols and endpoints](/en/ecosystem-tools/text-model-protocols).
 
@@ -60,7 +60,7 @@ Add this to user-level `~/.claude/settings.json` or project-level `.claude/setti
 ```json
 {
   "env": {
-    "ANTHROPIC_BASE_URL": "https://baze-api.powerbuyin.top",
+    "ANTHROPIC_BASE_URL": "https://api.powertokens.ai",
     "ANTHROPIC_AUTH_TOKEN": "YOUR_POWERTOKENS_API_KEY",
     "ANTHROPIC_MODEL": "glm-5.2",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-5-turbo",
@@ -109,7 +109,7 @@ rm compat.txt
 You can also verify the same model directly through the platform API.
 
 ```bash
-curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+curl -X POST "https://api.powertokens.ai/v1/messages" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
   -H "anthropic-version: 2023-06-01" \

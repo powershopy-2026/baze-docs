@@ -5,7 +5,7 @@
 ## BUG-001: 部分模型直接调用返回 403 用户已被封禁
 
 - 状态: 无法重现，暂不处理
-- 环境: `https://baze-api.powerbuyin.top`
+- 环境: `https://api.powertokens.ai`
 - 接口: `POST /v1/chat/completions`
 - 现象: 多个文本模型直接请求返回 HTTP `403`，响应体为 `用户已被封禁`
 - 响应体形态:
@@ -44,7 +44,7 @@
 ## BUG-003: opencode Anthropic provider 下部分模型返回 `tool_choice.type` 参数错误
 
 - 状态: 部分已修复；`deepseek-v3-2-251201` 与 Seed 系列已通过复测；`gpt-oss-120b-250805` 已下架处理；`seed-1-6-flash-250715` 按上游不支持 `/v1/messages` 处理
-- 环境: `https://baze-api.powerbuyin.top`
+- 环境: `https://api.powertokens.ai`
 - 工具: opencode `1.17.9`
 - provider: `@ai-sdk/anthropic`
 - 接口: `POST /v1/messages`

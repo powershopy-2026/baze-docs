@@ -13,9 +13,9 @@ If you need to choose the endpoint first, see [Text model protocols and endpoint
 
 | Goal | Hermes setup | Base URL | Model scope |
 | --- | --- | --- | --- |
-| Quick text-model setup | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | OpenAI-compatible text models |
-| Anthropic Messages verification | Use `api_mode: anthropic_messages` only after your Hermes version is confirmed to request `/v1/messages` | `https://baze-api.powerbuyin.top` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
-| OpenAI-compatible preferred models | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
+| Quick text-model setup | Custom endpoint | `https://api.powertokens.ai/v1` | OpenAI-compatible text models |
+| Anthropic Messages verification | Use `api_mode: anthropic_messages` only after your Hermes version is confirmed to request `/v1/messages` | `https://api.powertokens.ai` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
+| OpenAI-compatible preferred models | Custom endpoint | `https://api.powertokens.ai/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
 
 ## OpenAI-compatible endpoint
 
@@ -30,14 +30,14 @@ Use these values:
 | Field | Value |
 | --- | --- |
 | Endpoint type | Custom endpoint or OpenAI-compatible endpoint |
-| URL | `https://baze-api.powerbuyin.top/v1` |
+| URL | `https://api.powertokens.ai/v1` |
 | API key | Your `powertokens platform` API key |
 | Model | For example `glm-5.2`, `MiniMax-M3`, or `seed-2-0-pro-260328` |
 
 If your Hermes version asks for the full chat completions endpoint, use:
 
 ```text
-https://baze-api.powerbuyin.top/v1/chat/completions
+https://api.powertokens.ai/v1/chat/completions
 ```
 
 ## anthropic_messages version check
@@ -47,12 +47,12 @@ Only use `anthropic_messages` when your Hermes version is confirmed to send the 
 ```yaml
 provider: powertokens-anthropic
 api_mode: anthropic_messages
-base_url: https://baze-api.powerbuyin.top
+base_url: https://api.powertokens.ai
 api_key: ${POWERTOKENS_API_KEY}
 model: glm-5.2
 ```
 
-After configuring it, inspect the Hermes request dump or debug log. The final request URL should be `https://baze-api.powerbuyin.top/v1/messages`. If the request still lands on `/chat/completions`, do not treat this path as a stable Hermes Agent setup.
+After configuring it, inspect the Hermes request dump or debug log. The final request URL should be `https://api.powertokens.ai/v1/messages`. If the request still lands on `/chat/completions`, do not treat this path as a stable Hermes Agent setup.
 
 ## Recommended models
 
@@ -93,7 +93,7 @@ seed-2-0-pro-260328
 ## Verify the OpenAI-compatible path
 
 ```bash
-curl -X POST "https://baze-api.powerbuyin.top/v1/chat/completions" \
+curl -X POST "https://api.powertokens.ai/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
   --data '{
@@ -108,7 +108,7 @@ curl -X POST "https://baze-api.powerbuyin.top/v1/chat/completions" \
 ## Verify the anthropic_messages path
 
 ```bash
-curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+curl -X POST "https://api.powertokens.ai/v1/messages" \
   -H "Content-Type: application/json" \
   -H "x-api-key: YOUR_POWERTOKENS_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
