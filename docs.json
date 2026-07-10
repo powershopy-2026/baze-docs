@@ -451,7 +451,17 @@
                       "en/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
                       "en/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
                       "en/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
-                      "en/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
+                      "en/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
+                      {
+                        "group": "minimax Compatible API",
+                        "pages": [
+                          "en/zmodelVideo/minimax/video-generation/text-to-video",
+                          "en/zmodelVideo/minimax/video-generation/image-to-video",
+                          "en/zmodelVideo/minimax/video-generation/first-last-frame-to-video",
+                          "en/zmodelVideo/minimax/video-generation/query-video-task",
+                          "en/zmodelVideo/minimax/video-generation/download-video-file"
+                        ]
+                      }
                     ]
                   },
                   {
@@ -548,7 +558,13 @@
                       "en/zmodelAudio/minimax/speech-2.8-hd",
                       "en/zmodelAudio/minimax/speech-2.8-turbo",
                       "en/zmodelAudio/minimax/speech-02-hd",
-                      "en/zmodelAudio/minimax/speech-02-turbo"
+                      "en/zmodelAudio/minimax/speech-02-turbo",
+                      {
+                        "group": "minimax Compatible API",
+                        "pages": [
+                          "en/zmodelAudio/minimax/audio-generation/t2a-v2"
+                        ]
+                      }
                     ]
                   },
                   {
