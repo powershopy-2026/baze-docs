@@ -313,10 +313,9 @@
             "type": "string",
             "enum": [
               "first_clip",
-              "last_frame",
-              "driving_audio"
+              "last_frame"
             ],
-            "description": "媒体资源类型。\n- `first_clip`：首段视频。\n- `last_frame`：尾帧图片。\n- `driving_audio`：驱动音频。\n\n每个类型在单次请求中最多出现一次（例如不能包含两个 `first_clip` 条目）。"
+            "description": "媒体资源类型。\n- `first_clip`：首段视频。\n- `last_frame`：尾帧图片。\n\n每个类型在单次请求中最多出现一次（例如不能包含两个 `first_clip` 条目）。"
           },
           "url": {
             "type": "string",

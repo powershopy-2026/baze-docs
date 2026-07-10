@@ -313,10 +313,9 @@
             "type": "string",
             "enum": [
               "first_clip",
-              "last_frame",
-              "driving_audio"
+              "last_frame"
             ],
-            "description": "Media asset type.\n- `first_clip`: First video clip.\n- `last_frame`: Last frame image.\n- `driving_audio`: Driving audio.\n\nEach type can appear at most once per request (e.g. cannot include two `first_clip` entries)."
+            "description": "Media asset type.\n- `first_clip`: First video clip.\n- `last_frame`: Last frame image.\n\nEach type can appear at most once per request (e.g. cannot include two `first_clip` entries)."
           },
           "url": {
             "type": "string",
