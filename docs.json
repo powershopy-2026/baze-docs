@@ -387,7 +387,14 @@
                     "group": "MiniMax",
                     "pages": [
                       "en/zmodelImage/minimax/image01-image-to-image",
-                      "en/zmodelImage/minimax/image01-text-to-image"
+                      "en/zmodelImage/minimax/image01-text-to-image",
+                      {
+                        "group": "minimax Compatible API",
+                        "pages": [
+                          "en/zmodelImage/minimax/image-generation/text-to-image",
+                          "en/zmodelImage/minimax/image-generation/image-to-image"
+                        ]
+                      }
                     ]
                   },
                   {
