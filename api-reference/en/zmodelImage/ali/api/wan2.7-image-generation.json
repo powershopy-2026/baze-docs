@@ -405,7 +405,7 @@
             "format": "int64",
             "minimum": 0,
             "maximum": 2147483647,
-            "description": "Random seed. Range [0, 2147483647]. Using the same seed helps keep generation results relatively stable. Note: the generation process is probabilistic; the same seed does not guarantee identical results every time."
+            "description": "Random seed. Range [0, 2147483647].\n\nUsing the same seed value helps keep generation results relatively stable. If not provided, the system automatically uses a random seed.\n\nNote: the generation process is probabilistic; the same seed does not guarantee identical results every time."
           }
         }
       },
