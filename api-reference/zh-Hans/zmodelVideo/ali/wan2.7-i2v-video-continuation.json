@@ -1,34 +1,34 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "wan2.7-i2v 视频续写",
+    "title": "Wan 2.7 视频续写",
     "version": "1.0.0",
-    "description": "面向客户的 Ali `wan2.7-i2v` 视频续写渠道文档，统一公开入口为 `/v1/videos`。\n\n本文档描述视频续写场景，并使用顶层 `media` 数组表达上游新版 `input.media` 协议。\n\n本场景支持的 `media.type` 为 `first_clip`、`last_frame`、`driving_audio`。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n- `first_clip + driving_audio`\n- `first_clip + last_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
+    "description": "Ali `wan2.7-i2v` 视频续写能力文档。统一接口端点为 `/v1/videos`。\n\n本文档覆盖视频续写场景，使用顶层 `media` 数组来表达上游厂商新的 `input.media` 协议。\n\n本场景支持的 `media.type` 取值为 `first_clip` 和 `last_frame`。\n\n支持的 `media` 组合：\n- `first_clip`\n- `first_clip + last_frame`\n\n`prompt` 字段为可选。`size` 仅支持 `720P` 和 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。同时支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 和 `seed`。",
     "license": {
-      "name": "Project License",
+      "name": "项目许可证",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
     }
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Baze API 服务地址"
+      "description": "Baze API 服务端点"
     }
   ],
   "tags": [
     {
-      "name": "Wan 2.7 Video",
+      "name": "Wan 2.7 视频",
       "description": "Ali wan2.7-i2v 视频续写能力"
     }
   ],
   "paths": {
     "/v1/videos": {
       "post": {
-        "summary": "创建 wan2.7-i2v 视频续写任务",
-        "description": "提交一个异步的 Ali `wan2.7-i2v` 视频续写任务。\n\n使用 `first_clip` 指定初始视频片段，可选搭配 `last_frame` 作为尾帧参考图和/或 `driving_audio` 驱动音频。\n\n支持的 `media` 组合为：\n- `first_clip`\n- `first_clip + last_frame`\n- `first_clip + driving_audio`\n- `first_clip + last_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
+        "summary": "创建 Wan 2.7 视频续写任务",
+        "description": "提交一个异步 Ali `wan2.7-i2v` 视频续写任务。\n\n使用 `first_clip` 指定首段视频，可选搭配 `last_frame` 作为尾帧参考。\n\n支持的 `media` 组合：\n- `first_clip`\n- `first_clip + last_frame`\n\n`prompt` 字段为可选。`size` 仅支持 `720P` 和 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。同时支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 和 `seed`。",
         "operationId": "aliWan27I2VVideoContinuation",
         "tags": [
-          "Wan 2.7 Video"
+          "Wan 2.7 视频"
         ],
         "requestBody": {
           "required": true,
@@ -39,10 +39,10 @@
               },
               "examples": {
                 "first_clip_only": {
-                  "summary": "仅使用首段视频",
+                  "summary": "仅首段视频",
                   "value": {
                     "model": "wan2.7-i2v",
-                    "prompt": "角色继续自然地向前行走，保持与输入片段一致的风格。",
+                    "prompt": "角色继续自然地向前行走，保持与输入片段相同的风格。",
                     "media": [
                       {
                         "type": "first_clip",
@@ -57,7 +57,7 @@
                   "summary": "首段视频 + 尾帧",
                   "value": {
                     "model": "wan2.7-i2v",
-                    "prompt": "角色从行走自然过渡到站立姿态。",
+                    "prompt": "角色从行走自然过渡到站立姿势。",
                     "media": [
                       {
                         "type": "first_clip",
@@ -71,25 +71,6 @@
                     "seconds": "5",
                     "size": "1080P"
                   }
-                },
-                "first_clip_with_audio": {
-                  "summary": "首段视频 + 驱动音频",
-                  "value": {
-                    "model": "wan2.7-i2v",
-                    "prompt": "角色自然地继续动作，伴随音频。",
-                    "media": [
-                      {
-                        "type": "first_clip",
-                        "url": "https://example.com/assets/input.mp4"
-                      },
-                      {
-                        "type": "driving_audio",
-                        "url": "https://example.com/assets/voice.mp3"
-                      }
-                    ],
-                    "seconds": "8",
-                    "size": "720P"
-                  }
                 }
               }
             }
@@ -97,7 +78,7 @@
         },
         "responses": {
           "200": {
-            "description": "提交成功，返回统一的 OpenAI 风格视频任务对象。",
+            "description": "提交成功。返回一个 OpenAI 兼容的视频任务对象。",
             "content": {
               "application/json": {
                 "schema": {
@@ -107,7 +88,7 @@
             }
           },
           "400": {
-            "description": "请求参数非法，例如 `media` 组合不受支持，或 `size` / `seconds` 超出项目当前支持范围。",
+            "description": "请求参数无效，例如不支持的 `media` 组合，或 `size` / `seconds` 超出支持范围。",
             "content": {
               "application/json": {
                 "schema": {
@@ -129,7 +110,7 @@
             }
           },
           "401": {
-            "description": "鉴权失败。",
+            "description": "认证失败。",
             "content": {
               "application/json": {
                 "schema": {
@@ -139,7 +120,7 @@
             }
           },
           "429": {
-            "description": "请求频率过高或额度不足。",
+            "description": "触发限流或账户配额不足。",
             "content": {
               "application/json": {
                 "schema": {
@@ -149,7 +130,7 @@
             }
           },
           "500": {
-            "description": "服务端处理失败。",
+            "description": "处理请求时发生内部错误。",
             "content": {
               "application/json": {
                 "schema": {
@@ -168,11 +149,11 @@
     },
     "/v1/videos/{task_id}": {
       "get": {
-        "summary": "查询 wan2.7-i2v 视频续写任务",
-        "description": "根据公开任务 ID 查询 `wan2.7-i2v` 视频续写异步任务的最新状态。",
+        "summary": "查询 Wan 2.7 视频续写任务",
+        "description": "通过公开任务 ID 查询 `wan2.7-i2v` 视频续写异步任务的最新状态。",
         "operationId": "aliWan27I2VVideoContinuationQuery",
         "tags": [
-          "Wan 2.7 Video"
+          "Wan 2.7 视频"
         ],
         "parameters": [
           {
@@ -197,7 +178,7 @@
             }
           },
           "400": {
-            "description": "任务 ID 非法。",
+            "description": "无效的任务 ID。",
             "content": {
               "application/json": {
                 "schema": {
@@ -207,7 +188,7 @@
             }
           },
           "401": {
-            "description": "鉴权失败。",
+            "description": "认证失败。",
             "content": {
               "application/json": {
                 "schema": {
@@ -241,7 +222,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "API Key",
-        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+        "description": "在请求头中传递 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {
@@ -257,11 +238,11 @@
             "enum": [
               "wan2.7-i2v"
             ],
-            "description": "模型名称。可选值：`wan2.7-i2v`。"
+            "description": "模型名称。可用值：`wan2.7-i2v`。"
           },
           "prompt": {
             "type": "string",
-            "description": "文本提示词。用来描述生成视频中期望包含的元素和视觉特点。支持中英文，长度不超过5000个字符。每个汉字/字母占一个字符，超过部分会自动截断。"
+            "description": "描述期望视频内容与视觉特征的文本提示词。支持中英文，最多 5000 个字符（每个汉字、字母、数字、标点均计为 1 个字符）。超出部分会自动截断。"
           },
           "size": {
             "type": "string",
@@ -269,12 +250,12 @@
               "720P",
               "1080P"
             ],
-            "description": "指定生成的视频分辨率档位，用于控制视频的清晰度（总像素）。\n\n模型根据选择的分辨率档位，自动缩放至相近总像素。视频宽高比尽量与输入素材（首帧或首段视频）保持一致。",
+            "description": "指定输出分辨率档位，用于控制视频清晰度（总像素数）。\n\n模型会根据所选分辨率档位自动缩放到相近的总像素数。视频宽高比会尽量保持与输入素材（首帧或首段视频）一致。",
             "default": "1080P"
           },
           "seconds": {
             "type": "string",
-            "description": "视频时长的字符串形式。当前支持 `2` 到 `15` 的整数字符串。",
+            "description": "视频时长（字符串形式）。支持 `2` 到 `15` 的整数字符串。",
             "default": "5",
             "enum": [
               "2",
@@ -295,26 +276,26 @@
           },
           "negative_prompt": {
             "type": "string",
-            "description": "反向提示词，用来描述不希望在视频画面中看到的内容，可以对视频画面进行限制。支持中英文，长度不超过500个字符，超过部分会自动截断。示例值：低分辨率、错误、最差质量、低质量、残缺、多余的手指、比例不良等。"
+            "description": "负向提示词，描述不希望出现的视频内容。支持中英文，最多 500 个字符。超出部分会自动截断。示例：`低分辨率、最差质量、变形、多余手指、比例失调`。"
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "是否开启 prompt 智能改写。开启后使用大模型对输入 prompt 进行智能改写。对于较短的 prompt 生成效果提升明显，但会增加耗时。`true`（默认值）：开启智能改写。`false`：不开启智能改写。"
+            "description": "是否开启智能改写提示词。开启后，会使用大模型对输入提示词进行智能改写，对短提示词效果提升显著，但会增加处理耗时。`true`（默认）：开启。`false`：关闭。"
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印标识，水印位于视频右下角，文案固定为 \"AI生成\"。`false`（默认值）：不添加水印。`true`：添加水印。",
+            "description": "是否添加水印。水印位于右下角，文字为“AI生成”。`false`（默认）：不添加。`true`：添加。",
             "default": false
           },
           "seed": {
             "type": "integer",
             "minimum": 0,
             "maximum": 2147483647,
-            "description": "随机数种子，取值范围为 [0, 2147483647]。未指定时，系统自动生成随机种子。若需提升生成结果的可复现性，建议固定 seed 值。请注意，由于模型生成具有概率性，即使使用相同 seed，也不能保证每次生成结果完全一致。"
+            "description": "随机种子，范围 [0, 2147483647]。未指定时系统自动生成随机种子。为了获得更稳定的复现效果，建议设置固定种子。注意：由于模型生成具有概率性，即使相同种子也不能保证每次结果完全一致。"
           },
           "media": {
             "type": "array",
-            "description": "媒体素材列表，用于指定视频生成所需的参考素材（图像、音频和视频）。数组的每个元素为一个媒体对象，包含 type 与 url 字段。\n\n素材组合（仅支持以下特定的组合，非法组合将报错）：\n- **仅首段视频**：`first_clip`\n- **首段视频 + 尾帧**：`first_clip` + `last_frame`\n- **首段视频 + 音频**：`first_clip` + `driving_audio`\n- **首段视频 + 尾帧 + 音频**：`first_clip` + `last_frame` + `driving_audio`\n\n每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_clip）。",
+            "description": "用于视频生成的媒体资源（图片、音频、视频）列表。每个元素都是一个包含 `type` 和 `url` 的媒体对象。\n\n支持的组合（非法组合会返回错误）：\n- **仅首段视频**：`first_clip`\n- **首段视频 + 尾帧**：`first_clip` + `last_frame`\n\n数组中每个 `type` 最多出现一次。",
             "items": {
               "$ref": "#/components/schemas/Wan27MediaInput"
             }
@@ -335,11 +316,11 @@
               "last_frame",
               "driving_audio"
             ],
-            "description": "媒体素材类型。可选值为：\n- `first_clip`：首段视频。\n- `last_frame`：尾帧。\n- `driving_audio`：驱动音频。\n\n使用限制：每种 type 在 media 数组中最多出现一次（例如：不可同时传入两个 first_clip）。"
+            "description": "媒体资源类型。\n- `first_clip`：首段视频。\n- `last_frame`：尾帧图片。\n- `driving_audio`：驱动音频。\n\n每个类型在单次请求中最多出现一次（例如不能包含两个 `first_clip` 条目）。"
           },
           "url": {
             "type": "string",
-            "description": "媒体素材URL。素材包括图像、音频和视频。\n\n**传入视频（type=first_clip）**\n\n首段视频URL。\n\n视频限制：\n\n- 格式：MP4。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过100MB。\n- 时长：不超过30秒。\n\n**传入图像（type=last_frame）**\n\n尾帧 URL，或 Base64 编码数据。\n\n图像限制：\n\n- 格式：JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 或 HTTPS 协议。\n\n示例值：`https://xxx/xxx.png`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：`oss://dashscope-instant/xxx/xxx.png`。\n\nBase64 编码图像后的字符串：\n\n数据格式：data:{MIME_type};base64,{base64_data}。\n\n示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ......（示例已截断，仅做演示）。\n\nBase64编码数据格式\n\n格式： data:{MIME_type};base64,{base64_data} 。\n\n{base64_data}：图像文件经过 Base64 编码后的字符串。\n\n{MIME_type}：图像的媒体类型，需与文件格式对应。\n\n图像格式与MIME Type对照\n\n| 图像格式 | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
+            "description": "媒体资源 URL。支持图片、音频和视频。\n\n**音频**（type=`driving_audio`）\n\n音频文件的 URL。\n\n- **传入音频**：模型将以该音频为驱动源生成视频（如口型同步、动作卡点等）。\n- **未传入音频**：模型将根据视频画面内容，自动生成匹配的背景音乐或音效。\n\n音频限制：\n\n- 格式：wav、mp3。\n- 时长：2～30s。\n- 文件大小：不超过15MB。\n- 截断处理：若音频长度超过 duration 值（如5秒），自动截取前5秒，其余部分丢弃。若音频长度不足视频时长，超出音频长度部分为无声视频。例如，音频为3秒，视频时长为5秒，输出视频前3秒有声，后2秒无声。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 和 HTTPS 协议。\n\n示例值：`https://xxx/xxx.mp3`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：`oss://dashscope-instant/xxx/xxx.mp3`。\n\n**视频**（type=`first_clip`）\n\n视频文件的 URL。模型将基于该视频内容进行续写生成，续写时长的上限由 duration 参数控制。\n\n例如：当duration=15时，输入视频 3 秒，则模型续写生成 12 秒，最终输出视频总时长 15 秒， 按 15 秒计费。\n\n视频限制：\n\n- 格式：mp4、mov。\n- 时长：2～10s。\n- 分辨率：宽和高的范围为[240, 4096]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过100MB。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 和 HTTPS 协议。\n\n示例值：`https://xxx/xxx.mp4`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：`oss://dashscope-instant/xxx/xxx.mp4`。\n\n**图片**（type=`last_frame`）：尾帧图片的 URL 或 Base64 编码数据。\n\n图片限制：\n- 格式：JPEG、JPG、PNG（无透明通道）、BMP、WEBP。\n- 分辨率：宽和高的范围为[240, 8000]像素。\n- 宽高比：1:8～8:1。\n- 文件大小：不超过20MB。\n\n支持输入的格式：\n\n公网URL：\n\n支持 HTTP 或 HTTPS 协议。\n\n示例值：`https://xxx/xxx.png`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：`oss://dashscope-instant/xxx/xxx.png`。\n\nBase64 编码图片字符串：\n\n数据格式：data:{MIME_type};base64,{base64_data}。\n\n示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ...... （此处省略以演示）。\n\nBase64 编码格式说明\n\n格式：data:{MIME_type};base64,{base64_data}。\n\n{base64_data}：图片文件的 Base64 编码字符串。\n\n{MIME_type}：图片的媒体类型，对应文件格式。\n\n图片格式与 MIME Type 对应关系：\n\n| 图片格式 | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
           }
         }
       },
@@ -352,7 +333,7 @@
           },
           "task_id": {
             "type": "string",
-            "description": "公开任务 ID 的兼容别名。"
+            "description": "公开任务 ID 的向后兼容别名。"
           },
           "object": {
             "type": "string",
@@ -371,7 +352,7 @@
               "failed",
               "unknown"
             ],
-            "description": "统一的视频任务状态。"
+            "description": "统一视频任务状态。"
           },
           "progress": {
             "type": "integer",
@@ -380,7 +361,7 @@
           "created_at": {
             "type": "integer",
             "format": "int64",
-            "description": "Unix 秒级时间戳。"
+            "description": "创建时间，Unix 时间戳（秒）。"
           }
         }
       },
@@ -395,11 +376,11 @@
               "completed_at": {
                 "type": "integer",
                 "format": "int64",
-                "description": "任务进入终态后的完成时间戳。"
+                "description": "任务进入终态时的时间戳。"
               },
               "metadata": {
                 "type": "object",
-                "description": "额外的统一元数据。成功时通常会在 `metadata.url` 中返回结果下载地址。",
+                "description": "其他统一元信息。成功时 `metadata.url` 通常包含结果下载链接。",
                 "additionalProperties": true
               },
               "error": {

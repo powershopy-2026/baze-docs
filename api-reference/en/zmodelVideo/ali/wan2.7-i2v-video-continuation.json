@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan 2.7 Video Continuation",
     "version": "1.0.0",
-    "description": "Ali `wan2.7-i2v` video continuation capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the video continuation scenario and uses the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_clip`, `last_frame`, and `driving_audio`.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n- `first_clip + driving_audio`\n- `first_clip + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
+    "description": "Ali `wan2.7-i2v` video continuation capability documentation. The unified API endpoint is `/v1/videos`.\n\nThis document covers the video continuation scenario and uses the top-level `media` array to express the upstream provider's new `input.media` protocol.\n\nSupported `media.type` values for this scenario are `first_clip` and `last_frame`.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/videos": {
       "post": {
         "summary": "Create Wan 2.7 Video Continuation task",
-        "description": "Submit an asynchronous Ali `wan2.7-i2v` video continuation task.\n\nUse `first_clip` to specify the initial video segment, optionally paired with `last_frame` for an end frame reference and/or `driving_audio` for audio-driven generation.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n- `first_clip + driving_audio`\n- `first_clip + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
+        "description": "Submit an asynchronous Ali `wan2.7-i2v` video continuation task.\n\nUse `first_clip` to specify the initial video segment, optionally paired with `last_frame` for an end frame reference.\n\nSupported `media` combinations:\n- `first_clip`\n- `first_clip + last_frame`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
         "operationId": "aliWan27I2VVideoContinuation",
         "tags": [
           "Wan 2.7 Video"
@@ -70,25 +70,6 @@
                     ],
                     "seconds": "5",
                     "size": "1080P"
-                  }
-                },
-                "first_clip_with_audio": {
-                  "summary": "First clip + driving audio",
-                  "value": {
-                    "model": "wan2.7-i2v",
-                    "prompt": "The character continues the action naturally, accompanied by audio.",
-                    "media": [
-                      {
-                        "type": "first_clip",
-                        "url": "https://example.com/assets/input.mp4"
-                      },
-                      {
-                        "type": "driving_audio",
-                        "url": "https://example.com/assets/voice.mp3"
-                      }
-                    ],
-                    "seconds": "8",
-                    "size": "720P"
                   }
                 }
               }
@@ -314,7 +295,7 @@
           },
           "media": {
             "type": "array",
-            "description": "List of media assets (images, audio, video) for video generation. Each element is a media object with `type` and `url`.\n\nSupported combinations (invalid combinations will return an error):\n- **First clip only**: `first_clip`\n- **First clip + last frame**: `first_clip` + `last_frame`\n- **First clip + audio**: `first_clip` + `driving_audio`\n- **First clip + last frame + audio**: `first_clip` + `last_frame` + `driving_audio`\n\nEach `type` can appear at most once in the array.",
+            "description": "List of media assets (images, audio, video) for video generation. Each element is a media object with `type` and `url`.\n\nSupported combinations (invalid combinations will return an error):\n- **First clip only**: `first_clip`\n- **First clip + last frame**: `first_clip` + `last_frame`\n\nEach `type` can appear at most once in the array.",
             "items": {
               "$ref": "#/components/schemas/Wan27MediaInput"
             }
@@ -339,7 +320,7 @@
           },
           "url": {
             "type": "string",
-            "description": "Media asset URL. Supports images, audio, and video.\n\n**Video** (type=`first_clip`): Initial video clip URL.\n\nVideo restrictions:\n- Formats: MP4.\n- Resolution: width and height range [240, 8000] pixels.\n- Aspect ratio: 1:8 ~ 8:1.\n- File size: up to 100MB.\n- Duration: up to 30 seconds.\n\n**Image** (type=`last_frame`): Last frame URL, or Base64 encoded data.\n\nImage restrictions:\n- Formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n- Resolution: width and height range [240, 8000] pixels.\n- Aspect ratio: 1:8 ~ 8:1.\n- File size: up to 20MB.\n\nSupported input formats:\n\nPublic URL:\n\nSupports HTTP or HTTPS protocols.\n\nExample: `https://xxx/xxx.png`.\n\nTemporary URL:\n\nSupports OSS protocol. Must obtain the temporary URL via file upload.\n\nExample: `oss://dashscope-instant/xxx/xxx.png`.\n\nBase64 encoded image string:\n\nData format: data:{MIME_type};base64,{base64_data}.\n\nExample: data:image/png;base64,GDU7MtCZzEbTbmRZ...... (truncated for demonstration).\n\nBase64 encoded data format\n\nFormat: data:{MIME_type};base64,{base64_data}.\n\n{base64_data}: The Base64 encoded string of the image file.\n\n{MIME_type}: The media type of the image, corresponding to the file format.\n\nImage format to MIME Type mapping:\n\n| Image Format | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
+            "description": "Media asset URL. Supports images, audio, and video.\n\n**Audio** (type=`driving_audio`)\n\nAudio file URL.\n\n- **With audio provided**: The model uses this audio as the driving source to generate the video (e.g., lip sync, action cues, etc.).\n- **Without audio provided**: The model automatically generates matching background music or sound effects based on the video content.\n\nAudio restrictions:\n\n- Formats: WAV, MP3.\n- Duration: 2~30s.\n- File size: up to 15MB.\n- Truncation handling: If the audio length exceeds the `duration` value (e.g., 5 seconds), the first 5 seconds are automatically kept and the rest is discarded. If the audio is shorter than the video duration, the part beyond the audio length is a silent video. For example, audio is 3 seconds, video duration is 5 seconds, the output video has audio in the first 3 seconds and is silent in the last 2 seconds.\n\nSupported input formats:\n\nPublic URL:\n\nSupports HTTP and HTTPS protocols.\n\nExample: `https://xxx/xxx.mp3`.\n\nTemporary URL:\n\nSupports OSS protocol. Must obtain the temporary URL via file upload.\n\nExample: `oss://dashscope-instant/xxx/xxx.mp3`.\n\n**Video** (type=`first_clip`)\n\nVideo file URL. The model generates continuation content based on this video. The upper limit of the continuation duration is controlled by the `duration` parameter.\n\nFor example: when `duration=15` and the input video is 3 seconds, the model generates 12 seconds of continuation, the final output video has a total duration of 15 seconds, and is billed for 15 seconds.\n\nVideo restrictions:\n\n- Formats: MP4, MOV.\n- Duration: 2~10s.\n- Resolution: width and height range [240, 4096] pixels.\n- Aspect ratio: 1:8 ~ 8:1.\n- File size: up to 100MB.\n\nSupported input formats:\n\nPublic URL:\n\nSupports HTTP and HTTPS protocols.\n\nExample: `https://xxx/xxx.mp4`.\n\nTemporary URL:\n\nSupports OSS protocol. Must obtain the temporary URL via file upload.\n\nExample: `oss://dashscope-instant/xxx/xxx.mp4`.\n\n**Image** (type=`last_frame`): Last frame URL, or Base64 encoded data.\n\nImage restrictions:\n- Formats: JPEG, JPG, PNG (no alpha channel), BMP, WEBP.\n- Resolution: width and height range [240, 8000] pixels.\n- Aspect ratio: 1:8 ~ 8:1.\n- File size: up to 20MB.\n\nSupported input formats:\n\nPublic URL:\n\nSupports HTTP or HTTPS protocols.\n\nExample: `https://xxx/xxx.png`.\n\nTemporary URL:\n\nSupports OSS protocol. Must obtain the temporary URL via file upload.\n\nExample: `oss://dashscope-instant/xxx/xxx.png`.\n\nBase64 encoded image string:\n\nData format: data:{MIME_type};base64,{base64_data}.\n\nExample: data:image/png;base64,GDU7MtCZzEbTbmRZ...... (truncated for demonstration).\n\nBase64 encoded data format\n\nFormat: data:{MIME_type};base64,{base64_data}.\n\n{base64_data}: The Base64 encoded string of the image file.\n\n{MIME_type}: The media type of the image, corresponding to the file format.\n\nImage format to MIME Type mapping:\n\n| Image Format | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| BMP | image/bmp |\n| WEBP | image/webp |"
           }
         }
       },
