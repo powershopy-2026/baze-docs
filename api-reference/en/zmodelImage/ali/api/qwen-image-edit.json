@@ -254,8 +254,8 @@
           },
           "content": {
             "type": "array",
-            "minItems": 2,
-            "maxItems": 4,
+            "minItems": 1,
+            "maxItems": 3,
             "description": "Message content. Includes 1-3 images in `{\"image\":\"...\"}` format and a single edit instruction in `{\"text\":\"...\"}` format.",
             "items": {
               "$ref": "#/components/schemas/QwenImageEditContentItem"
@@ -272,7 +272,7 @@
         "properties": {
           "image": {
             "type": "string",
-            "description": "输入图像的 URL 或 Base64 编码数据。支持传入1-3张图像。\n\n多图输入时，按照数组顺序定义图像顺序，输出图像的比例以最后一张为准。\n\n图像要求：\n\n图像格式：JPG、JPEG、PNG、BMP、TIFF、WEBP和GIF。\n\n输出图像为PNG格式，对于GIF动图，仅处理其第一帧。\n图像分辨率：为获得最佳效果，建议图像的宽和高均在384像素至3072像素之间。分辨率过低可能导致生成效果模糊，过高则会增加处理时长。\n\n图像大小：不超过10MB。\n\n支持的输入格式\n\n公网URL：\n\n支持 HTTP 和 HTTPS 协议。\n\n示例值：`https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/fpakfo/image36.webp`。\n\n临时URL：\n\n支持OSS协议，必须通过上传文件获取临时 URL。\n\n示例值：oss://dashscope-instant/xxx/2024-07-18/xxx/cat.png。\n\n传入 Base64 编码图像后的字符串\n\n示例值：data:image/jpeg;base64,GDU7MtCZz...（示例已截断，仅做演示）"
+            "description": "URL or Base64-encoded data of the input image. Supports 1-3 images.\n\nFor multi-image input, the image order is defined by the array order, and the output image aspect ratio follows the last image.\n\nImage requirements:\n\nImage formats: JPG, JPEG, PNG, BMP, TIFF, WEBP, and GIF.\n\nThe output image is in PNG format; for GIF animations, only the first frame is processed.\nImage resolution: For best results, it is recommended that both width and height be between 384 and 3072 pixels. Low resolution may cause blurry results, while excessively high resolution increases processing time.\n\nImage size: No more than 10MB.\n\nSupported input formats\n\nPublic URL:\n\nSupports HTTP and HTTPS protocols.\n\nExample: `https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20250925/fpakfo/image36.webp`.\n\nTemporary URL:\n\nSupports the OSS protocol; you must upload a file to obtain a temporary URL.\n\nExample: oss://dashscope-instant/xxx/2024-07-18/xxx/cat.png.\n\nBase64-encoded image string\n\nExample: data:image/jpeg;base64,GDU7MtCZz... (truncated for demonstration only)"
           },
           "text": {
             "type": "string",
