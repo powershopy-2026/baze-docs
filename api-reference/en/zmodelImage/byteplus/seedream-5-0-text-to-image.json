@@ -25,12 +25,12 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream 5.0 Text-to-Image",
-        "description": "Supported models include `seedream-5-0-260128`. This document covers Text-to-Image and Sequential Image Generation scenarios. Public fields include `model`, `prompt`, `size`, `seed`, `sequential_image_generation`, `sequential_image_generation_options`, `response_format`, and `watermark`.",
+        "description": "Supported models include `seedream-5-0-260128`. This document covers Text-to-Image and Sequential Image Generation scenarios. Public fields include `model`, `prompt`, `image`, `size`, `seed`, `sequential_image_generation`, `sequential_image_generation_options`, `response_format`, and `watermark`.",
         "operationId": "byteplusTextToImage50",
         "tags": [
           "Seedream Image"
         ],
-        "Query Video Generation TaskBody": {
+        "requestBody": {
           "required": true,
           "content": {
             "application/json": {
@@ -83,20 +83,20 @@
             }
           },
           "400": {
-            "description": "Invalid Query Video Generation Task parameters.",
+            "description": "Invalid request parameters.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "invalid_Query Video Generation Task": {
+                  "invalid_request": {
                     "summary": "Parameter Error",
                     "value": {
                       "error": {
-                        "message": "Invalid Query Video Generation Task body format or field value",
-                        "type": "invalid_Query Video Generation Task_error",
-                        "code": "bad_Query Video Generation Task_body",
+                        "message": "Invalid request body format or field value",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
                         "param": ""
                       }
                     }
@@ -152,7 +152,7 @@
             }
           },
           "500": {
-            "description": "Internal error occurred while processing the Query Video Generation Task.",
+            "description": "Internal error occurred while processing the request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -189,7 +189,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "Pass in the Query Video Generation Task header as `Authorization: Bearer <token>`."
+        "description": "Pass in the request header as `Authorization: Bearer <token>`."
       }
     },
     "schemas": {
@@ -207,7 +207,7 @@
             ],
             "description": "The name of the image generation model. Supported models include `seedream-5-0-260128`."
           },
-           "prompt": {
+          "prompt": {
             "type": "string",
             "description": "The prompt for generating images. Supports both Chinese and English. It is recommended not to exceed 300 Chinese characters or 600 English words. If the prompt is too long, the information may be diluted, causing the model to ignore details and focus only on key points, resulting in missing elements in the image.",
             "example": "Vibrant close-up editorial portrait, model with sharp eyes, wearing a sculptural hat, rich color blocking."

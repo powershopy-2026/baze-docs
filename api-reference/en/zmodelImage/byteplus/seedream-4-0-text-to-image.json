@@ -30,7 +30,7 @@
         "tags": [
           "Seedream Image"
         ],
-        "Query Video Generation TaskBody": {
+        "requestBody": {
           "required": true,
           "content": {
             "application/json": {
@@ -83,20 +83,20 @@
             }
           },
           "400": {
-            "description": "Invalid Query Video Generation Task parameters.",
+            "description": "Invalid request parameters.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "invalid_Query Video Generation Task": {
+                  "invalid_request": {
                     "summary": "Parameter Error",
                     "value": {
                       "error": {
-                        "message": "Invalid Query Video Generation Task body format or field value",
-                        "type": "invalid_Query Video Generation Task_error",
-                        "code": "bad_Query Video Generation Task_body",
+                        "message": "Invalid request body format or field value",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
                         "param": ""
                       }
                     }
@@ -152,7 +152,7 @@
             }
           },
           "500": {
-            "description": "Internal error occurred while processing the Query Video Generation Task.",
+            "description": "Internal error occurred while processing the request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -189,7 +189,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "Pass in the Query Video Generation Task header as `Authorization: Bearer <token>`."
+        "description": "Pass in the request header as `Authorization: Bearer <token>`."
       }
     },
     "schemas": {
