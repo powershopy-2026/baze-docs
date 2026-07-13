@@ -28,7 +28,7 @@
         "description": "Call the Image Generation model to generate images based on text prompts. Supports Text-to-Image, Image-to-Image, multi-image fusion, batch sequential generation, and other modes.\n\nOverview of Image Generation capabilities supported by different models:\n- **seedream 5.0/4.5/4.0**: Generate sequential images (requires `sequential_image_generation` set to `auto`)\n  - Multi-image to sequential: Generate a set of content-related images based on multiple reference images (2-14) + text prompt (number of input reference images + number of final generated images ≤ 15)\n  - Single image to sequential: Generate a set of content-related images based on a single reference image + text prompt (up to 14 images)\n  - Text to sequential: Generate a set of content-related images based on text prompt (up to 15 images)\n- **seedream 5.0/4.5/4.0**: Generate single image (set `sequential_image_generation` to `disabled`)\n  - Multi Image-to-Image: Generate a single image based on multiple reference images (2-14) + text prompt\n  - Single Image-to-Image: Generate a single image based on a single reference image + text prompt\n  - Text-to-Image: Generate a single image based on text prompt",
         "operationId": "seedreamImageCreate",
         "tags": ["Seedream API Compat"],
-        "Query Video Generation TaskBody": {
+        "requestBody": {
           "required": true,
           "content": {
             "application/json": {
@@ -160,7 +160,7 @@
                       }
                     }
                   },
-                  "多图": {
+                  "Multiple Images": {
                     "summary": "Multiple Images Output",
                     "value": {
                       "model": "seedream-4-0-250828",
@@ -199,19 +199,19 @@
             }
           },
           "400": {
-            "description": "Invalid Query Video Generation Task parameters.",
+            "description": "Invalid request parameters.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "invalid_Query Video Generation Task": {
+                  "invalid_request": {
                     "summary": "Parameter Error",
                     "value": {
                       "error": {
-                        "code": "bad_Query Video Generation Task_body",
-                        "message": "Invalid Query Video Generation Task body format or field value"
+                        "code": "bad_request_body",
+                        "message": "Invalid request body format or field value"
                       }
                     }
                   }
@@ -266,7 +266,7 @@
             }
           },
           "500": {
-            "description": "Internal error occurred while processing the Query Video Generation Task.",
+            "description": "Internal error occurred while processing the request.",
             "content": {
               "application/json": {
                 "schema": {
@@ -303,7 +303,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "Pass in the Query Video Generation Task header as `Authorization: Bearer <token>`."
+        "description": "Pass in the request header as `Authorization: Bearer <token>`."
       }
     },
     "schemas": {
@@ -449,10 +449,10 @@
             "items": {
               "type": "object",
               "properties": {
-                  "type": {
-                    "type": "string",
-                    "description": "The configured tool type.\n- `web_search`: Web search tool."
-                  }
+                "type": {
+                  "type": "string",
+                  "description": "The configured tool type.\n- `web_search`: Web search tool."
+                }
               }
             }
           },
@@ -514,7 +514,7 @@
           },
           "size": {
             "type": "string",
-            "description": "Only supported by seedream 5.0/4.5/4.0. The pixel dimensions of the image, in the format <width>x<height>, e.g., 2048×2048."
+            "description": "Only supported by seedream 5.0/4.5/4.0. The pixel dimensions of the image, in the format <width>x<height>, e.g., 2048x2048."
           },
           "error": {
             "type": "object",
