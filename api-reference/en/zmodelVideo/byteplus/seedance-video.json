@@ -3,12 +3,12 @@
   "info": {
     "title": "Seedance Video Generation",
     "version": "1.0.0",
-    "description": "This topic describes the input and output parameters of the API for creating video generation for your reference. The model will generate a video based on the input image and text information. After the generation is completed, you can query tasks by conditions and obtain the generated video.\n\n## Model Capabilities\n\n* **Dreamina Seedance 2.0 & 2.0 fast (audio video / silent video)**\n   * **Multimodal reference-based video generation**: Input reference images (0-9) + videos (0-3) + audio (0-3) + text prompt (optional) to generate one video. Note: You cannot input audio alone. At least 1 reference video or image must be included. Supports generating new videos, editing videos, and extending videos.\n   * **Image to video (first and last frames)**: Input first frame image, last frame image and optional text prompt to generate 1 target video.\n   * **Image to video (first frame)**: Input first frame image and optional text prompt to generate 1 target video.\n   * **Text to video**: Input text prompt to generate 1 target video.\n\n* **Seedance 1.5 Pro (audio video / silent video)**\n   [Image to video - first and last frames] [Image to video - first frame] [Text to video]\n\n* **Seedance 1.0 Pro**\n   [Image to video - first and last frames] [Image to video - first frame] [Text to video]\n\n* **Seedance 1.0 Pro Fast**\n   [Image to video - first frame] [Text to video]"
+    "description": "This document describes the input and output parameters of the Create Video Generation Task API for your reference when using the interface. The model generates videos based on the input images and text information. After generation is complete, you can query the task by conditions and obtain the generated video.\n\n## Model Capabilities\n\n* **Doubao Seedance 2.0 series (audio/silent videos)**\n   * **Multimodal Reference-to-Video**：Input <ins>reference images (0~9) + reference videos (0~3) + reference audio (0~3) + text prompt (optional)</ins> to generate 1 target video. Note that audio cannot be input alone; at least 1 reference video or image must be included. Supports generating new videos, editing videos, and extending videos.\n   * ****Image-to-Video (First & Last Frame)**: Input <ins>first frame image + last frame image + text prompt (optional)</ins> to generate 1 target video.\n   * ****Image-to-Video (First Frame)**: Input <ins>first frame image + text prompt (optional)</ins> to generate 1 target video.\n   * **Text-to-Video**：Input <ins>text prompt</ins> to generate 1 target video.\n\n* **Doubao Seedance 1.5 pro（audio/silent videos)**\n   【Image-to-Video (First & Last Frame), Image-to-Video (First Frame), Text-to-Video\n\n* **Doubao Seedance 1.0 pro**\n   【Image-to-Video (First & Last Frame), Image-to-Video (First Frame), Text-to-Video\n\n* **Doubao Seedance 1.0 pro fast**\n   【Image-to-Video (First Frame), Text-to-Video"
   },
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Volcano Ark API Service"
+      "description": "Baze API server endpoint"
     }
   ],
   "paths": {
@@ -16,7 +16,7 @@
       "post": {
         "summary": "Create Video Generation Task",
         "operationId": "createSeedanceVideoTask",
-        "description": "This topic describes the input and output parameters of the API for creating video generation for your reference. The model will generate a video based on the input image and text information. After the generation is completed, you can query tasks by conditions and obtain the generated video.\n\n## Model Capabilities\n\n* **Dreamina Seedance 2.0 & 2.0 fast (audio video / silent video)**\n   * **Multimodal reference-based video generation**: Input reference images (0-9) + videos (0-3) + audio (0-3) + text prompt (optional) to generate one video. Note: You cannot input audio alone. At least 1 reference video or image must be included. Supports generating new videos, editing videos, and extending videos.\n   * **Image to video (first and last frames)**: Input first frame image, last frame image and optional text prompt to generate 1 target video.\n   * **Image to video (first frame)**: Input first frame image and optional text prompt to generate 1 target video.\n   * **Text to video**: Input text prompt to generate 1 target video.\n\n* **Seedance 1.5 Pro (audio video / silent video)**\n   [Image to video - first and last frames] [Image to video - first frame] [Text to video]\n\n* **Seedance 1.0 Pro**\n   [Image to video - first and last frames] [Image to video - first frame] [Text to video]\n\n* **Seedance 1.0 Pro Fast**\n   [Image to video - first frame] [Text to video]",
+        "description": "This document describes the input and output parameters of the Create Video Generation Task API for your reference when using the interface. The model generates videos based on the input images and text information. After generation is complete, you can query the task by conditions and obtain the generated video.\n\n## Model Capabilities\n\n* **Doubao Seedance 2.0 series (audio/silent videos)**\n   * **Multimodal Reference-to-Video**：Input <ins>reference images (0~9) + reference videos (0~3) + reference audio (0~3) + text prompt (optional)</ins> to generate 1 target video. Note that audio cannot be input alone; at least 1 reference video or image must be included. Supports generating new videos, editing videos, and extending videos.\n   * ****Image-to-Video (First & Last Frame)**: Input <ins>first frame image + last frame image + text prompt (optional)</ins> to generate 1 target video.\n   * ****Image-to-Video (First Frame)**: Input <ins>first frame image + text prompt (optional)</ins> to generate 1 target video.\n   * **Text-to-Video**：Input <ins>text prompt</ins> to generate 1 target video.\n\n* **Doubao Seedance 1.5 pro（audio/silent videos)**\n   【Image-to-Video (First & Last Frame), Image-to-Video (First Frame), Text-to-Video\n\n* **Doubao Seedance 1.0 pro**\n   【Image-to-Video (First & Last Frame), Image-to-Video (First Frame), Text-to-Video\n\n* **Doubao Seedance 1.0 pro fast**\n   【Image-to-Video (First Frame), Text-to-Video",
         "requestBody": {
           "required": true,
           "content": {
@@ -25,14 +25,13 @@
                 "$ref": "#/components/schemas/CreateVideoTaskRequest"
               },
               "examples": {
-                "multimodal_reference": {
-                  "summary": "Multimodal reference video generation",
+                "Multimodal Reference-to-Video": {
                   "value": {
                     "model": "dreamina-seedance-2-0-260128",
                     "content": [
                       {
                         "type": "text",
-                        "text": "Use the first-person perspective composition of Video 1 throughout, and use Audio 1 as the background music throughout. First-person perspective fruit tea advertisement, Seedance brand \"Ping Ping An An\" apple fruit tea limited edition; the first frame is Image 1, your hand picks a dewy Aksu red apple, crisp apple collision sound; 2-4 seconds: quick cut, your hand drops apple pieces into a shaker cup, adds ice and tea base, shakes vigorously, ice collision and shaking sounds sync with upbeat drums, background voice: \"Fresh-cut, fresh-shake\"; 4-6 seconds: first-person close-up of the finished product, layered fruit tea is poured into a transparent cup, your hand gently squeezes the cream foam to spread on top, sticks a pink-red label on the cup body, the camera zooms in to show the layered texture of cream foam and fruit tea; 6-8 seconds: first-person holding up the cup, you hold the fruit tea from Image 2 in front of the camera (simulating the perspective of handing it to the viewer), the cup label is clearly visible, background voice \"Take a sip of freshness\", the last frame freezes on Image 2. Background voice is uniformly female voice."
+                        "text": "Use the first-person composition of video 1 throughout, with audio 1 as background music throughout. First-person fruit tea promotional ad, seedance brand \"Peace & Sweet\" Apple Fruit Tea Limited Edition; First frame is image 1, your hand picks an Aksu red apple with morning dew, crisp apple crunch sound; 2-4s: Quick cut, your hand throws apple chunks into a shaker, adds ice and tea base, shakes vigorously, ice clinking and shaking sounds sync with upbeat drum beats, background audio: \"Freshly Cut, Freshly Shaken\"; 4-6s: First-person product close-up, layered fruit tea poured into a clear cup, your hand gently spreads cream cheese topping, sticks a pink-gold label on the cup, camera zooms in on the layered texture of cream and fruit tea; 6-8s: First-person hand holding the cup, you raise the fruit tea from image 2 to the camera (simulating handing it to the viewer), cup label clearly visible, background audio \"Take a Fresh Sip\", final frame frozen on image 2. All background audio uses a female voice."
                       },
                       {
                         "type": "image_url",
@@ -69,14 +68,13 @@
                     "watermark": false
                   }
                 },
-                "image_to_video_first_frame": {
-                  "summary": "Image to video - first frame (with audio)",
+                "Audio Video - First Frame": {
                   "value": {
                     "model": "seedance-1-5-pro-251215",
                     "content": [
                       {
                         "type": "text",
-                        "text": "The girl holds a fox, the girl opens her eyes and looks gently at the camera, the fox is held friendly, the camera slowly pulls out, the girl's hair is blown by the wind, and the sound of wind can be heard"
+                        "text": "A girl holding a fox, the girl opens her eyes and looks gently at the camera, the fox holds her affectionately, the camera slowly pulls out, the girl's hair blows in the wind, wind sounds can be heard"
                       },
                       {
                         "type": "image_url",
@@ -91,14 +89,13 @@
                     "watermark": false
                   }
                 },
-                "image_to_video_first_last_frame": {
-                  "summary": "Image to video - first and last frames (with audio)",
+                "Audio Video - First & Last Frame": {
                   "value": {
                     "model": "seedance-1-5-pro-251215",
                     "content": [
                       {
                         "type": "text",
-                        "text": "The girl in the picture says \"cheese\" to the camera, 360-degree revolving camera movement"
+                        "text": "The girl in the picture says \"Cheese\" to the camera, with a 360-degree orbiting camera movement"
                       },
                       {
                         "type": "image_url",
@@ -121,14 +118,13 @@
                     "watermark": false
                   }
                 },
-                "image_to_video_base64": {
-                  "summary": "Image to video - Base64 encoding",
+                "Image-to-Video - Base64": {
                   "value": {
                     "model": "dreamina-seedance-2-0-260128",
                     "content": [
                       {
                         "type": "text",
-                        "text": "The girl holds a fox, the girl opens her eyes and looks gently at the camera, the fox is held friendly, the camera slowly pulls out, the girl's hair is blown by the wind"
+                        "text": "A girl holding a fox, the girl opens her eyes and looks gently at the camera, the fox holds her affectionately, the camera slowly pulls out, the girl's hair blows in the wind"
                       },
                       {
                         "type": "image_url",
@@ -142,14 +138,13 @@
                     "watermark": false
                   }
                 },
-                "text_to_video": {
-                  "summary": "Text to video",
+                "Text-to-Video": {
                   "value": {
                     "model": "seedance-1-0-pro-250528",
                     "content": [
                       {
                         "type": "text",
-                        "text": "Realistic style, under a clear blue sky, a large field of white daisies, the camera gradually zooms in and finally freezes on a close-up of a daisy, with several crystal-clear dewdrops on the petals"
+                        "text": "Realistic style, under a clear blue sky, a large field of white daisies, the camera gradually zooms in, finally focused on a close-up of a daisy, with crystal clear dewdrops on the petals"
                       }
                     ],
                     "ratio": "16:9",
@@ -219,11 +214,11 @@
               "dreamina-seedance-2-0-260128",
               "dreamina-seedance-2-0-fast-260128"
             ],
-            "description": "ID of the model you need to call. You can activate a model service and query the model ID.\n\nYou can also use an endpoint ID to call a model for advanced capabilities such as rate limiting, billing type (prepaid/postpaid), runtime status query, monitoring, and security."
+            "description": "The ID of the model you need to call (Model ID)"
           },
           "content": {
             "type": "array",
-            "description": "The references provided to the model for video generation, supporting text, image, audio, video, and sample task ID.\n\nCaution: Seedance 2.0 series models do not support direct upload of reference images or videos containing real human faces. \n\n* Supports using original outputs containing human faces from certain models as input assets\n* Supports using preset digital characters as input assets\n* Supports using authorized real-person assets as input assets\n\nThe following combinations are supported:\n* Text\n* Text (optional) + image\n* Text (optional) + video\n* Text (optional) + image + audio\n* Text (optional) + image + video\n* Text (optional) + video + audio\n* Text (optional) + image + video + audio\n* Sample task ID: A sample video generated using the seedance model. The model can generate a high-quality official video based on the sample.\n\n---",
+            "description": "Input information for the model to generate videos. Supports text, images, audio, video, and draft task IDs.\n\nNote: Seedance 2.0 series models do not support directly uploading reference images/videos containing real human faces. To facilitate creators' use of portraits, the platform provides the following solutions:\n\n* Supports using face-containing raw outputs from certain models as input materials\n* Supports using preset virtual avatars as input materials\n* Supports using authorized real-person materials as input\n\nSupports the following combinations:\n* Text\n* Text (optional) + Image\n* Text (optional) + Video\n* Text (optional) + Image + Audio\n* Text (optional) + Image + Video\n* Text (optional) + Video + Audio\n* Text (optional) + Image + Video + Audio\n* Draft task ID: A draft refers to a sample video successfully generated using the Seedance model. The model can generate high-quality final videos based on the draft.\n\n---",
             "items": {
               "oneOf": [
                 {
@@ -256,11 +251,11 @@
           },
           "callback_url": {
             "type": "string",
-            "description": "Fill in the callback notification address for the result of this generation task. When the status of the video generation task changes, ModelArk will send a POST request to this address.\n\nThe callback request content structure is consistent with the response body.\n\nThe status returned by the callback can be one of the following values:\n* queued: In queue.\n* running: Task is running.\n* succeeded: Task succeeded. (If sending fails, that is, no successful delivery confirmation is received within 5 seconds, the callback will be retried 3 times.)\n* failed: Task failed. (If sending fails, that is, no successful delivery confirmation is received within 5 seconds, the callback will be retried 3 times.)\n* expired: Task timed out, that is, the task has been in running or queued state for longer than the expiration time. You can set the expiration time via the execution_expires_after parameter."
+            "description": "The callback notification URL for the generation task results. When the video generation task status changes, the platform will send a POST request to this URL.\n\nThe callback request body structure is the same as the query task API response.\n\nThe callback status includes the following states:\n* queued: In queue.\n* running: Task running.\n* succeeded: Task successful. (If sending fails, i.e., no successful delivery within 5 seconds, retry up to 3 times)\n* failed: Task failed. (If sending fails, i.e., no successful delivery within 5 seconds, retry up to 3 times)\n* expired: Task timed out, meaning the task has been in running or queued state beyond the expiration time. Can be configured via the execution_expires_after field."
           },
           "return_last_frame": {
             "type": "boolean",
-            "description": "true: Return the last frame image of the generated video. After setting it to true, you can get the last frame image of the video. The last frame image is in PNG format. Its width and height pixels are consistent with the generated video, and it has no watermark.\n\nThis parameter can be used to generate multiple consecutive videos: use the last frame of the previously generated video as the first frame of the next video task to quickly generate multiple consecutive videos.\n\nfalse: Do not return the last frame image of the generated video.",
+            "description": "true: Return the last frame image of the generated video. When set to true, you can obtain the last frame image through the query video generation task API. The last frame image is in PNG format with the same pixel dimensions as the generated video, without watermarks.\n\nUse this parameter to generate multiple consecutive videos: use the last frame of one video as the first frame of the next video task to quickly generate a sequence of consecutive videos.\n\nfalse: Do not return the last frame image of the generated video.",
             "default": false
           },
           "service_tier": {
@@ -269,29 +264,29 @@
               "default",
               "flex"
             ],
-            "description": "> Modifying the service tier of a submitted task is not supported.\n> The Seedance 2.0 series supports only online inference mode and does not support configuring this parameter.\nWe have not yet integrated offline inference.\n\nSpecify the service tier type for processing this request. Valid values:\n\n* default: Online inference mode, with lower RPM and concurrency quotas , suitable with high requirements for inference efficiency.\n* flex: Offline inference mode, with higher TPD quota , priced at 50% of online inference, suitable for scenarios with high tolerance for inference latency.",
+            "description": "> The service tier of a submitted task cannot be modified\n> Seedance 2.0 series only supports online inference mode and does not support this parameter\nCurrently offline inference is not yet supported\n\nSpecifies the service tier for processing this request. Enum values:\n\n* default: Online inference mode, lower RPM and concurrency quotas, suitable for scenarios requiring low-latency inference.\n* flex: Offline inference mode, higher TPD quotas, priced at 50% of online inference, suitable for scenarios with less stringent latency requirements.",
             "default": "default"
           },
           "execution_expires_after": {
             "type": "integer",
-            "description": "Task timeout threshold. Specifies the expiration time of the task after submission (unit: second), calculated from the created at timestamp. The default value is 172800 seconds, which is 48 hours. Value range: [3600, 259200].\n\nNo matter which service_tier you use, it is recommended to set an appropriate timeout according to your business scenario. After this time, the task will be automatically terminated and marked as expired status.",
+            "description": "Task timeout threshold. Specifies the expiration time after task submission (in seconds), calculated from the created_at timestamp. Default: 172800 seconds (48 hours). Range: [3600, 259200].\n\nRegardless of the service_tier used, it is recommended to set an appropriate timeout based on your business scenario. After this time, the task will be automatically terminated and marked as expired.",
             "default": 172800,
             "minimum": 3600,
             "maximum": 259200
           },
           "generate_audio": {
             "type": "boolean",
-            "description": "> Only supported by Seedance 2.0 series and Seedance 1.5 Pro\n\nControls whether the generated video includes sound synchronized with the footage.\n\n* true: The video output by the model includes synchronized audio. The model will automatically generate matching human voice, sound effects and background music based on the text prompt and visual content. It is recommended to put dialogue content in double quotes to optimize the audio generation effect.\n* false: The video output by the model is a silent video.\n\nNote: All generated videos with audio are mono, regardless of the number of channels of the input audio.",
+            "description": "> Only supported by Seedance 2.0 series and Seedance 1.5 pro\n\nControls whether the generated video contains synchronized audio.\n\n* true: The model outputs video with synchronized audio. The model automatically generates matching voice, sound effects, and background music based on the text prompt and visual content. It is recommended to place dialogue in double quotes for better audio generation. For example: The man stops the woman and says, \"Remember, never point your finger at the moon.\"\n* false: The model outputs video without audio.\n\nNote: Generated audio videos are all mono, regardless of the input audio channel count.",
             "default": true
           },
           "draft": {
             "type": "boolean",
-            "description": "> Only supported by Seedance 1.5 Pro\n\nControls whether to enable draft mode.\n\n* true: Enable draft mode, generate a preview video to quickly verify whether the scene structure, shot scheduling, subject motion match the prompt intent as expected. It consumes fewer tokens than normal videos, so the usage cost is lower.\n* false: Disable draft mode and generate a video normally.\n\nNote: After enabling draft mode, the draft video will be generated in 480p resolution (using other resolutions will cause an error). The last frame return function and offline inference function are not supported.",
+            "description": "> Only supported by Seedance 1.5 pro\n\nControls whether to enable draft mode.\n\n* true: Enable draft mode to generate a preview video, quickly verifying whether the scene structure, camera movement, subject actions, and prompt intent meet expectations. Consumes fewer tokens than normal video, reducing cost.\n* false: Disable draft mode and generate a normal video.\n\nNote: When draft mode is enabled, Draft videos are generated at 480p resolution (using other resolutions will cause an error). The last frame return feature is not supported, and offline inference is not supported.",
             "default": false
           },
           "tools": {
             "type": "array",
-            "description": "> Only supported by Seedance 2.0 series\n\nConfigure the tools the model should call. (Overseas nodes currently do not support web_search)",
+            "description": "> Only supported by Seedance 2.0 series\n\nConfigure the tools for the model to call. (Web search is currently not supported on overseas nodes)",
             "items": {
               "$ref": "#/components/schemas/Tool"
             }
@@ -303,7 +298,7 @@
           },
           "priority": {
             "type": "integer",
-            "description": "> Only supported by Seedance 2.0. (Please contact sales to obtain the maximum priority available for each user)\n\nSets the execution priority of the current request and determines its position in the queue. Valid values: 0-9. A larger value indicates a higher priority.\n\nBy default, requests are executed in FIFO (First In, First Out) order. After you set a higher priority, the request is inserted before all lower-priority requests under the same Endpoint.\n\nNotes:\n* Requests with the same priority are still ordered by FIFO.\n* Priority affects only the queue order. It does not interrupt tasks that are already running (status=running).\n* Priority takes effect only within the same Endpoint and does not affect other Endpoints.\n* Offline inference mode (service_tier=flex) does not support priority configuration.\n\n**Example**:\n\nSuppose there are 3 tasks in the queued status in the current queue of an Endpoint, all with priority 0 (default).\n\nQueue: [Task A: priority=0] → [Task B: priority=0] → [Task C: priority=0]\n\nWhen a new request with priority=5 is submitted, it will be placed at the front of the queue:\n\nQueue: [New request: priority=5] → [Task A: priority=0] → [Task B: priority=0] → [Task C: priority=0]",
+            "description": "> Only supported by Seedance 2.0 series. (Please contact sales for the maximum priority available per user)\n\nSets the execution priority of the current request, determining its position in the queue. Range: 0~9, higher values indicate higher priority.\n\nBy default, requests are executed in FIFO (First In, First Out) order. When a higher priority is set, the request will jump ahead of all lower-priority requests under the same Endpoint.\n\nNotes:\n* Requests with the same priority are still ordered by FIFO.\n* Priority only affects queue order and does not interrupt currently running (status=running) tasks.\n* Priority only takes effect within the same Endpoint and does not affect other Endpoints.\n* Offline inference mode (service_tier=flex) does not support priority configuration.\n\n**Example**:\n\nAn Endpoint currently has 3 queued (status=queued) tasks in the queue, all with priority 0 (default).\n\nQueue: [Task A: priority=0] → [Task B: priority=0] → [Task C: priority=0]\n\nWhen a new request with priority=5 is submitted, it goes directly to the front of the queue:\n\nQueue: [New Request: priority=5] → [Task A: priority=0] → [Task B: priority=0] → [Task C: priority=0]",
             "default": 0,
             "minimum": 0,
             "maximum": 9
@@ -315,7 +310,7 @@
               "720p",
               "1080p"
             ],
-            "description": "> Default value for Seedance 2.0 series and Seedance 1.5 Pro: 720p\n> Default value for Seedance 1.0 Pro & Pro Fast: 1080p\n\nVideo resolution. Valid values:\n\n* 480p\n* 720p\n* 1080p: Not supported by Seedance 2.0 Fast."
+            "description": "> Seedance 2.0 series and Seedance 1.5 pro default: `720p`\n> Seedance 1.0 pro & pro-fast default: `1080p`\n\nVideo resolution. Enum values:\n\n* 480p\n* 720p\n* 1080p: Not supported by Seedance 2.0 fast"
           },
           "ratio": {
             "type": "string",
@@ -328,42 +323,42 @@
               "21:9",
               "adaptive"
             ],
-            "description": "> Default value for Seedance 2.0 series and Seedance 1.5 Pro: adaptive\n> Other models: Default value for text to video is 16:9; default value for image to video is adaptive.\n\nAspect ratio of the generated video. The width and height pixel values corresponding to different aspect ratios are shown in the table below.\n\n* 16:9\n* 4:3\n* 1:1\n* 3:4\n* 9:16\n* 21:9\n* adaptive: Automatically select the most appropriate aspect ratio based on the input\n\n**Adaptive rules:**\n\nWhen ratio is set to adaptive, the model will automatically adapt the aspect ratio according to the generation scenario. The actual aspect ratio of the generated video can be obtained from the ratio parameter returned by the Retrieve a video generation task API.\n\n**Supported models:**\n* Supported by Seedance 2.0 series and Seedance 1.5 Pro\n* Only supported for image-to-video tasks by other models\n\n**Value rules:**\n* Text to video: Intelligently select the most appropriate aspect ratio based on the input prompt.\n* First frame / first and last frames to video: Automatically select the closest aspect ratio based on the ratio of the uploaded first frame image.\n* Multimodal reference video generation: Judged based on the intent of the user's prompt. If it is first-frame video generation/video editing/video extension, select the closest aspect ratio based on the corresponding image/video; otherwise, select the closest aspect ratio based on the first uploaded media file (priority: video > image).\n\nWidth and height pixel values corresponding to different aspect ratios\n\nNote: For image to video tasks, when the selected video aspect ratio is inconsistent with the aspect ratio of your uploaded image, ModelArk will crop your image, and the cropping will be centered.\n\n| Resolution | Aspect ratio | Width and height pixel value Seedance 1.0 series | Width and height pixel value Seedance 1.5 Pro / 2.0 series |\n|---|---|---|---|\n| 480p | 16:9 | 864×480 | 864×496 |\n| | 4:3 | 736×544 | 752×560 |\n| | 1:1 | 640×640 | 640×640 |\n| | 3:4 | 544×736 | 560×752 |\n| | 9:16 | 480×864 | 496×864 |\n| | 21:9 | 960×416 | 992×432 |\n| 720p | 16:9 | 1248×704 | 1280×720 |\n| | 4:3 | 1120×832 | 1112×834 |\n| | 1:1 | 960×960 | 960×960 |\n| | 3:4 | 832×1120 | 834×1112 |\n| | 9:16 | 704×1248 | 720×1280 |\n| | 21:9 | 1504×640 | 1470×630 |\n| 1080p | 16:9 | 1920×1088 | 1920×1080 |\n| | 4:3 | 1664×1248 | 1664×1248 |\n| | 1:1 | 1440×1440 | 1440×1440 |\n| | 3:4 | 1248×1664 | 1248×1664 |\n| | 9:16 | 1088×1920 | 1080×1920 |\n| | 21:9 | 2176×928 | 2206×946 |"
+            "description": "> Seedance 2.0 series and Seedance 1.5 pro default: `adaptive`\n> Other models: Text-to-Video default `16:9`, Image-to-Video default `adaptive`\n\nThe aspect ratio of the generated video. See the table below for pixel dimensions for different aspect ratios.\n\n* 16:9\n* 4:3\n* 1:1\n* 3:4\n* 9:16\n* 21:9\n* adaptive: Automatically selects the most suitable aspect ratio based on input (see details below)\n\n**adaptive Rules**\n\nWhen ratio is set to adaptive, the model automatically adjusts the aspect ratio based on the generation scenario. The actual video aspect ratio can be obtained from the ratio field returned by the query video generation task API.\n\n****Supported models:\n* Seedance 2.0 series, Seedance 1.5 Pro supported\n* Other models only supported in Image-to-Video scenarios\n\n****Rules:\n* Text-to-Video：Based on the input prompt, intelligently selects the most suitable aspect ratio.\n* First Frame / First & Last Frame: Automatically selects the closest aspect ratio based on the uploaded first frame image ratio.\n* Multimodal Reference-to-Video: Determines based on user prompt intent. If it is first-frame video/editing video/extending video, selects the closest aspect ratio based on that image/video; otherwise, selects the closest aspect ratio based on the first media file (priority: video > image).\n\nPixel dimensions corresponding to different aspect ratios\n\nNote: For Image-to-Video, if the selected aspect ratio does not match the uploaded image ratio, the platform will crop your image from the center.\n\n| Resolution | Aspect Ratio | Pixel Dimensions Seedance 1.0 Series | Pixel Dimensions Seedance 1.5 pro / 2.0 Series |\n|---|---|---|---|\n| 480p | 16:9 | 864×480 | 864×496 |\n| | 4:3 | 736×544 | 752×560 |\n| | 1:1 | 640×640 | 640×640 |\n| | 3:4 | 544×736 | 560×752 |\n| | 9:16 | 480×864 | 496×864 |\n| | 21:9 | 960×416 | 992×432 |\n| 720p | 16:9 | 1248×704 | 1280×720 |\n| | 4:3 | 1120×832 | 1112×834 |\n| | 1:1 | 960×960 | 960×960 |\n| | 3:4 | 832×1120 | 834×1112 |\n| | 9:16 | 704×1248 | 720×1280 |\n| | 21:9 | 1504×640 | 1470×630 |\n| 1080p | 16:9 | 1920×1088 | 1920×1080 |\n| | 4:3 | 1664×1248 | 1664×1248 |\n| | 1:1 | 1440×1440 | 1440×1440 |\n| | 3:4 | 1248×1664 | 1248×1664 |\n| | 9:16 | 1088×1920 | 1080×1920 |\n| | 21:9 | 2176×928 | 2206×946 |"
           },
           "duration": {
             "type": "integer",
-            "description": "> You only need to specify either duration or frames, and frames takes precedence over duration. If you want to generate a video with integer seconds, it is recommended to specify duration.\n\nGenerated video duration. Only integers are supported. Unit: second.\n\n* Seedance 1.0 Pro, Seedance 1.0 Pro Fast: [2, 12] s.\n* Seedance 1.5 Pro: [4,12] or set to -1.\n* Seedance 2.0 series: [4,15] or set to -1.\n\n> Seedance 2.0 series and Seedance 1.5 Pro support two configuration methods:\n* Specify specific duration: Any integer within the valid range is supported.\n* Intelligent specification: Set to -1, which means the model independently selects the appropriate video length (integer seconds) within the valid range. The actual duration of the generated video can be obtained from the duration parameter returned by the Retrieve a video generation task API. Note that video duration is related to billing, please set it carefully.",
+            "description": "Video duration, integer only, in seconds.\n\n* Seedance 1.0 pro, Seedance 1.0 pro fast: [2, 12] s.\n* Seedance 1.5 pro: [4, 12] or set to -1\n* Seedance 2.0 series: [4, 15] or set to -1\n\n**Note**\n\nSeedance 2.0 series and Seedance 1.5 pro support two configuration methods:\n* Specify exact duration: Any integer within the valid range.\n* Smart mode: Set to -1 to let the model choose the appropriate video length (in whole seconds) within the valid range. The actual generated video duration can be obtained from the duration field returned by the query video generation task API. Note that video duration is related to billing, so set it carefully.",
             "default": 5,
             "minimum": -1,
             "maximum": 15
           },
           "frames": {
             "type": "integer",
-            "description": "> Not supported by Seedance 2.0 series and Seedance 1.5 Pro\n> You only need to specify either duration or frames, and frames takes precedence over duration. If you want to generate a video with fractional seconds, it is recommended to specify frames.\n\nFrame count of the generated video. By specifying the number of frames, you can flexibly control the length of the generated video and generate videos with fractional seconds.\n\nDue to the value limit of frames, only certain fractional seconds are supported. You need to calculate the closest number of frames according to the formula.\n\n* Calculation formula: Number of frames = duration x frame rate (24).\n* Value range: All integer values in the range [29, 289] that fit the format 25 + 4n are supported, where n is a positive integer.\n\nExample: If you need to generate a 2.4-second video, the number of frames = 2.4 x 24 = 57.6. However, since frames value cannot be 57.6, you can only select the closest value. The closest number of frames calculated according to 25 + 4n is 57, and the actually generated video is 57 / 24 = 2.375 seconds.",
+            "description": "> Temporarily not supported by Seedance 2.0 series and Seedance 1.5 pro\n> Choose either duration or frames; frames takes priority over duration. If you want to generate videos with fractional seconds, it is recommended to specify frames.\n\nThe number of frames for the generated video. By specifying the frame count, you can flexibly control the video length and generate videos with fractional seconds.\n\nDue to frames value constraints, only limited fractional seconds are supported. You need to calculate the closest frame count using the formula.\n\n* Formula: frames = duration x frame rate (24).\n* Range: Supports all integer values in the [29, 289] range that satisfy the format 25 + 4n, where n is a positive integer.\n\nExample: To generate a 2.4-second video, frames = 2.4 x 24 = 57.6. Since frames does not support 57.6, you can only choose the closest value. According to 25+4n, the closest frame count is 57, and the actual generated video is 57/24 = 2.375 seconds.",
             "minimum": 29,
             "maximum": 289
           },
           "seed": {
             "type": "integer",
-            "description": "Seed integer, used to control the randomness of generated content.\n\nValue range: Integer between [-1, 2^32-1].\n\nNotes:\n* For the same request, if the model receives different seed values, such as not specifying a seed value, setting the seed to -1 (which will be replaced by a random number), or manually changing the seed value, different results will be generated.\n* For the same request, if the model receives the same seed value, similar results will be generated, but complete consistency is not guaranteed.",
+            "description": "> Temporarily not supported by Seedance 2.0 series\n\nSeed integer for controlling the randomness of generated content. Range: integer in [-1, 2^32-1].\n\nNotes:\n* With the same request, if the model receives different seed values (e.g., not specifying a seed, setting seed to -1 which uses a random number, or manually changing the seed value), different results will be generated.\n* With the same request, if the model receives the same seed value, similar results will be generated, but exact consistency is not guaranteed.",
             "default": -1,
             "minimum": -1,
             "maximum": 4294967295
           },
           "camera_fixed": {
             "type": "boolean",
-            "description": "> Not supported in reference-to-image scenarios, and not currently supported by Seedance 2.0 series.\n\nWhether to fix the camera. Valid values:\n\n* true: Fix the camera. ModelArk will append the fixed camera instruction to the user's prompt, but the actual result is not guaranteed.\n* false: Do not fix the camera.",
+            "description": "> Not supported in reference image scenarios, temporarily not supported by Seedance 2.0 series\n\nWhether to fix the camera.\n\n* true: Fix the camera. The platform will append fixed camera instructions to the user prompt, but the actual effect is not guaranteed.\n* false: Do not fix the camera.",
             "default": false
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether the generated video contains a watermark. Valid values:\n\n* false: The generated video does not contain a watermark.\n* true: An AI Generated watermark will be displayed in the lower right corner of the generated video.",
+            "description": "Whether the generated video contains a watermark.\n\n* false: The generated video does not contain a watermark.\n* true: The generated video displays an \"AI Generated\" watermark in the bottom-right corner.",
             "default": false
           }
         }
       },
       "TextContent": {
-        "title": "Text Information",
+        "title": "Text Content",
         "type": "object",
         "required": [
           "type",
@@ -375,17 +370,17 @@
             "enum": [
               "text"
             ],
-            "description": "The type of the input content. In this case, set the value to text."
+            "description": "The type of input content. This should be text."
           },
           "text": {
             "type": "string",
-            "description": "Text prompt input to the model, describing the expected generated video.\n\nNotes:\n* Supported prompt languages: All models support Chinese and English prompts; Seedance 2.0 and Seedance 2.0 Fast additionally support Japanese, Indonesian, Spanish, and Portuguese.\n* Recommended prompt length: Chinese prompts up to 500 characters, English prompts up to 1000 words. Lengthy text will lead to scattered information, and the model may ignore details and only focus on key points, resulting in missing elements in the generated video."
+            "description": "Text prompt input to the model, describing the expected video content.\n\nNotes:\n* Prompt language support: All models support Chinese and English prompts; seedance 2.0 and seedance 2.0 fast additionally support Japanese, Indonesian, Spanish, and Portuguese.\n* Prompt length recommendations: Chinese prompts should not exceed 500 characters, English prompts should not exceed 1000 words. Excessively long prompts may cause information dispersion, and the model may ignore details and only focus on key points, resulting in missing elements in the video."
           }
         },
-        "description": "Text prompt information for the model."
+        "description": "Prompt information input to the model."
       },
       "ImageContent": {
-        "title": "Image Information",
+        "title": "Image Content",
         "type": "object",
         "required": [
           "type",
@@ -397,18 +392,18 @@
             "enum": [
               "image_url"
             ],
-            "description": "The type of the input content. In this case, set the value to image_url."
+            "description": "The type of input content. This should be image_url."
           },
           "image_url": {
             "type": "object",
             "required": [
               "url"
             ],
-            "description": "The input image object for the model.",
+            "description": "The image object input to the model.",
             "properties": {
               "url": {
                 "type": "string",
-                "description": "Accepts image URL, Base64-encoded image, or asset ID.\n\n* URL: Enter the public accessible URL of the image.\n* Base64 encoding: Convert the local file to a Base64-encoded string, then submit to the model. Follow the format: data:image/<image format>;base64,<Base64 encoding>. Note that <image format> must be lowercase, for example data:image/png;base64,{base64_image}.\n* Asset ID: The URI of the digital character used for video generation. It follows the format asset://<ASSET_ID> and can be obtained from the Elements & Digital Characters Library.\n\nRequirements for uploading a single image:\n* Format: .jpeg, .png, .webp, .bmp, .tiff, .gif. In addition, Seedance 1.5 Pro and Seedance 2.0 series also support .heic and .heif.\n* Aspect ratio (width/height): (0.4, 2.5)\n* Width and height (px): (300, 6000)\n* Size: Single image must be less than 30 MB. Request body size does not exceed 64 MB. Do not use Base64 encoding for large files.\n* Number of images:\n   * Image to video - first frame: 1\n   * Image to video - first and last frames: 2\n   * Seedance 2.0 series multimodal-reference to video: 1-9 images"
+                "description": "Image URL, Base64-encoded image, or asset ID.\n\n* Image URL: Provide the public URL of the image.\n* Base64 encoding: Convert local files to a Base64-encoded string and submit it to the model. Format: data:image/<image_format>;base64,<Base64_encoding>. Note that <image_format> must be lowercase, e.g., data:image/png;base64,{base64_image}.\n* Asset ID: The ID of preset assets and virtual avatars for video generation. Format: asset://<ASSET_ID>. Can be obtained from the Assets & Virtual Avatars library.\n\nSingle image requirements:\n* Formats: jpeg, png, webp, bmp, tiff, gif. Seedance 1.5 pro and Seedance 2.0 series additionally support heic and heif.\n* Aspect ratio (width/height): (0.4, 2.5)\n* Dimensions (px): (300, 6000)\n* Size: Single image under 30 MB. Request body size does not exceed 64 MB. Do not use Base64 encoding for large files.\n* Image count:\n   * Image-to-Video (First Frame): 1 image\n   * Image-to-Video (First & Last Frame): 2 images\n   * Seedance 2.0 series Multimodal Reference-to-Video: 1~9 images"
               }
             }
           },
@@ -419,13 +414,13 @@
               "last_frame",
               "reference_image"
             ],
-            "description": "The location or purpose of the image. Conditionally required.\n\nWarnings:\n* Image to video - first frame, image to video - first and last frames, Multimodal reference video generation (including reference image, video, and audio) are three mutually exclusive scenarios and cannot be mixed.\n* For multimodal reference-based video generation, you can specify reference images as the first and/or last frame in the prompt to indirectly achieve a first/last frame + multimodal references effect. If you need to strictly ensure the first and last frames exactly match the specified images, use image to video - first and last frames instead (set role to first_frame / last_frame).\n\nImage to video - first frame:\n* Supported models: All models\n* Values: You need to pass in one image_url object, with the role field set to first_frame or leave role blank.\n\nImage to video - first and last frames:\n* Supported models: Seedance 2.0 & 2.0 Fast, Seedance 1.5 Pro, Seedance 1.0 Pro.\n* Values: Two image_url objects must be provided, and the role field is required.\n   * Role of the first frame: first_frame\n   * Role of the last frame: last_frame\n\nNote: First-frame and last-frame images can be the same one. If the aspect ratios of the first and last frame images are inconsistent, the first frame image takes precedence, and the last frame image will be automatically cropped to fit.\n\nImage to video - reference images:\n* Supported models: Seedance 2.0 series (1-9 images)\n* Values: Required. The role field for each reference image must be set to reference_image."
+            "description": "The position or purpose of the image. Conditionally required.\n\nNote:\n* Image-to-Video (First Frame), Image-to-Video (First & Last Frame), and Multimodal Reference-to-Video (including reference images, videos, and audio) are 3 mutually exclusive scenarios and cannot be mixed.\n* Multimodal Reference-to-VideoYou can specify reference images as first/last frames through prompts to indirectly achieve \"First & Last Frame + Multimodal Reference\" effects. If you need strict consistency between the first/last frames and specified images, prioritize using Image-to-Video (First & Last Frame) with role set to first_frame/last_frame.\n\nImage-to-Video (First Frame):\n* Supported models: All models\n* Field role value: Requires 1 image_url object, with role set to first_frame or left empty.\n\nImage-to-Video (First & Last Frame):\n* Supported models: Seedance 2.0 series, Seedance 1.5 pro, Seedance 1.0 pro\n* Field role value: Requires 2 image_url objects, and the role field is required.\n\n   * The role for the first frame image is: first_frame\n\n   * The role for the last frame image is: last_frame\n\nNote: The first and last frame images can be the same. If the aspect ratios of the first and last frame images differ, the first frame image takes priority, and the last frame image will be automatically cropped to fit.\n\nImage-to-Video (Reference Image):\n* Supported models: Seedance 2.0 series (1~9 images)\n* Field role value: Required. The role for each reference image is: reference_image"
           }
         },
-        "description": "Image information for the model."
+        "description": "Image information input to the model."
       },
       "VideoContent": {
-        "title": "Video Information",
+        "title": "Video Content",
         "type": "object",
         "required": [
           "type",
@@ -437,18 +432,18 @@
             "enum": [
               "video_url"
             ],
-            "description": "The type of input content. Should be video_url."
+            "description": "The type of input content. This should be video_url."
           },
           "video_url": {
             "type": "object",
             "required": [
               "url"
             ],
-            "description": "The video object provided to the model.",
+            "description": "The video object input to the model.",
             "properties": {
               "url": {
                 "type": "string",
-                "description": "Accepts video URL or asset ID.\n\n* URL: The public URL of the video. Only video URLs are supported.\n* Asset ID: The URI of the digital character used for video generation. It follows the format asset://<ASSET_ID> and can be obtained from the digital characters library.\n\nVideo input requirements:\n* Video format: mp4, mov. Supported encoding formats are listed in the table below.\n* Resolution: 480p, 720p, 1080p\n* Duration: Each video must be between [2, 15] seconds. Up to 3 reference videos can be submitted, and the total duration of all videos must not exceed 15 seconds.\n* Dimensions:\n   * Aspect ratio (width/height): [0.4, 2.5]\n   * Width and height (px): [300, 6000]\n   * Total pixels: [640x640=409600, 2206x946=2086876], that is, the product of width and height must fall in the range of [409600, 2086876].\n* Size: Each video must not exceed 50 MB.\n* Frame rate (FPS): [24, 60]\n\nSupported encoding formats:\n| Container Format | Common Extension Name | MIME | Supported Encodings |\n|---|---|---|---|\n| MP4 | .mp4 | video/mp4 | Video: H.264/AVC, H.265/HEVC; Audio: AAC, MP3 |\n| QuickTime | .mov | video/quicktime | Video: H.264/AVC, H.265/HEVC; Audio: AAC, MP3 |"
+                "description": "Video URL or Asset ID.\n\n* Video URL: Enter the public URL of the video.\n* Asset ID: ID for preset assets and virtual avatar videos used in video generation, format: asset://<ASSET_ID>. Can be obtained from the Assets & Virtual Avatars Library.\n\nSingle video requirements:\n* Formats: mp4, mov. Supported codecs are listed below.\n* Resolution: 480p, 720p, 1080p\n* Duration: Single video [2, 15] s, up to 3 reference videos, total duration must not exceed 15s.\n* Dimensions:\n   * Aspect ratio (width/height): [0.4, 2.5]\n   * Width/height (px): [300, 6000]\n   * Total pixels: [640x640=409600, 2206x946=2086876], i.e., width x height must be within [409600, 2086876].\n* Size: Single video must not exceed 50 MB.\n* Frame rate (FPS): [24, 60]\n\nSupported codecs:\n| Container | Common Extensions | MIME | Supported Codecs |\n|---|---|---|---|\n| MP4 | .mp4 | video/mp4 | Video: H.264/AVC, H.265/HEVC; Audio: AAC, MP3 |\n| QuickTime | .mov | video/quicktime | Video: H.264/AVC, H.265/HEVC; Audio: AAC, MP3 |"
               }
             }
           },
@@ -457,13 +452,13 @@
             "enum": [
               "reference_video"
             ],
-            "description": "Position or purpose of the video. Currently only supports reference_video."
+            "description": "The position or purpose of the video. Currently only supports reference_video. Required under certain conditions."
           }
         },
-        "description": "Video information for the model. Only Seedance 2.0 series supports video input."
+        "description": "Video information input to the model. Only the Seedance 2.0 series supports video input."
       },
       "AudioContent": {
-        "title": "Audio Information",
+        "title": "Audio Content",
         "type": "object",
         "required": [
           "type",
@@ -475,18 +470,18 @@
             "enum": [
               "audio_url"
             ],
-            "description": "The type of input content. Should be audio_url. Only Seedance 2.0 series supports audio input. Note: Audio cannot be input alone; at least 1 reference video or image must be included."
+            "description": "The type of input content. This should be audio_url. Only the Seedance 2.0 series supports audio input. Note that audio cannot be input alone; at least 1 reference video or image must be included."
           },
           "audio_url": {
             "type": "object",
             "required": [
               "url"
             ],
-            "description": "Audio object provided to the model. Only Seedance 2.0 series supports audio input.",
+            "description": "The audio object input to the model. Only the Seedance 2.0 series supports audio input.",
             "properties": {
               "url": {
                 "type": "string",
-                "description": "URL, Base64-encoded string or asset ID of the audio.\n\n* Audio URL: The public accessible URL of the audio.\n* Base64 encoding: Convert the local file to a Base64 encoded string, then submit it to the model. Follow the format: data:audio/<audio format>;base64,<Base64 encoding>. <audio format> must be lowercase, for example, data:audio/wav;base64,{base64_audio}.\n* Asset ID: The URI of the digital character used for video generation. It follows the format asset://<ASSET_ID> and can be obtained from the digital character library.\n\nAudio input requirements:\n* Format: wav, mp3\n* Duration: The length of a single audio [2, 15] (second); up to three reference audio segments can be provided, and the total duration of all audio must not exceed 15 s.\n* Size: Each audio file must not exceed 15 MB. The request body size must not exceed 64 MB. Do not use Base64 encoding for large files."
+                "description": "Audio URL, Audio Base64 encoding, or Asset ID.\n\n* Audio URL: Enter the public URL of the audio.\n* Base64 encoding: Convert a local file to a Base64-encoded string and submit it to the model. Format: data:audio/<audio_format>;base64,<Base64_encoding>. Note that <audio_format> must be lowercase, e.g., data:audio/wav;base64,{base64_audio}.\n* Asset ID: ID for virtual avatar audio assets used in video generation, format: asset://<ASSET_ID>. Can be obtained from the Assets & Virtual Avatars Library.\n\nSingle audio requirements:\n* Formats: wav, mp3\n* Duration: Single audio [2, 15] s, up to 3 reference audio segments, total duration must not exceed 15s.\n* Size: Single audio must not exceed 15 MB, request body size must not exceed 64 MB. Do not use Base64 encoding for large files."
               }
             }
           },
@@ -495,13 +490,13 @@
             "enum": [
               "reference_audio"
             ],
-            "description": "Position or purpose of the audio. Currently only supports reference_audio."
+            "description": "The position or purpose of the audio. Currently only supports reference_audio. Required under certain conditions."
           }
         },
-        "description": "Audio information for the model. Only Seedance 2.0 series supports audio input. Note: You cannot input audio alone. At least 1 reference video or image must be included."
+        "description": "Audio information input to the model. Only the Seedance 2.0 series supports audio input. Note that audio cannot be input alone; at least 1 reference video or image must be included."
       },
       "DraftTaskContent": {
-        "title": "Draft Task Information",
+        "title": "Draft Task Content",
         "type": "object",
         "required": [
           "type",
@@ -513,23 +508,23 @@
             "enum": [
               "draft_task"
             ],
-            "description": "The type of input content. Should be draft_task."
+            "description": "The type of input content. This should be draft_task."
           },
           "draft_task": {
             "type": "object",
             "required": [
               "id"
             ],
-            "description": "Draft task input to the model.",
+            "description": "Draft task object input to the model.",
             "properties": {
               "id": {
                 "type": "string",
-                "description": "Draft task ID. ModelArk will automatically reuse the user inputs used for the draft video (model, content.text, content.image_url, generate_audio, seed, ratio, duration, camera_fixed) to generate the final video. Other parameters can be specified manually. If not specified, the default values of this model will be used.\n\nTwo steps are required: Step 1, call this API to generate a draft video. Step 2, if you confirm that the draft video meets expectations, you can call this API to generate the final video based on the draft video task ID returned in Step 1."
+                "description": "Draft task ID. The platform will automatically reuse the user input from the Draft video (model, content.text, content.image_url, generate_audio, seed, ratio, duration, camera_fixed) to generate the final video. Other parameters can be specified; if not specified, the model defaults will be used.\n\nUsage is a two-step process: Step 1: Call this endpoint to generate a Draft video. Step 2: If the Draft video meets expectations, call this endpoint again with the Draft video task ID from Step 1 to generate the final video."
               }
             }
           }
         },
-        "description": "Generate a final video based on a draft task ID. Only Seedance 1.5 Pro supports this feature."
+        "description": "Generate the final video based on the draft task ID. Only supported by Seedance 1.5 Pro."
       },
       "Tool": {
         "type": "object",
@@ -542,7 +537,7 @@
             "enum": [
               "web_search"
             ],
-            "description": "Specify the type of tool to use.\n\n* web_search: Web search tool.\n\nNotes:\n* After enabling web search, the model will autonomously determine whether to search internet content (such as products, weather, etc.) based on the user's prompt. This can improve the timeliness of generated videos, but will also increase some latency.\n* The actual number of searches can be obtained from the usage.tool_usage.web_search field returned by the Retrieve a video generation task API. If it is 0, it means no search was performed."
+            "description": "Specifies the type of tool to use.\n\n* web_search: Web search tool.\n\nNotes:\n* When web search is enabled, the model autonomously determines whether to search internet content (e.g., products, weather) based on the user prompt. This can improve the timeliness of generated videos but may increase latency.\n* The actual number of searches can be obtained from the usage.tool_usage.web_search field in the query video generation task API response. A value of 0 indicates no search was performed."
           }
         }
       },
@@ -551,7 +546,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Video generation task ID. Stored for only 7 days (calculated from the created at timestamp), and will be automatically cleared after expiration.\n\n* When draft is set to true, it is the draft video task ID.\n* When draft is set to false, it is the normal video task ID.\n\nThe video generation task creation is an asynchronous API. After obtaining the ID, you need to query the status of the video generation task through the Retrieve a video generation task API. After the task is successful, the video_url of the generated video will be output."
+            "description": "Video generation task ID. Only stored for 7 days (from the `created_at` timestamp), then automatically deleted.\n\n* When draft: true, this is the Draft video task ID.\n* When draft: false, this is the normal video task ID.\n\nVideo generation is asynchronous. After obtaining the ID, use the query video generation task API to check the status. When successful, the API returns the generated video URL."
           }
         }
       }

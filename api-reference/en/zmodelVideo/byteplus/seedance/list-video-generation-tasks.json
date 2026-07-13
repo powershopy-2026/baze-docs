@@ -3,7 +3,7 @@
   "info": {
     "title": "List Video Generation Tasks",
     "version": "1.0.0",
-    "description": "Pass filter parameters to return matching video generation tasks. Only historical data from the last 7 days can be queried. Time calculation is always based on UTC timestamps. The timestamp interval is [T-7 days, T), where T is the request time accurate to the second.",
+    "description": "Filter parameters to query matching video generation tasks. Only supports the last 7 days of task records, time range [T-7 days, T), where T is the UTC timestamp (seconds) of the request.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,8 +25,8 @@
     "/byteplus/api/v3/contents/generations/tasks": {
       "get": {
         "summary": "List Video Generation Tasks",
-        "description": "Pass filter parameters to return matching video generation tasks. Only historical data from the last 7 days can be queried. Time calculation is always based on UTC timestamps. The timestamp interval is [T-7 days, T), where T is the request time accurate to the second.\n\n> Note: The following parameters are Query String Parameters, passed in the URL string.",
-        "operationId": "byteplusListVideoGenerationTasksEn",
+        "description": "Filter parameters to query matching video generation tasks. Only supports the last 7 days of task records, time range [T-7 days, T), where T is the UTC timestamp (seconds) of the request.\n\n> Note: The following parameters are Query String Parameters, passed in the URL string.",
+        "operationId": "byteplusListVideoGenerationTasks",
         "tags": [
           "Seedance Video"
         ],
@@ -35,7 +35,7 @@
             "name": "page_num",
             "in": "query",
             "required": false,
-            "description": "Page number of the returned results. ",
+            "description": "The page number of the results.",
             "schema": {
               "type": "integer",
               "nullable": true,
@@ -48,7 +48,7 @@
             "name": "page_size",
             "in": "query",
             "required": false,
-            "description": "Number of results per page. ",
+            "description": "The number of results displayed per page.",
             "schema": {
               "type": "integer",
               "nullable": true,
@@ -61,7 +61,7 @@
             "name": "filter.status",
             "in": "query",
             "required": false,
-            "description": "Filter parameter used to query tasks with a specific status.\n\n- queued: Task in queue.\n- running: Task in progress.\n- cancelled: Cancelled task.\n- succeeded: Successful task.\n- failed: Failed task.",
+            "description": "Filter parameter to query tasks by status.\n\n- queued: Tasks in queue.\n- running: Running tasks.\n- cancelled: Cancelled tasks.\n- succeeded: Successful tasks.\n- failed: Failed tasks.",
             "schema": {
               "type": "string",
               "nullable": true,
@@ -78,7 +78,7 @@
             "name": "filter.task_ids",
             "in": "query",
             "required": false,
-            "description": "Video generation task ID for exact search. Supports batch search by repeating the parameter name, for example: `filter.task_ids=id1&filter.task_ids=id2`.",
+            "description": "Video generation task ID, exact search, supports searching multiple task IDs simultaneously. Pass by repeating the parameter name, e.g.: `filter.task_ids=id1&filter.task_ids=id2`.",
             "style": "form",
             "explode": true,
             "schema": {
@@ -93,7 +93,7 @@
             "name": "filter.model",
             "in": "query",
             "required": false,
-            "description": "Model ID or endpoint ID for exact search. Only one input is supported. When the permission of your API key is Custom, manually enter the model ID or endpoint ID to query. A model resource generally corresponds to one preconfigured inference endpoint and multiple custom inference endpoints. Model ID is bound to the preconfigured inference endpoint.When a model ID is entered, video generation tasks initiated by calling this preconfigured inference endpoint will be returned.",
+            "description": "Unlike the response parameter, this field is the inference endpoint ID used by the task, exact search.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -103,7 +103,7 @@
             "name": "filter.service_tier",
             "in": "query",
             "required": false,
-            "description": "Service tier used for task processing. `default` means online inference mode, and `flex` means offline inference mode.",
+            "description": "The service tier used to process the task. `default` means online inference, `flex` means offline inference.",
             "schema": {
               "type": "string",
               "nullable": true,
@@ -117,7 +117,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Query succeeded. Returns matching video generation tasks.",
+            "description": "Query successful, returns a list of video generation tasks matching the filter criteria.",
             "content": {
               "application/json": {
                 "schema": {
@@ -125,26 +125,26 @@
                 },
                 "examples": {
                   "success": {
-                    "summary": "Successful response",
+                    "summary": "Query successful",
                     "value": {
                       "total": 2,
                       "items": [
                         {
-                          "id": "cgt-2025******-****",
-                          "model": "dreamina-seedance-2-0-260128",
+                          "id": "cgt-2026****-****",
+                          "model": "doubao-seedance-2-0-260128",
                           "status": "succeeded",
                           "content": {
-                            "video_url": "https://ark-content-generation-ap-southeast-1.tos-ap-southeast-1.volces.com/seedance-1-0-pro/****.mp4"
+                            "video_url": "https://ark-acg-cn-beijing.tos-cn-beijing.volces.com/xxx"
                           },
                           "usage": {
-                            "completion_tokens": 108900,
-                            "total_tokens": 108900
+                            "completion_tokens": 109586,
+                            "total_tokens": 109586
                           },
-                          "created_at": 1743414619,
-                          "updated_at": 1743414673,
-                          "seed": 10,
+                          "created_at": 1779354227,
+                          "updated_at": 1779354426,
+                          "seed": 70172,
                           "resolution": "720p",
-                          "ratio": "16:9",
+                          "ratio": "4:3",
                           "duration": 5,
                           "framespersecond": 24,
                           "service_tier": "default",
@@ -217,14 +217,14 @@
         "properties": {
           "items": {
             "type": "array",
-            "description": "List of found video generation tasks.",
+            "description": "The list of video generation tasks found.",
             "items": {
               "$ref": "#/components/schemas/VideoGenerationTask"
             }
           },
           "total": {
             "type": "integer",
-            "description": "Number of tasks that meet the filter conditions."
+            "description": "The number of tasks matching the filter criteria."
           }
         }
       },
@@ -237,84 +237,84 @@
           },
           "model": {
             "type": "string",
-            "description": "Model name and version used for this task in the format model name-version."
+            "description": "The model name and version used by the task, in `model_name-version` format."
           },
           "status": {
             "type": "string",
-            "description": "Task status.\n\n- queued: Task in queue.\n- running: Task in progress.\n- cancelled: Cancelled task.\n- succeeded: Successful task.\n- failed: Failed task.\n- expired: Expired task."
+            "description": "Task status.\n\n- queued: In queue.\n- running: Task running.\n- cancelled: Task cancelled (only queued tasks can be cancelled).\n- succeeded: Task successful.\n- failed: Task failed.\n- expired: Task timed out."
           },
           "error": {
             "$ref": "#/components/schemas/TaskError"
           },
           "created_at": {
             "type": "integer",
-            "description": "Unix timestamp in seconds of the task creation time."
+            "description": "Unix timestamp (seconds) of task creation time."
           },
           "updated_at": {
             "type": "integer",
-            "description": "Unix timestamp in seconds of the last update time of the task's current status."
+            "description": "Unix timestamp (seconds) of the current status update time."
           },
           "content": {
             "$ref": "#/components/schemas/VideoTaskContent"
           },
           "seed": {
             "type": "integer",
-            "description": "Seed integer value used for this request."
+            "description": "The seed integer value used for this request."
           },
           "resolution": {
             "type": "string",
-            "description": "Resolution of the generated video."
+            "description": "The resolution of the generated video."
           },
           "ratio": {
             "type": "string",
-            "description": "Aspect ratio of the generated video."
+            "description": "The aspect ratio of the generated video."
           },
           "duration": {
             "type": "integer",
-            "description": "Duration of the generated video in seconds. Either `duration` or `frames` is returned. If `frames` is not specified when creating a video generation task, `duration` is returned."
+            "description": "The duration of the generated video, in seconds. Only one of `duration` and `frames` will be returned. If `frames` was not specified in the task creation, `duration` is returned."
           },
           "frames": {
             "type": "integer",
-            "description": "Frame count of the generated video. Either `duration` or `frames` is returned. If `frames` is specified when creating a video generation task, `frames` is returned."
+            "description": "The number of frames of the generated video. Only one of `duration` and `frames` will be returned. If `frames` was specified in the task creation, `frames` is returned."
           },
           "framespersecond": {
             "type": "integer",
-            "description": "Frame rate of the generated video."
+            "description": "The frame rate of the generated video."
           },
           "generate_audio": {
             "type": "boolean",
-            "description": "Whether the generated video includes sound synchronized with the footage. Only Seedance 2.0 series and Seedance 1.5 Pro return this parameter.\n\n- true:The video output by the model includes synchronized audio.\n- false:The video output by the model is a silent video."
+            "description": "Whether the generated video contains synchronized audio. Only returned for Seedance 2.0 series and Seedance 1.5 pro.\n\n- true: The output video contains synchronized audio.\n- false: The output video has no audio."
           },
           "tools": {
             "type": "array",
-            "description": "Tools actually used by the model for this request. Not returned if no tool is used.",
+            "description": "The tools actually used by the model for this request. Not returned if no tools were used.",
             "items": {
               "$ref": "#/components/schemas/TaskTool"
             }
           },
           "safety_identifier": {
             "type": "string",
-            "description": "Unique identifier of the end user. If this parameter is set when creating a video generation task, the interface returns it as is."
+            "description": "Unique identifier of the end user. If this parameter was set when creating the video generation task, the API returns it as-is."
           },
           "priority": {
             "type": "integer",
-            "description": "Execution priority of the current request."
+            "description": "The execution priority of the current request."
           },
           "draft": {
             "type": "boolean",
-            "description": "Whether the generated video is a draft video. Only Seedance 1.5 Pro returns this parameter.\n\n- true: Indicates the current output is a draft video.\n- false: Indicates the current output is a normal video."
+            "description": "Whether the generated video is a Draft video. Only returned for Seedance 1.5 pro.\n\n- true: The current output is a Draft video.\n- false: The current output is a normal video."
           },
           "draft_task_id": {
             "type": "string",
-            "description": "Draft video task ID. Returned when a formal video is generated based on a draft video."
+            "description": "Draft video task ID. Returned when generating the final video based on a Draft video."
           },
           "service_tier": {
             "type": "string",
-            "description": "Service tier actually used for task processing."
+            "description": "The actual service tier used to process the task."
           },
           "execution_expires_after": {
             "type": "integer",
-            "description": "Task timeout threshold in seconds."
+            "description": "Task timeout threshold, in seconds."
           },
           "usage": {
             "$ref": "#/components/schemas/TaskUsage"
@@ -324,7 +324,7 @@
       "TaskError": {
         "type": "object",
         "nullable": true,
-        "description": "Error message. Returns null if the task succeeds; returns error data if the task fails.",
+        "description": "Error message. Returns null on success, returns error data on failure.",
         "properties": {
           "code": {
             "type": "string",
@@ -338,15 +338,15 @@
       },
       "VideoTaskContent": {
         "type": "object",
-        "description": "Output when the video generation task is completed, including the download URL of the generated video.",
+        "description": "When the video generation task is complete, this field is output, containing the download URL of the generated video.",
         "properties": {
           "video_url": {
             "type": "string",
-            "description": "URL of the generated video."
+            "description": "The URL of the generated video."
           },
           "last_frame_url": {
             "type": "string",
-            "description": "URL of the last frame image of the video. Returned when `return_last_frame=true` is set when creating a video generation task."
+            "description": "The URL of the video's last frame image. Returned when `return_last_frame=true` is set during task creation."
           }
         }
       },
@@ -355,21 +355,21 @@
         "properties": {
           "type": {
             "type": "string",
-            "description": "Tool type actually used.\n\n- web_search: Web search tool."
+            "description": "The type of tool actually used.\n\n- web_search: Web search tool."
           }
         }
       },
       "TaskUsage": {
         "type": "object",
-        "description": "Token usage of this request.",
+        "description": "Token usage for this request.",
         "properties": {
           "completion_tokens": {
             "type": "integer",
-            "description": "Number of tokens consumed for the model to output the video, which can be used for billing reconciliation. Seedance 2.0 series models have a minimum token usage limit. If actual token usage is less than the minimum,  this parameter will return the minimum token usage which is used for billing."
+            "description": "The number of tokens consumed by the model for video generation, used for billing reconciliation. Seedance 2.0 series models have a minimum token usage limit. If actual token usage < minimum token usage, this field returns the minimum token usage, and billing is based on the minimum."
           },
           "total_tokens": {
             "type": "integer",
-            "description": "Total number of tokens consumed by this request. Video generation models do not count input tokens, so input tokens are 0 and `total_tokens=completion_tokens`."
+            "description": "The total number of tokens consumed for this request. Video generation models do not count input tokens (input tokens = 0), so `total_tokens = completion_tokens`."
           },
           "tool_usage": {
             "$ref": "#/components/schemas/ToolUsage"
@@ -382,7 +382,7 @@
         "properties": {
           "web_search": {
             "type": "integer",
-            "description": "Actual number of web search tool calls. Returned only when web search is enabled."
+            "description": "The actual number of web search calls, only returned when web search is enabled."
           }
         }
       }

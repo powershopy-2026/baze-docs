@@ -3,7 +3,7 @@
   "info": {
     "title": "Cancel or Delete a Video Generation Task",
     "version": "1.0.0",
-    "description": "Cancels a queued video generation task, or deletes a video generation task record.",
+    "description": "Cancel a queued video generation task, or delete a video generation task record.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,8 +25,8 @@
     "/byteplus/api/v3/contents/generations/tasks/{id}": {
       "delete": {
         "summary": "Cancel or Delete a Video Generation Task",
-        "description": "Cancels a queued video generation task, or deletes a video generation task record.",
-        "operationId": "byteplusCancelDeleteVideoTaskEn",
+        "description": "Cancel a queued video generation task, or delete a video generation task record.",
+        "operationId": "byteplusCancelDeleteVideoTask",
         "tags": [
           "Seedance Video"
         ],
@@ -35,7 +35,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "The ID of the video generation task to be canceled or deleted.\n\nThe operation performed by the DELETE API varies depending on the status of the video generation task:\n\n| Task Status | Can it be deleted? | Operation Description | Post-DELETE Task Status |\n|-------------|---------------------|------------------------|--------------------------|\n| queued | Yes | The task is removed from the queue and its status is updated to `cancelled`. | cancelled |\n| running | No | - | - |\n| succeeded | Yes | The video generation task record is deleted and will no longer be queryable. | - |\n| failed | Yes | The video generation task record is deleted and will no longer be queryable. | - |\n| cancelled | No | - | - |\n| expired | Yes | The video generation task record is deleted and will no longer be queryable. | - |",
+            "description": "The ID of the video generation task to cancel or delete.\n\nThe behavior of the DELETE endpoint varies by task status:\n\n| Current Status | DELETE Supported | Behavior | Status After DELETE |\n|---|---|---|---|\n| queued | Yes | Cancel task queueing, task status changes to `cancelled` | cancelled |\n| running | No | - | - |\n| succeeded | Yes | Delete the video generation task record; subsequent queries will not be supported | - |\n| failed | Yes | Delete the video generation task record; subsequent queries will not be supported | - |\n| cancelled | No | - | - |\n| expired | Yes | Delete the video generation task record; subsequent queries will not be supported | - |\n\n> Note: The above parameters are Query String Parameters, passed in the URL string.",
             "schema": {
               "type": "string"
             }
@@ -43,7 +43,7 @@
         ],
         "responses": {
           "200": {
-            "description": "This API operation has no response parameters.",
+            "description": "This API has no response parameters.",
             "content": {
               "application/json": {
                 "schema": {
