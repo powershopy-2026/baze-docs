@@ -320,8 +320,11 @@
         }
       },
       "Message": {
-        "description": "对话的消息列表中的单条消息。根据 role 的不同，分为 system、user、assistant、tool 四种消息类型。",
+        "description": "对话的消息列表中的单条消息。根据 role 的不同，分为 developer、system、user、assistant、tool 五种消息类型。",
         "oneOf": [
+          {
+            "$ref": "#/components/schemas/DeveloperMessage"
+          },
           {
             "$ref": "#/components/schemas/SystemMessage"
           },
@@ -346,8 +349,16 @@
         "description": "System message。该消息的发起角色为 system。",
         "properties": {
           "content": {
-            "type": "string",
-            "description": "system 消息的内容。"
+            "description": "system 消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/TextContentPartArray"
+              }
+            ]
           },
           "role": {
             "type": "string",
@@ -372,8 +383,16 @@
         "description": "User message。该消息的发起角色为 user。",
         "properties": {
           "content": {
-            "type": "string",
-            "description": "user 消息的内容。"
+            "description": "user 消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/ContentPartArray"
+              }
+            ]
           },
           "role": {
             "type": "string",
@@ -397,9 +416,17 @@
         "description": "Assistant message。该消息的发起角色为 assistant。",
         "properties": {
           "content": {
-            "type": "string",
-            "nullable": true,
-            "description": "assistant 消息的内容。"
+            "description": "assistant 消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "nullable": true,
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/TextContentPartArray"
+              }
+            ]
           },
           "role": {
             "type": "string",
@@ -636,6 +663,147 @@
           }
         }
       },
+      "TextContentPart": {
+        "type": "object",
+        "title": "Text content part",
+        "required": [
+          "type",
+          "text"
+        ],
+        "description": "消息中的纯文本内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "内容部分的类型，其值为 text。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本内容。"
+          }
+        }
+      },
+      "TextContentPartArray": {
+        "type": "array",
+        "description": "消息中的纯文本内容部分数组。",
+        "items": {
+          "$ref": "#/components/schemas/TextContentPart"
+        }
+      },
+      "ContentPartText": {
+        "type": "object",
+        "title": "Text content part",
+        "required": [
+          "type",
+          "text"
+        ],
+        "description": "用户消息中的纯文本内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "内容部分的类型，其值为 text。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本内容。"
+          }
+        }
+      },
+      "ContentPartImage": {
+        "type": "object",
+        "title": "Image content part",
+        "required": [
+          "type",
+          "image_url"
+        ],
+        "description": "用户消息中的图片内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image_url"
+            ],
+            "description": "内容部分的类型，其值为 image_url。"
+          },
+          "image_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "图片 URL。可以是公网图片 URL 或 Base64 编码后的 data URL。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "公网图片 URL 或 Base64 编码的 data URL。"
+              },
+              "detail": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "low",
+                  "high"
+                ],
+                "default": "auto",
+                "description": "图片的处理级别。low 使用低分辨率；high 使用高分辨率；auto 由模型选择。"
+              }
+            }
+          }
+        }
+      },
+      "ContentPartArray": {
+        "type": "array",
+        "description": "用户消息中的内容部分数组，可包含文本与图片。",
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/ContentPartText"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartImage"
+            }
+          ]
+        }
+      },
+      "DeveloperMessage": {
+        "type": "object",
+        "title": "Developer message",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "Developer 消息。开发者提供的指令，模型应遵循这些指令，而不受用户发送的消息影响。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "developer"
+            ],
+            "description": "该消息的发起角色，其值为 developer。"
+          },
+          "content": {
+            "description": "developer 消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/TextContentPartArray"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+          }
+        }
+      },
       "AssistantMessage": {
         "type": "object",
         "properties": {
@@ -647,8 +815,17 @@
             "description": "生成这条消息的角色。"
           },
           "content": {
-            "type": "string",
-            "description": "该 completion 的内容。"
+            "description": "assistant 消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "nullable": true,
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/TextContentPartArray"
+              }
+            ]
           },
           "reasoning_content": {
             "type": "string",
