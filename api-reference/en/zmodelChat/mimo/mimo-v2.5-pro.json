@@ -1,0 +1,733 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "mimo-v2.5-pro",
+    "version": "1.0.0",
+    "description": "MIMO Chat Completions documentation",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MIMO Chat",
+      "description": "MIMO text chat"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "mimo-v2.5-pro",
+        "description": "Invoke MIMO chat completions capability",
+        "operationId": "mimoChatCompletions_mimo_v2_5_pro_en",
+        "tags": [
+          "MIMO Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "default": {
+                  "summary": "Basic text chat",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "content": "You are MiMo",
+                        "role": "system"
+                      },
+                      {
+                        "content": "Introduce yourself",
+                        "role": "user"
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "temperature": 1,
+                    "top_p": 0.95,
+                    "stream": false,
+                    "frequency_penalty": 0,
+                    "presence_penalty": 0,
+                    "thinking": {
+                      "type": "disabled"
+                    },
+                    "tool_choice": "auto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Returns JSON in non-streaming mode; returns an SSE event stream in streaming mode.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Non-streaming success response",
+                    "value": {
+                      "id": "test",
+                      "object": "chat.completion",
+                      "created": 1782805310,
+                      "model": "mimo-v2.5-pro",
+                      "choices": [
+                        {
+                          "index": 0,
+                          "message": {
+                            "role": "assistant",
+                            "content": "Hello! I am MiMo"
+                          },
+                          "finish_reason": "stop"
+                        }
+                      ],
+                      "usage": {
+                        "prompt_tokens": 10,
+                        "completion_tokens": 5,
+                        "total_tokens": 15
+                      }
+                    }
+                  }
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE data stream. Each `data:` event can be parsed as a DeepSeek/OpenAI-compatible Chat Completions Chunk; the stream typically ends with `data: [DONE]`. When `stream_options.include_usage=true` is set, an additional chunk with `usage` is returned before the end."
+                },
+                "examples": {
+                  "stream": {
+                    "summary": "Streaming response chunk",
+                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Parameter error",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "param": "messages",
+                        "code": "bad_request_body"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient account quota, please retry later",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing failure",
+                    "value": {
+                      "error": {
+                        "message": "Internal processing failed, please retry later",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "description": "DeepSeek chat completions request body.",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID to use",
+            "enum": [
+              "mimo-v2.5-pro"
+            ],
+            "example": "mimo-v2.5-pro"
+          },
+          "messages": {
+            "type": "array",
+            "description": "A list of messages comprising the conversation so far.",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "thinking": {
+            "$ref": "#/components/schemas/ThinkingConfig"
+          },
+          "stream": {
+            "type": "boolean",
+            "default": false,
+            "description": "If set to true, the model will send message deltas as SSE (server-sent events). The message stream ends with `data: [DONE]`."
+          },
+          "stop": {
+            "description": "A string or a list of up to 16 strings. The API will stop generating further tokens when it encounters any of these strings.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1.5,
+            "default": 1,
+            "description": "Sampling temperature"
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 1,
+            "default": 1,
+            "description": "Top P"
+          },
+          "tools": {
+            "type": "array",
+            "description": "A list of tools the model may call. Currently, only function is supported as a tool. Use this parameter to provide a list of functions that take JSON as input. Up to 128 functions are supported.",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            }
+          },
+          "tool_choice": {
+            "$ref": "#/components/schemas/ToolChoice"
+          },
+          "max_completion_tokens": {
+            "type": "integer",
+            "description": "Maximum tokens"
+          },
+          "frequency_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Frequency penalty"
+          },
+          "presence_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Presence penalty"
+          }
+        }
+      },
+      "Message": {
+        "description": "A single message in the conversation. Depending on the role, it is divided into four message types: system, user, assistant, and tool.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SystemMessage"
+          },
+          {
+            "$ref": "#/components/schemas/UserMessage"
+          },
+          {
+            "$ref": "#/components/schemas/AssistantRequestMessage"
+          },
+          {
+            "$ref": "#/components/schemas/ToolMessage"
+          }
+        ]
+      },
+      "SystemMessage": {
+        "title": "System message",
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "System message. The role of this message is system.",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "The content of the system message."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "system"
+            ],
+            "description": "The role of the message author, which is system."
+          },
+          "name": {
+            "type": "string",
+            "description": "An optional name for the participant, provided to the model to distinguish between participants of the same role."
+          }
+        }
+      },
+      "UserMessage": {
+        "title": "User message",
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "User message. The role of this message is user.",
+        "properties": {
+          "content": {
+            "type": "string",
+            "description": "The content of the user message."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "The role of the message author, which is user."
+          },
+          "name": {
+            "type": "string",
+            "description": "An optional name for the participant, provided to the model to distinguish between participants of the same role."
+          }
+        }
+      },
+      "AssistantRequestMessage": {
+        "title": "Assistant message",
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "description": "Assistant message. The role of this message is assistant.",
+        "properties": {
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "description": "The content of the assistant message."
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "The role of the message author, which is assistant."
+          },
+          "name": {
+            "type": "string",
+            "description": "An optional name for the participant, provided to the model to distinguish between participants of the same role."
+          },
+          "prefix": {
+            "type": "boolean",
+            "description": "(Beta) Set this to true to force the model to start its response with the prefix content provided in this assistant message. "
+          },
+          "reasoning_content": {
+            "type": "string",
+            "nullable": true,
+            "description": "(Beta) Used in thinking mode under conversation prefix continuation, as input for the last assistant chain-of-thought content. When using this feature, the prefix parameter must be set to true."
+          }
+        }
+      },
+      "ToolMessage": {
+        "title": "Tool message",
+        "type": "object",
+        "required": [
+          "role",
+          "content",
+          "tool_call_id"
+        ],
+        "description": "Tool message. The role of this message is tool.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "tool"
+            ],
+            "description": "The role of the message author, which is tool."
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of the tool message."
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "The ID of the tool call that this message is responding to."
+          }
+        }
+      },
+      "ThinkingConfig": {
+        "type": "object",
+        "description": "Controls the switch between thinking mode and non-thinking mode.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "enabled",
+              "disabled"
+            ],
+            "default": "enabled",
+            "description": "If set to enabled, thinking mode is used. If set to disabled, non-thinking mode is used."
+          }
+        }
+      },
+      "StreamOptions": {
+        "type": "object",
+        "description": "Options for streaming output. This parameter can only be set when the stream parameter is true.",
+        "properties": {
+          "include_usage": {
+            "type": "boolean",
+            "description": "If set to true, an additional chunk will be transmitted just before the final `data: [DONE]` in the stream. The usage field on this chunk shows the token usage statistics for the entire request, while the choices field will always be an empty array. All other chunks will also include a usage field, but its value will be null."
+          }
+        }
+      },
+      "ToolDefinition": {
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "description": "Function tool definition.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "The type of the tool. Currently only function is supported."
+          },
+          "function": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the function to call. Must consist of a-z, A-Z, 0-9 characters, or include underscores and hyphens, with a maximum length of 64 characters."
+              },
+              "description": {
+                "type": "string",
+                "description": "A description of what the function does, used by the model to understand when and how to call it."
+              },
+              "parameters": {
+                "type": "object",
+                "description": "The input parameters of the function, described as a JSON Schema object. Omitting parameters defines a function with an empty parameter list.",
+                "additionalProperties": true
+              },
+              "strict": {
+                "type": "boolean",
+                "default": false,
+                "description": "If set to true, the API will use strict mode in function calls to ensure the output always conforms to the function's JSON schema definition. This is a Beta feature."
+              }
+            }
+          }
+        }
+      },
+      "ToolChoice": {
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "auto"
+            ]
+          }
+        ],
+        "description": "Tool choice"
+      },
+      "ResponseFormat": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ]
+          }
+        },
+        "description": "Response format"
+      },
+      "ToolCallMessage": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "function"
+        ],
+        "description": "Tool call object within a message.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the tool call."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "The type of the tool. Currently only function is supported."
+          },
+          "function": {
+            "type": "object",
+            "description": "The function the model called.",
+            "required": [
+              "name",
+              "arguments"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the function the model called."
+              },
+              "arguments": {
+                "type": "string",
+                "description": "The arguments to call the function with, generated by the model as a JSON string. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined in your function schema. Validate these arguments in your code before calling the function."
+              }
+            }
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "description": "DeepSeek chat completions success response.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the chat."
+          },
+          "object": {
+            "type": "string",
+            "description": "The type of the object, which is chat.completion."
+          },
+          "created": {
+            "type": "integer",
+            "description": "The Unix timestamp (in seconds) when the chat completion was created."
+          },
+          "model": {
+            "type": "string",
+            "description": "The name of the model that generated the completion."
+          },
+          "system_fingerprint": {
+            "type": "string",
+            "description": "This fingerprint represents the backend configuration that the model runs with."
+          },
+          "choices": {
+            "type": "array",
+            "description": "A list of completions generated by the model.",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionChoice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "ChatCompletionChoice": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "The index of this completion in the list of completions generated by the model."
+          },
+          "message": {
+            "$ref": "#/components/schemas/AssistantMessage"
+          },
+          "finish_reason": {
+            "type": "string",
+            "description": "The reason the model stopped generating tokens. `stop` means the model finished generating naturally or hit a stop sequence; `length` means the output length reached the model's context length limit or the max_tokens limit; `content_filter` means the output was filtered due to a filtering policy; `tool_calls` means the model called a tool; `insufficient_system_resource` means generation was interrupted due to insufficient system inference resources."
+          },
+          "logprobs": {
+            "$ref": "#/components/schemas/ChoiceLogprobs"
+          }
+        }
+      },
+      "AssistantMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "The role that generated this message."
+          },
+          "content": {
+            "type": "string",
+            "description": "The content of this completion."
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "Only applicable in thinking mode. The reasoning content in the assistant message, preceding the final answer."
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "Tool calls generated by the model, e.g. function calls.",
+            "items": {
+              "$ref": "#/components/schemas/ToolCallMessage"
+            }
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "description": "Usage information for this chat completion request.",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "The number of tokens contained in the user prompt. This value equals prompt_cache_hit_tokens + prompt_cache_miss_tokens."
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "The number of tokens generated by the model for the completion."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "The total number of tokens in this request (prompt + completion)."
+          },
+          "prompt_cache_hit_tokens": {
+            "type": "integer",
+            "description": "The number of tokens in the user prompt that hit the context cache."
+          },
+          "prompt_cache_miss_tokens": {
+            "type": "integer",
+            "description": "The number of tokens in the user prompt that missed the context cache."
+          },
+          "completion_tokens_details": {
+            "type": "object",
+            "description": "Details about the completion tokens.",
+            "properties": {
+              "reasoning_tokens": {
+                "type": "integer",
+                "description": "The number of chain-of-thought tokens generated by the reasoning model."
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error description."
+          },
+          "type": {
+            "type": "string",
+            "description": "Error type."
+          },
+          "param": {
+            "type": "string",
+            "description": "Associated field name."
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          }
+        }
+      }
+    }
+  }
+}

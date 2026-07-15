@@ -76,6 +76,13 @@
                     ]
                   },
                   {
+                    "group": "MIMO",
+                    "pages": [
+                      "zh-Hans/zmodelChat/mimo/mimo-v2.5",
+                      "zh-Hans/zmodelChat/mimo/mimo-v2.5-pro"
+                    ]
+                  },
+                  {
                     "group": "智谱",
                     "pages": [
                       "zh-Hans/zmodelChat/zhipu/glm-4.5-air",
@@ -418,6 +425,13 @@
                     ]
                   },
                   {
+                    "group": "MIMO",
+                    "pages": [
+                      "en/zmodelChat/mimo/mimo-v2.5",
+                      "en/zmodelChat/mimo/mimo-v2.5-pro"
+                    ]
+                  },
+                  {
                     "group": "Zhipu",
                     "pages": [
                       "en/zmodelChat/zhipu/glm-4.5-air",
@@ -720,6 +734,5 @@
       "display": "interactive"
     }
   },
-  "footer": {
-  }
+  "footer": {}
 }
