@@ -3,7 +3,7 @@
   "info": {
     "title": "Seedream 5.0 Pro Image-to-Image",
     "version": "1.0.0",
-    "description": "Seedream series Image-to-Image and multi-image reference capability documentation. The public unified endpoint is `/v1/images/generations`.",
+    "description": "Seedream 5.0 pro Image-to-Image and multi-image reference capability documentation. The public unified endpoint is `/v1/images/generations`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream 5.0 Pro Image-to-Image",
-        "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Image-to-Image and Multi-Image Reference Generation scenarios. Public fields include `model`, `prompt`, `image`, `size`, `seed`, `sequential_image_generation`, `sequential_image_generation_options`, `response_format`, and `watermark`.",
+        "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Image-to-Image and Multi-Image Reference Generation scenarios. Public fields include `model`, `prompt`, `image`, `size`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Multi-Image Generation: Input multiple reference images (2-10) + text prompt to generate a single image.\n- Single Image Generation: Input single reference image + text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
         "operationId": "byteplusImageToImage50Pro",
         "tags": [
           "Seedream Image"
@@ -44,7 +44,7 @@
                     "model": "dola-seedream-5-0-pro-260628",
                     "prompt": "Convert the image to Studio Ghibli animation style",
                     "image": "https://example.com/input.jpg",
-                    "size": "2048x2048"
+                    "size": "2K"
                   }
                 },
                 "multi_image_reference": {
@@ -55,7 +55,8 @@
                     "image": [
                       "https://example.com/ref1.jpg",
                       "https://example.com/ref2.jpg"
-                    ]
+                    ],
+                    "size": "2K"
                   }
                 }
               }
@@ -197,7 +198,7 @@
             "enum": [
               "dola-seedream-5-0-pro-260628"
             ],
-            "description": "Image generation model name. Supported models include `dola-seedream-5-0-pro-260628`."
+            "description": "Image generation model name. Supported models include `dola-seedream-5-0-pro-260628` (Seedream 5.0 pro, supports interactive editing, does not support sequential image generation)."
           },
            "prompt": {
             "type": "string",
@@ -216,52 +217,22 @@
                 "items": {
                   "type": "string"
                 },
-                "maxItems": 14
+                "maxItems": 10
               }
             ],
-            "description": "Input image information, supports URL or Base64 encoding. Seedream 5.0/4.5/4.0 supports single or multiple image inputs.\n\n- Image URL: Ensure the image URL is accessible.\n- Base64 encoding: Follow the format `data:image/<image_format>;base64,<Base64_encoded>`. Note that `<image_format>` should be lowercase, e.g., `data:image/png;base64,<base64_image>`.\n\nNotes:\n- Single image requirements:\n  - Format: jpeg, png (seedream 5.0/4.5/4.0 additionally supports webp, bmp, tiff, gif, heic, heif formats)\n  - Aspect ratio (width/height) range: [1/16, 16] (for seedream 5.0/4.5/4.0)\n  - Width/height (px) > 14\n  - Size: no more than 30MB\n  - Total pixels: no more than 6000×6000 = 36000000 px (limit on the product of width and height, not individual values)\n- Seedream 5.0/4.5/4.0 supports up to 14 reference images."
+            "description": "Input image information, supports URL or Base64 encoding. Supports single or multiple image inputs.\n\n- Image URL: Ensure the image URL is accessible.\n- Base64 encoding: Follow the format `data:image/<image_format>;base64,<Base64_encoded>`. Note that `<image_format>` should be lowercase, e.g., `data:image/png;base64,<base64_image>`.\n\nNotes:\n- Single image requirements:\n  - Format: jpeg, png, webp, bmp, tiff, gif, heic, heif\n  - Aspect ratio (width/height) range: [1/16, 16]\n  - Width/height (px) > 14\n  - Size: no more than 30MB\n  - Total pixels: no more than 6000×6000 = 36000000 px (limit on the product of width and height, not individual values)\n- Seedream 5.0 pro supports up to 10 reference images."
           },
           "size": {
             "type": "string",
-            "x-enum": [
-              "1K",
-              "2K"
-            ],
-            "description": "Specifies the size of the generated image. Different models support different sizing methods.\n\n**dola-seedream-5-0-pro-260628**:\nSpecifies the size of the generated image, supports the following two methods, which cannot be mixed.\n\n* Method 1 | Specify width and height pixel values:\n  * Default: `2048x2048`\n  * Total pixel range: [`1280x720` (921600), `4096x4096` (16777216)]\n  * Aspect ratio range: [1/16, 16]\n\n  > Note: When using Method 1, both total pixel range and aspect ratio range must be satisfied. Total pixels refers to the product of width and height, not individual values.\n  > * Valid example: `1600x600`\n    Total pixels 1600x600=960000, within [921600, 16777216]; aspect ratio 1600/600=8/3, within [1/16, 16], so valid.\n  > * Invalid example: `800x800`\n    Total pixels 800x800=640000, below 921600 minimum; aspect ratio 800/800=1, within [1/16, 16], but fails due to total pixel requirement.\n\n* Method 2 | Specify resolution and describe aspect ratio in prompt:\n  * Options: `1K`, `2K`\n\n  Resolution to pixel reference:\n\n  | Resolution | Aspect Ratio | Pixel Dimensions |\n  |---|---|---|\n  | 1K | 1:1 | 1024x1024 |\n  | | 4:3 | 1152x864 |\n  | | 3:4 | 864x1152 |\n  | | 16:9 | 1280x720 |\n  | | 9:16 | 720x1280 |\n  | | 3:2 | 1248x832 |\n  | | 2:3 | 832x1248 |\n  | | 21:9 | 1512x648 |\n  | 2K | 1:1 | 2048x2048 |\n  | | 4:3 | 2304x1728 |\n  | | 3:4 | 1728x2304 |\n  | | 16:9 | 2848x1600 |\n  | | 9:16 | 1600x2848 |\n  | | 3:2 | 2496x1664 |\n  | | 2:3 | 1664x2496 |\n  | | 21:9 | 3136x1344 |\n\n",
+            "description": "Specifies the size of the generated image, supports specifying resolution level (e.g., 2K) or width and height pixel values (e.g., 2048x2048), which cannot be mixed.\n\n**dola-seedream-5-0-pro-260628 (Seedream 5.0 pro)**\nSupports the following two methods, which cannot be mixed:\n\n* Method 1 (Recommended): Specify resolution level and describe aspect ratio, shape, or purpose in the prompt. The model determines the final image size.\n  * Default: 2K\n  * Options: 1K, 2K\n\n* Method 2: Specify width and height pixel values (widthxheight).\n  * Total pixel range: [`1280x720` (921600), `2048x2048×1.1025` (4624220)]\n  * Aspect ratio range: [1/16, 16]\n\n> Note: When using Method 2, both total pixel range and aspect ratio range must be satisfied. Total pixels refers to the product of width and height, not individual values.\n> * Valid example: `2048x1024`\n    Total pixels 2048x1024=2097152, within [921600, 4624220]; aspect ratio 2048/1024=2, within [1/16, 16], so valid.\n> * Invalid example: `512x512`\n    Total pixels 512x512=262144, below 921600 minimum, so invalid.\n\nResolution to pixel reference values when using Method 1 (not limited to these standard values, common ones listed):\n\n| Resolution | Aspect Ratio | Pixel Dimensions |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n",
             "default": "2K",
-            "example": "2048x2048"
+            "example": "2K"
           },
           "response_format": {
             "type": "string",
             "enum": ["url", "b64_json"],
             "description": "Specifies the return format of the generated image. Supported options:\n- `url`: Returns image download URL; valid for 24 hours after generation.\n- `b64_json`: Returns image data as Base64 encoded JSON.",
             "default": "url"
-          },
-          "seed": {
-            "type": "integer",
-            "description": "Random seed. Supported by some Seedream models. Range: [-1, 2147483647].",
-            "default": -1,
-            "minimum": -1,
-            "maximum": 2147483647
-          },
-          "sequential_image_generation": {
-            "type": "string",
-            "enum": ["auto", "disabled"],
-            "description": "Controls whether sequential image generation is enabled.\n- `auto`: Auto mode, model determines whether to return sequential images and how many.\n- `disabled`: Disabled, model generates only one image.\n\nSupported by seedream 5.0/4.5/4.0 only.",
-            "default": "disabled"
-          },
-          "sequential_image_generation_options": {
-            "type": "object",
-            "description": "Configuration for sequential image generation. Effective only when `sequential_image_generation` is `auto`.\n\nSupported by seedream 5.0/4.5/4.0 only.",
-            "properties": {
-              "max_images": {
-                "type": "integer",
-                "description": "Maximum number of images to generate.\n- Range: [1, 15]\n\nNote: The actual number of generated images is affected by both `max_images` and the number of input reference images. Input reference images + generated images ≤ 15.",
-                "minimum": 1,
-                "maximum": 15,
-                "default": 15
-              }
-            }
           },
           "watermark": {
             "type": "boolean",
@@ -273,6 +244,10 @@
       "ImageGenerationResponse": {
         "type": "object",
         "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID (model name-version) used for this request."
+          },
           "created": {
             "type": "integer",
             "format": "int64",
@@ -283,7 +258,25 @@
             "items": {
               "$ref": "#/components/schemas/ImageData"
             },
-            "description": "List of generated images. May contain multiple images in sequential generation scenarios."
+            "description": "List of generated images."
+          },
+          "usage": {
+            "type": "object",
+            "description": "Usage information for this request.",
+            "properties": {
+              "generated_images": {
+                "type": "integer",
+                "description": "Number of successfully generated images, excluding failed ones."
+              },
+              "output_tokens": {
+                "type": "integer",
+                "description": "Token count for generated images."
+              },
+              "total_tokens": {
+                "type": "integer",
+                "description": "Total token count for this request."
+              }
+            }
           }
         }
       },
@@ -300,7 +293,7 @@
           },
           "size": {
             "type": "string",
-            "description": "Image dimensions (widthxheight). Returned by seedream-5.0-lite/4.5/4.0 only."
+            "description": "Image dimensions (widthxheight)."
           }
         }
       },

@@ -3,7 +3,7 @@
   "info": {
     "title": "Seedream 5.0 Pro 文生图",
     "version": "1.0.0",
-    "description": "Seedream 系列文生图能力文档。公开统一入口为 `/v1/images/generations`。",
+    "description": "Doubao Seedream 5.0 pro 文生图能力文档。公开统一入口为 `/v1/images/generations`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream 5.0 Pro 文生图",
-        "description": "支持模型包括 `dola-seedream-5-0-pro-260628`。本文档覆盖文生图与组图生成场景。公开字段包括 `model`、`prompt`、`size`、`seed`、`sequential_image_generation`、`sequential_image_generation_options`、`response_format`、`watermark`。",
+        "description": "支持模型包括 `dola-seedream-5-0-pro-260628`。本文档覆盖文生图场景。公开字段包括 `model`、`prompt`、`size`、`response_format`、`watermark`。\n\n**模型能力**\n- 生成单图（不支持配置 sequential_image_generation）\n- 文生图：输入文本提示词，生成单张图片。\n- 暂不支持组图生成、联网搜索、流式输出。",
         "operationId": "byteplusTextToImage50Pro",
         "tags": [
           "Seedream Image"
@@ -43,28 +43,8 @@
                   "value": {
                     "model": "dola-seedream-5-0-pro-260628",
                     "prompt": "一只可爱的柯基犬在草地上奔跑，阳光明媚，写实风格",
-                    "size": "2048x2048",
+                    "size": "2K",
                     "response_format": "url"
-                  }
-                },
-                "sequential_images": {
-                  "summary": "组图生成",
-                  "value": {
-                    "model": "dola-seedream-5-0-pro-260628",
-                    "prompt": "一套四季风景插画，春夏秋冬",
-                    "sequential_image_generation": "auto",
-                    "response_format": "url"
-                  }
-                },
-                "sequential_images_with_limit": {
-                  "summary": "限制组图最多张数",
-                  "value": {
-                    "model": "dola-seedream-5-0-pro-260628",
-                    "prompt": "一套四季风景插画，春夏秋冬",
-                    "sequential_image_generation": "auto",
-                    "sequential_image_generation_options": {
-                      "max_images": 3
-                    }
                   }
                 }
               }
@@ -205,71 +185,24 @@
             "enum": [
               "dola-seedream-5-0-pro-260628"
             ],
-            "description": "图像生成模型名称。支持的模型包括 `dola-seedream-5-0-pro-260628`。"
+            "description": "图像生成模型名称。支持的模型包括 `dola-seedream-5-0-pro-260628`（Seedream 5.0 pro，支持交互编辑，不支持组图生成）。"
           },
            "prompt": {
             "type": "string",
             "description": "用于生成图像的提示词，支持中英文。建议不超过 300 个汉字或 600 个英文单词。字数过多信息容易分散，模型可能因此忽略细节，只关注重点，造成图片缺失部分元素。",
             "example": "充满活力的特写编辑肖像，模特眼神犀利，头戴雕塑感帽子，色彩拼接丰富。"
           },
-          "image": {
-            "oneOf": [
-              {
-                "type": "string",
-                "description": "输入的图片信息，支持 URL 或 Base64 编码。"
-              },
-              {
-                "type": "array",
-                "description": "输入的多张图片信息，支持 URL 或 Base64 编码。",
-                "items": {
-                  "type": "string"
-                },
-                "maxItems": 14
-              }
-            ],
-            "description": "输入的图片信息，支持 URL 或 Base64 编码。seedream 5.0/4.5/4.0 支持单图或多图输入。\n\n- 图片 URL：请确保图片 URL 可被访问。\n- Base64 编码：请遵循此格式 `data:image/<图片格式>;base64,<Base64编码>`。注意 `<图片格式>` 需小写，如 `data:image/png;base64,<base64_image>`。\n\n说明：\n- 传入单张图片要求：\n  - 图片格式：jpeg、png（seedream 5.0/4.5/4.0 新增支持 webp、bmp、tiff、gif、heic、heif 格式）\n  - 宽高比（宽/高）范围：[1/16, 16]（适用模型：seedream 5.0/4.5/4.0）\n  - 宽高长度（px） > 14\n  - 大小：不超过 30MB\n  - 总像素：不超过 6000×6000 = 36000000 px（对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制）\n- seedream 5.0/4.5/4.0 最多支持传入 14 张参考图。"
-          },
           "size": {
             "type": "string",
-            "x-enum": [
-              "1K",
-              "2K"
-            ],
-            "description": "指定生成图像的尺寸信息。不同模型支持的尺寸方式存在差异。\n\n**dola-seedream-5-0-pro-260628**：\n指定生成图像的尺寸信息，支持以下两种方式，不可混用。\n\n* 方式 1 | 指定生成图像的宽高像素值：\n  * 默认值：`2048x2048`\n  * 总像素取值范围：[`1280x720`（921600）, `4096x4096`（16777216）]\n  * 宽高比取值范围：[1/16, 16]\n\n  > 说明：采用方式 1 时，需同时满足总像素取值范围和宽高比取值范围。其中，总像素是对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制。\n  > * 有效示例：`1600x600`\n    总像素值 1600x600=960000，符合 [921600, 16777216] 的区间要求；宽高比 1600/600=8/3，符合 [1/16, 16] 的区间要求，故该示例值有效。\n  > * 无效示例：`800x800`\n    总像素值 800x800=640000，未达到 921600 的最低要求；宽高 800/800=1，虽符合 [1/16, 16] 的区间要求，但因其未同时满足两项限制，故该示例值无效。\n\n* 方式 2 | 指定生成图像的分辨率，并在 prompt 中用自然语言描述图片宽高比、图片形状或图片用途，最终由模型判断生成图片的大小。\n  * 可选值：`1K`、`2K`\n\n  说明：采用方式 2 并在 prompt 中描述特定宽高比时，模型实际映射的宽高像素参考值：\n\n  | 分辨率 | 宽高比 | 宽高像素值 |\n  |---|---|---|\n  | 1K | 1:1 | 1024x1024 |\n  | | 4:3 | 1152x864 |\n  | | 3:4 | 864x1152 |\n  | | 16:9 | 1280x720 |\n  | | 9:16 | 720x1280 |\n  | | 3:2 | 1248x832 |\n  | | 2:3 | 832x1248 |\n  | | 21:9 | 1512x648 |\n  | 2K | 1:1 | 2048x2048 |\n  | | 4:3 | 2304x1728 |\n  | | 3:4 | 1728x2304 |\n  | | 16:9 | 2848x1600 |\n  | | 9:16 | 1600x2848 |\n  | | 3:2 | 2496x1664 |\n  | | 2:3 | 1664x2496 |\n  | | 21:9 | 3136x1344 |\n\n",
+            "description": "指定生成图像的尺寸信息，支持指定分辨率档位（如 2K）或指定宽高像素值（如 2048x2048）两种方式，不可混用。\n\n**dola-seedream-5-0-pro-260628（Seedream 5.0 pro）**\n支持以下两种方式，不可混用：\n\n* 方式 1（推荐）：指定分辨率档位，并在 prompt 中用自然语言描述图片宽高比、图片形状或图片用途，最终由模型判断生成图片的大小。\n  * 默认值：2K\n  * 可选值：1K、2K\n\n* 方式 2：指定宽高像素值（宽x高）。\n  * 总像素取值范围：[`1280x720`（921600）, `2048x2048×1.1025`（4624220）]\n  * 宽高比取值范围：[1/16, 16]\n\n> 说明：采用方式 2 时，需同时满足总像素取值范围和宽高比取值范围。其中，总像素是对单张图宽度和高度的像素乘积限制，而不是对宽度或高度的单独值进行限制。\n> * 有效示例：`2048x1024`\n  总像素值 2048x1024=2097152，符合 [921600, 4624220] 的区间要求；宽高比 2048/1024=2，符合 [1/16, 16] 的区间要求，故该示例值有效。\n> * 无效示例：`512x512`\n  总像素值 512x512=262144，未达到 921600 的最低要求，故该示例值无效。\n\n使用方式 1 时，模型实际映射的宽高像素参考值（不限于以下标准值，仅列常见）：\n\n| 分辨率 | 宽高比 | 宽高像素值 |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n",
             "default": "2K",
-            "example": "2048x2048"
+            "example": "2K"
           },
           "response_format": {
             "type": "string",
             "enum": ["url", "b64_json"],
             "description": "指定生成图像的返回格式。支持以下两种返回方式：\n- `url`：返回图片下载链接；链接在图片生成后 24 小时内有效，请及时下载图片。\n- `b64_json`：以 Base64 编码字符串的 JSON 格式返回图像数据。",
             "default": "url"
-          },
-          "seed": {
-            "type": "integer",
-            "description": "随机数种子。部分 Seedream 模型支持。取值范围 [-1, 2147483647]。",
-            "default": -1,
-            "minimum": -1,
-            "maximum": 2147483647
-          },
-          "sequential_image_generation": {
-            "type": "string",
-            "enum": ["auto", "disabled"],
-            "description": "控制是否关闭组图功能。\n- `auto`：自动判断模式，模型会根据用户提供的提示词自主判断是否返回组图以及组图包含的图片数量。\n- `disabled`：关闭组图功能，模型只会生成一张图。\n\n仅 seedream 5.0/4.5/4.0 支持该参数。",
-            "default": "disabled"
-          },
-          "sequential_image_generation_options": {
-            "type": "object",
-            "description": "组图功能的配置。仅当 `sequential_image_generation` 为 `auto` 时生效。\n\n仅 seedream 5.0/4.5/4.0 支持该参数。",
-            "properties": {
-              "max_images": {
-                "type": "integer",
-                "description": "指定本次请求，最多可生成的图片数量。\n- 取值范围：[1, 15]\n\n说明：实际可生成的图片数量，除受到 `max_images` 影响外，还受到输入的参考图数量影响。输入的参考图数量 + 最终生成的图片数量 ≤ 15 张。",
-                "minimum": 1,
-                "maximum": 15,
-                "default": 15
-              }
-            }
           },
           "watermark": {
             "type": "boolean",
@@ -281,6 +214,10 @@
       "ImageGenerationResponse": {
         "type": "object",
         "properties": {
+          "model": {
+            "type": "string",
+            "description": "本次请求使用的模型 ID（模型名称-版本）。"
+          },
           "created": {
             "type": "integer",
             "format": "int64",
@@ -291,7 +228,25 @@
             "items": {
               "$ref": "#/components/schemas/ImageData"
             },
-            "description": "生成的图像列表。组图场景下可能包含多张图片。"
+            "description": "生成的图像列表。"
+          },
+          "usage": {
+            "type": "object",
+            "description": "本次请求的用量信息。",
+            "properties": {
+              "generated_images": {
+                "type": "integer",
+                "description": "模型成功生成的图片张数，不包含生成失败的图片。"
+              },
+              "output_tokens": {
+                "type": "integer",
+                "description": "模型生成的图片花费的 token 数量。"
+              },
+              "total_tokens": {
+                "type": "integer",
+                "description": "本次请求消耗的总 token 数量。"
+              }
+            }
           }
         }
       },
@@ -308,7 +263,7 @@
           },
           "size": {
             "type": "string",
-            "description": "图像尺寸（宽x高）。仅 seedream-5.0-lite/4.5/4.0 返回。"
+            "description": "图像尺寸（宽x高）。"
           }
         }
       },
