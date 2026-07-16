@@ -38,28 +38,167 @@
                 "$ref": "#/components/schemas/ChatCompletionRequest"
               },
               "examples": {
-                "default": {
+                "Basic Call": {
                   "summary": "Basic text chat",
                   "value": {
                     "model": "mimo-v2.5-pro",
                     "messages": [
                       {
-                        "content": "You are MiMo",
-                        "role": "system"
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
                       },
                       {
-                        "content": "Introduce yourself",
-                        "role": "user"
+                        "role": "user",
+                        "content": "please introduce yourself"
                       }
                     ],
                     "max_completion_tokens": 1024,
                     "temperature": 1,
                     "top_p": 0.95,
                     "stream": false,
+                    "stop": null,
                     "frequency_penalty": 0,
+                    "presence_penalty": 0,
                     "thinking": {
                       "type": "disabled"
                     }
+                  }
+                },
+                "Streaming Response": {
+                  "summary": "Streaming chat response",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "please introduce yourself"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "stream": true
+                  }
+                },
+                "Function Call": {
+                  "summary": "Chat with function calling",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": "What is the weather like in Boston today?"
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_current_weather",
+                          "description": "Get the current weather in a given location",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "location": {
+                                "type": "string",
+                                "description": "The city and state, e.g. San Francisco, CA"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "enum": [
+                                  "celsius",
+                                  "fahrenheit"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "location"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto"
+                  }
+                },
+                "Web Search": {
+                  "summary": "Chat with web search",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": "please introduce Jun Lei"
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "web_search",
+                        "max_keyword": 3,
+                        "force_search": true,
+                        "limit": 1,
+                        "user_location": {
+                          "type": "approximate",
+                          "country": "China",
+                          "region": "Hubei",
+                          "city": "Wuhan"
+                        }
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "temperature": 1,
+                    "top_p": 0.95,
+                    "stream": false,
+                    "stop": null,
+                    "frequency_penalty": 0,
+                    "presence_penalty": 0,
+                    "thinking": {
+                      "type": "disabled"
+                    }
+                  }
+                },
+                "Image Input": {
+                  "summary": "Chat with image input",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "please describe the content of the image"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
                   }
                 }
               }
@@ -75,27 +214,157 @@
                   "$ref": "#/components/schemas/ChatCompletionResponse"
                 },
                 "examples": {
-                  "success": {
+                  "Basic Call": {
                     "summary": "Non-streaming success response",
                     "value": {
-                      "id": "test",
-                      "object": "chat.completion",
-                      "created": 1782805310,
-                      "model": "mimo-v2.5-pro",
+                      "id": "8b51f9e0515949cb8207fbd35ea6ea5c",
                       "choices": [
                         {
+                          "finish_reason": "stop",
                           "index": 0,
                           "message": {
+                            "content": "Hello! I'm MiMo, Xiaomi's AI assistant created by the Xiaomi LLM-Core team. I'm here to chat, help answer questions, and assist with various tasks—whether it's providing information, brainstorming ideas, or just having a friendly conversation. Feel free to ask me anything, and I'll do my best to help! 😊",
                             "role": "assistant",
-                            "content": "Hello! I am MiMo"
-                          },
-                          "finish_reason": "stop"
+                            "tool_calls": null
+                          }
                         }
                       ],
+                      "created": 1776848906,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
                       "usage": {
-                        "prompt_tokens": 10,
-                        "completion_tokens": 5,
-                        "total_tokens": 15
+                        "completion_tokens": 72,
+                        "prompt_tokens": 57,
+                        "total_tokens": 129,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 0
+                        },
+                        "prompt_tokens_details": null
+                      }
+                    }
+                  },
+                  "Function Call": {
+                    "summary": "Function calling response",
+                    "value": {
+                      "id": "8778784df68043e39a2df03258ddeaa5",
+                      "choices": [
+                        {
+                          "finish_reason": "tool_calls",
+                          "index": 0,
+                          "message": {
+                            "content": "",
+                            "role": "assistant",
+                            "tool_calls": [
+                              {
+                                "id": "call_b837e211b7764dab9b56f4d8",
+                                "function": {
+                                  "arguments": "{\"location\": \"Boston, MA\", \"unit\": \"celsius\"}",
+                                  "name": "get_current_weather"
+                                },
+                                "type": "function"
+                              }
+                            ],
+                            "reasoning_content": "The user is asking about the current weather in Boston. I should use the get_current_weather function to get this information. Boston could refer to Boston, MA. I'll call the function with location \"Boston, MA\" and use celsius as the unit since that's more commonly used in many places, but actually the user didn't specify a unit. Looking at the function parameters, I can choose celsius or fahrenheit. Since Boston is in the US, maybe fahrenheit would be more appropriate? Actually, I should just pick a default or ask. But the instructions say not to ask about optional parameters if there are defaults. There's no default specified in the schema, so I should choose one. I'll go with celsius as it's more standard internationally. Let me call the function."
+                          }
+                        }
+                      ],
+                      "created": 1776849125,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 196,
+                        "prompt_tokens": 349,
+                        "total_tokens": 545,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 161
+                        },
+                        "prompt_tokens_details": null
+                      }
+                    }
+                  },
+                  "Web Search": {
+                    "summary": "Web search response",
+                    "value": {
+                      "id": "828d5db56ff748d8b4623d1972c8eca2",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "Based on the search results, here is an introduction to Jun Lei (Lei Jun):\n\nJun Lei, also known as Lei Jun, is a renowned Chinese entrepreneur and technology industry leader. He has accumulated 30 years of entrepreneurial experience in the science and technology sector, making him a representative figure of China's internet and a well-known entrepreneur.\n\nLei Jun was born in 1969 in Xiantao, Hubei Province. He began his entrepreneurial journey early, participating in the founding of Kingsoft (Jinshan Software) in 1992 and later serving as its CEO in 1998. That same year, he also founded Excellence Network (Zhuoyue Wang). After Kingsoft went public in 2007, he stepped down as President and CEO to take on the role of Vice Chairman.\n\nIn the following years, Lei Jun actively engaged as an angel investor, backing numerous innovative enterprises such as Fanke Chengpin (Vancl), Duowan, and Youshi Technology (UCWeb). A pivotal moment came on April 6, 2010, when he decided to embark on a new venture, establishing Xiaomi Company. The first Xiaomi smartphone was officially released on August 16, 2011.\n\nFurthermore, Lei Jun returned to Kingsoft in July 2011 to oversee its online games and antivirus software divisions, and he officially assumed the position of Chairman of Kingsoft on July 11, 2011. His career also includes involvement in investment cases for companies like Shuiyang Shares, Edianyun, Yaoshibang, Cheche, and others.",
+                            "role": "assistant",
+                            "annotations": [
+                              {
+                                "type": "url_citation",
+                                "url": "https://en.shunwei.com/team",
+                                "title": "Team – Shunwei",
+                                "summary": "Jun LEI Founding Partner & Chairman Mr. Lei Jun, with 30 years of entrepreneurial experience in the science and technology industry, is a representative of China's Internet and a well-known entrepreneShe has been involved in investment cases such as Shuiyang Shares (SZ:300740), Edianyun (HK:02416), Yaoshibang (HK:09885), Cheche, Shansong, Royal Xiaohu, Yangteng Innovation, Zhiketong, Yinghe, Chaya",
+                                "site_name": "en.shunwei.com",
+                                "publish_time": "2024-10-26T07:37:04+08:00",
+                                "logo_url": "https://th.bochaai.com/favicon?domain_url=https://en.shunwei.com/team"
+                              },
+                              {
+                                "type": "url_citation",
+                                "url": "https://max.book118.com/html/2023/0519/7145010064005110.shtm",
+                                "title": "小米公司介绍-20230519110336.pptx-原创力文档",
+                                "summary": "小米公司介绍第1页/共25页小米创始人:雷军Millet founder: Lei Jun1969年出生于湖北仙桃,于1992年参与创办金山软件,1998年出任金山软件CEO,1998年创办了卓越网。1969 born in Hubei Xiantao, in 1992, and participated in the founding of Kingsoft, 1998 served as CEO of golden hill software. In 1998 founded the network of excellence.2007年,金山软件上市后,雷军卸任金山软件总裁兼CEO职务,担任副董事长。2007, Kingsoft listing, Kingsoft chairman and CEO Lei Juns office, served as vice chairman.之后几年,雷军作为天使投资人,投资了凡客诚品、多玩、优视科技等多家创新型企业。After a few years, Lei Jun as an angel investor, invested more, Eslite, superior technology and a number of innovative enterprises.2010年4月6日,雷军选择重新创业,建立了小米公司,并于2011年8月16日正式发布小米手机。In April 6, 2010, Lei choose to venture, a millet company, and officially released millet mobile phone in August 16, 2011.2011年7月,雷军重返金山执掌网游与毒霸;2011年7月11日,正式担任金山软件董事长。July 2011, Lei Ju",
+                                "site_name": "原创力文档",
+                                "publish_time": "2023-05-23T19:49:37+08:00",
+                                "logo_url": "https://th.bochaai.com/favicon?domain_url=https://max.book118.com/html/2023/0519/7145010064005110.shtm"
+                              }
+                            ],
+                            "tool_calls": null
+                          }
+                        }
+                      ],
+                      "created": 1776849240,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 387,
+                        "prompt_tokens": 1222,
+                        "total_tokens": 1609,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 0
+                        },
+                        "prompt_tokens_details": null,
+                        "web_search_usage": {
+                          "tool_usage": 3,
+                          "page_usage": 2
+                        }
+                      }
+                    }
+                  },
+                  "Image Input": {
+                    "summary": "Image input response",
+                    "value": {
+                      "id": "e27ffa1d3e31434daa71d6b6a83f6e38",
+                      "choices": [
+                        {
+                          "finish_reason": "length",
+                          "index": 0,
+                          "message": {
+                            "content": "Based on the image provided, here is a detailed description of the content:\n\n**Overall Atmosphere**\nThe image depicts a serene, magical, and lush forest scene. It has an ethereal quality, likely enhanced by digital art techniques or AI generation, characterized",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Here's a thinking process that leads to the description:\n\n1.  **Analyze the Request:**\n*   **Input:** An image of a forest scene with a stream, sunlight, and trees.\n*   **Task:** Describe the content of the image.\n\n2.  **Initial Impression & Overall Mood:**\n*   The image depicts a serene, magical, and lush forest.\n*   The lighting is dramatic, with sunbeams filtering through the canopy.\n*   There's a sense of tranquility and nature in its undisturbed state.\n*   The style looks somewhat photorealistic but possibly enhanced or AI-generated due to the perfect lighting and composition.\n\n3.  **Break Down Visual Elements:**\n\n*   **Foreground:**\n*   *Left side:* Large, detailed ferns. They are vibrant green and look wet or dewy.\n*   *Bottom center/right:* A stream or small river flowing towards the viewer.\n*   *Water:* The water is clear but reflects the light, creating a shimmering effect. It flows over smooth, moss-covered rocks.\n*   *Rocks:* Several large, rounded stones are visible in the immediate foreground, covered in thick green moss.\n\n*   **Mid-ground:**\n*   *Trees:* Massive, ancient-looking trees with thick, gnarled trunks and exposed roots. The bark is textured and dark.\n*   *Vegetation:* More ferns, bushes, and mossy ground cover lining the banks of the stream.\n*   *Stream path:* The stream winds back into the forest, guiding the eye.\n\n*   **Background:**\n*   *Forest density:* The trees become denser and fade into a misty or foggy atmosphere.\n*   *Lighting:* This is the most striking feature. \"God rays\" or crepuscular rays are streaming down from the upper center/right, cutting through the mist and illuminating the scene.\n*   *Particles:* There are tiny specks floating in the light beams, looking like dust motes, pollen, or perhaps magical sparkles/fireflies.\n\n4.  **Structure the Description:**\n*   **Introduction:** General summary of the scene (misty forest, stream, sunlight).\n*   **The Lighting (Key Feature):** Describe the sunbeams and atmosphere.\n*   **The Vegetation (Flora):** Mention the ferns, moss, and ancient trees.\n*   **The Water (Hydrography):** Describe the stream, rocks, and reflections.\n*   **Composition/Atmosphere:** Conclude with the overall feeling (peaceful, ethereal).\n\n5.  **Drafting the Description (Iterative refinement):**\n\n*   *Draft 1 (Mental):* It's a forest with a river. Big trees on the sides. Sun is shining down in beams. There are ferns in the front left. The rocks are mossy. It looks magical.\n\n*   *Draft 2 (More detail):* A lush forest scene. A stream flows through the center over mossy rocks. On the left, there are large ferns. The trees are old with twisted branches. The sun is breaking through the canopy, creating bright rays of light. There is mist in the background. It looks like a fantasy setting.\n\n*   *Draft 3 (Polished & Descriptive - closer to final output):*\n*   Start with the atmosphere: \"This image depicts a serene and enchanting forest scene...\"\n*   Focus on the light: \"...dominated by dramatic shafts of sunlight (god rays) filtering through the dense canopy...\"\n*   Describe the water: \"A gentle stream flows through the center, winding over smooth, moss-covered stones...\"\n*   Describe the plants: \"Lush vegetation is everywhere, particularly large, detailed ferns in the foreground on the left...\"\n*   Describe the trees: \"Ancient trees with thick, gnarled trunks and exposed roots frame the scene...\"\n\n6.  **Final Polish (Reviewing against the image):**\n*   *Check:* Did I mention the moss? Yes.\n*   *Check:* Did I mention the floating particles? Yes, add that detail about the \"sparkles\" or dust motes.\n*   *Check:* Is the perspective correct? Yes, low angle looking up the stream.\n\n7.  **Final Output Generation:** (This matches the provided good response.)\n*   \"The image displays a breathtaking, ethereal forest scene...\"\n*   Break it down by lighting, vegetation, and water.\n*   Mention the color palette (greens, browns, golden light).\n\n8.  **Formatting:** Use bullet points or paragraphs for readability. (I will use a mix of general description and specific details)."
+                          }
+                        }
+                      ],
+                      "created": 1776849330,
+                      "model": "mimo-v2.5",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 1024,
+                        "prompt_tokens": 1085,
+                        "total_tokens": 2109,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 971
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 5,
+                          "image_tokens": 1024
+                        }
                       }
                     }
                   }
@@ -107,9 +376,9 @@
                   "description": "SSE data stream. Each `data:` event can be parsed as a DeepSeek/OpenAI-compatible Chat Completions Chunk; the stream typically ends with `data: [DONE]`. When `stream_options.include_usage=true` is set, an additional chunk with `usage` is returned before the end."
                 },
                 "examples": {
-                  "stream": {
-                    "summary": "Streaming response chunk",
-                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                  "Streaming Response": {
+                    "summary": "Streaming response with SSE events",
+                    "value": "data: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":null,\"matched_stop\":null}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\"Okay, the user\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" is asking\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" me\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\n...\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\"'m ready\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\" to help!\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":null,\"content\":null,\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":\"stop\",\"matched_stop\":151645}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":{\"completion_tokens\":123,\"prompt_tokens\":55,\"total_tokens\":178,\"completion_tokens_details\":{\"reasoning_tokens\":71},\"prompt_tokens_details\":null}}\n\ndata: [DONE]"
                   }
                 }
               }
@@ -254,8 +523,8 @@
             "type": "number",
             "nullable": true,
             "default": 0,
-            "minimum": -2.0,
-            "maximum": 2.0,
+            "minimum": -2,
+            "maximum": 2,
             "description": "A value between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, reducing the model's likelihood of repeating the same content."
           },
           "max_completion_tokens": {
@@ -296,7 +565,7 @@
             "type": "number",
             "minimum": 0,
             "maximum": 1.5,
-            "default": 1.0,
+            "default": 1,
             "description": "Sampling temperature to use, between 0 and 1.5. Higher values (e.g., 0.8) make the output more random, while lower values (e.g., 0.2) make it more focused and deterministic. We generally recommend altering this or top_p but not both. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom temperature. Even if passed, the model will force the recommended default value of 1.0."
           },
           "tool_choice": {
@@ -306,7 +575,7 @@
             "type": "number",
             "default": 0.95,
             "minimum": 0.01,
-            "maximum": 1.0,
+            "maximum": 1,
             "description": "Probability threshold for nucleus sampling, controlling the diversity of text generation. Higher top_p values produce more diverse text; lower values produce more deterministic text. Since both temperature and top_p control text diversity, it is recommended to adjust only one of them. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom top_p. Even if passed, the model will force the recommended default value of 0.95."
           },
           "tools": {
