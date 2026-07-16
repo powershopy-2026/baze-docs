@@ -715,6 +715,13 @@
             "type": "string",
             "nullable": true,
             "description": "（Beta）用于对话前缀延续下的思考模式，作为上一条助手思维链内容的输入。使用此功能时，prefix 参数必须设为 true。"
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "模型生成的工具调用，如函数调用。",
+            "items": {
+              "$ref": "#/components/schemas/ToolCallMessage"
+            }
           }
         }
       },
@@ -736,8 +743,16 @@
             "description": "消息作者的角色，为 tool。"
           },
           "content": {
-            "type": "string",
-            "description": "工具消息的内容。"
+            "description": "工具消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "工具消息的文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/TextContentPartArray"
+              }
+            ]
           },
           "tool_call_id": {
             "type": "string",
@@ -1337,7 +1352,7 @@
       },
       "ContentPartArray": {
         "type": "array",
-        "description": "用户消息中的内容部分数组。可包含文本和图片。",
+        "description": "用户消息中内容部分的数组。可包含文本、图像、音频或视频。",
         "items": {
           "oneOf": [
             {
@@ -1345,6 +1360,12 @@
             },
             {
               "$ref": "#/components/schemas/ContentPartImage"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartAudio"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartVideo"
             }
           ]
         }
@@ -1473,6 +1494,84 @@
           "code": {
             "type": "string",
             "description": "错误代码。"
+          }
+        }
+      },
+      "ContentPartAudio": {
+        "type": "object",
+        "title": "Audio content part",
+        "required": [
+          "type",
+          "audio_url"
+        ],
+        "description": "用户消息中的音频内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "audio_url"
+            ],
+            "description": "内容部分的类型，值为 audio_url。"
+          },
+          "audio_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "音频 URL。可以是公共音频 URL 或 Base64 编码的数据 URL。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "音频的 URL 或 Base64 编码的音频数据。"
+              }
+            }
+          }
+        }
+      },
+      "ContentPartVideo": {
+        "type": "object",
+        "title": "Video content part",
+        "required": [
+          "type",
+          "video_url"
+        ],
+        "description": "用户消息中的视频内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "video_url"
+            ],
+            "description": "内容部分的类型，值为 video_url。"
+          },
+          "video_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "视频 URL。可以是公共视频 URL 或 Base64 编码的数据 URL。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "视频的 URL 或 Base64 编码的视频数据。"
+              },
+              "fps": {
+                "type": "number",
+                "default": 2,
+                "description": "每秒抽帧数。所需范围：[0.1, 10.0]"
+              },
+              "media_resolution": {
+                "type": "string",
+                "default": "default",
+                "enum": [
+                  "default",
+                  "max"
+                ],
+                "description": "分辨率档次。可选值：default，max"
+              }
+            }
           }
         }
       }
