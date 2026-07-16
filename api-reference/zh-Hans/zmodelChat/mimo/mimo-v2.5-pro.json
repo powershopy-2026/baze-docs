@@ -12,12 +12,12 @@
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Baze API 服务地址"
+      "description": "baze API 服务端点"
     }
   ],
   "tags": [
     {
-      "name": "MIMO Chat",
+      "name": "MIMO 对话",
       "description": "MIMO 文本对话"
     }
   ],
@@ -25,10 +25,10 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "mimo-v2.5-pro",
-        "description": "调用 MIMO chat completions 能力",
-        "operationId": "mimoChatCompletions_mimo_v2_5_pro",
+        "description": "调用 MIMO 对话补全能力",
+        "operationId": "mimoChatCompletions_mimo_v2_5_pro_zh",
         "tags": [
-          "MIMO Chat"
+          "MIMO 对话"
         ],
         "requestBody": {
           "required": true,
@@ -44,11 +44,11 @@
                     "model": "mimo-v2.5-pro",
                     "messages": [
                       {
-                        "content": "你是MiMo",
+                        "content": "你是 MiMo",
                         "role": "system"
                       },
                       {
-                        "content": "介绍你自己",
+                        "content": "介绍一下你自己",
                         "role": "user"
                       }
                     ],
@@ -57,11 +57,9 @@
                     "top_p": 0.95,
                     "stream": false,
                     "frequency_penalty": 0,
-                    "presence_penalty": 0,
                     "thinking": {
                       "type": "disabled"
-                    },
-                    "tool_choice": "auto"
+                    }
                   }
                 }
               }
@@ -70,7 +68,7 @@
         },
         "responses": {
           "200": {
-            "description": "调用成功。非流式模式返回 JSON；流式模式返回 SSE 事件流。",
+            "description": "成功。非流式模式返回 JSON；流式模式返回 SSE 事件流。",
             "content": {
               "application/json": {
                 "schema": {
@@ -89,7 +87,7 @@
                           "index": 0,
                           "message": {
                             "role": "assistant",
-                            "content": "你好！我是MiMo"
+                            "content": "你好！我是 MiMo"
                           },
                           "finish_reason": "stop"
                         }
@@ -106,19 +104,19 @@
               "text/event-stream": {
                 "schema": {
                   "type": "string",
-                  "description": "SSE 数据流。每个 `data:` 事件都可按 DeepSeek/OpenAI 兼容的 Chat Completions Chunk 解析；结束时通常返回 `data: [DONE]`。当请求设置 `stream_options.include_usage=true` 时，结束前会额外返回带 `usage` 的 chunk。"
+                  "description": "SSE 数据流。每个 `data:` 事件可以解析为兼容 DeepSeek/OpenAI 的对话补全 Chunk；流通常以 `data: [DONE]` 结束。当设置了 `stream_options.include_usage=true` 时，会在结束前额外返回一个包含 `usage` 的数据块。"
                 },
                 "examples": {
                   "stream": {
-                    "summary": "流式响应片段",
-                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"正在调用天气工具\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                    "summary": "流式响应数据块",
+                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "请求参数不合法。",
+            "description": "请求参数无效。",
             "content": {
               "application/json": {
                 "schema": {
@@ -129,7 +127,7 @@
                     "summary": "参数错误",
                     "value": {
                       "error": {
-                        "message": "messages is required",
+                        "message": "messages 是必需的",
                         "type": "invalid_request_error",
                         "param": "messages",
                         "code": "bad_request_body"
@@ -141,7 +139,7 @@
             }
           },
           "401": {
-            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "description": "身份验证失败，例如缺少或无效的 token。",
             "content": {
               "application/json": {
                 "schema": {
@@ -152,7 +150,7 @@
                     "summary": "未授权",
                     "value": {
                       "error": {
-                        "message": "无效的令牌",
+                        "message": "无效的 token",
                         "type": "api_error",
                         "code": "access_denied",
                         "param": ""
@@ -164,7 +162,7 @@
             }
           },
           "429": {
-            "description": "触发速率限制或账户额度不足。",
+            "description": "触发频率限制或账户额度不足。",
             "content": {
               "application/json": {
                 "schema": {
@@ -172,10 +170,10 @@
                 },
                 "examples": {
                   "quota_exceeded": {
-                    "summary": "额度不足或速率受限",
+                    "summary": "额度不足或频率受限",
                     "value": {
                       "error": {
-                        "message": "当前账户额度不足，请稍后重试",
+                        "message": "账户额度不足，请稍后重试",
                         "type": "api_error",
                         "code": "insufficient_user_quota",
                         "param": ""
@@ -187,7 +185,7 @@
             }
           },
           "500": {
-            "description": "服务端处理请求时发生内部错误。",
+            "description": "处理请求时发生内部服务器错误。",
             "content": {
               "application/json": {
                 "schema": {
@@ -198,7 +196,7 @@
                     "summary": "内部处理失败",
                     "value": {
                       "error": {
-                        "message": "服务内部处理失败，请稍后重试",
+                        "message": "内部处理失败，请稍后重试",
                         "type": "api_error",
                         "code": "gen_relay_info_failed",
                         "param": ""
@@ -224,7 +222,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "API Token",
-        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+        "description": "在请求头中传递 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {
@@ -234,11 +232,11 @@
           "model",
           "messages"
         ],
-        "description": "DeepSeek chat completions 请求体。",
+        "description": "MIMO 对话补全请求体。",
         "properties": {
           "model": {
             "type": "string",
-            "description": "使用的模型的 ID",
+            "description": "要使用的模型 ID",
             "enum": [
               "mimo-v2.5-pro"
             ],
@@ -246,22 +244,32 @@
           },
           "messages": {
             "type": "array",
-            "description": "对话的消息列表。",
+            "description": "包含到目前为止对话的消息列表。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
             }
           },
-          "thinking": {
-            "$ref": "#/components/schemas/ThinkingConfig"
+          "frequency_penalty": {
+            "type": "number",
+            "nullable": true,
+            "default": 0,
+            "minimum": -2.0,
+            "maximum": 2.0,
+            "description": "取值范围在 -2.0 到 2.0 之间的数值。如果该值为正，那么新 token 会根据其在已有文本中的出现频率受到相应的惩罚，降低模型重复相同内容的可能性。"
           },
-          "stream": {
-            "type": "boolean",
-            "default": false,
-            "description": "如果设置为 true，将会以 SSE（server-sent events）的形式以流式发送消息增量。消息流以 `data: [DONE]` 结尾。"
+          "max_completion_tokens": {
+            "type": "integer",
+            "nullable": true,
+            "description": "对话补全中可以生成的 token 数的上限，包括可见的输出 token 数和推理 token 数。mimo-v2.5-pro 的默认值 131072。所需范围：[1, 131072]"
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
           },
           "stop": {
-            "description": "一个 string 或最多包含 16 个 string 的 list，在遇到这些词时，API 将停止生成更多的 token。",
+            "description": "最多 4 个序列，当 API 生成到这些序列时会停止继续生成 token。返回的文本中不会包含这些停止序列。",
+            "nullable": true,
+            "default": null,
             "oneOf": [
               {
                 "type": "string"
@@ -270,57 +278,48 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "maxItems": 4
               }
             ]
           },
-          "response_format": {
-            "$ref": "#/components/schemas/ResponseFormat"
+          "stream": {
+            "type": "boolean",
+            "nullable": true,
+            "default": false,
+            "description": "如果设置为 true，模型的响应数据会在生成过程中通过 SSE（server-sent events）的形式流式传输到客户端。"
+          },
+          "thinking": {
+            "$ref": "#/components/schemas/ThinkingConfig"
           },
           "temperature": {
             "type": "number",
             "minimum": 0,
             "maximum": 1.5,
-            "default": 1,
-            "description": "采样温度"
-          },
-          "top_p": {
-            "type": "number",
-            "minimum": 0.01,
-            "maximum": 1,
-            "default": 1,
-            "description": "核采样概率"
-          },
-          "tools": {
-            "type": "array",
-            "description": "模型可能会调用的 tool 的列表。目前，仅支持 function 作为工具。使用此参数来提供以 JSON 作为输入参数的 function 列表。最多支持 128 个 function。",
-            "items": {
-              "$ref": "#/components/schemas/ToolDefinition"
-            }
+            "default": 1.0,
+            "description": "要使用的采样温度，介于 0 和 1.5 之间。较高的值（如 0.8）会使输出更加随机，而较低的值（如 0.2）会使其更加集中和确定性。我们通常建议更改此值或 top_p，但不要同时更改。在思考模式下，mimo-v2.5-pro、mimo-v2.5 模型不支持自定义 temperature 参数。即使传入该参数，实际生效值也会被模型强制采用其推荐默认值 1.0。"
           },
           "tool_choice": {
             "$ref": "#/components/schemas/ToolChoice"
           },
-          "max_completion_tokens": {
-            "type": "integer",
-            "description": "最大生成 token 数"
-          },
-          "frequency_penalty": {
+          "top_p": {
             "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "description": "频率惩罚"
+            "default": 0.95,
+            "minimum": 0.01,
+            "maximum": 1.0,
+            "description": "核采样的概率阈值，用于控制模型生成文本的多样性。top_p 值越高，生成的文本多样性越强；top_p 值越低，生成的文本确定性越高。由于 temperature 和 top_p 均用于控制生成文本的多样性，建议仅设置其中一个参数。在思考模式下，mimo-v2.5-pro、mimo-v2.5 模型不支持自定义 top_p 参数。即使传入该参数，实际生效值也会被模型强制采用其推荐默认值 0.95。"
           },
-          "presence_penalty": {
-            "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "description": "存在惩罚"
+          "tools": {
+            "type": "array",
+            "description": "模型可能调用的工具列表。目前仅支持函数作为工具。注意：在思考模式下的多轮工具调用过程中，模型会在返回 tool_calls 字段的同时返回 reasoning_content 字段。若要继续对话，建议在后续每次请求的 messages 数组中保留所有历史 reasoning_content，以获得最佳表现。",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            }
           }
         }
       },
       "Message": {
-        "description": "对话的消息列表中的单条消息。根据 role 的不同，分为 developer、system、user、assistant、tool 五种消息类型。",
+        "description": "对话中的一条消息。根据角色的不同，分为五种消息类型：developer、system、user、assistant 和 tool。",
         "oneOf": [
           {
             "$ref": "#/components/schemas/DeveloperMessage"
@@ -340,16 +339,16 @@
         ]
       },
       "SystemMessage": {
-        "title": "System message",
+        "title": "系统消息",
         "type": "object",
         "required": [
           "role",
           "content"
         ],
-        "description": "System message。该消息的发起角色为 system。",
+        "description": "系统消息。此消息的角色为 system。",
         "properties": {
           "content": {
-            "description": "system 消息的内容。",
+            "description": "系统消息的内容。",
             "oneOf": [
               {
                 "type": "string",
@@ -365,25 +364,25 @@
             "enum": [
               "system"
             ],
-            "description": "该消息的发起角色，其值为 system。"
+            "description": "消息作者的角色，为 system。"
           },
           "name": {
             "type": "string",
-            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+            "description": "参与者的可选名称，提供给模型以区分同一角色的不同参与者。"
           }
         }
       },
       "UserMessage": {
-        "title": "User message",
+        "title": "用户消息",
         "type": "object",
         "required": [
           "role",
           "content"
         ],
-        "description": "User message。该消息的发起角色为 user。",
+        "description": "用户消息。此消息的角色为 user。",
         "properties": {
           "content": {
-            "description": "user 消息的内容。",
+            "description": "用户消息的内容。",
             "oneOf": [
               {
                 "type": "string",
@@ -399,24 +398,24 @@
             "enum": [
               "user"
             ],
-            "description": "该消息的发起角色，其值为 user。"
+            "description": "消息作者的角色，为 user。"
           },
           "name": {
             "type": "string",
-            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+            "description": "参与者的可选名称，提供给模型以区分同一角色的不同参与者。"
           }
         }
       },
       "AssistantRequestMessage": {
-        "title": "Assistant message",
+        "title": "助手消息",
         "type": "object",
         "required": [
           "role"
         ],
-        "description": "Assistant message。该消息的发起角色为 assistant。",
+        "description": "助手消息。此消息的角色为 assistant。",
         "properties": {
           "content": {
-            "description": "assistant 消息的内容。",
+            "description": "助手消息的内容。",
             "oneOf": [
               {
                 "type": "string",
@@ -433,53 +432,53 @@
             "enum": [
               "assistant"
             ],
-            "description": "该消息的发起角色，其值为 assistant。"
+            "description": "消息作者的角色，为 assistant。"
           },
           "name": {
             "type": "string",
-            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+            "description": "参与者的可选名称，提供给模型以区分同一角色的不同参与者。"
           },
           "prefix": {
             "type": "boolean",
-            "description": "(Beta) 设置此参数为 true，来强制模型在其回答中以此 assistant 消息中提供的前缀内容开始。"
+            "description": "（Beta）将此参数设为 true 可强制模型以此助手消息中提供的前缀内容作为回复的开头。"
           },
           "reasoning_content": {
             "type": "string",
             "nullable": true,
-            "description": "(Beta) 用于思考模式下在对话前缀续写功能下，作为最后一条 assistant 思维链内容的输入。使用此功能时，prefix 参数必须设置为 true。"
+            "description": "（Beta）用于对话前缀延续下的思考模式，作为上一条助手思维链内容的输入。使用此功能时，prefix 参数必须设为 true。"
           }
         }
       },
       "ToolMessage": {
-        "title": "Tool message",
+        "title": "工具消息",
         "type": "object",
         "required": [
           "role",
           "content",
           "tool_call_id"
         ],
-        "description": "Tool message。该消息的发起角色为 tool。",
+        "description": "工具消息。此消息的角色为 tool。",
         "properties": {
           "role": {
             "type": "string",
             "enum": [
               "tool"
             ],
-            "description": "该消息的发起角色，其值为 tool。"
+            "description": "消息作者的角色，为 tool。"
           },
           "content": {
             "type": "string",
-            "description": "tool 消息的内容。"
+            "description": "工具消息的内容。"
           },
           "tool_call_id": {
             "type": "string",
-            "description": "此消息所响应的 tool call 的 ID。"
+            "description": "此消息所响应的工具调用的 ID。"
           }
         }
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "控制思考模式与非思考模式的转换。",
+        "description": "这个参数用于控制模型是否启用思维链。注意：在思考模式下的多轮工具调用过程中，模型会在返回 tool_calls 字段的同时返回 reasoning_content 字段。若要继续对话，建议在后续每次请求的 messages 数组中保留所有历史 reasoning_content，以获得最佳表现。在思考模式下，mimo-v2.5-pro、mimo-v2.5 模型不支持自定义 temperature 和 top_p 参数。即使传入该参数，实际生效值也会被模型强制采用其推荐默认值 1.0 和 0.95。",
         "properties": {
           "type": {
             "type": "string",
@@ -488,17 +487,17 @@
               "disabled"
             ],
             "default": "enabled",
-            "description": "如果设为 enabled，则使用思考模式。如果设为 disabled，则使用非思考模式。"
+            "description": "是否启用思维链。mimo-v2.5-pro，mimo-v2.5 默认值为 enabled。可选值：enabled，disabled"
           }
         }
       },
       "StreamOptions": {
         "type": "object",
-        "description": "流式输出相关选项。只有在 stream 参数为 true 时，才可设置此参数。",
+        "description": "流式输出的选项。此参数仅在 stream 参数为 true 时才可设置。",
         "properties": {
           "include_usage": {
             "type": "boolean",
-            "description": "如果设置为 true，在流式消息最后的 `data: [DONE]` 之前将会传输一个额外的块。此块上的 usage 字段显示整个请求的 token 使用统计信息，而 choices 字段将始终是一个空数组。所有其他块也将包含一个 usage 字段，但其值为 null。"
+            "description": "如果设置为 true，在流传输结束前的 `data: [DONE]` 之前会额外传输一个数据块。该数据块上的 usage 字段显示整个请求的 token 用量统计，而 choices 字段始终为空数组。所有其他数据块也会包含 usage 字段，但其值为 null。"
           }
         }
       },
@@ -515,7 +514,7 @@
             "enum": [
               "function"
             ],
-            "description": "tool 的类型。目前仅支持 function。"
+            "description": "工具类型。目前仅支持 function。"
           },
           "function": {
             "type": "object",
@@ -525,23 +524,104 @@
             "properties": {
               "name": {
                 "type": "string",
-                "description": "要调用的 function 名称。必须由 a-z、A-Z、0-9 字符组成，或包含下划线和连字符，最大长度为 64 个字符。"
+                "description": "工具函数的名称。必须由 a-z、A-Z、0-9 组成，或包含下划线（_）和连字符（-），最大长度为 64。"
               },
               "description": {
                 "type": "string",
-                "description": "function 的功能描述，供模型理解何时以及如何调用该 function。"
+                "description": "函数功能的描述，供模型判断何时以及如何调用该函数。"
               },
               "parameters": {
                 "type": "object",
-                "description": "function 的输入参数，以 JSON Schema 对象描述。省略 parameters 会定义一个参数列表为空的 function。",
+                "description": "函数接受的参数，以 JSON 模式对象的形式描述。若省略 parameters，则表示该函数的参数列表为空。",
                 "additionalProperties": true
               },
               "strict": {
                 "type": "boolean",
                 "default": false,
-                "description": "如果设置为 true，API 将在函数调用中使用 strict 模式，以确保输出始终符合函数的 JSON schema 定义。该功能为 Beta 功能。"
+                "description": "生成函数调用时是否启用严格的模式遵循。若设为 true，模型将严格遵循 parameters 字段中定义的确切模式。当 strict 为 true 时，仅支持 JSON 模式的一个子集。"
               }
             }
+          }
+        }
+      },
+      "WebSearchUserLocation": {
+        "type": "object",
+        "required": [
+          "type",
+          "country"
+        ],
+        "description": "用户地理位置，用于优化模型输出结果。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "approximate"
+            ],
+            "description": "位置类型，必须为 approximate。"
+          },
+          "country": {
+            "type": "string",
+            "description": "国家"
+          },
+          "region": {
+            "type": "string",
+            "description": "省份"
+          },
+          "city": {
+            "type": "string",
+            "description": "城市"
+          },
+          "district": {
+            "type": "string",
+            "description": "区县"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "description": "经度"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "description": "纬度"
+          }
+        }
+      },
+      "WebSearchTool": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "description": "联网搜索工具对象。详情请参考联网搜索文档。注意：使用前需要开通联网服务插件。",
+        "properties": {
+          "user_location": {
+            "$ref": "#/components/schemas/WebSearchUserLocation"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "web_search"
+            ],
+            "description": "工具类型。必须为 web_search。"
+          },
+          "force_search": {
+            "type": "string",
+            "default": "false",
+            "description": "是否启用强制搜索。true 强制搜索，false 由模型判断是否需要搜索。"
+          },
+          "max_keyword": {
+            "type": "integer",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 50,
+            "description": "限制单轮搜索中可使用的最大关键词数量。"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 50,
+            "description": "限制单次搜索操作返回的最大结果条数。"
           }
         }
       },
@@ -554,19 +634,47 @@
             ]
           }
         ],
-        "description": "工具选择"
+        "description": "控制模型如何选择工具。注意：当 tool_choice 传入非 auto 值时，后端会默认移除该字段，模型响应行为仍等同于 auto 模式（该逻辑保留调整的可能性）。可选值：auto"
       },
       "ResponseFormat": {
         "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "text"
+        "description": "一个指定模型必须输出的格式的对象。",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "Text",
+            "description": "默认响应格式。用于生成文本响应。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text"
+                ],
+                "description": "所定义的响应格式类型。仅为 text。"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "title": "JSON object",
+            "description": "JSON 对象响应格式。请注意，若系统消息或用户消息中未指示模型生成 JSON，模型将不会输出 JSON 格式内容。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "json_object"
+                ],
+                "description": "所定义的响应格式类型。仅为 json_object。"
+              }
+            },
+            "required": [
+              "type"
             ]
           }
-        },
-        "description": "响应格式"
+        ]
       },
       "ToolCallMessage": {
         "type": "object",
@@ -579,18 +687,18 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "tool 调用的 ID。"
+            "description": "工具调用的 ID。"
           },
           "type": {
             "type": "string",
             "enum": [
               "function"
             ],
-            "description": "tool 的类型。目前仅支持 function。"
+            "description": "工具的类型。目前仅支持 function。"
           },
           "function": {
             "type": "object",
-            "description": "模型调用的 function。",
+            "description": "模型所调用的函数。",
             "required": [
               "name",
               "arguments"
@@ -598,43 +706,97 @@
             "properties": {
               "name": {
                 "type": "string",
-                "description": "模型调用的 function 名。"
+                "description": "模型所调用的函数的名称。"
               },
               "arguments": {
                 "type": "string",
-                "description": "要调用的 function 的参数，由模型生成，格式为 JSON。请注意，模型并不总是生成有效的 JSON，并且可能会臆造出你函数模式中未定义的参数。在调用函数之前，请在代码中验证这些参数。"
+                "description": "模型生成的用于调用函数的参数，格式为 JSON 字符串。请注意，模型生成的内容并非总能保证是有效的 JSON，且可能会虚构出函数模式中未定义的参数。在调用函数之前，请在代码中对这些参数进行验证。"
               }
             }
           }
         }
       },
-      "ChatCompletionResponse": {
+      "Annotation": {
         "type": "object",
-        "description": "DeepSeek chat completions 成功响应。",
+        "description": "联网搜索后，模型会返回全部引用网址的注释。",
+        "properties": {
+          "logo_url": {
+            "type": "string",
+            "description": "logo 网址。"
+          },
+          "publish_time": {
+            "type": "string",
+            "description": "发布时间。"
+          },
+          "site_name": {
+            "type": "string",
+            "description": "网站名称。"
+          },
+          "summary": {
+            "type": "string",
+            "description": "总结。"
+          },
+          "title": {
+            "type": "string",
+            "description": "标题。"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型。"
+          },
+          "url": {
+            "type": "string",
+            "description": "网址。"
+          }
+        }
+      },
+      "AudioResponse": {
+        "type": "object",
+        "description": "如果请求输出音频，该对象将包含有关模型音频响应的数据。",
         "properties": {
           "id": {
             "type": "string",
-            "description": "该对话的唯一标识符。"
+            "description": "此音频响应的唯一标识符。"
+          },
+          "data": {
+            "type": "string",
+            "description": "模型生成的 Base64 编码音频，格式为请求中指定的格式。"
+          },
+          "expires_at": {
+            "type": "number",
+            "nullable": true,
+            "description": "此音频响应过期的 Unix 时间戳（以秒为单位）。当前仅为 null。"
+          },
+          "transcript": {
+            "type": "string",
+            "nullable": true,
+            "description": "模型生成的音频的文字记录。当前仅为 null。"
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "description": "Chat 响应对象（非流式输出）。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "响应的唯一标识符。"
           },
           "object": {
             "type": "string",
-            "description": "对象的类型，其值为 chat.completion。"
+            "description": "对象类型，仅为 chat.completion。"
           },
           "created": {
             "type": "integer",
-            "description": "创建聊天完成时的 Unix 时间戳（以秒为单位）。"
+            "description": "对话补全对象创建时的 Unix 时间戳（以秒为单位）。"
           },
           "model": {
             "type": "string",
-            "description": "生成该 completion 的模型名。"
-          },
-          "system_fingerprint": {
-            "type": "string",
-            "description": "该指纹代表模型运行的后端配置。"
+            "description": "用于生成结果的模型名称。"
           },
           "choices": {
             "type": "array",
-            "description": "模型生成的 completion 的选择列表。",
+            "description": "包含生成的回复选项列表。",
             "items": {
               "$ref": "#/components/schemas/ChatCompletionChoice"
             }
@@ -649,23 +811,162 @@
         "properties": {
           "index": {
             "type": "integer",
-            "description": "该 completion 在模型生成的 completion 的选择列表中的索引。"
+            "description": "选项列表中对应选项的索引。"
           },
           "message": {
-            "$ref": "#/components/schemas/AssistantMessage"
+            "$ref": "#/components/schemas/AssistantResponseMessage"
           },
           "finish_reason": {
             "type": "string",
-            "description": "模型停止生成 token 的原因。`stop` 表示模型自然停止生成或遇到 stop 序列；`length` 表示输出长度达到了模型上下文长度限制或 max_tokens 的限制；`content_filter` 表示输出内容因触发过滤策略而被过滤；`tool_calls` 表示模型调用了工具；`insufficient_system_resource` 表示系统推理资源不足，生成被打断。"
+            "description": "模型停止生成 token 的原因。如果模型到达自然停止点或提供的停止序列，则为 stop；如果达到请求中指定的最大 token 数，则为 length；如果模型调用了工具，则为 tool_calls。如果内容因触发过滤策略而被拦截，则为 content_filter；如果模型检测到了复读，则为 repetition_truncation。"
+          }
+        }
+      },
+      "AssistantResponseMessage": {
+        "type": "object",
+        "description": "模型生成的对话补全消息。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "消息作者的角色。"
           },
-          "logprobs": {
-            "$ref": "#/components/schemas/ChoiceLogprobs"
+          "content": {
+            "type": "string",
+            "description": "消息的内容。"
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "助手消息中最终答案之前的推理内容。"
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "函数调用启动后，模型会返回待调用的工具以及该调用所需的参数。此参数可包含一个或多个工具响应对象。",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ToolCallMessage"
+                }
+              ]
+            }
+          },
+          "annotations": {
+            "type": "array",
+            "description": "联网搜索后，模型会返回全部引用网址的注释。",
+            "items": {
+              "$ref": "#/components/schemas/Annotation"
+            }
+          },
+          "error_message": {
+            "type": "string",
+            "description": "联网搜索的错误信息。"
+          },
+          "audio": {
+            "$ref": "#/components/schemas/AudioResponse"
+          },
+          "final_text_preview": {
+            "type": "string",
+            "description": "经过智能优化润色后的音频播报最终文本。仅当请求参数 optimize_text_preview 设为 true 时，该字段才会返回。"
+          }
+        }
+      },
+      "ChatCompletionChunkChoice": {
+        "type": "object",
+        "description": "Chat 响应 chunk 对象（流式输出）。",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "选项列表中对应选项的索引。"
+          },
+          "delta": {
+            "type": "object",
+            "description": "流式模型响应生成的对话补全增量。",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "assistant"
+                ],
+                "description": "消息作者的角色。"
+              },
+              "content": {
+                "type": "string",
+                "description": "数据块消息的内容。"
+              },
+              "reasoning_content": {
+                "type": "string",
+                "description": "助手消息中最终答案之前的推理内容。"
+              },
+              "tool_calls": {
+                "type": "array",
+                "description": "函数调用启动后，模型会返回待调用的工具以及该调用所需的参数。",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "description": "在 tool_calls 列表中被调用工具的索引，从 0 开始。"
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "工具调用的 ID。"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "function"
+                      ],
+                      "description": "工具的类型。目前仅支持 function。"
+                    },
+                    "function": {
+                      "type": "object",
+                      "description": "调用的函数。",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "要调用的函数的名称。"
+                        },
+                        "arguments": {
+                          "type": "string",
+                          "description": "模型生成的用于调用函数的参数，格式为 JSON 字符串。"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "annotations": {
+                "type": "array",
+                "description": "联网搜索后，模型会返回全部引用网址的注释。",
+                "items": {
+                  "$ref": "#/components/schemas/Annotation"
+                }
+              },
+              "error_message": {
+                "type": "string",
+                "description": "联网搜索链路的错误信息。"
+              },
+              "audio": {
+                "$ref": "#/components/schemas/AudioResponse"
+              },
+              "final_text_preview": {
+                "type": "string",
+                "description": "经过智能优化润色后的音频播报最终文本。仅当请求参数 optimize_text_preview 设为 true 时，该字段才会返回。"
+              }
+            }
+          },
+          "finish_reason": {
+            "type": "string",
+            "nullable": true,
+            "description": "模型停止生成 token 的原因。如果模型到达自然停止点或提供的停止序列，则为 stop；如果达到请求中指定的最大 token 数，则为 length；如果模型调用了工具，则为 tool_calls。如果内容因触发过滤策略而被拦截，则为 content_filter；如果模型检测到了复读，则为 repetition_truncation。"
           }
         }
       },
       "TextContentPart": {
         "type": "object",
-        "title": "Text content part",
+        "title": "文本内容部分",
         "required": [
           "type",
           "text"
@@ -677,7 +978,7 @@
             "enum": [
               "text"
             ],
-            "description": "内容部分的类型，其值为 text。"
+            "description": "内容部分的类型，为 text。"
           },
           "text": {
             "type": "string",
@@ -694,7 +995,7 @@
       },
       "ContentPartText": {
         "type": "object",
-        "title": "Text content part",
+        "title": "文本内容部分",
         "required": [
           "type",
           "text"
@@ -706,7 +1007,7 @@
             "enum": [
               "text"
             ],
-            "description": "内容部分的类型，其值为 text。"
+            "description": "内容部分的类型，为 text。"
           },
           "text": {
             "type": "string",
@@ -716,7 +1017,7 @@
       },
       "ContentPartImage": {
         "type": "object",
-        "title": "Image content part",
+        "title": "图片内容部分",
         "required": [
           "type",
           "image_url"
@@ -728,19 +1029,19 @@
             "enum": [
               "image_url"
             ],
-            "description": "内容部分的类型，其值为 image_url。"
+            "description": "内容部分的类型，为 image_url。"
           },
           "image_url": {
             "type": "object",
             "required": [
               "url"
             ],
-            "description": "图片 URL。可以是公网图片 URL 或 Base64 编码后的 data URL。",
+            "description": "图片 URL。可以是公共图片 URL 或 Base64 编码的数据 URL。",
             "properties": {
               "url": {
                 "type": "string",
                 "format": "uri",
-                "description": "公网图片 URL 或 Base64 编码的 data URL。"
+                "description": "公共图片 URL 或 Base64 编码的数据 URL。"
               },
               "detail": {
                 "type": "string",
@@ -750,7 +1051,7 @@
                   "high"
                 ],
                 "default": "auto",
-                "description": "图片的处理级别。low 使用低分辨率；high 使用高分辨率；auto 由模型选择。"
+                "description": "处理图片的精细度级别。low 使用低分辨率；high 使用高分辨率；auto 由模型决定。"
               }
             }
           }
@@ -758,7 +1059,7 @@
       },
       "ContentPartArray": {
         "type": "array",
-        "description": "用户消息中的内容部分数组，可包含文本与图片。",
+        "description": "用户消息中的内容部分数组。可包含文本和图片。",
         "items": {
           "oneOf": [
             {
@@ -772,22 +1073,22 @@
       },
       "DeveloperMessage": {
         "type": "object",
-        "title": "Developer message",
+        "title": "开发者消息",
         "required": [
           "role",
           "content"
         ],
-        "description": "Developer 消息。开发者提供的指令，模型应遵循这些指令，而不受用户发送的消息影响。",
+        "description": "开发者消息。开发者提供的指令，无论用户发送什么消息，模型都应遵循这些指令。",
         "properties": {
           "role": {
             "type": "string",
             "enum": [
               "developer"
             ],
-            "description": "该消息的发起角色，其值为 developer。"
+            "description": "消息作者的角色，为 developer。"
           },
           "content": {
-            "description": "developer 消息的内容。",
+            "description": "开发者消息的内容。",
             "oneOf": [
               {
                 "type": "string",
@@ -800,43 +1101,7 @@
           },
           "name": {
             "type": "string",
-            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
-          }
-        }
-      },
-      "AssistantMessage": {
-        "type": "object",
-        "properties": {
-          "role": {
-            "type": "string",
-            "enum": [
-              "assistant"
-            ],
-            "description": "生成这条消息的角色。"
-          },
-          "content": {
-            "description": "assistant 消息的内容。",
-            "oneOf": [
-              {
-                "type": "string",
-                "nullable": true,
-                "description": "纯文本内容。"
-              },
-              {
-                "$ref": "#/components/schemas/TextContentPartArray"
-              }
-            ]
-          },
-          "reasoning_content": {
-            "type": "string",
-            "description": "仅适用于思考模式。内容为 assistant 消息中在最终答案之前的推理内容。"
-          },
-          "tool_calls": {
-            "type": "array",
-            "description": "模型生成的 tool 调用，例如 function 调用。",
-            "items": {
-              "$ref": "#/components/schemas/ToolCallMessage"
-            }
+            "description": "参与者的可选名称，提供给模型以区分同一角色的不同参与者。"
           }
         }
       },
@@ -846,31 +1111,59 @@
         "properties": {
           "prompt_tokens": {
             "type": "integer",
-            "description": "用户 prompt 所包含的 token 数。该值等于 prompt_cache_hit_tokens + prompt_cache_miss_tokens。"
+            "description": "提示词使用的 token 数量。"
           },
           "completion_tokens": {
             "type": "integer",
-            "description": "模型 completion 产生的 token 数。"
+            "description": "模型输出内容花费的 token。"
           },
           "total_tokens": {
             "type": "integer",
-            "description": "该请求中，所有 token 的数量（prompt + completion）。"
-          },
-          "prompt_cache_hit_tokens": {
-            "type": "integer",
-            "description": "用户 prompt 中，命中上下文缓存的 token 数。"
-          },
-          "prompt_cache_miss_tokens": {
-            "type": "integer",
-            "description": "用户 prompt 中，未命中上下文缓存的 token 数。"
+            "description": "请求中使用的 token 总数（提示词 + 补全结果）。"
           },
           "completion_tokens_details": {
             "type": "object",
-            "description": "completion tokens 的详细信息。",
+            "description": "补全中使用的 token 数量明细。",
             "properties": {
               "reasoning_tokens": {
                 "type": "integer",
-                "description": "推理模型所产生的思维链 token 数量。"
+                "description": "模型为推理生成的 token 数量。"
+              }
+            }
+          },
+          "prompt_tokens_details": {
+            "type": "object",
+            "description": "提示中使用的 token 数量明细。",
+            "properties": {
+              "cached_tokens": {
+                "type": "integer",
+                "description": "命中缓存的 token 数量。"
+              },
+              "audio_tokens": {
+                "type": "integer",
+                "description": "提示中存在的音频输入 token 数量。"
+              },
+              "image_tokens": {
+                "type": "integer",
+                "description": "提示中存在的图像输入 token 数量。"
+              },
+              "video_tokens": {
+                "type": "integer",
+                "description": "提示中存在的视频输入 token 数量。"
+              }
+            }
+          },
+          "web_search_usage": {
+            "type": "object",
+            "description": "联网搜索 API 的调用量明细。",
+            "properties": {
+              "tool_usage": {
+                "type": "integer",
+                "description": "联网搜索 API 的调用次数。"
+              },
+              "page_usage": {
+                "type": "integer",
+                "description": "联网搜索 API 返回的网页数。"
               }
             }
           }
@@ -897,11 +1190,11 @@
           },
           "param": {
             "type": "string",
-            "description": "关联字段名。"
+            "description": "关联字段名称。"
           },
           "code": {
             "type": "string",
-            "description": "错误码。"
+            "description": "错误代码。"
           }
         }
       }

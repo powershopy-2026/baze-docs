@@ -57,11 +57,9 @@
                     "top_p": 0.95,
                     "stream": false,
                     "frequency_penalty": 0,
-                    "presence_penalty": 0,
                     "thinking": {
                       "type": "disabled"
-                    },
-                    "tool_choice": "auto"
+                    }
                   }
                 }
               }
@@ -234,7 +232,7 @@
           "model",
           "messages"
         ],
-        "description": "DeepSeek chat completions request body.",
+        "description": "MIMO chat completions request body.",
         "properties": {
           "model": {
             "type": "string",
@@ -252,16 +250,26 @@
               "$ref": "#/components/schemas/Message"
             }
           },
-          "thinking": {
-            "$ref": "#/components/schemas/ThinkingConfig"
+          "frequency_penalty": {
+            "type": "number",
+            "nullable": true,
+            "default": 0,
+            "minimum": -2.0,
+            "maximum": 2.0,
+            "description": "A value between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, reducing the model's likelihood of repeating the same content."
           },
-          "stream": {
-            "type": "boolean",
-            "default": false,
-            "description": "If set to true, the model will send message deltas as SSE (server-sent events). The message stream ends with `data: [DONE]`."
+          "max_completion_tokens": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The upper limit of tokens that can be generated in the chat completion, including visible output tokens and reasoning tokens. Default is 32768 for mimo-v2.5. Range: [1, 131072]"
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
           },
           "stop": {
-            "description": "A string or a list of up to 16 strings. The API will stop generating further tokens when it encounters any of these strings.",
+            "description": "Up to 4 sequences where the API will stop generating further tokens when any of them is encountered. The returned text will not contain the stop sequences.",
+            "nullable": true,
+            "default": null,
             "oneOf": [
               {
                 "type": "string"
@@ -270,52 +278,43 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "maxItems": 4
               }
             ]
           },
-          "response_format": {
-            "$ref": "#/components/schemas/ResponseFormat"
+          "stream": {
+            "type": "boolean",
+            "nullable": true,
+            "default": false,
+            "description": "If set to true, the model's response data will be streamed to the client via SSE (server-sent events) during generation."
+          },
+          "thinking": {
+            "$ref": "#/components/schemas/ThinkingConfig"
           },
           "temperature": {
             "type": "number",
             "minimum": 0,
             "maximum": 1.5,
-            "default": 1,
-            "description": "Sampling temperature"
-          },
-          "top_p": {
-            "type": "number",
-            "minimum": 0.01,
-            "maximum": 1,
-            "default": 1,
-            "description": "Top P"
-          },
-          "tools": {
-            "type": "array",
-            "description": "A list of tools the model may call. Currently, only function is supported as a tool. Use this parameter to provide a list of functions that take JSON as input. Up to 128 functions are supported.",
-            "items": {
-              "$ref": "#/components/schemas/ToolDefinition"
-            }
+            "default": 1.0,
+            "description": "Sampling temperature to use, between 0 and 1.5. Higher values (e.g., 0.8) make the output more random, while lower values (e.g., 0.2) make it more focused and deterministic. We generally recommend altering this or top_p but not both. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom temperature. Even if passed, the model will force the recommended default value of 1.0."
           },
           "tool_choice": {
             "$ref": "#/components/schemas/ToolChoice"
           },
-          "max_completion_tokens": {
-            "type": "integer",
-            "description": "Maximum tokens"
-          },
-          "frequency_penalty": {
+          "top_p": {
             "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "description": "Frequency penalty"
+            "default": 0.95,
+            "minimum": 0.01,
+            "maximum": 1.0,
+            "description": "Probability threshold for nucleus sampling, controlling the diversity of text generation. Higher top_p values produce more diverse text; lower values produce more deterministic text. Since both temperature and top_p control text diversity, it is recommended to adjust only one of them. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom top_p. Even if passed, the model will force the recommended default value of 0.95."
           },
-          "presence_penalty": {
-            "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "description": "Presence penalty"
+          "tools": {
+            "type": "array",
+            "description": "A list of tools the model may call. Currently, only function tools are supported. Note: In multi-round tool calls under thinking mode, the model returns the reasoning_content field along with tool_calls. To continue the conversation, it is recommended to retain all historical reasoning_content in the messages array of each subsequent request for optimal performance.",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            }
           }
         }
       },
@@ -441,7 +440,7 @@
           },
           "prefix": {
             "type": "boolean",
-            "description": "(Beta) Set this to true to force the model to start its response with the prefix content provided in this assistant message. "
+            "description": "(Beta) Set this to true to force the model to start its response with the prefix content provided in this assistant message."
           },
           "reasoning_content": {
             "type": "string",
@@ -479,7 +478,7 @@
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "Controls the switch between thinking mode and non-thinking mode.",
+        "description": "Controls whether the model enables chain-of-thought (thinking) mode. Note: In multi-round tool calls under thinking mode, the model returns the reasoning_content field along with tool_calls. To continue the conversation, it is recommended to retain all historical reasoning_content in the messages array of each subsequent request for optimal performance. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom temperature and top_p parameters. Even if passed, the model will force the recommended default values of 1.0 and 0.95 respectively.",
         "properties": {
           "type": {
             "type": "string",
@@ -488,7 +487,7 @@
               "disabled"
             ],
             "default": "enabled",
-            "description": "If set to enabled, thinking mode is used. If set to disabled, non-thinking mode is used."
+            "description": "Whether to enable chain-of-thought. For mimo-v2.5-pro and mimo-v2.5, the default value is enabled. Allowed values: enabled, disabled"
           }
         }
       },
@@ -525,7 +524,7 @@
             "properties": {
               "name": {
                 "type": "string",
-                "description": "The name of the function to call. Must consist of a-z, A-Z, 0-9 characters, or include underscores and hyphens, with a maximum length of 64 characters."
+                "description": "The name of the function to call. Must consist of a-z, A-Z, 0-9 characters, or include underscores (_) and hyphens (-), with a maximum length of 64 characters."
               },
               "description": {
                 "type": "string",
@@ -539,9 +538,90 @@
               "strict": {
                 "type": "boolean",
                 "default": false,
-                "description": "If set to true, the API will use strict mode in function calls to ensure the output always conforms to the function's JSON schema definition. This is a Beta feature."
+                "description": "Whether to enable strict schema adherence when generating function calls. If set to true, the model will strictly follow the exact schema defined in the parameters field. When strict is true, only a subset of JSON Schema is supported."
               }
             }
+          }
+        }
+      },
+      "WebSearchUserLocation": {
+        "type": "object",
+        "required": [
+          "type",
+          "country"
+        ],
+        "description": "User geographical location for optimizing model output.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "approximate"
+            ],
+            "description": "Location type, must be approximate."
+          },
+          "country": {
+            "type": "string",
+            "description": "Country"
+          },
+          "region": {
+            "type": "string",
+            "description": "Region/State"
+          },
+          "city": {
+            "type": "string",
+            "description": "City"
+          },
+          "district": {
+            "type": "string",
+            "description": "District"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "description": "Longitude"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "description": "Latitude"
+          }
+        }
+      },
+      "WebSearchTool": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "description": "Web search tool object. For details, please refer to Web Search documentation. Note: The web search plugin must be enabled before use.",
+        "properties": {
+          "user_location": {
+            "$ref": "#/components/schemas/WebSearchUserLocation"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "web_search"
+            ],
+            "description": "The type of the tool. Must be web_search."
+          },
+          "force_search": {
+            "type": "string",
+            "default": "false",
+            "description": "Whether to force search. true forces search, false lets the model decide whether search is needed."
+          },
+          "max_keyword": {
+            "type": "integer",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Limits the maximum number of keywords that can be used in a single search turn."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Limits the maximum number of results returned per single search operation."
           }
         }
       },
@@ -554,19 +634,47 @@
             ]
           }
         ],
-        "description": "Tool choice"
+        "description": "Controls how the model selects tools. Note: When tool_choice is set to a non-auto value, the backend will remove this field by default, and the model's response behavior will still be equivalent to auto mode (this logic may be subject to adjustment). Allowed values: auto"
       },
       "ResponseFormat": {
         "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "text"
+        "description": "An object specifying the format that the model must output.",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "Text",
+            "description": "Default response format. Used for generating text responses.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text"
+                ],
+                "description": "The type of response format. Must be text."
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "title": "JSON object",
+            "description": "JSON object response format. Note: The model will not output JSON formatted content unless instructed to generate JSON in the system or user messages.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "json_object"
+                ],
+                "description": "The type of response format. Must be json_object."
+              }
+            },
+            "required": [
+              "type"
             ]
           }
-        },
-        "description": "Response format"
+        ]
       },
       "ToolCallMessage": {
         "type": "object",
@@ -608,13 +716,71 @@
           }
         }
       },
-      "ChatCompletionResponse": {
+      "Annotation": {
         "type": "object",
-        "description": "DeepSeek chat completions success response.",
+        "description": "Annotations returned by web search, containing citation URLs.",
+        "properties": {
+          "logo_url": {
+            "type": "string",
+            "description": "Logo URL."
+          },
+          "publish_time": {
+            "type": "string",
+            "description": "Publish time."
+          },
+          "site_name": {
+            "type": "string",
+            "description": "Website name."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Summary."
+          },
+          "title": {
+            "type": "string",
+            "description": "Title."
+          },
+          "type": {
+            "type": "string",
+            "description": "Type."
+          },
+          "url": {
+            "type": "string",
+            "description": "URL."
+          }
+        }
+      },
+      "AudioResponse": {
+        "type": "object",
+        "description": "If audio output is requested, this object contains data about the model's audio response.",
         "properties": {
           "id": {
             "type": "string",
-            "description": "A unique identifier for the chat."
+            "description": "Unique identifier for this audio response."
+          },
+          "data": {
+            "type": "string",
+            "description": "Base64-encoded audio generated by the model, in the format specified in the request."
+          },
+          "expires_at": {
+            "type": "number",
+            "nullable": true,
+            "description": "Unix timestamp (in seconds) when this audio response expires. Currently null."
+          },
+          "transcript": {
+            "type": "string",
+            "nullable": true,
+            "description": "Transcript of the generated audio. Currently null."
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "description": "Chat response object (non-streaming).",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the response."
           },
           "object": {
             "type": "string",
@@ -627,10 +793,6 @@
           "model": {
             "type": "string",
             "description": "The name of the model that generated the completion."
-          },
-          "system_fingerprint": {
-            "type": "string",
-            "description": "This fingerprint represents the backend configuration that the model runs with."
           },
           "choices": {
             "type": "array",
@@ -649,17 +811,156 @@
         "properties": {
           "index": {
             "type": "integer",
-            "description": "The index of this completion in the list of completions generated by the model."
+            "description": "The index of this completion in the list of choices."
           },
           "message": {
-            "$ref": "#/components/schemas/AssistantMessage"
+            "$ref": "#/components/schemas/AssistantResponseMessage"
           },
           "finish_reason": {
             "type": "string",
-            "description": "The reason the model stopped generating tokens. `stop` means the model finished generating naturally or hit a stop sequence; `length` means the output length reached the model's context length limit or the max_tokens limit; `content_filter` means the output was filtered due to a filtering policy; `tool_calls` means the model called a tool; `insufficient_system_resource` means generation was interrupted due to insufficient system inference resources."
+            "description": "The reason the model stopped generating tokens. stop if the model reached a natural stop point or a provided stop sequence; length if the maximum number of tokens specified in the request was reached; tool_calls if the model called a tool; content_filter if the content was blocked due to a filtering policy; repetition_truncation if the model detected repetition."
+          }
+        }
+      },
+      "AssistantResponseMessage": {
+        "type": "object",
+        "description": "The chat completion message generated by the model.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "The role of the message author."
           },
-          "logprobs": {
-            "$ref": "#/components/schemas/ChoiceLogprobs"
+          "content": {
+            "type": "string",
+            "description": "The content of the message."
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "The reasoning content in the assistant message, preceding the final answer."
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "After a function call is initiated, the model returns the tools to be called along with the parameters required. This parameter may contain one or more tool response objects.",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ToolCallMessage"
+                }
+              ]
+            }
+          },
+          "annotations": {
+            "type": "array",
+            "description": "After web search, the model returns annotations for all cited URLs.",
+            "items": {
+              "$ref": "#/components/schemas/Annotation"
+            }
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message for web search."
+          },
+          "audio": {
+            "$ref": "#/components/schemas/AudioResponse"
+          },
+          "final_text_preview": {
+            "type": "string",
+            "description": "The final text after intelligent optimization and polishing for audio broadcasting. Only returned when the request parameter optimize_text_preview is set to true."
+          }
+        }
+      },
+      "ChatCompletionChunkChoice": {
+        "type": "object",
+        "description": "Chat response chunk object (streaming).",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "The index of this completion in the list of choices."
+          },
+          "delta": {
+            "type": "object",
+            "description": "The chat completion delta generated by the model in streaming mode.",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "assistant"
+                ],
+                "description": "The role of the message author."
+              },
+              "content": {
+                "type": "string",
+                "description": "The content of the chunk message."
+              },
+              "reasoning_content": {
+                "type": "string",
+                "description": "The reasoning content in the assistant message, preceding the final answer."
+              },
+              "tool_calls": {
+                "type": "array",
+                "description": "After a function call is initiated, the model returns the tools to be called along with the parameters required.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "description": "The index of the tool call in the tool_calls list, starting from 0."
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "The ID of the tool call."
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "function"
+                      ],
+                      "description": "The type of the tool. Currently only function is supported."
+                    },
+                    "function": {
+                      "type": "object",
+                      "description": "The function being called.",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "The name of the function to call."
+                        },
+                        "arguments": {
+                          "type": "string",
+                          "description": "The arguments to call the function with, generated by the model as a JSON string."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "annotations": {
+                "type": "array",
+                "description": "After web search, the model returns annotations for all cited URLs.",
+                "items": {
+                  "$ref": "#/components/schemas/Annotation"
+                }
+              },
+              "error_message": {
+                "type": "string",
+                "description": "Error message for the web search chain."
+              },
+              "audio": {
+                "$ref": "#/components/schemas/AudioResponse"
+              },
+              "final_text_preview": {
+                "type": "string",
+                "description": "The final text after intelligent optimization and polishing for audio broadcasting. Only returned when the request parameter optimize_text_preview is set to true."
+              }
+            }
+          },
+          "finish_reason": {
+            "type": "string",
+            "nullable": true,
+            "description": "The reason the model stopped generating tokens. stop if the model reached a natural stop point or a provided stop sequence; length if the maximum number of tokens specified in the request was reached; tool_calls if the model called a tool; content_filter if the content was blocked due to a filtering policy; repetition_truncation if the model detected repetition."
           }
         }
       },
@@ -804,73 +1105,65 @@
           }
         }
       },
-      "AssistantMessage": {
-        "type": "object",
-        "properties": {
-          "role": {
-            "type": "string",
-            "enum": [
-              "assistant"
-            ],
-            "description": "The role that generated this message."
-          },
-          "content": {
-            "description": "The content of the assistant message.",
-            "oneOf": [
-              {
-                "type": "string",
-                "nullable": true,
-                "description": "Plain text content."
-              },
-              {
-                "$ref": "#/components/schemas/TextContentPartArray"
-              }
-            ]
-          },
-          "reasoning_content": {
-            "type": "string",
-            "description": "Only applicable in thinking mode. The reasoning content in the assistant message, preceding the final answer."
-          },
-          "tool_calls": {
-            "type": "array",
-            "description": "Tool calls generated by the model, e.g. function calls.",
-            "items": {
-              "$ref": "#/components/schemas/ToolCallMessage"
-            }
-          }
-        }
-      },
       "Usage": {
         "type": "object",
         "description": "Usage information for this chat completion request.",
         "properties": {
           "prompt_tokens": {
             "type": "integer",
-            "description": "The number of tokens contained in the user prompt. This value equals prompt_cache_hit_tokens + prompt_cache_miss_tokens."
+            "description": "Number of tokens used by the prompt."
           },
           "completion_tokens": {
             "type": "integer",
-            "description": "The number of tokens generated by the model for the completion."
+            "description": "Number of tokens used by the model output."
           },
           "total_tokens": {
             "type": "integer",
-            "description": "The total number of tokens in this request (prompt + completion)."
-          },
-          "prompt_cache_hit_tokens": {
-            "type": "integer",
-            "description": "The number of tokens in the user prompt that hit the context cache."
-          },
-          "prompt_cache_miss_tokens": {
-            "type": "integer",
-            "description": "The number of tokens in the user prompt that missed the context cache."
+            "description": "Total number of tokens used in the request (prompt + completion)."
           },
           "completion_tokens_details": {
             "type": "object",
-            "description": "Details about the completion tokens.",
+            "description": "Breakdown of tokens used in the completion.",
             "properties": {
               "reasoning_tokens": {
                 "type": "integer",
-                "description": "The number of chain-of-thought tokens generated by the reasoning model."
+                "description": "Number of tokens generated by the model for reasoning."
+              }
+            }
+          },
+          "prompt_tokens_details": {
+            "type": "object",
+            "description": "Breakdown of tokens used in the prompt.",
+            "properties": {
+              "cached_tokens": {
+                "type": "integer",
+                "description": "Number of tokens that hit the cache."
+              },
+              "audio_tokens": {
+                "type": "integer",
+                "description": "Number of audio input tokens present in the prompt."
+              },
+              "image_tokens": {
+                "type": "integer",
+                "description": "Number of image input tokens present in the prompt."
+              },
+              "video_tokens": {
+                "type": "integer",
+                "description": "Number of video input tokens present in the prompt."
+              }
+            }
+          },
+          "web_search_usage": {
+            "type": "object",
+            "description": "Usage details for the web search API.",
+            "properties": {
+              "tool_usage": {
+                "type": "integer",
+                "description": "Number of web search API calls."
+              },
+              "page_usage": {
+                "type": "integer",
+                "description": "Number of web pages returned by the web search API."
               }
             }
           }
