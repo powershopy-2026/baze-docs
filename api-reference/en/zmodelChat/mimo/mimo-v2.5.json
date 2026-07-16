@@ -580,7 +580,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "A list of tools the model may call. Currently, only function tools are supported. Note: In multi-round tool calls under thinking mode, the model returns the reasoning_content field along with tool_calls. To continue the conversation, it is recommended to retain all historical reasoning_content in the messages array of each subsequent request for optimal performance.",
+            "description": "A list of tools the model may call. Currently, both function tools and web_search tools are supported. Note: In multi-round tool calls under thinking mode, the model returns the reasoning_content field along with tool_calls. To continue the conversation, it is recommended to retain all historical reasoning_content in the messages array of each subsequent request for optimal performance.",
             "items": {
               "$ref": "#/components/schemas/ToolDefinition"
             }
@@ -771,47 +771,55 @@
         }
       },
       "ToolDefinition": {
-        "type": "object",
-        "required": [
-          "type",
-          "function"
-        ],
-        "description": "Function tool definition.",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "Function tool",
+            "required": [
+              "type",
               "function"
             ],
-            "description": "The type of the tool. Currently only function is supported."
-          },
-          "function": {
-            "type": "object",
-            "required": [
-              "name"
-            ],
+            "description": "Function tool definition.",
             "properties": {
-              "name": {
+              "type": {
                 "type": "string",
-                "description": "The name of the function to call. Must consist of a-z, A-Z, 0-9 characters, or include underscores (_) and hyphens (-), with a maximum length of 64 characters."
+                "enum": [
+                  "function"
+                ],
+                "description": "The type of the tool. Currently function is supported."
               },
-              "description": {
-                "type": "string",
-                "description": "A description of what the function does, used by the model to understand when and how to call it."
-              },
-              "parameters": {
+              "function": {
                 "type": "object",
-                "description": "The input parameters of the function, described as a JSON Schema object. Omitting parameters defines a function with an empty parameter list.",
-                "additionalProperties": true
-              },
-              "strict": {
-                "type": "boolean",
-                "default": false,
-                "description": "Whether to enable strict schema adherence when generating function calls. If set to true, the model will strictly follow the exact schema defined in the parameters field. When strict is true, only a subset of JSON Schema is supported."
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the function to call. Must consist of a-z, A-Z, 0-9 characters, or include underscores (_) and hyphens (-), with a maximum length of 64 characters."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "A description of what the function does, used by the model to understand when and how to call it."
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "description": "The input parameters of the function, described as a JSON Schema object. Omitting parameters defines a function with an empty parameter list.",
+                    "additionalProperties": true
+                  },
+                  "strict": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Whether to enable strict schema adherence when generating function calls. If set to true, the model will strictly follow the exact schema defined in the parameters field. When strict is true, only a subset of JSON Schema is supported."
+                  }
+                }
               }
             }
+          },
+          {
+            "$ref": "#/components/schemas/WebSearchTool"
           }
-        }
+        ]
       },
       "WebSearchUserLocation": {
         "type": "object",
@@ -892,7 +900,8 @@
             "maximum": 50,
             "description": "Limits the maximum number of results returned per single search operation."
           }
-        }
+        },
+        "title": "Web search tool"
       },
       "ToolChoice": {
         "oneOf": [

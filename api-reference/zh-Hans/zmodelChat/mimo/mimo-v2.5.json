@@ -580,7 +580,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "模型可能调用的工具列表。目前仅支持函数作为工具。注意：在思考模式下的多轮工具调用过程中，模型会在返回 tool_calls 字段的同时返回 reasoning_content 字段。若要继续对话，建议在后续每次请求的 messages 数组中保留所有历史 reasoning_content，以获得最佳表现。",
+            "description": "模型可能调用的工具列表。目前支持 function（函数）和 web_search（联网搜索）两种工具类型。注意：在思考模式下的多轮工具调用过程中，模型会在返回 tool_calls 字段的同时返回 reasoning_content 字段。若要继续对话，建议在后续每次请求的 messages 数组中保留所有历史 reasoning_content，以获得最佳表现。",
             "items": {
               "$ref": "#/components/schemas/ToolDefinition"
             }
@@ -771,47 +771,55 @@
         }
       },
       "ToolDefinition": {
-        "type": "object",
-        "required": [
-          "type",
-          "function"
-        ],
-        "description": "函数工具定义。",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "函数工具",
+            "required": [
+              "type",
               "function"
             ],
-            "description": "工具类型。目前仅支持 function。"
-          },
-          "function": {
-            "type": "object",
-            "required": [
-              "name"
-            ],
+            "description": "函数工具定义。",
             "properties": {
-              "name": {
+              "type": {
                 "type": "string",
-                "description": "工具函数的名称。必须由 a-z、A-Z、0-9 组成，或包含下划线（_）和连字符（-），最大长度为 64。"
+                "enum": [
+                  "function"
+                ],
+                "description": "工具类型。目前支持 function。"
               },
-              "description": {
-                "type": "string",
-                "description": "函数功能的描述，供模型判断何时以及如何调用该函数。"
-              },
-              "parameters": {
+              "function": {
                 "type": "object",
-                "description": "函数接受的参数，以 JSON 模式对象的形式描述。若省略 parameters，则表示该函数的参数列表为空。",
-                "additionalProperties": true
-              },
-              "strict": {
-                "type": "boolean",
-                "default": false,
-                "description": "生成函数调用时是否启用严格的模式遵循。若设为 true，模型将严格遵循 parameters 字段中定义的确切模式。当 strict 为 true 时，仅支持 JSON 模式的一个子集。"
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "工具函数的名称。必须由 a-z、A-Z、0-9 组成，或包含下划线（_）和连字符（-），最大长度为 64。"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "函数功能的描述，供模型判断何时以及如何调用该函数。"
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "description": "函数接受的参数，以 JSON 模式对象的形式描述。若省略 parameters，则表示该函数的参数列表为空。",
+                    "additionalProperties": true
+                  },
+                  "strict": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "生成函数调用时是否启用严格的模式遵循。若设为 true，模型将严格遵循 parameters 字段中定义的确切模式。当 strict 为 true 时，仅支持 JSON 模式的一个子集。"
+                  }
+                }
               }
             }
+          },
+          {
+            "$ref": "#/components/schemas/WebSearchTool"
           }
-        }
+        ]
       },
       "WebSearchUserLocation": {
         "type": "object",
@@ -892,7 +900,8 @@
             "maximum": 50,
             "description": "限制单次搜索操作返回的最大结果条数。"
           }
-        }
+        },
+        "title": "联网搜索工具"
       },
       "ToolChoice": {
         "oneOf": [
