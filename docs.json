@@ -207,6 +207,9 @@
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      "zh-Hans/zmodelVideo/ali/api/happyhorse-1.1-t2v",
+                      "zh-Hans/zmodelVideo/ali/api/happyhorse-1.1-i2v",
+                      "zh-Hans/zmodelVideo/ali/api/happyhorse-1.1-r2v",
                       {
                         "group": "阿里巴巴兼容API",
                         "pages": [
@@ -556,6 +559,9 @@
                       "en/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "en/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
                       "en/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      "en/zmodelVideo/ali/api/happyhorse-1.1-t2v",
+                      "en/zmodelVideo/ali/api/happyhorse-1.1-i2v",
+                      "en/zmodelVideo/ali/api/happyhorse-1.1-r2v",
                       {
                         "group": "Alibaba Compatible API",
                         "pages": [
