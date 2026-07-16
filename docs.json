@@ -210,6 +210,7 @@
                       "zh-Hans/zmodelVideo/ali/happyhorse-1.1-t2v",
                       "zh-Hans/zmodelVideo/ali/happyhorse-1.1-i2v",
                       "zh-Hans/zmodelVideo/ali/happyhorse-1.1-r2v",
+                      "zh-Hans/zmodelVideo/ali/task-query",
                       {
                         "group": "阿里巴巴兼容API",
                         "pages": [
@@ -562,6 +563,7 @@
                       "en/zmodelVideo/ali/happyhorse-1.1-t2v",
                       "en/zmodelVideo/ali/happyhorse-1.1-i2v",
                       "en/zmodelVideo/ali/happyhorse-1.1-r2v",
+                      "en/zmodelVideo/ali/task-query",
                       {
                         "group": "Alibaba Compatible API",
                         "pages": [
