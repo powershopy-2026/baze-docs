@@ -608,7 +608,7 @@
         ]
       },
       "SystemMessage": {
-        "title": "系统消息",
+        "title": "System message · object",
         "type": "object",
         "required": [
           "role",
@@ -642,7 +642,7 @@
         }
       },
       "UserMessage": {
-        "title": "用户消息",
+        "title": "User message · object",
         "type": "object",
         "required": [
           "role",
@@ -676,7 +676,7 @@
         }
       },
       "AssistantRequestMessage": {
-        "title": "助手消息",
+        "title": "Assistant message · object",
         "type": "object",
         "required": [
           "role"
@@ -726,7 +726,7 @@
         }
       },
       "ToolMessage": {
-        "title": "工具消息",
+        "title": "Tool message · object",
         "type": "object",
         "required": [
           "role",
@@ -1007,7 +1007,8 @@
               }
             }
           }
-        }
+        },
+        "title": "Function tool call · object"
       },
       "Annotation": {
         "type": "object",
@@ -1259,7 +1260,7 @@
       },
       "TextContentPart": {
         "type": "object",
-        "title": "文本内容部分",
+        "title": "Text content part · object",
         "required": [
           "type",
           "text"
@@ -1284,11 +1285,12 @@
         "description": "消息中的纯文本内容部分数组。",
         "items": {
           "$ref": "#/components/schemas/TextContentPart"
-        }
+        },
+        "title": "Array of content parts · array"
       },
       "ContentPartText": {
         "type": "object",
-        "title": "文本内容部分",
+        "title": "Text content part · object",
         "required": [
           "type",
           "text"
@@ -1310,7 +1312,7 @@
       },
       "ContentPartImage": {
         "type": "object",
-        "title": "图片内容部分",
+        "title": "Image content part · object",
         "required": [
           "type",
           "image_url"
@@ -1372,7 +1374,7 @@
       },
       "DeveloperMessage": {
         "type": "object",
-        "title": "开发者消息",
+        "title": "Developer message · object",
         "required": [
           "role",
           "content"
@@ -1499,7 +1501,7 @@
       },
       "ContentPartAudio": {
         "type": "object",
-        "title": "Audio content part",
+        "title": "Audio content part · object",
         "required": [
           "type",
           "audio_url"
@@ -1531,7 +1533,7 @@
       },
       "ContentPartVideo": {
         "type": "object",
-        "title": "Video content part",
+        "title": "Video content part · object",
         "required": [
           "type",
           "video_url"
