@@ -1475,13 +1475,6 @@
       "ChatCompletionChunk": {
         "type": "object",
         "description": "Chat response chunk object (streaming). Each `data:` event in the SSE stream corresponds to a ChatCompletionChunk. The stream typically ends with `data: [DONE]`.",
-        "required": [
-          "id",
-          "object",
-          "created",
-          "model",
-          "choices"
-        ],
         "properties": {
           "id": {
             "type": "string",

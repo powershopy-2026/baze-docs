@@ -1475,13 +1475,6 @@
       "ChatCompletionChunk": {
         "type": "object",
         "description": "Chat 响应 chunk 对象（流式输出）。SSE 流中的每个 `data:` 事件对应一个 ChatCompletionChunk。流通常以 `data: [DONE]` 结束。",
-        "required": [
-          "id",
-          "object",
-          "created",
-          "model",
-          "choices"
-        ],
         "properties": {
           "id": {
             "type": "string",
