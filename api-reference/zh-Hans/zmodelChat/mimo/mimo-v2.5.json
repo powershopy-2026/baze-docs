@@ -596,8 +596,7 @@
               },
               "text/event-stream": {
                 "schema": {
-                  "type": "string",
-                  "description": "SSE 数据流。每个 `data:` 事件可以解析为兼容 DeepSeek/OpenAI 的对话补全 Chunk；流通常以 `data: [DONE]` 结束。当设置了 `stream_options.include_usage=true` 时，会在结束前额外返回一个包含 `usage` 的数据块。"
+                  "$ref": "#/components/schemas/ChatCompletionChunk"
                 },
                 "examples": {
                   "流式响应": {
@@ -1470,6 +1469,54 @@
             "type": "string",
             "nullable": true,
             "description": "模型停止生成 token 的原因。如果模型到达自然停止点或提供的停止序列，则为 stop；如果达到请求中指定的最大 token 数，则为 length；如果模型调用了工具，则为 tool_calls。如果内容因触发过滤策略而被拦截，则为 content_filter；如果模型检测到了复读，则为 repetition_truncation。"
+          }
+        }
+      },
+      "ChatCompletionChunk": {
+        "type": "object",
+        "description": "Chat 响应 chunk 对象（流式输出）。SSE 流中的每个 `data:` 事件对应一个 ChatCompletionChunk。流通常以 `data: [DONE]` 结束。",
+        "required": [
+          "id",
+          "object",
+          "created",
+          "model",
+          "choices"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "对话补全 chunk 的唯一标识符。同一流中的所有 chunk 共享相同的 ID。"
+          },
+          "object": {
+            "type": "string",
+            "enum": [
+              "chat.completion.chunk"
+            ],
+            "description": "对象类型，仅为 chat.completion.chunk。"
+          },
+          "created": {
+            "type": "integer",
+            "description": "对话补全对象创建时的 Unix 时间戳（以秒为单位）。所有 chunk 使用相同的时间戳。"
+          },
+          "model": {
+            "type": "string",
+            "description": "用于生成结果的模型。"
+          },
+          "choices": {
+            "type": "array",
+            "description": "包含生成的回复选项列表。当 stream_options.include_usage 设为 true 时，最终的 usage chunk 中的 choices 可为空数组。",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionChunkChoice"
+            }
+          },
+          "usage": {
+            "description": "该对话补全请求的用量信息。大多数 chunk 中为 null；仅当 stream_options.include_usage 设为 true 时，最后的 chunk 会包含 usage 信息。",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Usage"
+              }
+            ],
+            "nullable": true
           }
         }
       },
