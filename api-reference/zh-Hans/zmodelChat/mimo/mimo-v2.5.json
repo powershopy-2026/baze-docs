@@ -684,7 +684,7 @@
         "description": "助手消息。此消息的角色为 assistant。",
         "properties": {
           "content": {
-            "description": "助手消息的内容。",
+            "description": "助手消息的内容。除非指定了 tool_calls，否则为必需。",
             "oneOf": [
               {
                 "type": "string",
@@ -706,15 +706,6 @@
           "name": {
             "type": "string",
             "description": "参与者的可选名称，提供给模型以区分同一角色的不同参与者。"
-          },
-          "prefix": {
-            "type": "boolean",
-            "description": "（Beta）将此参数设为 true 可强制模型以此助手消息中提供的前缀内容作为回复的开头。"
-          },
-          "reasoning_content": {
-            "type": "string",
-            "nullable": true,
-            "description": "（Beta）用于对话前缀延续下的思考模式，作为上一条助手思维链内容的输入。使用此功能时，prefix 参数必须设为 true。"
           },
           "tool_calls": {
             "type": "array",
@@ -773,7 +764,10 @@
             "default": "enabled",
             "description": "是否启用思维链。mimo-v2.5-pro，mimo-v2.5 默认值为 enabled。可选值：enabled，disabled"
           }
-        }
+        },
+        "required": [
+          "type"
+        ]
       },
       "StreamOptions": {
         "type": "object",
@@ -1122,9 +1116,6 @@
         "properties": {
           "role": {
             "type": "string",
-            "enum": [
-              "assistant"
-            ],
             "description": "消息作者的角色。"
           },
           "content": {
@@ -1337,16 +1328,6 @@
                 "type": "string",
                 "format": "uri",
                 "description": "公共图片 URL 或 Base64 编码的数据 URL。"
-              },
-              "detail": {
-                "type": "string",
-                "enum": [
-                  "auto",
-                  "low",
-                  "high"
-                ],
-                "default": "auto",
-                "description": "处理图片的精细度级别。low 使用低分辨率；high 使用高分辨率；auto 由模型决定。"
               }
             }
           }
@@ -1504,27 +1485,26 @@
         "title": "Audio content part · object",
         "required": [
           "type",
-          "audio_url"
+          "input_audio"
         ],
         "description": "用户消息中的音频内容部分。",
         "properties": {
           "type": {
             "type": "string",
             "enum": [
-              "audio_url"
+              "input_audio"
             ],
-            "description": "内容部分的类型，值为 audio_url。"
+            "description": "内容部分的类型，类型值为 input_audio。"
           },
-          "audio_url": {
+          "input_audio": {
             "type": "object",
             "required": [
-              "url"
+              "data"
             ],
-            "description": "音频 URL。可以是公共音频 URL 或 Base64 编码的数据 URL。",
+            "description": "音频的 URL 或 Base64 编码的音频数据。",
             "properties": {
-              "url": {
+              "data": {
                 "type": "string",
-                "format": "uri",
                 "description": "音频的 URL 或 Base64 编码的音频数据。"
               }
             }
@@ -1574,6 +1554,46 @@
                 "description": "分辨率档次。可选值：default，max"
               }
             }
+          }
+        }
+      },
+      "ChatCompletionChunk": {
+        "type": "object",
+        "description": "对话补全响应块对象（流式输出）。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "对话补全块的唯一标识符。每个数据块均使用相同的 ID。"
+          },
+          "object": {
+            "type": "string",
+            "description": "对象类型，仅为 chat.completion.chunk。"
+          },
+          "created": {
+            "type": "integer",
+            "description": "对话补全对象创建时的 Unix 时间戳（以秒为单位）。每个数据块均使用相同的时间戳。"
+          },
+          "model": {
+            "type": "string",
+            "description": "用于生成结果的模型。"
+          },
+          "choices": {
+            "type": "array",
+            "description": "包含生成的回复选项列表。",
+            "items": {
+              "": "#/components/schemas/ChatCompletionChunkChoice"
+            }
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "": "#/components/schemas/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "该对话补全请求的用量信息。"
           }
         }
       }

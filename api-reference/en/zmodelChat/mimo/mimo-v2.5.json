@@ -684,7 +684,7 @@
         "description": "Assistant message. The role of this message is assistant.",
         "properties": {
           "content": {
-            "description": "The content of the assistant message.",
+            "description": "The content of the assistant message. Required unless tool_calls is specified.",
             "oneOf": [
               {
                 "type": "string",
@@ -706,15 +706,6 @@
           "name": {
             "type": "string",
             "description": "An optional name for the participant, provided to the model to distinguish between participants of the same role."
-          },
-          "prefix": {
-            "type": "boolean",
-            "description": "(Beta) Set this to true to force the model to start its response with the prefix content provided in this assistant message."
-          },
-          "reasoning_content": {
-            "type": "string",
-            "nullable": true,
-            "description": "(Beta) Used in thinking mode under conversation prefix continuation, as input for the last assistant chain-of-thought content. When using this feature, the prefix parameter must be set to true."
           },
           "tool_calls": {
             "type": "array",
@@ -773,7 +764,10 @@
             "default": "enabled",
             "description": "Whether to enable chain-of-thought. For mimo-v2.5-pro and mimo-v2.5, the default value is enabled. Allowed values: enabled, disabled"
           }
-        }
+        },
+        "required": [
+          "type"
+        ]
       },
       "StreamOptions": {
         "type": "object",
@@ -1122,9 +1116,6 @@
         "properties": {
           "role": {
             "type": "string",
-            "enum": [
-              "assistant"
-            ],
             "description": "The role of the message author."
           },
           "content": {
@@ -1337,16 +1328,6 @@
                 "type": "string",
                 "format": "uri",
                 "description": "A public image URL or a Base64-encoded data URL."
-              },
-              "detail": {
-                "type": "string",
-                "enum": [
-                  "auto",
-                  "low",
-                  "high"
-                ],
-                "default": "auto",
-                "description": "The level of effort spent processing the image. low uses low resolution; high uses high resolution; auto lets the model decide."
               }
             }
           }
@@ -1504,27 +1485,26 @@
         "title": "Audio content part · object",
         "required": [
           "type",
-          "audio_url"
+          "input_audio"
         ],
         "description": "An audio content part within a user message.",
         "properties": {
           "type": {
             "type": "string",
             "enum": [
-              "audio_url"
+              "input_audio"
             ],
-            "description": "The type of the content part, which is audio_url."
+            "description": "The type of the content part, which is input_audio."
           },
-          "audio_url": {
+          "input_audio": {
             "type": "object",
             "required": [
-              "url"
+              "data"
             ],
-            "description": "The audio URL. May be a public audio URL or a Base64-encoded data URL.",
+            "description": "The audio URL or Base64-encoded audio data.",
             "properties": {
-              "url": {
+              "data": {
                 "type": "string",
-                "format": "uri",
                 "description": "The URL of the audio or Base64-encoded audio data."
               }
             }
@@ -1574,6 +1554,46 @@
                 "description": "Resolution level. Allowed values: default, max"
               }
             }
+          }
+        }
+      },
+      "ChatCompletionChunk": {
+        "type": "object",
+        "description": "Chat response chunk object (streaming).",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "A unique identifier for the chat completion chunk. Each chunk uses the same ID."
+          },
+          "object": {
+            "type": "string",
+            "description": "The object type, which is chat.completion.chunk."
+          },
+          "created": {
+            "type": "integer",
+            "description": "The Unix timestamp (in seconds) when the chat completion chunk was created. Each chunk uses the same timestamp."
+          },
+          "model": {
+            "type": "string",
+            "description": "The model used to generate the completion."
+          },
+          "choices": {
+            "type": "array",
+            "description": "A list of chat completion choices. Each element is a choice object.",
+            "items": {
+              "": "#/components/schemas/ChatCompletionChunkChoice"
+            }
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "": "#/components/schemas/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Usage information for this chat completion request."
           }
         }
       }
