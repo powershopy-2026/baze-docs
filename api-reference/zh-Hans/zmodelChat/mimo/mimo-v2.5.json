@@ -200,6 +200,104 @@
                     ],
                     "max_completion_tokens": 1024
                   }
+                },
+                "音频输入": {
+                  "summary": "带音频输入的对话",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下音频的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "视频输入": {
+                  "summary": "带视频输入的对话",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下视频的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "结构化输出": {
+                  "summary": "带结构化输出的对话",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "我叫张三，今年28岁，邮箱是zhangsan@test.com，生日是1996年5月12日。请按照以下JSON格式返回结果。注意：生日必须使用YYYY-MM-DD格式。{\"name\": \"string or null\", \"age\": \"int or null\", \"email\": \"string or null\", \"birthday\": \"string or null\"}"
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "response_format": {
+                      "type": "json_object"
+                    }
+                  }
+                },
+                "深度思考": {
+                  "summary": "带深度思考的对话",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "用三句话介绍机器学习。"
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "thinking": {
+                      "type": "enabled"
+                    }
+                  }
                 }
               }
             }
@@ -365,6 +463,132 @@
                           "cached_tokens": 5,
                           "image_tokens": 1024
                         }
+                      }
+                    }
+                  },
+                  "音频输入": {
+                    "summary": "音频输入响应",
+                    "value": {
+                      "id": "87ee7097c0f7491ea27429efcc21cc26",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Good morning. Could you tell me what the weather will be like today?"
+                          }
+                        }
+                      ],
+                      "created": 1776849418,
+                      "model": "mimo-v2.5",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 17,
+                        "prompt_tokens": 86,
+                        "total_tokens": 103,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 15
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 25,
+                          "cached_tokens": 45
+                        }
+                      }
+                    }
+                  },
+                  "视频输入": {
+                    "summary": "视频输入响应",
+                    "value": {
+                      "id": "d2c3bd5a08114f78a525e09b69308dc9",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "视频中有一只白色小猫，长着明亮的蓝眼睛，坐在抛光木地板上。它靠近一扇挂着米色窗帘的窗户，阳光照进来，在地板上投下阴影。背景中可见一盆绿色的盆栽植物，类似于龟背竹。小猫好奇地环顾四周，然后张开嘴喵喵叫。",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user wants a description of the video content.\n\n1.  **Analyze the video**:\n*   **Subject**: A white kitten with blue eyes.\n*   **Setting**: Indoors, near a window. There are beige curtains, a wooden floor, and a green potted plant (Monstera) in the background.\n*   **Action**: The kitten is sitting on the wooden floor. It's looking slightly to the side. It meows. The lighting is warm and sunny, creating shadows on the floor.\n*   **Timestamps**:\n*   00:00 - 00:03: The kitten sits still, looking around, then opens its mouth to meow. The sun casts shadows.\n\n2.  **Synthesize the description**:\n*   Start with the main subject: A white kitten with blue eyes.\n*   Describe the environment: Sitting on a wooden floor near a window with beige curtains. Sunlight is streaming in. A plant is visible in the background.\n*   Describe the action: The kitten looks around and meows.\n*   Mention the atmosphere: Warm, peaceful, sunny.\n\n3.  **Draft the response**:\nThe video features a close-up of a white kitten with striking blue eyes sitting on a polished wooden floor. It is positioned near a window draped with light beige curtains. Sunlight streams through the window, casting long shadows on the floor and illuminating the kitten's fur. In the background, a green potted plant, resembling a Monstera, adds a touch of nature to the indoor setting. The kitten looks around curiously and then lets out a meow. The scene is bright and peaceful.\n\n4.  **Refine based on specific details**:\n*   The kitten is white.\n*   Blue eyes.\n*   Wooden floor.\n*   Window with curtains.\n*   Plant in background.\n*   Sunlight/Shadows.\n*   Action: Meowing.\n\n5.  **Final Polish**: Combine these points into a coherent paragraph. The video shows a white kitten with blue eyes sitting on a wooden floor in a sunlit room. It's near a window with curtains and a plant in the background. The kitten meows.\n\nLet's stick to a descriptive summary.\n\n*   **Subject**: White kitten, blue eyes.\n*   **Location**: Wooden floor, near window, curtains, plant.\n*   **Action**: Sitting, looking, meowing.\n*   **Lighting**: Sunny, warm.\n\nConstruct the final output."
+                          }
+                        }
+                      ],
+                      "created": 1776849614,
+                      "model": "mimo-v2.5",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 590,
+                        "prompt_tokens": 1260,
+                        "total_tokens": 1850,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 514
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 19,
+                          "cached_tokens": 45,
+                          "video_tokens": 1144
+                        }
+                      }
+                    }
+                  },
+                  "结构化输出": {
+                    "summary": "结构化输出响应",
+                    "value": {
+                      "id": "f88d3e6c6b0043b09871487b5c52e4b4",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "{\"name\": \"Zhang San\", \"age\": 28, \"email\": \"zhangsan@test.com\", \"birthday\": \"1996-05-12\"}",
+                            "role": "assistant",
+                            "tool_calls": null
+                          }
+                        }
+                      ],
+                      "created": 1776850034,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 41,
+                        "prompt_tokens": 145,
+                        "total_tokens": 186,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 0
+                        },
+                        "prompt_tokens_details": null
+                      }
+                    }
+                  },
+                  "深度思考": {
+                    "summary": "深度思考响应",
+                    "value": {
+                      "id": "7f2cc80f34b541c49f5fcd40ad34bc73",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "机器学习是人工智能的一个领域，它使计算机能够从数据中学习并提高性能，而无需为每项任务进行显式编程。它使用算法识别模式，并基于输入信息做出决策或预测。这种方法驱动着从个性化推荐到高级医疗诊断等一切应用。",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Hmm, the user is asking for a concise introduction to machine learning in exactly three sentences. This seems straightforward but requires careful wording to cover the core concepts without oversimplifying or overcomplicating.  \\n\\nI should start with the basic definition, then mention how it learns from data, and end with its purpose and real-world relevance. The response should flow naturally from \\\"what it is\\\" to \\\"how it works\\\" to \\\"why it matters.\\\"  \\n\\nKeeping it neutral and factual works best here—no need for examples or jargon. Just three clear, standalone sentences that collectively give a solid overview."
+                          }
+                        }
+                      ],
+                      "created": 1776850089,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 179,
+                        "prompt_tokens": 60,
+                        "total_tokens": 239,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 121
+                        },
+                        "prompt_tokens_details": null
                       }
                     }
                   }
