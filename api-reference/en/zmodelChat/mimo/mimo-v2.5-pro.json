@@ -200,6 +200,46 @@
                     ],
                     "max_completion_tokens": 1024
                   }
+                },
+                "Structured Output": {
+                  "summary": "Chat with structured output (JSON)",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": "My name is Zhang San, I am 28 years old, my email address is zhangsan@test.com, and my birthday is May 12, 1996. Please return the results in the following JSON format. Note: The birthday must be in YYYY-MM-DD format. {\"name\": \"string or null\", \"age\": \"int or null\", \"email\": \"string or null\", \"birthday\": \"string or null\"}"
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "response_format": {
+                      "type": "json_object"
+                    }
+                  }
+                },
+                "Deep Thinking": {
+                  "summary": "Chat with deep thinking enabled",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Introduce machine learning in three sentences."
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "thinking": {
+                      "type": "enabled"
+                    }
+                  }
                 }
               }
             }
@@ -365,6 +405,65 @@
                           "cached_tokens": 5,
                           "image_tokens": 1024
                         }
+                      }
+                    }
+                  },
+                  "Structured Output": {
+                    "summary": "Structured output (JSON) response",
+                    "value": {
+                      "id": "f88d3e6c6b0043b09871487b5c52e4b4",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "{\"name\": \"Zhang San\", \"age\": 28, \"email\": \"zhangsan@test.com\", \"birthday\": \"1996-05-12\"}",
+                            "role": "assistant",
+                            "tool_calls": null
+                          }
+                        }
+                      ],
+                      "created": 1776850034,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 41,
+                        "prompt_tokens": 145,
+                        "total_tokens": 186,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 0
+                        },
+                        "prompt_tokens_details": null
+                      }
+                    }
+                  },
+                  "Deep Thinking": {
+                    "summary": "Deep thinking response",
+                    "value": {
+                      "id": "7f2cc80f34b541c49f5fcd40ad34bc73",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "Machine learning is a field of artificial intelligence that enables computers to learn from data and improve their performance without being explicitly programmed for every task. It uses algorithms to identify patterns and make decisions or predictions based on input information. This approach powers everything from personalized recommendations to advanced medical diagnostics.",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Hmm, the user is asking for a concise introduction to machine learning in exactly three sentences. This seems straightforward but requires careful wording to cover the core concepts without oversimplifying or overcomplicating.  \\n\\nI should start with the basic definition, then mention how it learns from data, and end with its purpose and real-world relevance. The response should flow naturally from \\\"what it is\\\" to \\\"how it works\\\" to \\\"why it matters.\\\"  \\n\\nKeeping it neutral and factual works best here—no need for examples or jargon. Just three clear, standalone sentences that collectively give a solid overview."
+                          }
+                        }
+                      ],
+                      "created": 1776850089,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 179,
+                        "prompt_tokens": 60,
+                        "total_tokens": 239,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 121
+                        },
+                        "prompt_tokens_details": null
                       }
                     }
                   }

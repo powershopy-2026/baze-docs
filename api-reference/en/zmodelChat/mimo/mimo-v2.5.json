@@ -200,6 +200,64 @@
                     ],
                     "max_completion_tokens": 1024
                   }
+                },
+                "Audio Input": {
+                  "summary": "Chat with audio input",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "please describe the content of the audio"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "Video Input": {
+                  "summary": "Chat with video input",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
+                          },
+                          {
+                            "type": "text",
+                            "text": "please describe the content of the video"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
                 }
               }
             }
@@ -335,40 +393,107 @@
                       }
                     }
                   },
-                  "Image Input": {
-                    "summary": "Image input response",
-                    "value": {
-                      "id": "e27ffa1d3e31434daa71d6b6a83f6e38",
-                      "choices": [
-                        {
-                          "finish_reason": "length",
-                          "index": 0,
-                          "message": {
-                            "content": "Based on the image provided, here is a detailed description of the content:\n\n**Overall Atmosphere**\nThe image depicts a serene, magical, and lush forest scene. It has an ethereal quality, likely enhanced by digital art techniques or AI generation, characterized",
-                            "role": "assistant",
-                            "tool_calls": null,
-                            "reasoning_content": "Here's a thinking process that leads to the description:\n\n1.  **Analyze the Request:**\n*   **Input:** An image of a forest scene with a stream, sunlight, and trees.\n*   **Task:** Describe the content of the image.\n\n2.  **Initial Impression & Overall Mood:**\n*   The image depicts a serene, magical, and lush forest.\n*   The lighting is dramatic, with sunbeams filtering through the canopy.\n*   There's a sense of tranquility and nature in its undisturbed state.\n*   The style looks somewhat photorealistic but possibly enhanced or AI-generated due to the perfect lighting and composition.\n\n3.  **Break Down Visual Elements:**\n\n*   **Foreground:**\n*   *Left side:* Large, detailed ferns. They are vibrant green and look wet or dewy.\n*   *Bottom center/right:* A stream or small river flowing towards the viewer.\n*   *Water:* The water is clear but reflects the light, creating a shimmering effect. It flows over smooth, moss-covered rocks.\n*   *Rocks:* Several large, rounded stones are visible in the immediate foreground, covered in thick green moss.\n\n*   **Mid-ground:**\n*   *Trees:* Massive, ancient-looking trees with thick, gnarled trunks and exposed roots. The bark is textured and dark.\n*   *Vegetation:* More ferns, bushes, and mossy ground cover lining the banks of the stream.\n*   *Stream path:* The stream winds back into the forest, guiding the eye.\n\n*   **Background:**\n*   *Forest density:* The trees become denser and fade into a misty or foggy atmosphere.\n*   *Lighting:* This is the most striking feature. \"God rays\" or crepuscular rays are streaming down from the upper center/right, cutting through the mist and illuminating the scene.\n*   *Particles:* There are tiny specks floating in the light beams, looking like dust motes, pollen, or perhaps magical sparkles/fireflies.\n\n4.  **Structure the Description:**\n*   **Introduction:** General summary of the scene (misty forest, stream, sunlight).\n*   **The Lighting (Key Feature):** Describe the sunbeams and atmosphere.\n*   **The Vegetation (Flora):** Mention the ferns, moss, and ancient trees.\n*   **The Water (Hydrography):** Describe the stream, rocks, and reflections.\n*   **Composition/Atmosphere:** Conclude with the overall feeling (peaceful, ethereal).\n\n5.  **Drafting the Description (Iterative refinement):**\n\n*   *Draft 1 (Mental):* It's a forest with a river. Big trees on the sides. Sun is shining down in beams. There are ferns in the front left. The rocks are mossy. It looks magical.\n\n*   *Draft 2 (More detail):* A lush forest scene. A stream flows through the center over mossy rocks. On the left, there are large ferns. The trees are old with twisted branches. The sun is breaking through the canopy, creating bright rays of light. There is mist in the background. It looks like a fantasy setting.\n\n*   *Draft 3 (Polished & Descriptive - closer to final output):*\n*   Start with the atmosphere: \"This image depicts a serene and enchanting forest scene...\"\n*   Focus on the light: \"...dominated by dramatic shafts of sunlight (god rays) filtering through the dense canopy...\"\n*   Describe the water: \"A gentle stream flows through the center, winding over smooth, moss-covered stones...\"\n*   Describe the plants: \"Lush vegetation is everywhere, particularly large, detailed ferns in the foreground on the left...\"\n*   Describe the trees: \"Ancient trees with thick, gnarled trunks and exposed roots frame the scene...\"\n\n6.  **Final Polish (Reviewing against the image):**\n*   *Check:* Did I mention the moss? Yes.\n*   *Check:* Did I mention the floating particles? Yes, add that detail about the \"sparkles\" or dust motes.\n*   *Check:* Is the perspective correct? Yes, low angle looking up the stream.\n\n7.  **Final Output Generation:** (This matches the provided good response.)\n*   \"The image displays a breathtaking, ethereal forest scene...\"\n*   Break it down by lighting, vegetation, and water.\n*   Mention the color palette (greens, browns, golden light).\n\n8.  **Formatting:** Use bullet points or paragraphs for readability. (I will use a mix of general description and specific details)."
+                    "Image Input": {
+                      "summary": "Image input response",
+                      "value": {
+                        "id": "e27ffa1d3e31434daa71d6b6a83f6e38",
+                        "choices": [
+                          {
+                            "finish_reason": "length",
+                            "index": 0,
+                            "message": {
+                              "content": "Based on the image provided, here is a detailed description of the content:\n\n**Overall Atmosphere**\nThe image depicts a serene, magical, and lush forest scene. It has an ethereal quality, likely enhanced by digital art techniques or AI generation, characterized",
+                              "role": "assistant",
+                              "tool_calls": null,
+                              "reasoning_content": "Here's a thinking process that leads to the description:\n\n1.  **Analyze the Request:**\n*   **Input:** An image of a forest scene with a stream, sunlight, and trees.\n*   **Task:** Describe the content of the image.\n\n2.  **Initial Impression & Overall Mood:**\n*   The image depicts a serene, magical, and lush forest.\n*   The lighting is dramatic, with sunbeams filtering through the canopy.\n*   There's a sense of tranquility and nature in its undisturbed state.\n*   The style looks somewhat photorealistic but possibly enhanced or AI-generated due to the perfect lighting and composition.\n\n3.  **Break Down Visual Elements:**\n\n*   **Foreground:**\n*   *Left side:* Large, detailed ferns. They are vibrant green and look wet or dewy.\n*   *Bottom center/right:* A stream or small river flowing towards the viewer.\n*   *Water:* The water is clear but reflects the light, creating a shimmering effect. It flows over smooth, moss-covered rocks.\n*   *Rocks:* Several large, rounded stones are visible in the immediate foreground, covered in thick green moss.\n\n*   **Mid-ground:**\n*   *Trees:* Massive, ancient-looking trees with thick, gnarled trunks and exposed roots. The bark is textured and dark.\n*   *Vegetation:* More ferns, bushes, and mossy ground cover lining the banks of the stream.\n*   *Stream path:* The stream winds back into the forest, guiding the eye.\n\n*   **Background:**\n*   *Forest density:* The trees become denser and fade into a misty or foggy atmosphere.\n*   *Lighting:* This is the most striking feature. \"God rays\" or crepuscular rays are streaming down from the upper center/right, cutting through the mist and illuminating the scene.\n*   *Particles:* There are tiny specks floating in the light beams, looking like dust motes, pollen, or perhaps magical sparkles/fireflies.\n\n4.  **Structure the Description:**\n*   **Introduction:** General summary of the scene (misty forest, stream, sunlight).\n*   **The Lighting (Key Feature):** Describe the sunbeams and atmosphere.\n*   **The Vegetation (Flora):** Mention the ferns, moss, and ancient trees.\n*   **The Water (Hydrography):** Describe the stream, rocks, and reflections.\n*   **Composition/Atmosphere:** Conclude with the overall feeling (peaceful, ethereal).\n\n5.  **Drafting the Description (Iterative refinement):**\n\n*   *Draft 1 (Mental):* It's a forest with a river. Big trees on the sides. Sun is shining down in beams. There are ferns in the front left. The rocks are mossy. It looks magical.\n\n*   *Draft 2 (More detail):* A lush forest scene. A stream flows through the center over mossy rocks. On the left, there are large ferns. The trees are old with twisted branches. The sun is breaking through the canopy, creating bright rays of light. There is mist in the background. It looks like a fantasy setting.\n\n*   *Draft 3 (Polished & Descriptive - closer to final output):*\n*   Start with the atmosphere: \"This image depicts a serene and enchanting forest scene...\"\n*   Focus on the light: \"...dominated by dramatic shafts of sunlight (god rays) filtering through the dense canopy...\"\n*   Describe the water: \"A gentle stream flows through the center, winding over smooth, moss-covered stones...\"\n*   Describe the plants: \"Lush vegetation is everywhere, particularly large, detailed ferns in the foreground on the left...\"\n*   Describe the trees: \"Ancient trees with thick, gnarled trunks and exposed roots frame the scene...\"\n\n6.  **Final Polish (Reviewing against the image):**\n*   *Check:* Did I mention the moss? Yes.\n*   *Check:* Did I mention the floating particles? Yes, add that detail about the \"sparkles\" or dust motes.\n*   *Check:* Is the perspective correct? Yes, low angle looking up the stream.\n\n7.  **Final Output Generation:** (This matches the provided good response.)\n*   \"The image displays a breathtaking, ethereal forest scene...\"\n*   Break it down by lighting, vegetation, and water.\n*   Mention the color palette (greens, browns, golden light).\n\n8.  **Formatting:** Use bullet points or paragraphs for readability. (I will use a mix of general description and specific details)."
+                            }
+                          }
+                        ],
+                        "created": 1776849330,
+                        "model": "mimo-v2.5",
+                        "object": "chat.completion",
+                        "usage": {
+                          "completion_tokens": 1024,
+                          "prompt_tokens": 1085,
+                          "total_tokens": 2109,
+                          "completion_tokens_details": {
+                            "reasoning_tokens": 971
+                          },
+                          "prompt_tokens_details": {
+                            "cached_tokens": 5,
+                            "image_tokens": 1024
                           }
                         }
-                      ],
-                      "created": 1776849330,
-                      "model": "mimo-v2.5",
-                      "object": "chat.completion",
-                      "usage": {
-                        "completion_tokens": 1024,
-                        "prompt_tokens": 1085,
-                        "total_tokens": 2109,
-                        "completion_tokens_details": {
-                          "reasoning_tokens": 971
-                        },
-                        "prompt_tokens_details": {
-                          "cached_tokens": 5,
-                          "image_tokens": 1024
+                      }
+                    },
+                    "Audio Input": {
+                      "summary": "Audio input response",
+                      "value": {
+                        "id": "87ee7097c0f7491ea27429efcc21cc26",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "message": {
+                              "content": "",
+                              "role": "assistant",
+                              "tool_calls": null,
+                              "reasoning_content": "Good morning. Could you tell me what the weather will be like today?"
+                            }
+                          }
+                        ],
+                        "created": 1776849418,
+                        "model": "mimo-v2.5",
+                        "object": "chat.completion",
+                        "usage": {
+                          "completion_tokens": 17,
+                          "prompt_tokens": 86,
+                          "total_tokens": 103,
+                          "completion_tokens_details": {
+                            "reasoning_tokens": 15
+                          },
+                          "prompt_tokens_details": {
+                            "audio_tokens": 25,
+                            "cached_tokens": 45
+                          }
+                        }
+                      }
+                    },
+                    "Video Input": {
+                      "summary": "Video input response",
+                      "value": {
+                        "id": "d2c3bd5a08114f78a525e09b69308dc9",
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "message": {
+                              "content": "The video features a white kitten with bright blue eyes sitting on a polished wooden floor. It is positioned near a window covered by beige curtains, with sunlight streaming in and casting shadows across the room. In the background, a green potted plant, resembling a Monstera, is visible. The kitten looks around curiously and then opens its mouth to meow.",
+                              "role": "assistant",
+                              "tool_calls": null,
+                              "reasoning_content": "The user wants a description of the video content.\n\n1.  **Analyze the video**:\n*   **Subject**: A white kitten with blue eyes.\n*   **Setting**: Indoors, near a window. There are beige curtains, a wooden floor, and a green potted plant (Monstera) in the background.\n*   **Action**: The kitten is sitting on the wooden floor. It's looking slightly to the side. It meows. The lighting is warm and sunny, creating shadows on the floor.\n*   **Timestamps**:\n*   00:00 - 00:03: The kitten sits still, looking around, then opens its mouth to meow. The sun casts shadows.\n\n2.  **Synthesize the description**:\n*   Start with the main subject: A white kitten with blue eyes.\n*   Describe the environment: Sitting on a wooden floor near a window with beige curtains. Sunlight is streaming in. A plant is visible in the background.\n*   Describe the action: The kitten looks around and meows.\n*   Mention the atmosphere: Warm, peaceful, sunny.\n\n3.  **Draft the response**:\nThe video features a close-up of a white kitten with striking blue eyes sitting on a polished wooden floor. It is positioned near a window draped with light beige curtains. Sunlight streams through the window, casting long shadows on the floor and illuminating the kitten's fur. In the background, a green potted plant, resembling a Monstera, adds a touch of nature to the indoor setting. The kitten looks around curiously and then lets out a meow. The scene is bright and peaceful.\n\n4.  **Refine based on specific details**:\n*   The kitten is white.\n*   Blue eyes.\n*   Wooden floor.\n*   Window with curtains.\n*   Plant in background.\n*   Sunlight/Shadows.\n*   Action: Meowing.\n\n5.  **Final Polish**: Combine these points into a coherent paragraph. The video shows a white kitten with blue eyes sitting on a wooden floor in a sunlit room. It's near a window with curtains and a plant in the background. The kitten meows.\n\nLet's stick to a descriptive summary.\n\n*   **Subject**: White kitten, blue eyes.\n*   **Location**: Wooden floor, near window, curtains, plant.\n*   **Action**: Sitting, looking, meowing.\n*   **Lighting**: Sunny, warm.\n\nConstruct the final output."
+                            }
+                          }
+                        ],
+                        "created": 1776849614,
+                        "model": "mimo-v2.5",
+                        "object": "chat.completion",
+                        "usage": {
+                          "completion_tokens": 590,
+                          "prompt_tokens": 1260,
+                          "total_tokens": 1850,
+                          "completion_tokens_details": {
+                            "reasoning_tokens": 514
+                          },
+                          "prompt_tokens_details": {
+                            "audio_tokens": 19,
+                            "cached_tokens": 45,
+                            "video_tokens": 1144
+                          }
                         }
                       }
                     }
                   }
-                }
               },
               "text/event-stream": {
                 "schema": {

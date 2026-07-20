@@ -200,6 +200,64 @@
                     ],
                     "max_completion_tokens": 1024
                   }
+                },
+                "音频输入": {
+                  "summary": "带音频输入的对话",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下音频的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "视频输入": {
+                  "summary": "带视频输入的对话",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下视频的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
                 }
               }
             }
@@ -364,6 +422,73 @@
                         "prompt_tokens_details": {
                           "cached_tokens": 5,
                           "image_tokens": 1024
+                        }
+                      }
+                    }
+                  },
+                  "音频输入": {
+                    "summary": "音频输入响应",
+                    "value": {
+                      "id": "87ee7097c0f7491ea27429efcc21cc26",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Good morning. Could you tell me what the weather will be like today?"
+                          }
+                        }
+                      ],
+                      "created": 1776849418,
+                      "model": "mimo-v2.5",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 17,
+                        "prompt_tokens": 86,
+                        "total_tokens": 103,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 15
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 25,
+                          "cached_tokens": 45
+                        }
+                      }
+                    }
+                  },
+                  "视频输入": {
+                    "summary": "视频输入响应",
+                    "value": {
+                      "id": "d2c3bd5a08114f78a525e09b69308dc9",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "视频展示了一只长着明亮蓝眼睛的白色小猫，坐在光滑的木地板上。它靠近一扇覆盖着米色窗帘的窗户，阳光洒进来，在地板上投下阴影。背景中可以看到一盆绿色的盆栽，像是龟背竹（Monstera）。小猫好奇地环顾四周，然后张开嘴喵喵叫了一声。",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user wants a description of the video content.\n\n1.  **Analyze the video**:\n*   **Subject**: A white kitten with blue eyes.\n*   **Setting**: Indoors, near a window. There are beige curtains, a wooden floor, and a green potted plant (Monstera) in the background.\n*   **Action**: The kitten is sitting on the wooden floor. It's looking slightly to the side. It meows. The lighting is warm and sunny, creating shadows on the floor.\n*   **Timestamps**:\n*   00:00 - 00:03: The kitten sits still, looking around, then opens its mouth to meow. The sun casts shadows.\n\n2.  **Synthesize the description**:\n*   Start with the main subject: A white kitten with blue eyes.\n*   Describe the environment: Sitting on a wooden floor near a window with beige curtains. Sunlight is streaming in. A plant is visible in the background.\n*   Describe the action: The kitten looks around and meows.\n*   Mention the atmosphere: Warm, peaceful, sunny.\n\n3.  **Draft the response**:\nThe video features a close-up of a white kitten with striking blue eyes sitting on a polished wooden floor. It is positioned near a window draped with light beige curtains. Sunlight streams through the window, casting long shadows on the floor and illuminating the kitten's fur. In the background, a green potted plant, resembling a Monstera, adds a touch of nature to the indoor setting. The kitten looks around curiously and then lets out a meow. The scene is bright and peaceful.\n\n4.  **Refine based on specific details**:\n*   The kitten is white.\n*   Blue eyes.\n*   Wooden floor.\n*   Window with curtains.\n*   Plant in background.\n*   Sunlight/Shadows.\n*   Action: Meowing.\n\n5.  **Final Polish**: Combine these points into a coherent paragraph. The video shows a white kitten with blue eyes sitting on a wooden floor in a sunlit room. It's near a window with curtains and a plant in the background. The kitten meows.\n\nLet's stick to a descriptive summary.\n\n*   **Subject**: White kitten, blue eyes.\n*   **Location**: Wooden floor, near window, curtains, plant.\n*   **Action**: Sitting, looking, meowing.\n*   **Lighting**: Sunny, warm.\n\nConstruct the final output."
+                          }
+                        }
+                      ],
+                      "created": 1776849614,
+                      "model": "mimo-v2.5",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 590,
+                        "prompt_tokens": 1260,
+                        "total_tokens": 1850,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 514
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 19,
+                          "cached_tokens": 45,
+                          "video_tokens": 1144
                         }
                       }
                     }
