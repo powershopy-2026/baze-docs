@@ -1556,46 +1556,6 @@
             }
           }
         }
-      },
-      "ChatCompletionChunk": {
-        "type": "object",
-        "description": "Chat response chunk object (streaming).",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "A unique identifier for the chat completion chunk. Each chunk uses the same ID."
-          },
-          "object": {
-            "type": "string",
-            "description": "The object type, which is chat.completion.chunk."
-          },
-          "created": {
-            "type": "integer",
-            "description": "The Unix timestamp (in seconds) when the chat completion chunk was created. Each chunk uses the same timestamp."
-          },
-          "model": {
-            "type": "string",
-            "description": "The model used to generate the completion."
-          },
-          "choices": {
-            "type": "array",
-            "description": "A list of chat completion choices. Each element is a choice object.",
-            "items": {
-              "": "#/components/schemas/ChatCompletionChunkChoice"
-            }
-          },
-          "usage": {
-            "anyOf": [
-              {
-                "": "#/components/schemas/Usage"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Usage information for this chat completion request."
-          }
-        }
       }
     }
   }

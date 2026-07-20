@@ -1556,46 +1556,6 @@
             }
           }
         }
-      },
-      "ChatCompletionChunk": {
-        "type": "object",
-        "description": "对话补全响应块对象（流式输出）。",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "对话补全块的唯一标识符。每个数据块均使用相同的 ID。"
-          },
-          "object": {
-            "type": "string",
-            "description": "对象类型，仅为 chat.completion.chunk。"
-          },
-          "created": {
-            "type": "integer",
-            "description": "对话补全对象创建时的 Unix 时间戳（以秒为单位）。每个数据块均使用相同的时间戳。"
-          },
-          "model": {
-            "type": "string",
-            "description": "用于生成结果的模型。"
-          },
-          "choices": {
-            "type": "array",
-            "description": "包含生成的回复选项列表。",
-            "items": {
-              "": "#/components/schemas/ChatCompletionChunkChoice"
-            }
-          },
-          "usage": {
-            "anyOf": [
-              {
-                "": "#/components/schemas/Usage"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "该对话补全请求的用量信息。"
-          }
-        }
       }
     }
   }
