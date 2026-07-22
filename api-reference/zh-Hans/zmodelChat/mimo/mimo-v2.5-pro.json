@@ -874,16 +874,8 @@
         "description": "用户消息。此消息的角色为 user。",
         "properties": {
           "content": {
-            "description": "用户消息的内容。",
-            "oneOf": [
-              {
-                "type": "string",
-                "description": "纯文本内容。"
-              },
-              {
-                "$ref": "#/components/schemas/ContentPartArray"
-              }
-            ]
+            "type": "string",
+            "description": "用户消息的内容。"
           },
           "role": {
             "type": "string",
@@ -1565,38 +1557,6 @@
           }
         }
       },
-      "ContentPartImage": {
-        "type": "object",
-        "title": "Image content part · object",
-        "required": [
-          "type",
-          "image_url"
-        ],
-        "description": "用户消息中的图片内容部分。",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "image_url"
-            ],
-            "description": "内容部分的类型，为 image_url。"
-          },
-          "image_url": {
-            "type": "object",
-            "required": [
-              "url"
-            ],
-            "description": "图片 URL。可以是公共图片 URL 或 Base64 编码的数据 URL。",
-            "properties": {
-              "url": {
-                "type": "string",
-                "format": "uri",
-                "description": "公共图片 URL 或 Base64 编码的数据 URL。"
-              }
-            }
-          }
-        }
-      },
       "ContentPartArray": {
         "type": "array",
         "description": "用户消息中内容部分的数组。可包含文本、图像、音频或视频。",
@@ -1604,15 +1564,6 @@
           "oneOf": [
             {
               "$ref": "#/components/schemas/ContentPartText"
-            },
-            {
-              "$ref": "#/components/schemas/ContentPartImage"
-            },
-            {
-              "$ref": "#/components/schemas/ContentPartAudio"
-            },
-            {
-              "$ref": "#/components/schemas/ContentPartVideo"
             }
           ]
         }
@@ -1741,83 +1692,6 @@
           "code": {
             "type": "string",
             "description": "错误代码。"
-          }
-        }
-      },
-      "ContentPartAudio": {
-        "type": "object",
-        "title": "Audio content part · object",
-        "required": [
-          "type",
-          "input_audio"
-        ],
-        "description": "用户消息中的音频内容部分。",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "input_audio"
-            ],
-            "description": "内容部分的类型，类型值为 input_audio。"
-          },
-          "input_audio": {
-            "type": "object",
-            "required": [
-              "data"
-            ],
-            "description": "音频的 URL 或 Base64 编码的音频数据。",
-            "properties": {
-              "data": {
-                "type": "string",
-                "description": "音频的 URL 或 Base64 编码的音频数据。"
-              }
-            }
-          }
-        }
-      },
-      "ContentPartVideo": {
-        "type": "object",
-        "title": "Video content part · object",
-        "required": [
-          "type",
-          "video_url"
-        ],
-        "description": "用户消息中的视频内容部分。",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "video_url"
-            ],
-            "description": "内容部分的类型，值为 video_url。"
-          },
-          "video_url": {
-            "type": "object",
-            "required": [
-              "url"
-            ],
-            "description": "视频 URL。可以是公共视频 URL 或 Base64 编码的数据 URL。",
-            "properties": {
-              "url": {
-                "type": "string",
-                "format": "uri",
-                "description": "视频的 URL 或 Base64 编码的视频数据。"
-              },
-              "fps": {
-                "type": "number",
-                "default": 2,
-                "description": "每秒抽帧数。所需范围：[0.1, 10.0]"
-              },
-              "media_resolution": {
-                "type": "string",
-                "default": "default",
-                "enum": [
-                  "default",
-                  "max"
-                ],
-                "description": "分辨率档次。可选值：default，max"
-              }
-            }
           }
         }
       }

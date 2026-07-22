@@ -874,16 +874,8 @@
         "description": "User message. The role of this message is user.",
         "properties": {
           "content": {
-            "description": "The content of the user message.",
-            "oneOf": [
-              {
-                "type": "string",
-                "description": "Plain text content."
-              },
-              {
-                "$ref": "#/components/schemas/ContentPartArray"
-              }
-            ]
+            "type": "string",
+            "description": "The content of the user message."
           },
           "role": {
             "type": "string",
@@ -1565,54 +1557,13 @@
           }
         }
       },
-      "ContentPartImage": {
-        "type": "object",
-        "title": "Image content part · object",
-        "required": [
-          "type",
-          "image_url"
-        ],
-        "description": "An image content part within a user message.",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "image_url"
-            ],
-            "description": "The type of the content part, which is image_url."
-          },
-          "image_url": {
-            "type": "object",
-            "required": [
-              "url"
-            ],
-            "description": "The image URL. May be a public image URL or a Base64-encoded data URL.",
-            "properties": {
-              "url": {
-                "type": "string",
-                "format": "uri",
-                "description": "A public image URL or a Base64-encoded data URL."
-              }
-            }
-          }
-        }
-      },
       "ContentPartArray": {
         "type": "array",
-        "description": "An array of content parts in a user message. May include text, images, audio, or video.",
+        "description": "An array of content parts in a user message. May include text, .",
         "items": {
           "oneOf": [
             {
               "$ref": "#/components/schemas/ContentPartText"
-            },
-            {
-              "$ref": "#/components/schemas/ContentPartImage"
-            },
-            {
-              "$ref": "#/components/schemas/ContentPartAudio"
-            },
-            {
-              "$ref": "#/components/schemas/ContentPartVideo"
             }
           ]
         }
@@ -1741,83 +1692,6 @@
           "code": {
             "type": "string",
             "description": "Error code."
-          }
-        }
-      },
-      "ContentPartAudio": {
-        "type": "object",
-        "title": "Audio content part · object",
-        "required": [
-          "type",
-          "input_audio"
-        ],
-        "description": "An audio content part within a user message.",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "input_audio"
-            ],
-            "description": "The type of the content part, which is input_audio."
-          },
-          "input_audio": {
-            "type": "object",
-            "required": [
-              "data"
-            ],
-            "description": "The audio URL or Base64-encoded audio data.",
-            "properties": {
-              "data": {
-                "type": "string",
-                "description": "The URL of the audio or Base64-encoded audio data."
-              }
-            }
-          }
-        }
-      },
-      "ContentPartVideo": {
-        "type": "object",
-        "title": "Video content part · object",
-        "required": [
-          "type",
-          "video_url"
-        ],
-        "description": "A video content part within a user message.",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "video_url"
-            ],
-            "description": "The type of the content part, which is video_url."
-          },
-          "video_url": {
-            "type": "object",
-            "required": [
-              "url"
-            ],
-            "description": "The video URL. May be a public video URL or a Base64-encoded data URL.",
-            "properties": {
-              "url": {
-                "type": "string",
-                "format": "uri",
-                "description": "The URL of the video or Base64-encoded video data."
-              },
-              "fps": {
-                "type": "number",
-                "default": 2,
-                "description": "The number of frames to extract per second. Valid range: [0.1, 10.0]"
-              },
-              "media_resolution": {
-                "type": "string",
-                "default": "default",
-                "enum": [
-                  "default",
-                  "max"
-                ],
-                "description": "Resolution level. Allowed values: default, max"
-              }
-            }
           }
         }
       }
