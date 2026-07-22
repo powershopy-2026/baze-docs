@@ -1180,11 +1180,6 @@
       },
       "ToolCallMessage": {
         "type": "object",
-        "required": [
-          "id",
-          "type",
-          "function"
-        ],
         "description": "消息中的工具调用对象。",
         "properties": {
           "id": {
@@ -1401,7 +1396,7 @@
               },
               "tool_calls": {
                 "type": "array",
-                "description": "函数调用启动后，模型会返回待调用的工具以及该调用所需的参数。",
+                "description": "函数调用启动后，模型会返回待调用的工具以及该调用所需的参数。此参数可包含一个或多个工具响应对象。",
                 "items": {
                   "type": "object",
                   "properties": {
@@ -1430,7 +1425,7 @@
                         },
                         "arguments": {
                           "type": "string",
-                          "description": "模型生成的用于调用函数的参数，格式为 JSON 字符串。"
+                          "description": "模型生成的用于调用函数的参数，格式为 JSON。请注意，模型生成的内容并非并非总能保证是有效的 JSON，且可能会虚构出函数模式中未定义的参数。在调用函数之前，请在代码中对这些参数进行验证。"
                         }
                       }
                     }
@@ -1447,13 +1442,6 @@
               "error_message": {
                 "type": "string",
                 "description": "联网搜索链路的错误信息。"
-              },
-              "audio": {
-                "$ref": "#/components/schemas/AudioResponse"
-              },
-              "final_text_preview": {
-                "type": "string",
-                "description": "经过智能优化润色后的音频播报最终文本。仅当请求参数 optimize_text_preview 设为 true 时，该字段才会返回。"
               }
             }
           },
@@ -1470,7 +1458,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "对话补全 chunk 的唯一标识符。同一流中的所有 chunk 共享相同的 ID。"
+            "description": "对话补全对象的唯一标识符。每个数据块均使用相同的 ID。"
           },
           "object": {
             "type": "string",
@@ -1481,7 +1469,7 @@
           },
           "created": {
             "type": "integer",
-            "description": "对话补全对象创建时的 Unix 时间戳（以秒为单位）。所有 chunk 使用相同的时间戳。"
+            "description": "对话补全对象创建时的 Unix 时间戳（以秒为单位）。每个数据块均使用相同的时间戳。"
           },
           "model": {
             "type": "string",
@@ -1489,13 +1477,13 @@
           },
           "choices": {
             "type": "array",
-            "description": "包含生成的回复选项列表。当 stream_options.include_usage 设为 true 时，最终的 usage chunk 中的 choices 可为空数组。",
+            "description": "包含生成的回复选项列表。",
             "items": {
               "$ref": "#/components/schemas/ChatCompletionChunkChoice"
             }
           },
           "usage": {
-            "description": "该对话补全请求的用量信息。大多数 chunk 中为 null；仅当 stream_options.include_usage 设为 true 时，最后的 chunk 会包含 usage 信息。",
+            "description": "该对话补全请求的用量信息。",
             "allOf": [
               {
                 "$ref": "#/components/schemas/Usage"
