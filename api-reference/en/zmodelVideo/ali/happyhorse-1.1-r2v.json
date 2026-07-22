@@ -261,7 +261,7 @@
           },
           "media": {
             "type": "array",
-            "description": "Media asset list, used to specify reference images. Defines the order in which characters are referenced in the prompt, following the array order. The first `reference_image` in the array corresponds to [Image 1], the second to [Image 2], and so on. Number of reference images: 1~9.",
+            "description": "Media asset list, used to specify reference images. Each element of the array is a media object containing type and url fields. Defines the order in which characters are referenced in the prompt, following the array order. The first `reference_image` in the array corresponds to [Image 1], the second to [Image 2], and so on. Number of reference images: 1~9.",
             "minItems": 1,
             "maxItems": 9,
             "items": {
@@ -286,7 +286,7 @@
           },
           "url": {
             "type": "string",
-            "description": "Reference image URL or Base64-encoded data.\n\nImage constraints:\n- Formats: JPEG, JPG, PNG, WEBP.\n- Resolution: short side no less than 400 pixels, 720P or higher is recommended. Avoid passing images that are too small, blurry, or over-compressed, which may affect the result.\n- File size: up to 20MB.\n\nSupported input formats:\n1. Public URL: HTTP or HTTPS protocol. Example: https://xxx/xxx.jpg.\n2. Base64-encoded image string: format `data:{MIME_type};base64,{base64_data}`. Example: data:image/png;base64,GDU7MtCZzEbTbmRZ......"
+            "description": "Reference image URL or Base64-encoded data.\n\nImage constraints:\n- Formats: JPEG, JPG, PNG, WEBP.\n- Resolution: short side no less than 400 pixels, 720P or higher is recommended. Avoid passing images that are too small, blurry, or over-compressed, which may affect the result.\n- File size: up to 20MB.\n\nSupported input formats:\n1. Public URL: HTTP or HTTPS protocol. Example: https://xxx/xxx.jpg.\n2. Base64-encoded image string: format `data:{MIME_type};base64,{base64_data}`. Example: data:image/png;base64,GDU7MtCZzEbTbmRZ......\n\n**Base64 Encoding Data Format**\n\nFormat: `data:{MIME_type};base64,{base64_data}`.\n\n- `{base64_data}`: The string obtained after Base64 encoding the image file.\n- `{MIME_type}`: The media type of the image, which must correspond to the file format.\n\n**Image Format and MIME Type Mapping**\n\n| Image Format | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| WEBP | image/webp |"
           }
         }
       },

@@ -276,7 +276,7 @@
           },
           "url": {
             "type": "string",
-            "description": "Media asset URL. Provide the first-frame image URL (type=first_frame) or Base64-encoded data.\n\nImage constraints:\n- Formats: JPEG, JPG, PNG, WEBP.\n- Resolution: width and height no less than 300 pixels.\n- Aspect ratio: 1:2.5 ~ 2.5:1.\n- File size: up to 20MB.\n\nSupported input formats:\n1. Public URL: HTTP or HTTPS protocol. Example: https://xxx/xxx.png.\n2. Base64-encoded image string: format `data:{MIME_type};base64,{base64_data}`. Example: data:image/png;base64,GDU7MtCZzEbTbmRZ......"
+            "description": "Media material URL. Pass in the first frame URL of the image (type=first_frame), or Base64 encoded data.\n\nImage restrictions:\n- Format: JPEG, JPG, PNG, WEBP.\n- Resolution: Width and height are not less than 300 pixels.\n- Aspect ratio: 1:2.5 to 2.5:1.\n- File size: No more than 20MB.\n\nSupported input formats:\n1. Public URL: Supports HTTP or HTTPS protocol. Example: https://xxx/xxx.png.\n2. Base64 encoded image string: Data format `data:{MIME_type};base64,{base64_data}`. Example: data:image/png;base64,GDU7MtCZzEbTbmRZ......\n\n**Base64 Encoding Data Format**\n\nFormat: `data:{MIME_type};base64,{base64_data}`.\n\n- `{base64_data}`: The string obtained after Base64 encoding the image file.\n- `{MIME_type}`: The media type of the image, which must correspond to the file format.\n\n**Image Format and MIME Type Mapping**\n\n| Image Format | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| WEBP | image/webp |"
           }
         }
       },

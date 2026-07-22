@@ -276,7 +276,7 @@
           },
           "url": {
             "type": "string",
-            "description": "媒体素材 URL。传入图像（type=first_frame）首帧URL，或 Base64 编码数据。\n\n图像限制：\n- 格式：JPEG、JPG、PNG、WEBP。\n- 分辨率：宽和高不小于 300 像素。\n- 宽高比：1:2.5 ～ 2.5:1。\n- 文件大小：不超过 20MB。\n\n支持输入的格式：\n1. 公网URL：支持 HTTP 或 HTTPS 协议。示例值：https://xxx/xxx.png。\n2. Base64 编码图像后的字符串：数据格式 `data:{MIME_type};base64,{base64_data}`。示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ......"
+            "description": "媒体素材 URL。传入图像（type=first_frame）首帧URL，或 Base64 编码数据。\n\n图像限制：\n- 格式：JPEG、JPG、PNG、WEBP。\n- 分辨率：宽和高不小于 300 像素。\n- 宽高比：1:2.5 ～ 2.5:1。\n- 文件大小：不超过 20MB。\n\n支持输入的格式：\n1. 公网URL：支持 HTTP 或 HTTPS 协议。示例值：https://xxx/xxx.png。\n2. Base64 编码图像后的字符串：数据格式 `data:{MIME_type};base64,{base64_data}`。示例值：data:image/png;base64,GDU7MtCZzEbTbmRZ......\n\n**Base64 编码数据格式**\n\n格式：`data:{MIME_type};base64,{base64_data}`。\n\n- `{base64_data}`：图像文件经过 Base64 编码后的字符串。\n- `{MIME_type}`：图像的媒体类型，需与文件格式对应。\n\n**图像格式与 MIME Type 对应表**\n\n| 图像格式 | MIME Type |\n| --- | --- |\n| JPEG | image/jpeg |\n| JPG | image/jpeg |\n| PNG | image/png |\n| WEBP | image/webp |"
           }
         }
       },
