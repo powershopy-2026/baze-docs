@@ -1109,7 +1109,7 @@
         "required": [
           "type"
         ],
-        "description": "Web search tool object. For details, please refer to Web Search documentation. Note: The web search plugin must be enabled before use.",
+        "description": "Web search tool object. For details, please refer to the web search documentation. Note: Web search tools are not supported at this time.",
         "properties": {
           "user_location": {
             "$ref": "#/components/schemas/WebSearchUserLocation"

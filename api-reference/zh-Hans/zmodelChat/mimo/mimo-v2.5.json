@@ -1109,7 +1109,7 @@
         "required": [
           "type"
         ],
-        "description": "联网搜索工具对象。详情请参考联网搜索文档。注意：使用前需要开通联网服务插件。",
+        "description": "联网搜索工具对象。详情请参考联网搜索文档。注意：使用前需要开通联网服务插件。暂不支持联网搜索工具。",
         "properties": {
           "user_location": {
             "$ref": "#/components/schemas/WebSearchUserLocation"
