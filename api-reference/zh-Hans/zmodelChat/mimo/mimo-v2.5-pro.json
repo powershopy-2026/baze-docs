@@ -535,6 +535,14 @@
             "maximum": 2,
             "description": "取值范围在 -2.0 到 2.0 之间的数值。如果该值为正，那么新 token 会根据其在已有文本中的出现频率受到相应的惩罚，降低模型重复相同内容的可能性。"
           },
+          "presence_penalty": {
+            "type": "number",
+            "nullable": true,
+            "default": 0,
+            "minimum": -2,
+            "maximum": 2,
+            "description": "取值范围在 -2.0 到 2.0 之间的数值。如果该值为正，那么新 token 会根据其是否已在已有文本中出现受到相应的惩罚，从而增加模型谈论新主题的可能性。"
+          },
           "max_completion_tokens": {
             "type": "integer",
             "nullable": true,
@@ -981,10 +989,6 @@
           "function": {
             "type": "object",
             "description": "模型所调用的函数。",
-            "required": [
-              "name",
-              "arguments"
-            ],
             "properties": {
               "name": {
                 "type": "string",
@@ -1166,9 +1170,6 @@
             "properties": {
               "role": {
                 "type": "string",
-                "enum": [
-                  "assistant"
-                ],
                 "description": "消息作者的角色。"
               },
               "content": {

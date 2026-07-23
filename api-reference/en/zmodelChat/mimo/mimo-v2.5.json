@@ -750,6 +750,14 @@
             "maximum": 2,
             "description": "A value between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, reducing the model's likelihood of repeating the same content."
           },
+          "presence_penalty": {
+            "type": "number",
+            "nullable": true,
+            "default": 0,
+            "minimum": -2,
+            "maximum": 2,
+            "description": "Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they have appeared in the text so far, increasing the model's likelihood to talk about new topics."
+          },
           "max_completion_tokens": {
             "type": "integer",
             "nullable": true,
@@ -1204,10 +1212,6 @@
           "function": {
             "type": "object",
             "description": "The function the model called.",
-            "required": [
-              "name",
-              "arguments"
-            ],
             "properties": {
               "name": {
                 "type": "string",
@@ -1389,9 +1393,6 @@
             "properties": {
               "role": {
                 "type": "string",
-                "enum": [
-                  "assistant"
-                ],
                 "description": "The role of the message author."
               },
               "content": {
