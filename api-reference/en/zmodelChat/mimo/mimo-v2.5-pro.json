@@ -133,36 +133,6 @@
                     "tool_choice": "auto"
                   }
                 },
-                "Video Input": {
-                  "summary": "Chat with video input",
-                  "value": {
-                    "model": "mimo-v2.5",
-                    "messages": [
-                      {
-                        "role": "system",
-                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
-                      },
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "video_url",
-                            "video_url": {
-                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
-                            },
-                            "fps": 2,
-                            "media_resolution": "default"
-                          },
-                          {
-                            "type": "text",
-                            "text": "please describe the content of the video"
-                          }
-                        ]
-                      }
-                    ],
-                    "max_completion_tokens": 1024
-                  }
-                },
                 "Structured Output": {
                   "summary": "Chat with structured output (JSON mode)",
                   "value": {
@@ -281,40 +251,6 @@
                           "reasoning_tokens": 161
                         },
                         "prompt_tokens_details": null
-                      }
-                    }
-                  },
-                  "Video Input": {
-                    "summary": "Video input response",
-                    "value": {
-                      "id": "d2c3bd5a08114f78a525e09b69308dc9",
-                      "choices": [
-                        {
-                          "finish_reason": "stop",
-                          "index": 0,
-                          "message": {
-                            "content": "The video features a white kitten with bright blue eyes sitting on a polished wooden floor. It is positioned near a window covered by beige curtains, with sunlight streaming in and casting shadows across the room. In the background, a green potted plant, resembling a Monstera, is visible. The kitten looks around curiously and then opens its mouth to meow.",
-                            "role": "assistant",
-                            "tool_calls": null,
-                            "reasoning_content": "The user wants a description of the video content.\n\n1.  **Analyze the video**:\n*   **Subject**: A white kitten with blue eyes.\n*   **Setting**: Indoors, near a window. There are beige curtains, a wooden floor, and a green potted plant (Monstera) in the background.\n*   **Action**: The kitten is sitting on the wooden floor. It's looking slightly to the side. It meows. The lighting is warm and sunny, creating shadows on the floor.\n*   **Timestamps**:\n*   00:00 - 00:03: The kitten sits still, looking around, then opens its mouth to meow. The sun casts shadows.\n\n2.  **Synthesize the description**:\n*   Start with the main subject: A white kitten with blue eyes.\n*   Describe the environment: Sitting on a wooden floor near a window with beige curtains. Sunlight is streaming in. A plant is visible in the background.\n*   Describe the action: The kitten looks around and meows.\n*   Mention the atmosphere: Warm, peaceful, sunny.\n\n3.  **Draft the response**:\nThe video features a close-up of a white kitten with striking blue eyes sitting on a polished wooden floor. It is positioned near a window draped with light beige curtains. Sunlight streams through the window, casting long shadows on the floor and illuminating the kitten's fur. In the background, a green potted plant, resembling a Monstera, adds a touch of nature to the indoor setting. The kitten looks around curiously and then lets out a meow. The scene is bright and peaceful.\n\n4.  **Refine based on specific details**:\n*   The kitten is white.\n*   Blue eyes.\n*   Wooden floor.\n*   Window with curtains.\n*   Plant in background.\n*   Sunlight/Shadows.\n*   Action: Meowing.\n\n5.  **Final Polish**: Combine these points into a coherent paragraph. The video shows a white kitten with blue eyes sitting on a wooden floor in a sunlit room. It's near a window with curtains and a plant in the background. The kitten meows.\n\nLet's stick to a descriptive summary.\n\n*   **Subject**: White kitten, blue eyes.\n*   **Location**: Wooden floor, near window, curtains, plant.\n*   **Action**: Sitting, looking, meowing.\n*   **Lighting**: Sunny, warm.\n\nConstruct the final output."
-                          }
-                        }
-                      ],
-                      "created": 1776849614,
-                      "model": "mimo-v2.5",
-                      "object": "chat.completion",
-                      "usage": {
-                        "completion_tokens": 590,
-                        "prompt_tokens": 1260,
-                        "total_tokens": 1850,
-                        "completion_tokens_details": {
-                          "reasoning_tokens": 514
-                        },
-                        "prompt_tokens_details": {
-                          "audio_tokens": 19,
-                          "cached_tokens": 45,
-                          "video_tokens": 1144
-                        }
                       }
                     }
                   },
