@@ -1,0 +1,295 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Seedream 5.0 Pro Text-to-Image",
+    "version": "1.0.0",
+    "description": "Seedream 5.0 pro Text-to-Image capability documentation. The public unified endpoint is `/v1/images/generations`.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API service endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Seedream Image",
+      "description": "Seedream series image generation capabilities"
+    }
+  ],
+  "paths": {
+    "/v1/images/generations": {
+      "post": {
+        "summary": "Seedream 5.0 Pro Text-to-Image",
+        "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Text-to-Image scenarios. Public fields include `model`, `prompt`, `size`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Text-to-Image: Input text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
+        "operationId": "byteplusTextToImage50Pro",
+        "tags": [
+          "Seedream Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TextToImageRequest"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "Basic Text-to-Image",
+                  "value": {
+                    "model": "dola-seedream-5-0-pro-260628",
+                    "prompt": "A cute corgi running on the grass, sunny day, realistic style",
+                    "size": "2K",
+                    "response_format": "url"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success, returns the image generation result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageGenerationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Invalid Parameters",
+                    "value": {
+                      "error": {
+                        "message": "Request body format error or invalid field values",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g., token not provided or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Quota Exceeded or Rate Limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient account quota, please try again later",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error occurred during request processing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal Processing Failed",
+                    "value": {
+                      "error": {
+                        "message": "Internal service processing failed, please try again later",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "TextToImageRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "dola-seedream-5-0-pro-260628"
+            ],
+            "description": "Image generation model name. Supported models include `dola-seedream-5-0-pro-260628` (Seedream 5.0 pro, supports interactive editing, does not support sequential image generation)."
+          },
+           "prompt": {
+            "type": "string",
+            "description": "Prompt for image generation, supports Chinese and English. It is recommended not to exceed 300 Chinese characters or 600 English words. Too many words may disperse information, causing the model to ignore details and focus only on key points, resulting in missing elements in the image.",
+            "example": "Dynamic close-up editorial portrait with sharp gaze, sculptural hat, rich color blocking."
+          },
+          "size": {
+            "type": "string",
+            "description": "Specifies the size of the generated image, supports specifying resolution level (e.g., 2K) or width and height pixel values (e.g., 2048x2048), which cannot be mixed.\n\n**dola-seedream-5-0-pro-260628 (Seedream 5.0 pro)**\nSupports the following two methods, which cannot be mixed:\n\n* Method 1 (Recommended): Specify resolution level and describe aspect ratio, shape, or purpose in the prompt. The model determines the final image size.\n  * Default: 2K\n  * Options: 1K, 2K\n\n* Method 2: Specify width and height pixel values (widthxheight).\n  * Total pixel range: [`1280x720` (921600), `2048x2048×1.1025` (4624220)]\n  * Aspect ratio range: [1/16, 16]\n\n> Note: When using Method 2, both total pixel range and aspect ratio range must be satisfied. Total pixels refers to the product of width and height, not individual values.\n> * Valid example: `2048x1024`\n    Total pixels 2048x1024=2097152, within [921600, 4624220]; aspect ratio 2048/1024=2, within [1/16, 16], so valid.\n> * Invalid example: `512x512`\n    Total pixels 512x512=262144, below 921600 minimum, so invalid.\n\nResolution to pixel reference values when using Method 1 (not limited to these standard values, common ones listed):\n\n| Resolution | Aspect Ratio | Pixel Dimensions |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n",
+            "default": "2K",
+            "example": "2K",
+            "x-enum": [
+              "1K",
+              "2K"
+            ]
+          },
+          "response_format": {
+            "type": "string",
+            "enum": ["url", "b64_json"],
+            "description": "Specifies the return format of the generated image. Supported options:\n- `url`: Returns image download URL; valid for 24 hours after generation.\n- `b64_json`: Returns image data as Base64 encoded JSON.",
+            "default": "url"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add watermark to generated images.\n- `false`: No watermark.\n- `true`: Add \"AI Generated\" watermark at bottom right corner.",
+            "default": true
+          }
+        }
+      },
+      "ImageGenerationResponse": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model ID (model name-version) used for this request."
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Unix timestamp (seconds) of creation."
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImageData"
+            },
+            "description": "List of generated images."
+          },
+          "usage": {
+            "type": "object",
+            "description": "Usage information for this request.",
+            "properties": {
+              "generated_images": {
+                "type": "integer",
+                "description": "Number of successfully generated images, excluding failed ones."
+              },
+              "output_tokens": {
+                "type": "integer",
+                "description": "Token count for generated images."
+              },
+              "total_tokens": {
+                "type": "integer",
+                "description": "Total token count for this request."
+              }
+            }
+          }
+        }
+      },
+      "ImageData": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Image download URL. Valid for 24 hours, please save promptly."
+          },
+          "b64_json": {
+            "type": "string",
+            "description": "Base64 encoded image data."
+          },
+          "size": {
+            "type": "string",
+            "description": "Image dimensions (widthxheight)."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

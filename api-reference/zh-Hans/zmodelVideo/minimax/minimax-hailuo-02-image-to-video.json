@@ -238,7 +238,7 @@
           },
           "image": {
             "type": "string",
-            "description": "将指定图片作为视频的起始帧。支持公网 URL 或 Base64 编码的 Data URL (`data:image/jpeg;base64,...`)\n\n- 图片要求：\n\t- 格式：JPG, JPEG, PNG, WebP\n\t- 体积：小于 20MB\n\t- 尺寸：短边像素大于 300px，长宽比在 2:5 和 5:2 之间  ",
+            "description": "将指定图片作为视频的起始帧。支持公网 URL 或 Base64 编码的 Data URL (`data:image/jpeg;base64,...`)\n\n- 图片要求：\n\t- 格式：JPG, JPEG, PNG, WebP\n\t- 体积：小于 20MB\n\t- 尺寸：短边像素大于 300px，长宽比在 2:5 和 5:2 之间  "
           },
           "prompt": {
             "type": "string",

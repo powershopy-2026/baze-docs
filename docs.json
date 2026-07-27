@@ -76,6 +76,13 @@
                     ]
                   },
                   {
+                    "group": "MIMO",
+                    "pages": [
+                      "zh-Hans/zmodelChat/mimo/mimo-v2.5",
+                      "zh-Hans/zmodelChat/mimo/mimo-v2.5-pro"
+                    ]
+                  },
+                  {
                     "group": "智谱",
                     "pages": [
                       "zh-Hans/zmodelChat/zhipu/glm-4.5-air",
@@ -132,6 +139,8 @@
                       "zh-Hans/zmodelImage/byteplus/seedream-4-5-image-to-image",
                       "zh-Hans/zmodelImage/byteplus/seedream-5-0-text-to-image",
                       "zh-Hans/zmodelImage/byteplus/seedream-5-0-image-to-image",
+                      "zh-Hans/zmodelImage/byteplus/seedream-5-0-pro-text-to-image",
+                      "zh-Hans/zmodelImage/byteplus/seedream-5-0-pro-image-to-image",
                       {
                         "group": "字节API兼容",
                         "pages": [
@@ -198,6 +207,10 @@
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      "zh-Hans/zmodelVideo/ali/happyhorse-1.1-t2v",
+                      "zh-Hans/zmodelVideo/ali/happyhorse-1.1-i2v",
+                      "zh-Hans/zmodelVideo/ali/happyhorse-1.1-r2v",
+                      "zh-Hans/zmodelVideo/ali/task-query",
                       {
                         "group": "阿里巴巴兼容API",
                         "pages": [
@@ -416,6 +429,13 @@
                     ]
                   },
                   {
+                    "group": "MIMO",
+                    "pages": [
+                      "en/zmodelChat/mimo/mimo-v2.5",
+                      "en/zmodelChat/mimo/mimo-v2.5-pro"
+                    ]
+                  },
+                  {
                     "group": "Zhipu",
                     "pages": [
                       "en/zmodelChat/zhipu/glm-4.5-air",
@@ -472,6 +492,8 @@
                       "en/zmodelImage/byteplus/seedream-4-5-image-to-image",
                       "en/zmodelImage/byteplus/seedream-5-0-text-to-image",
                       "en/zmodelImage/byteplus/seedream-5-0-image-to-image",
+                      "en/zmodelImage/byteplus/seedream-5-0-pro-text-to-image",
+                      "en/zmodelImage/byteplus/seedream-5-0-pro-image-to-image",
                       {
                         "group": "BytePlus API Compat",
                         "pages": [
@@ -538,6 +560,10 @@
                       "en/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "en/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
                       "en/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      "en/zmodelVideo/ali/happyhorse-1.1-t2v",
+                      "en/zmodelVideo/ali/happyhorse-1.1-i2v",
+                      "en/zmodelVideo/ali/happyhorse-1.1-r2v",
+                      "en/zmodelVideo/ali/task-query",
                       {
                         "group": "Alibaba Compatible API",
                         "pages": [
@@ -716,6 +742,5 @@
       "display": "interactive"
     }
   },
-  "footer": {
-  }
+  "footer": {}
 }
