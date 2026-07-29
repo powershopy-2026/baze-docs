@@ -583,9 +583,22 @@
           },
           "messages": {
             "type": "array",
-            "description": "Context passed to the model, arranged in conversation order. Supports plain text, multimodal (image/video/audio) content, and explicit caching.",
+            "description": "Context passed to the model, arranged in conversation order. Supports four message types: System Message, User Message, Assistant Message, and Tool Message. Supports plain text, multimodal (image/video/audio) content, and explicit caching.",
             "items": {
-              "$ref": "#/components/schemas/Message"
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/SystemMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/UserMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/AssistantMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/ToolMessage"
+                }
+              ]
             }
           },
           "stream": {
@@ -856,7 +869,7 @@
               "assistant",
               "tool"
             ],
-            "description": "Message sender role."
+            "description": "Message sender role. Values: system, user, assistant, tool."
           },
           "content": {
             "anyOf": [
@@ -872,23 +885,27 @@
                 }
               }
             ],
-            "description": "Message content. string for plain text; array for multimodal content or explicit caching."
+            "description": "Message content. System Message: content is string (system instruction). User Message: content is string (plain text) or array (multimodal content). Assistant Message: content is string (optional, can be empty when tool_calls present). Tool Message: content is string (tool output, required)."
           },
           "tool_calls": {
             "type": "array",
-            "description": "Tool call information returned by the model after Function Calling.",
+            "description": "Tool call information returned by the model after Function Calling. Obtained from the previous response's tool_calls field. Only valid when role=assistant.",
             "items": {
               "$ref": "#/components/schemas/ToolCall"
             }
           },
           "partial": {
             "type": "boolean",
-            "description": "Whether to enable prefix continuation. Default: false.",
+            "description": "Whether to enable prefix continuation. Only valid when role=assistant. Default: false.",
             "default": false
           },
           "reasoning_content": {
             "type": "string",
-            "description": "Model thinking content."
+            "description": "Model thinking content. Only valid when role=assistant."
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "Tool call ID. Returned after Function Calling, used to associate Tool Message with the corresponding tool. Required only when role=tool."
           }
         }
       },
@@ -1442,6 +1459,122 @@
             "format": "float",
             "nullable": true,
             "description": "Log probability. null means very low."
+          }
+        }
+      },
+      "SystemMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "System message. Used to set the model's role, tone, task goals, or constraints. Typically placed first in the messages array.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system"
+            ],
+            "description": "System message role. Fixed value: system."
+          },
+          "content": {
+            "type": "string",
+            "description": "System instruction. Used to define the model's role, behavior, response style, and task constraints."
+          }
+        }
+      },
+      "UserMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "User message. Used to pass questions, instructions, or context to the model.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "User message role. Fixed value: user."
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "Plain text content."
+              },
+              {
+                "type": "array",
+                "description": "Multimodal content list (image/video/audio).",
+                "items": {
+                  "$ref": "#/components/schemas/ContentItem"
+                }
+              }
+            ],
+            "description": "Message content. string for plain text; array for multimodal content or explicit caching."
+          }
+        }
+      },
+      "AssistantMessage": {
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "description": "Model response. Typically used as context for multi-turn conversations.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "Assistant message role. Fixed value: assistant."
+          },
+          "content": {
+            "type": "string",
+            "description": "Model's text response. Can be empty when tool_calls is present; otherwise required."
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "Tool call information returned by the model after Function Calling.",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          },
+          "partial": {
+            "type": "boolean",
+            "description": "Whether to enable prefix continuation. Default: false.",
+            "default": false
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "Model thinking content."
+          }
+        }
+      },
+      "ToolMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content",
+          "tool_call_id"
+        ],
+        "description": "Tool output message.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "tool"
+            ],
+            "description": "Fixed value: tool."
+          },
+          "content": {
+            "type": "string",
+            "description": "Tool function output. Must be a string."
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "ID returned after Function Calling, used to associate the Tool Message with the corresponding tool."
           }
         }
       }

@@ -698,9 +698,22 @@
           },
           "messages": {
             "type": "array",
-            "description": "传递给大模型的上下文，按对话顺序排列。支持纯文本、多模态（图像/视频/音频）内容以及显式缓存。",
+            "description": "传递给大模型的上下文，按对话顺序排列。支持四种消息类型：System Message（系统消息）、User Message（用户消息）、Assistant Message（助手消息）、Tool Message（工具消息）。支持纯文本、多模态（图像/视频/音频）内容以及显式缓存。",
             "items": {
-              "$ref": "#/components/schemas/Message"
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/SystemMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/UserMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/AssistantMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/ToolMessage"
+                }
+              ]
             }
           },
           "stream": {
@@ -971,7 +984,7 @@
               "assistant",
               "tool"
             ],
-            "description": "消息发送者角色。"
+            "description": "消息发送者角色。可选值：system（系统消息）、user（用户消息）、assistant（助手消息）、tool（工具消息）。"
           },
           "content": {
             "anyOf": [
@@ -987,23 +1000,27 @@
                 }
               }
             ],
-            "description": "消息内容。若输入只有文本，则为 string 类型；若输入包含图像等多模态数据，或启用显式缓存，则为 array 类型。"
+            "description": "消息内容。System Message：content 为 string（系统指令）。User Message：content 为 string（纯文本）或 array（多模态内容）。Assistant Message：content 为 string（可选，包含 tool_calls 时可为空）。Tool Message：content 为 string（工具输出，必选）。"
           },
           "tool_calls": {
             "type": "array",
-            "description": "发起 Function Calling 后，返回的工具与入参信息，包含一个或多个对象。",
+            "description": "发起 Function Calling 后，模型返回的工具与入参信息。由上一轮模型响应的 tool_calls 字段获得。仅 role=assistant 时有效。",
             "items": {
               "$ref": "#/components/schemas/ToolCall"
             }
           },
           "partial": {
             "type": "boolean",
-            "description": "是否开启前缀续写。默认值为 false。",
+            "description": "是否开启前缀续写。仅 role=assistant 时有效。默认值：false。",
             "default": false
           },
           "reasoning_content": {
             "type": "string",
-            "description": "模型的思维链内容。"
+            "description": "模型的思维链内容。仅 role=assistant 时有效。"
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "工具调用ID。发起 Function Calling 后返回的 id，用于标记 Tool Message 对应的工具。仅 role=tool 时必选。"
           }
         }
       },
@@ -1557,6 +1574,122 @@
             "format": "float",
             "nullable": true,
             "description": "对数概率。null 表示概率值极低。"
+          }
+        }
+      },
+      "SystemMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "系统消息，用于设定大模型的角色、语气、任务目标或约束条件等。一般放在 messages 数组的第一位。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system"
+            ],
+            "description": "系统消息的角色，固定为 system。"
+          },
+          "content": {
+            "type": "string",
+            "description": "系统指令，用于明确模型的角色、行为规范、回答风格和任务约束等。"
+          }
+        }
+      },
+      "UserMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "用户消息，用于向模型传递问题、指令或上下文等。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "用户消息的角色，固定为 user。"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "纯文本内容。"
+              },
+              {
+                "type": "array",
+                "description": "多模态内容列表（图像/视频/音频等）。",
+                "items": {
+                  "$ref": "#/components/schemas/ContentItem"
+                }
+              }
+            ],
+            "description": "消息内容。若输入只有文本，则为 string 类型；若输入包含图像等多模态数据，或启用显式缓存，则为 array 类型。"
+          }
+        }
+      },
+      "AssistantMessage": {
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "description": "模型的回复。通常用于在多轮对话中作为上下文回传给模型。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ],
+            "description": "助手消息的角色，固定为 assistant。"
+          },
+          "content": {
+            "type": "string",
+            "description": "模型回复的文本内容。包含 tool_calls 时，content 可以为空；否则 content 为必选。"
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "发起 Function Calling 后，模型返回的工具与入参信息。",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          },
+          "partial": {
+            "type": "boolean",
+            "description": "是否开启前缀续写。默认值：false。",
+            "default": false
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "模型的思维链内容。"
+          }
+        }
+      },
+      "ToolMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content",
+          "tool_call_id"
+        ],
+        "description": "工具的输出信息。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "tool"
+            ],
+            "description": "固定为 tool。"
+          },
+          "content": {
+            "type": "string",
+            "description": "工具函数的输出内容，必须为字符串。"
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "发起 Function Calling 后返回的 id，用于标记 Tool Message 对应的工具。"
           }
         }
       }
