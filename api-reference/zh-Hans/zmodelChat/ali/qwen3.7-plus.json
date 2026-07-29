@@ -1066,22 +1066,6 @@
               "url": {
                 "type": "string",
                 "description": "视频文件的公网 URL 或 Base64 Data URL。"
-              },
-              "fps": {
-                "type": "number",
-                "description": "每秒抽帧数。取值范围 [0.1, 10]，默认值为 2.0。"
-              },
-              "min_pixels": {
-                "type": "integer",
-                "description": "输入图像或视频帧的最小像素阈值。"
-              },
-              "max_pixels": {
-                "type": "integer",
-                "description": "输入图像或视频帧的最大像素阈值。"
-              },
-              "total_pixels": {
-                "type": "integer",
-                "description": "从视频中抽取的所有帧的总像素限制。"
               }
             }
           },
@@ -1117,6 +1101,22 @@
                 ]
               }
             }
+          },
+          "fps": {
+            "type": "number",
+            "description": "每秒抽帧数。取值范围为 [0.1, 10]，默认值为 2.0。MiniMax/MiniMax-M3 的 fps 取值范围为 [0.2, 5]，默认值为 1。\n\nfps 有两个功能：\n1. 输入视频文件时，控制抽帧频率，每 1/fps 秒抽取一帧。适用于 Qwen-VL、MiniMax/MiniMax-M3 与 QVQ 模型。\n2. 告知模型相邻帧之间的时间间隔，帮助其更好地理解视频的时间动态。同时适用于输入视频文件与图像列表时。支持 Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL、Qwen2.5-VL、Qwen3.5-Omni 与 QVQ 模型。\n\n较大的 fps 适合高速运动的场景（如体育赛事、动作电影等），较小的 fps 适合长视频或内容偏静态的场景。"
+          },
+          "min_pixels": {
+            "type": "integer",
+            "description": "设定输入图像或视频帧的最小像素阈值。当输入图像或视频帧的像素小于 min_pixels 时，会将其进行放大，直到总像素高于 min_pixels。适用于 Qwen-VL、QVQ 模型。\n\n取值范围：\n- 输入图像：Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL 默认值和最小值均为 65536。\n- 输入视频文件或图像列表：Qwen3.7、Qwen3.6、Qwen3.5、Qwen3.5-Omni、Qwen3-VL（包括商业版和开源版）、qwen-vl-max、qwen-vl-max-0813、qwen-vl-plus、qwen-vl-plus-0815、qwen-vl-plus-0710 默认值为 65536，最小值为 4096。"
+          },
+          "max_pixels": {
+            "type": "integer",
+            "description": "用于设定输入图像或视频帧的最大像素阈值。当输入图像或视频的像素在 [min_pixels, max_pixels] 区间内时，模型会按原图进行识别。当输入图像像素大于 max_pixels 时，会将图像进行缩小，直到总像素低于 max_pixels。适用于 Qwen-VL、QVQ 模型。\n\n取值范围：\n- 输入图像：\n  - 当 vl_high_resolution_images 为 False 时：Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL 默认值为 2621440，最大值为 16777216。\n  - 当 vl_high_resolution_images 为 True 时：Qwen3.7、Qwen3.6、Qwen3.5-Omni、Qwen3.5、Qwen3-VL、qwen-vl-max、qwen-vl-max-0813、qwen-vl-plus、qwen-vl-plus-0815、qwen-vl-plus-0710 的 max_pixels 无效，输入图像的最大像素固定为 16777216。\n- 输入视频文件或图像列表：Qwen3.7 系列、Qwen3.6 系列、Qwen3.5 系列、Qwen3.5-Omni、Qwen3-VL 闭源系列、qwen3-vl-235b-a22b-thinking、qwen3-vl-235b-a22b-instruct 默认值为 655360，最大值为 2048000。"
+          },
+          "total_pixels": {
+            "type": "integer",
+            "description": "用于限制从视频中抽取的所有帧的总像素（单帧图像像素 × 总帧数）。如果视频总像素超过此限制，系统将对视频帧进行缩放，但仍会确保单帧图像的像素值在 [min_pixels, max_pixels] 范围内。适用于 Qwen-VL、QVQ 模型。\n\n对于抽帧数量较多的长视频，可适当降低此值以减少 Token 消耗和处理时间，但这可能会导致图像细节丢失。\n\n取值范围：Qwen3.7 系列、Qwen3.6 系列、Qwen3.5 系列默认值和最大值均为 819200000，该值对应 800000 个图像 Token（每 32×32 像素对应 1 个图像 Token）。"
           }
         }
       },

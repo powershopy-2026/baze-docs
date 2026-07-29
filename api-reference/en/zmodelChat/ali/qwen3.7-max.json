@@ -951,22 +951,6 @@
               "url": {
                 "type": "string",
                 "description": "Video file URL or Base64 Data URL."
-              },
-              "fps": {
-                "type": "number",
-                "description": "Frames per second. Range [0.1, 10]. Default: 2.0."
-              },
-              "min_pixels": {
-                "type": "integer",
-                "description": "Minimum pixel threshold for images/video frames."
-              },
-              "max_pixels": {
-                "type": "integer",
-                "description": "Maximum pixel threshold for images/video frames."
-              },
-              "total_pixels": {
-                "type": "integer",
-                "description": "Total pixel limit for all extracted frames."
               }
             }
           },
@@ -1002,6 +986,22 @@
                 ]
               }
             }
+          },
+          "fps": {
+            "type": "number",
+            "description": "Frames per second for video extraction. Valid range [0.1, 10], default 2.0. For MiniMax/MiniMax-M3, range [0.2, 5], default 1.\n\nfps serves two purposes:\n1. Controls frame extraction frequency when inputting a video file — one frame is extracted every 1/fps seconds. Applies to Qwen-VL, MiniMax/MiniMax-M3 and QVQ models.\n2. Informs the model about the time interval between adjacent frames to better understand video temporal dynamics. Applies to both video files and image lists. Supported by Qwen3.7, Qwen3.6, Qwen3.5, Qwen3-VL, Qwen2.5-VL, Qwen3.5-Omni and QVQ models.\n\nHigher fps values are suitable for fast-moving scenes (e.g. sports, action movies), while lower values are suitable for long videos or static content."
+          },
+          "min_pixels": {
+            "type": "integer",
+            "description": "Sets the minimum pixel threshold for input images or video frames. When the pixel count of an input image or video frame is below min_pixels, it will be scaled up until the total pixel count exceeds min_pixels. Applies to Qwen-VL and QVQ models.\n\nValue range:\n- For input images: Qwen3.7, Qwen3.6, Qwen3.5, Qwen3-VL have a default and minimum value of 65536.\n- For input video files or image lists: Qwen3.7, Qwen3.6, Qwen3.5, Qwen3.5-Omni, Qwen3-VL (commercial and open-source), qwen-vl-max, qwen-vl-max-0813, qwen-vl-plus, qwen-vl-plus-0815, qwen-vl-plus-0710 have a default of 65536 and a minimum of 4096."
+          },
+          "max_pixels": {
+            "type": "integer",
+            "description": "Sets the maximum pixel threshold for input images or video frames. When the pixel count falls within [min_pixels, max_pixels], the model recognizes the original image as-is. When the pixel count exceeds max_pixels, the image is scaled down until the total pixel count falls below max_pixels. Applies to Qwen-VL and QVQ models.\n\nValue range:\n- For input images:\n  - When vl_high_resolution_images is False: Qwen3.7, Qwen3.6, Qwen3.5, Qwen3-VL default to 2621440, maximum 16777216.\n  - When vl_high_resolution_images is True: max_pixels is ignored for Qwen3.7, Qwen3.6, Qwen3.5-Omni, Qwen3.5, Qwen3-VL, qwen-vl-max, qwen-vl-max-0813, qwen-vl-plus, qwen-vl-plus-0815, qwen-vl-plus-0710; the maximum pixel count is fixed at 16777216.\n- For input video files or image lists: Qwen3.7, Qwen3.6, Qwen3.5 series, Qwen3.5-Omni, Qwen3-VL closed-source series, qwen3-vl-235b-a22b-thinking, qwen3-vl-235b-a22b-instruct default to 655360, maximum 2048000."
+          },
+          "total_pixels": {
+            "type": "integer",
+            "description": "Limits the total pixels of all frames extracted from a video (single-frame pixels × total frame count). If the total exceeds this limit, the system scales the frames while keeping each frame's pixel count within [min_pixels, max_pixels]. Applies to Qwen-VL and QVQ models.\n\nFor long videos with many extracted frames, lowering this value can reduce token consumption and processing time, but may result in loss of image details.\n\nValue range: Qwen3.7, Qwen3.6 and Qwen3.5 series have a default and maximum of 819200000, corresponding to 800000 image tokens (each 32×32 pixels corresponds to 1 image token)."
           }
         }
       },
