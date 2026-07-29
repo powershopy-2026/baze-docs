@@ -38,7 +38,7 @@
                 "$ref": "#/components/schemas/ChatCompletionRequest"
               },
               "examples": {
-                "text_chat": {
+                "文本输入": {
                   "summary": "文本输入",
                   "value": {
                     "model": "qwen3.7-plus",
@@ -54,7 +54,7 @@
                     ]
                   }
                 },
-                "streaming_chat": {
+                "流式输出": {
                   "summary": "流式输出",
                   "value": {
                     "model": "qwen3.7-plus",
@@ -74,7 +74,7 @@
                     }
                   }
                 },
-                "vision_chat": {
+                "图像输入": {
                   "summary": "图像输入",
                   "value": {
                     "model": "qwen-vl-plus",
@@ -97,7 +97,7 @@
                     ]
                   }
                 },
-                "video_chat": {
+                "视频输入": {
                   "summary": "视频输入",
                   "value": {
                     "model": "qwen-vl-max",
@@ -123,7 +123,7 @@
                     ]
                   }
                 },
-                "tool_calling": {
+                "工具调用": {
                   "summary": "工具调用",
                   "value": {
                     "model": "qwen-plus",
@@ -168,7 +168,7 @@
                     ]
                   }
                 },
-                "web_search": {
+                "联网搜索": {
                   "summary": "联网搜索",
                   "value": {
                     "model": "qwen-plus",
@@ -185,7 +185,7 @@
                     "enable_search": true
                   }
                 },
-                "doc_understanding": {
+                "文档理解": {
                   "summary": "文档理解",
                   "value": {
                     "model": "qwen-long",
@@ -209,7 +209,7 @@
                     }
                   }
                 },
-                "ppt_generation": {
+                "PPT生成": {
                   "summary": "PPT生成",
                   "value": {
                     "model": "qwen-doc-turbo",
@@ -260,7 +260,7 @@
                   ]
                 },
                 "examples": {
-                  "success": {
+                  "非流式响应示例": {
                     "summary": "非流式响应示例",
                     "value": {
                       "choices": [
@@ -289,7 +289,7 @@
                       "id": "chatcmpl-6ada9ed2-7f33-9de2-8bb0-78bd4035025a"
                     }
                   },
-                  "streaming": {
+                  "流式响应示例（多 chunk，SSE）": {
                     "summary": "流式响应示例（多 chunk，SSE）",
                     "value": [
                       {

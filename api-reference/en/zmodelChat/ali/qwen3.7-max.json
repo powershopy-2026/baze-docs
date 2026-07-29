@@ -38,7 +38,7 @@
                 "$ref": "#/components/schemas/ChatCompletionRequest"
               },
               "examples": {
-                "text_chat": {
+                "Text input": {
                   "summary": "Text input",
                   "value": {
                     "model": "qwen3.7-max",
@@ -54,7 +54,7 @@
                     ]
                   }
                 },
-                "streaming_chat": {
+                "Streaming output": {
                   "summary": "Streaming output",
                   "value": {
                     "model": "qwen3.7-max",
@@ -74,7 +74,7 @@
                     }
                   }
                 },
-                "vision_chat": {
+                "Image input": {
                   "summary": "Image input",
                   "value": {
                     "model": "qwen-vl-plus",
@@ -97,7 +97,7 @@
                     ]
                   }
                 },
-                "video_chat": {
+                "Video input": {
                   "summary": "Video input",
                   "value": {
                     "model": "qwen-vl-max",
@@ -123,7 +123,7 @@
                     ]
                   }
                 },
-                "tool_calling": {
+                "Tool calling": {
                   "summary": "Tool calling",
                   "value": {
                     "model": "qwen-plus",
@@ -168,7 +168,7 @@
                     ]
                   }
                 },
-                "web_search": {
+                "Web search": {
                   "summary": "Web search",
                   "value": {
                     "model": "qwen-plus",
@@ -185,7 +185,7 @@
                     "enable_search": true
                   }
                 },
-                "doc_understanding": {
+                "Document understanding": {
                   "summary": "Document understanding",
                   "value": {
                     "model": "qwen-long",
@@ -209,7 +209,7 @@
                     }
                   }
                 },
-                "ppt_generation": {
+                "PPT generation": {
                   "summary": "PPT generation",
                   "value": {
                     "model": "qwen-doc-turbo",
@@ -260,7 +260,7 @@
                   ]
                 },
                 "examples": {
-                  "success": {
+                  "Non-streaming response example": {
                     "summary": "Non-streaming response example",
                     "value": {
                       "choices": [
@@ -289,7 +289,7 @@
                       "id": "chatcmpl-6ada9ed2-7f33-9de2-8bb0-78bd4035025a"
                     }
                   },
-                  "streaming": {
+                  "Streaming response example (multi-chunk, SSE)": {
                     "summary": "Streaming response example (multi-chunk, SSE)",
                     "value": [
                       {
