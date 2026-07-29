@@ -702,16 +702,20 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/SystemMessage"
+                  "$ref": "#/components/schemas/SystemMessage",
+                  "title": "System Message object （可选）"
                 },
                 {
-                  "$ref": "#/components/schemas/UserMessage"
+                  "$ref": "#/components/schemas/UserMessage",
+                  "title": "User Message object （必选）"
                 },
                 {
-                  "$ref": "#/components/schemas/AssistantMessage"
+                  "$ref": "#/components/schemas/AssistantMessage",
+                  "title": "Assistant Message object （可选）"
                 },
                 {
-                  "$ref": "#/components/schemas/ToolMessage"
+                  "$ref": "#/components/schemas/ToolMessage",
+                  "title": "Tool Message object （可选）"
                 }
               ]
             }
@@ -1596,7 +1600,8 @@
             "type": "string",
             "description": "系统指令，用于明确模型的角色、行为规范、回答风格和任务约束等。"
           }
-        }
+        },
+        "title": "System Message object （可选）"
       },
       "UserMessage": {
         "type": "object",
@@ -1629,7 +1634,8 @@
             ],
             "description": "消息内容。若输入只有文本，则为 string 类型；若输入包含图像等多模态数据，或启用显式缓存，则为 array 类型。"
           }
-        }
+        },
+        "title": "User Message object （必选）"
       },
       "AssistantMessage": {
         "type": "object",
@@ -1665,7 +1671,8 @@
             "type": "string",
             "description": "模型的思维链内容。"
           }
-        }
+        },
+        "title": "Assistant Message object （可选）"
       },
       "ToolMessage": {
         "type": "object",
@@ -1691,7 +1698,8 @@
             "type": "string",
             "description": "发起 Function Calling 后返回的 id，用于标记 Tool Message 对应的工具。"
           }
-        }
+        },
+        "title": "Tool Message object （可选）"
       }
     }
   }

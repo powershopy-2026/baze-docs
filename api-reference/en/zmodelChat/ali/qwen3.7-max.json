@@ -587,16 +587,20 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/SystemMessage"
+                  "$ref": "#/components/schemas/SystemMessage",
+                  "title": "System Message object (optional)"
                 },
                 {
-                  "$ref": "#/components/schemas/UserMessage"
+                  "$ref": "#/components/schemas/UserMessage",
+                  "title": "User Message object (required)"
                 },
                 {
-                  "$ref": "#/components/schemas/AssistantMessage"
+                  "$ref": "#/components/schemas/AssistantMessage",
+                  "title": "Assistant Message object (optional)"
                 },
                 {
-                  "$ref": "#/components/schemas/ToolMessage"
+                  "$ref": "#/components/schemas/ToolMessage",
+                  "title": "Tool Message object (optional)"
                 }
               ]
             }
@@ -1481,7 +1485,8 @@
             "type": "string",
             "description": "System instruction. Used to define the model's role, behavior, response style, and task constraints."
           }
-        }
+        },
+        "title": "System Message object (optional)"
       },
       "UserMessage": {
         "type": "object",
@@ -1514,7 +1519,8 @@
             ],
             "description": "Message content. string for plain text; array for multimodal content or explicit caching."
           }
-        }
+        },
+        "title": "User Message object (required)"
       },
       "AssistantMessage": {
         "type": "object",
@@ -1550,7 +1556,8 @@
             "type": "string",
             "description": "Model thinking content."
           }
-        }
+        },
+        "title": "Assistant Message object (optional)"
       },
       "ToolMessage": {
         "type": "object",
@@ -1576,7 +1583,8 @@
             "type": "string",
             "description": "ID returned after Function Calling, used to associate the Tool Message with the corresponding tool."
           }
-        }
+        },
+        "title": "Tool Message object (optional)"
       }
     }
   }
