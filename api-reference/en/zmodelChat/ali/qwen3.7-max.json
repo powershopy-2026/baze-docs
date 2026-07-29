@@ -578,7 +578,7 @@
             "enum": [
               "qwen3.7-max"
             ],
-            "description": "Model name. Supported: qwen3.7-max",
+            "description": "Model name. Only publicly available chat models in the current Ali channel's final whitelist are supported.",
             "example": "qwen3.7-max"
           },
           "messages": {

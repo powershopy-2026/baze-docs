@@ -693,7 +693,7 @@
             "enum": [
               "qwen3.7-max"
             ],
-            "description": "????????qwen3.7-max",
+            "description": "模型名称。仅支持当前阿里渠道最终白名单中的公开对话模型。",
             "example": "qwen3.7-max"
           },
           "messages": {
