@@ -1,0 +1,1565 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "qwen3.7-plus ????",
+    "version": "1.0.0",
+    "description": "????????????? /v1/chat/completions?",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Qwen Chat",
+      "description": "千问系列对话与多模态能力"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "qwen3.7 ????",
+        "description": "???qwen3.7-plus??????model?messages?stream?temperature?top_p?top_k?repetition_penalty?presence_penalty?max_completion_tokens?max_tokens?stop?seed?tools?tool_choice?enable_search?response_format?enable_thinking?thinking_budget?reasoning_effort?n?logprobs?top_logprobs?preserve_thinking?",
+        "operationId": "aliChatCompletions",
+        "tags": [
+          "Qwen Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "text_chat": {
+                  "summary": "文本输入",
+                  "value": {
+                    "model": "qwen3.7-plus",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a helpful assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "你是谁？"
+                      }
+                    ]
+                  }
+                },
+                "streaming_chat": {
+                  "summary": "流式输出",
+                  "value": {
+                    "model": "qwen3.7-plus",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a helpful assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "你是谁？"
+                      }
+                    ],
+                    "stream": true,
+                    "stream_options": {
+                      "include_usage": true
+                    }
+                  }
+                },
+                "vision_chat": {
+                  "summary": "图像输入",
+                  "value": {
+                    "model": "qwen-vl-plus",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://dashscope.oss-cn-beijing.aliyuncs.com/images/dog_and_girl.jpeg"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "这是什么"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "video_chat": {
+                  "summary": "视频输入",
+                  "value": {
+                    "model": "qwen-vl-max",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video",
+                            "video": [
+                              "https://img.alicdn.com/imgextra/i3/O1CN01K3SgGo1eqmlUgeE9b_!!6000000003923-0-tps-3840-2160.jpg",
+                              "https://img.alicdn.com/imgextra/i4/O1CN01BjZvwg1Y23CF5qIRB_!!6000000003000-0-tps-3840-2160.jpg",
+                              "https://img.alicdn.com/imgextra/i4/O1CN01Ib0clU27vTgBdbVLQ_!!6000000007859-0-tps-3840-2160.jpg",
+                              "https://img.alicdn.com/imgextra/i1/O1CN01aygPLW1s3EXCdSN4X_!!6000000005710-0-tps-3840-2160.jpg"
+                            ]
+                          },
+                          {
+                            "type": "text",
+                            "text": "描述这个视频的具体过程"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "tool_calling": {
+                  "summary": "工具调用",
+                  "value": {
+                    "model": "qwen-plus",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a helpful assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "杭州天气怎么样"
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_current_time",
+                          "description": "当你想知道现在的时间时非常有用。",
+                          "parameters": {}
+                        }
+                      },
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_current_weather",
+                          "description": "当你想查询指定城市的天气时非常有用。",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "location": {
+                                "type": "string",
+                                "description": "城市或县区，比如北京市、杭州市、余杭区等。"
+                              }
+                            },
+                            "required": [
+                              "location"
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                "web_search": {
+                  "summary": "联网搜索",
+                  "value": {
+                    "model": "qwen-plus",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a helpful assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "中国队在巴黎奥运会获得了多少枚金牌"
+                      }
+                    ],
+                    "enable_search": true
+                  }
+                },
+                "doc_understanding": {
+                  "summary": "文档理解",
+                  "value": {
+                    "model": "qwen-long",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a helpful assistant."
+                      },
+                      {
+                        "role": "system",
+                        "content": "fileid://file-fe-xxx"
+                      },
+                      {
+                        "role": "user",
+                        "content": "这篇文章讲了什么？"
+                      }
+                    ],
+                    "stream": true,
+                    "stream_options": {
+                      "include_usage": true
+                    }
+                  }
+                },
+                "ppt_generation": {
+                  "summary": "PPT生成",
+                  "value": {
+                    "model": "qwen-doc-turbo",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "you are a helpful assistant."
+                      },
+                      {
+                        "role": "system",
+                        "content": "您的文档内容"
+                      },
+                      {
+                        "role": "user",
+                        "content": "生成一个10到20页的ppt"
+                      }
+                    ],
+                    "skill": [
+                      {
+                        "type": "ppt",
+                        "mode": "general",
+                        "template_id": "news_01"
+                      }
+                    ],
+                    "stream": true,
+                    "stream_options": {
+                      "include_usage": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功，返回对话补全结果。流式模式下返回 SSE 流。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ChatCompletionChunkResponse"
+                    }
+                  ]
+                },
+                "examples": {
+                  "success": {
+                    "summary": "非流式响应示例",
+                    "value": {
+                      "choices": [
+                        {
+                          "message": {
+                            "role": "assistant",
+                            "content": "我是阿里云开发的一款超大规模语言模型，我叫千问。"
+                          },
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "logprobs": null
+                        }
+                      ],
+                      "object": "chat.completion",
+                      "usage": {
+                        "prompt_tokens": 3019,
+                        "completion_tokens": 104,
+                        "total_tokens": 3123,
+                        "prompt_tokens_details": {
+                          "cached_tokens": 2048
+                        }
+                      },
+                      "created": 1735120033,
+                      "system_fingerprint": null,
+                      "model": "qwen-plus",
+                      "id": "chatcmpl-6ada9ed2-7f33-9de2-8bb0-78bd4035025a"
+                    }
+                  },
+                  "streaming": {
+                    "summary": "流式响应示例（多 chunk，SSE）",
+                    "value": [
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": "assistant",
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "我是",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "来自",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "阿里",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "云的超大规模",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "语言模型，我",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "叫千问千",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "问。",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": "stop",
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": {
+                          "completion_tokens": 17,
+                          "prompt_tokens": 22,
+                          "total_tokens": 39,
+                          "completion_tokens_details": null,
+                          "prompt_tokens_details": {
+                            "audio_tokens": null,
+                            "cached_tokens": 0
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": "messages"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "鉴权失败，例如未提供令牌或令牌无效。"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "触发速率限制或账户额度不足。"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "服务端处理请求时发生内部错误。"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务返回异常响应。"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。"
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen3.7-plus"
+            ],
+            "description": "????????qwen3.7-plus",
+            "example": "qwen3.7-plus"
+          },
+          "messages": {
+            "type": "array",
+            "description": "传递给大模型的上下文，按对话顺序排列。支持纯文本、多模态（图像/视频/音频）内容以及显式缓存。",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "是否以流式输出方式回复。可选值：false（一次性返回）、true（边生成边输出）。推荐设置为 true。非流式调用超过 300 秒将中断请求。",
+            "default": false
+          },
+          "stream_options": {
+            "type": "object",
+            "description": "流式输出的配置项，仅在 stream 为 true 时生效。",
+            "properties": {
+              "include_usage": {
+                "type": "boolean",
+                "description": "是否在响应的最后一个数据块包含 Token 消耗信息。可选值：true（包含）、false（不包含）。",
+                "default": false
+              }
+            }
+          },
+          "temperature": {
+            "type": "number",
+            "description": "采样温度，控制生成文本多样性。越高越多样，越低越确定。取值范围 [0, 2)。默认值：0.7。",
+            "minimum": 0,
+            "maximum": 2,
+            "default": 0.7
+          },
+          "top_p": {
+            "type": "number",
+            "description": "核采样概率阈值，控制多样性。取值范围 (0, 1.0]。默认值：0.8（非思考模式）/ 0.95（思考模式）。",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.95
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "该参数即将废弃，请使用 max_completion_tokens。模型回答的最大长度（不含思维链）。",
+            "minimum": 1,
+            "deprecated": true
+          },
+          "stop": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "停止词字符串。"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "停止词列表。"
+              }
+            ],
+            "description": "用于指定停止词。当模型生成的文本中出现 stop 指定的字符串或 token_id 时，生成将立即终止。可传入敏感词以控制模型的输出。stop 为数组时，不可将 token_id 和字符串同时作为元素输入。"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机数种子。用于复现生成结果。取值范围：[0, 2^31-1]。",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "tools": {
+            "type": "array",
+            "description": "工具数组，供模型在 Function Calling 中调用。模型判断需要调用工具时，通过 tool_calls 返回工具信息。",
+            "items": {
+              "$ref": "#/components/schemas/Tool"
+            }
+          },
+          "tool_choice": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "none",
+                  "required"
+                ],
+                "description": "工具选择策略：auto（大模型自主选择）、none（不进行工具调用）、required（必须调用至少一个工具）。"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "function": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "description": "强制调用指定工具：{\"type\":\"function\",\"function\":{\"name\":\"the_function_to_call\"}}。思考模式的模型不支持强制调用某个工具。"
+              }
+            ],
+            "description": "工具选择策略。默认值：auto。可选值：auto（大模型自主选择）、none（不进行工具调用）、{\"type\":\"function\",\"function\":{\"name\":\"...\"}}（强制调用指定工具）。思考模式的模型不支持强制调用某个工具。",
+            "default": "auto"
+          },
+          "enable_search": {
+            "type": "boolean",
+            "description": "是否开启联网搜索。默认值：false。若开启后未联网搜索，可设置 search_options 中的 forced_search 开启强制搜索。可能增加 Token 消耗。非标准参数，需放入 extra_body。",
+            "default": false
+          },
+          "response_format": {
+            "type": "object",
+            "description": "返回内容格式。可选值：{\"type\": \"text\"}（文字回复）、{\"type\": \"json_object\"}（JSON 字符串）。默认值：{\"type\": \"text\"}。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "json_object"
+                ],
+                "description": "返回内容格式。可选值：text（文字回复）、json_object（JSON 字符串）。"
+              }
+            }
+          },
+          "top_k": {
+            "type": "integer",
+            "description": "采样候选 Token 数量。值越大输出越随机。取值为 >= 0 的整数。默认值：20。非标准参数，需放入 extra_body。",
+            "minimum": 0,
+            "default": 20
+          },
+          "repetition_penalty": {
+            "type": "number",
+            "description": "重复度惩罚。值越高重复度越低。1.0 表示不惩罚。默认值：1.05。非标准参数，需放入 extra_body。",
+            "minimum": 0,
+            "default": 1.05
+          },
+          "presence_penalty": {
+            "type": "number",
+            "description": "内容重复度控制。取值范围 [-2.0, 2.0]。正值降低重复。默认值：1.5（非思考模式）。非标准参数，需放入 extra_body。",
+            "minimum": -2,
+            "maximum": 2,
+            "default": 1.5
+          },
+          "max_completion_tokens": {
+            "type": "integer",
+            "description": "模型输出最大长度，包含思维链和回答。超过时提前停止。思考类模型推荐使用。",
+            "minimum": 1
+          },
+          "parallel_tool_calls": {
+            "type": "boolean",
+            "description": "是否开启并行工具调用。默认值：false。",
+            "default": false
+          },
+          "search_options": {
+            "type": "object",
+            "description": "联网搜索的策略配置。非标准参数，需放入 extra_body。"
+          },
+          "enable_thinking": {
+            "type": "boolean",
+            "description": "使用混合思考（回复前既可思考也可不思考）模型时，是否开启思考模式。适用于 Qwen3.7、Qwen3.6、Qwen3.5、Qwen3、Qwen3-Omni-Flash、Qwen3-VL 模型等。DeepSeek-V4 系列默认开启思考，可通过 reasoning_effort 参数调整推理力度。开启后，思考内容通过 reasoning_content 字段返回。非标准参数，需放入 extra_body。"
+          },
+          "thinking_budget": {
+            "type": "integer",
+            "description": "思考过程的最大 Token 数。适用于 Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL、Qwen3、GLM、Kimi 系列模型。默认值为模型最大思维链长度。非标准参数，需放入 extra_body。",
+            "minimum": 1
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "description": "控制模型的推理力度，不同模型支持的可选值和默认值不同。DeepSeek-V4、GLM 系列与 kimi/kimi-k3（默认值为 high）：high、max（low/medium 映射为 high，xhigh 映射为 max）。qwen3.8-max-preview（默认值为 xhigh）：xhigh、medium、low。非标准参数，需放入 extra_body。",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "max",
+              "xhigh"
+            ]
+          },
+          "tool_stream": {
+            "type": "boolean",
+            "description": "仅在 stream=true 时生效。当前仅 Qwen 和 GLM 系列支持。tool_stream=false（默认）：复杂工具参数一次性输出，格式更准确；tool_stream=true：复杂工具参数流式输出，无超时风险。非标准参数，需放入 extra_body。",
+            "default": false
+          },
+          "enable_code_interpreter": {
+            "type": "boolean",
+            "description": "是否开启代码解释器功能。非标准参数，需放入 extra_body。",
+            "default": false
+          },
+          "vl_high_resolution_images": {
+            "type": "boolean",
+            "description": "是否将图像像素上限提升至 16384 Token。默认值：false。非标准参数，需放入 extra_body。",
+            "default": false
+          },
+          "n": {
+            "type": "integer",
+            "description": "生成响应数量，取值范围 1-4。仅部分模型支持。默认值：1。",
+            "minimum": 1,
+            "maximum": 4,
+            "default": 1
+          },
+          "logprobs": {
+            "type": "boolean",
+            "description": "是否返回输出 Token 的对数概率。可选值：true（返回）、false（不返回）。思考阶段生成的内容（reasoning_content）不会返回对数概率。支持的模型：qwen-plus 系列的快照模型、qwen-turbo 系列的快照模型、qwen3-vl-plus 系列模型、qwen3-vl-flash 系列模型、Qwen3 开源模型。",
+            "default": false
+          },
+          "top_logprobs": {
+            "type": "integer",
+            "description": "指定在每一步生成时，返回模型最大概率的候选 Token 个数。取值范围：[0, 5]。仅当 logprobs 为 true 时生效。默认值：0。",
+            "minimum": 0,
+            "maximum": 5,
+            "default": 0
+          },
+          "preserve_thinking": {
+            "type": "boolean",
+            "description": "是否将对话历史中 assistant 消息的 reasoning_content 拼接至模型输入。适用于需要模型参考历史思考过程的场景。支持 qwen3.7-max、qwen3.7-plus 及后续快照等模型。开启后，历史 reasoning_content 会计入输入 Token 数量并计费。非标准参数，需放入 extra_body。",
+            "default": false
+          },
+          "thinking": {
+            "type": "object",
+            "description": "控制稀宇科技直供的 MiniMax/MiniMax-M3 的思考模式。默认值：{\"type\":\"adaptive\"}。非标准参数，需放入 extra_body。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "adaptive",
+                  "disabled"
+                ],
+                "description": "思考类型。可选值：adaptive（自适应，模型自主判断）、disabled（关闭思考，直接回答）。"
+              }
+            }
+          },
+          "skill": {
+            "type": "array",
+            "description": "技能参数，用于 PPT 生成等。仅 qwen-doc-turbo 支持。非标准参数，需放入 extra_body。使用时 stream 必须为 true。",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "技能类型：ppt（PPT 生成）。"
+                },
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "general",
+                    "creative"
+                  ],
+                  "description": "PPT 生成模式：general（模板模式，需 template_id）、creative（创意模式）。"
+                },
+                "template_id": {
+                  "type": "string",
+                  "description": "模板 ID：news_01、summary_01、internet_01、thesis_01。"
+                }
+              }
+            }
+          },
+          "clear_thinking": {
+            "type": "boolean",
+            "description": "控制多轮对话中是否忽略历史 reasoning_content。仅 GLM 5.2/5.1/5/4.7 支持。非标准参数，需放入 extra_body。true：忽略。false（默认）：保留。",
+            "default": false
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool"
+            ],
+            "description": "消息发送者角色。"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string",
+                "description": "文本内容。"
+              },
+              {
+                "type": "array",
+                "description": "多模态内容列表（用于图像理解）。",
+                "items": {
+                  "$ref": "#/components/schemas/ContentItem"
+                }
+              }
+            ],
+            "description": "消息内容。若输入只有文本，则为 string 类型；若输入包含图像等多模态数据，或启用显式缓存，则为 array 类型。"
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "发起 Function Calling 后，返回的工具与入参信息，包含一个或多个对象。",
+            "items": {
+              "$ref": "#/components/schemas/ToolCall"
+            }
+          },
+          "partial": {
+            "type": "boolean",
+            "description": "是否开启前缀续写。默认值为 false。",
+            "default": false
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "模型的思维链内容。"
+          }
+        }
+      },
+      "ContentItem": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "image_url",
+              "input_audio",
+              "video",
+              "video_url"
+            ],
+            "description": "内容类型。"
+          },
+          "text": {
+            "type": "string",
+            "description": "输入的文本。当 type 为 text 时，是必选参数。"
+          },
+          "image_url": {
+            "type": "object",
+            "description": "输入的图片信息。当 type 为 image_url 时是必选参数。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "图片的 URL 或 Base64 Data URL。"
+              }
+            }
+          },
+          "video_url": {
+            "type": "object",
+            "description": "输入的视频文件信息。当 type 为 video_url 时是必选参数。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "视频文件的公网 URL 或 Base64 Data URL。"
+              },
+              "fps": {
+                "type": "number",
+                "description": "每秒抽帧数。取值范围 [0.1, 10]，默认值为 2.0。"
+              },
+              "min_pixels": {
+                "type": "integer",
+                "description": "输入图像或视频帧的最小像素阈值。"
+              },
+              "max_pixels": {
+                "type": "integer",
+                "description": "输入图像或视频帧的最大像素阈值。"
+              },
+              "total_pixels": {
+                "type": "integer",
+                "description": "从视频中抽取的所有帧的总像素限制。"
+              }
+            }
+          },
+          "input_audio": {
+            "type": "object",
+            "description": "输入的音频信息。当 type 为 input_audio 时是必选参数。",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "音频的 URL 或 Base64 Data URL。"
+              },
+              "format": {
+                "type": "string",
+                "description": "输入音频的格式，如 mp3、wav 等。"
+              }
+            }
+          },
+          "video": {
+            "type": "array",
+            "description": "输入的图片列表形式的视频信息。当 type 为 video 时是必选参数。",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cache_control": {
+            "type": "object",
+            "description": "用于开启显式缓存。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "ephemeral"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "Tool": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "工具类型，当前仅支持设为 function。"
+          },
+          "function": {
+            "type": "object",
+            "required": [
+              "name",
+              "description"
+            ],
+            "description": "工具信息。",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "工具名称。仅允许字母、数字、下划线（_）和短划线（-），最长 64 个 Token。"
+              },
+              "description": {
+                "type": "string",
+                "description": "工具描述信息，帮助模型判断何时以及如何调用该工具。"
+              },
+              "parameters": {
+                "type": "object",
+                "description": "工具的参数描述，需为合法的 JSON Schema。若为空表示无入参。",
+                "default": {}
+              }
+            }
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "本次调用的唯一标识符。"
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion",
+            "description": "始终为chat.completion。"
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "请求创建时的 Unix 时间戳（秒）。"
+          },
+          "model": {
+            "type": "string",
+            "description": "本次请求使用的模型。"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Choice"
+            },
+            "description": "模型生成内容的数组。"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage",
+            "description": "本次请求的 Token 消耗信息。"
+          },
+          "service_tier": {
+            "type": "string",
+            "nullable": true,
+            "description": "该参数当前固定为null。"
+          },
+          "system_fingerprint": {
+            "type": "string",
+            "nullable": true,
+            "description": "该参数当前固定为null。"
+          }
+        }
+      },
+      "Choice": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer"
+          },
+          "message": {
+            "$ref": "#/components/schemas/Message"
+          },
+          "finish_reason": {
+            "type": "string",
+            "description": "生成结束原因：stop、length、tool_calls、content_filter。"
+          },
+          "logprobs": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "content": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "输入的 Token 数。"
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "模型输出的 Token 数。"
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "消耗的总 Token 数，为prompt_tokens与completion_tokens的总和。"
+          },
+          "completion_tokens_details": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "reasoning_tokens": {
+                "type": "integer",
+                "description": "该参数当前固定为null。"
+              },
+              "text_tokens": {
+                "type": "integer",
+                "description": "文本 Token 数。"
+              },
+              "audio_tokens": {
+                "type": "integer",
+                "description": "该参数当前固定为null。"
+              }
+            }
+          },
+          "prompt_tokens_details": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "cached_tokens": {
+                "type": "integer",
+                "description": "命中缓存的 Token 数。"
+              },
+              "text_tokens": {
+                "type": "integer",
+                "description": "文本 Token 数。"
+              },
+              "image_tokens": {
+                "type": "integer",
+                "description": "图像 Token 数。"
+              },
+              "video_tokens": {
+                "type": "integer",
+                "description": "视频 Token 数。"
+              },
+              "audio_tokens": {
+                "type": "integer",
+                "description": "该参数当前固定为null。"
+              },
+              "cache_creation": {
+                "type": "object",
+                "description": "显式缓存创建信息。",
+                "properties": {
+                  "ephemeral_5m_input_tokens": {
+                    "type": "integer",
+                    "description": "创建显式缓存的 Token 数。"
+                  },
+                  "cache_creation_input_tokens": {
+                    "type": "integer",
+                    "description": "创建显式缓存的 Token 数。"
+                  },
+                  "cache_type": {
+                    "type": "string",
+                    "description": "使用显式缓存时，参数值为ephemeral，否则该参数不存在。"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ToolCall": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "function",
+          "index"
+        ],
+        "description": "发起 Function Calling 后，返回的工具与入参信息，包含一个或多个对象。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "工具响应的 ID。"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "工具类型，当前只支持设为 function。"
+          },
+          "function": {
+            "type": "object",
+            "required": [
+              "name",
+              "arguments"
+            ],
+            "description": "工具与入参信息。",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "工具名称。"
+              },
+              "arguments": {
+                "type": "string",
+                "description": "入参信息，为 JSON 格式字符串。"
+              }
+            }
+          },
+          "index": {
+            "type": "integer",
+            "description": "当前工具信息在 tool_calls 数组中的索引。"
+          }
+        }
+      },
+      "ChatCompletionChunkResponse": {
+        "type": "object",
+        "description": "流式响应的 Chunk 对象结构。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "本次调用的唯一标识符。每个 chunk 对象有相同的 id。"
+          },
+          "choices": {
+            "type": "array",
+            "description": "模型生成内容的数组。若设置 include_usage 为 true，则 choices 在最后一个 chunk 中为空数组。",
+            "items": {
+              "$ref": "#/components/schemas/ChunkChoice"
+            }
+          },
+          "created": {
+            "type": "integer",
+            "format": "int64",
+            "description": "本次请求被创建时的时间戳。"
+          },
+          "model": {
+            "type": "string",
+            "description": "本次请求使用的模型。"
+          },
+          "object": {
+            "type": "string",
+            "example": "chat.completion.chunk",
+            "description": "始终为chat.completion.chunk。"
+          },
+          "service_tier": {
+            "type": "string",
+            "nullable": true,
+            "description": "该参数当前固定为null。"
+          },
+          "system_fingerprint": {
+            "type": "string",
+            "nullable": true,
+            "description": "该参数当前固定为null。"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage",
+            "description": "本次请求消耗的 Token。只在 include_usage 为 true 时，在最后一个 chunk 显示。"
+          }
+        }
+      },
+      "ChunkChoice": {
+        "type": "object",
+        "properties": {
+          "delta": {
+            "$ref": "#/components/schemas/Delta",
+            "description": "请求的增量对象。"
+          },
+          "finish_reason": {
+            "type": "string",
+            "nullable": true,
+            "description": "停止原因：stop 触发或自然停止、null 未结束、length 过长、tool_calls 需调用工具。"
+          },
+          "index": {
+            "type": "integer",
+            "description": "在 choices 数组中的索引。n 大于 1 时需据此拼接。"
+          },
+          "logprobs": {
+            "$ref": "#/components/schemas/LogProbs",
+            "description": "当前对象的概率信息。"
+          }
+        }
+      },
+      "Delta": {
+        "type": "object",
+        "description": "流式响应的增量消息对象。",
+        "properties": {
+          "content": {
+            "type": "string",
+            "nullable": true,
+            "description": "增量消息内容。"
+          },
+          "reasoning_content": {
+            "type": "string",
+            "nullable": true,
+            "description": "增量思维链内容。"
+          },
+          "function_call": {
+            "type": "object",
+            "nullable": true,
+            "description": "默认 null，请参考 tool_calls。"
+          },
+          "audio": {
+            "type": "object",
+            "nullable": true,
+            "description": "使用 Qwen-Omni 模型时生成的回复。"
+          },
+          "refusal": {
+            "type": "object",
+            "nullable": true,
+            "description": "当前固定为 null。"
+          },
+          "role": {
+            "type": "string",
+            "description": "角色，只在第一个 chunk 中有值。"
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "Function Calling 后模型生成的工具与入参信息。",
+            "items": {
+              "$ref": "#/components/schemas/ToolCallDelta"
+            }
+          }
+        }
+      },
+      "ToolCallDelta": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "在 tool_calls 数组中的索引。"
+          },
+          "id": {
+            "type": "string",
+            "description": "本次工具响应的唯一标识符。"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "工具类型，当前只支持 function。"
+          },
+          "function": {
+            "type": "object",
+            "description": "被调用的工具信息。",
+            "properties": {
+              "arguments": {
+                "type": "string",
+                "description": "增量入参，拼接后为完整入参。请在调用前校验参数有效性。"
+              },
+              "name": {
+                "type": "string",
+                "description": "工具名称，只在第一个 chunk 中有值。"
+              }
+            }
+          }
+        }
+      },
+      "LogProbs": {
+        "type": "object",
+        "nullable": true,
+        "description": "当前对象的概率信息。",
+        "properties": {
+          "content": {
+            "type": "array",
+            "description": "带有对数概率信息的 Token 数组。",
+            "items": {
+              "$ref": "#/components/schemas/LogProbContent"
+            }
+          }
+        }
+      },
+      "LogProbContent": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "当前 Token。"
+          },
+          "bytes": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "UTF-8 原始字节列表。"
+          },
+          "logprob": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "description": "对数概率。null 表示概率值极低。"
+          },
+          "top_logprobs": {
+            "type": "array",
+            "description": "最可能的若干 Token 及对数概率。",
+            "items": {
+              "$ref": "#/components/schemas/TopLogProb"
+            }
+          }
+        }
+      },
+      "TopLogProb": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "候选 Token。"
+          },
+          "bytes": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "UTF-8 原始字节列表。"
+          },
+          "logprob": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "description": "对数概率。null 表示概率值极低。"
+          }
+        }
+      }
+    }
+  }
+}
