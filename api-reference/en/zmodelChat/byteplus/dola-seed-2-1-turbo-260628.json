@@ -1,0 +1,716 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "BytePlus Chat Completions",
+    "version": "1.0.0",
+    "description": "BytePlus Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `dola-seed-2-1-turbo-260628`\n\nThis document covers the following request fields: `model`, `messages`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `stop`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "BytePlus Chat",
+      "description": "BytePlus text chat and tool calling capabilities"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "BytePlus Chat Completions",
+        "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `dola-seed-2-1-turbo-260628`.\n\nDocumented fields: `model`, `messages`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `stop`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports plain text; `assistant` messages support `tool_calls`.",
+        "operationId": "byteplusChatCompletions",
+        "tags": [
+          "BytePlus Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basic_text_chat": {
+                  "summary": "Basic text chat",
+                  "value": {
+                    "model": "dola-seed-2-1-turbo-260628",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise and accurate assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Summarize the core process of RAG in three sentences."
+                      }
+                    ],
+                    "temperature": 0.3,
+                    "max_tokens": 1024,
+                    "stream": false
+                  }
+                },
+                "tool_calling_stream": {
+                  "summary": "Tool calling and streaming",
+                  "value": {
+                    "model": "dola-seed-2-1-turbo-260628",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Help me check the weather in Beijing today and tell me if it's suitable for outdoor running."
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "Query real-time weather by city name",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "City name"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "parallel_tool_calls": true,
+                    "stream": true,
+                    "stream_options": {
+                      "include_usage": true,
+                      "chunk_include_usage": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Returns JSON in non-streaming mode; SSE event stream in streaming mode.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Non-streaming success response",
+                    "value": {
+                      "id": "chatcmpl_bp_123",
+                      "object": "chat.completion",
+                      "created": 1742342400,
+                      "model": "dola-seed-2-1-turbo-260628",
+                      "choices": [
+                        {
+                          "index": 0,
+                          "message": {
+                            "role": "assistant",
+                            "content": "The core process of RAG typically involves three steps: retrieval, augmentation, and generation. The system first converts the user's question into a vector and retrieves relevant knowledge fragments, then concatenates the retrieval results with the original question into the prompt. Finally, the model generates an answer based on the augmented context, thereby reducing hallucinations and improving factual accuracy."
+                          },
+                          "finish_reason": "stop"
+                        }
+                      ],
+                      "usage": {
+                        "prompt_tokens": 123,
+                        "completion_tokens": 98,
+                        "total_tokens": 221
+                      }
+                    }
+                  }
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE data stream. Each `data:` event can be parsed as a BytePlus/OpenAI-compatible Chat Completions Chunk; typically `data: [DONE]` is returned at the end. When the request sets `stream_options.include_usage=true`, an additional chunk with `usage` is returned before the end."
+                },
+                "examples": {
+                  "stream": {
+                    "summary": "Streaming response fragment",
+                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"dola-seed-2-1-turbo-260628\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"dola-seed-2-1-turbo-260628\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Parameter error",
+                    "value": {
+                      "error": {
+                        "message": "messages is required",
+                        "type": "invalid_request_error",
+                        "param": "messages",
+                        "code": "bad_request_body"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g., token not provided or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or insufficient account quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient account quota, please try again later",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error occurred during request processing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal processing failure",
+                    "value": {
+                      "error": {
+                        "message": "Internal service processing failed, please try again later",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "description": "BytePlus chat completions request body.",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model name. Supported BytePlus chat models include `dola-seed-2-1-turbo-260628`",
+            "enum": [
+              "dola-seed-2-1-turbo-260628"
+            ],
+            "example": "dola-seed-2-1-turbo-260628"
+          },
+          "messages": {
+            "type": "array",
+            "description": "Message list. This document exposes four roles: `system`, `user`, `assistant`, `tool`. `messages[].content` supports plain text.",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "stream": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable streaming output. When `true`, the response content type is `text/event-stream`."
+          },
+          "stream_options": {
+            "$ref": "#/components/schemas/StreamOptions"
+          },
+          "max_tokens": {
+            "type": "integer",
+            "description": "Maximum length of the model response, in tokens."
+          },
+          "stop": {
+            "description": "Stop sequence. Can be a single string or an array of strings.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
+          },
+          "frequency_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "default": 0,
+            "description": "Frequency penalty. The higher the value, the more it suppresses repetitive expressions."
+          },
+          "presence_penalty": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2,
+            "default": 0,
+            "description": "Presence penalty. The higher the value, the more it encourages the model to introduce new topics."
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2,
+            "default": 1,
+            "description": "Sampling temperature. Lower values make the output more stable, higher values make it more creative."
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.95,
+            "description": "Nucleus sampling parameter. Usually used as an alternative to `temperature`."
+          },
+          "logprobs": {
+            "type": "boolean",
+            "description": "Whether to return log probability information for output tokens."
+          },
+          "top_logprobs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 20,
+            "description": "When `logprobs=true`, specifies how many candidate tokens' log probabilities to return at each position.",
+            "x-valid-when": {
+              "logprobs": [
+                true
+              ]
+            }
+          },
+          "tools": {
+            "type": "array",
+            "description": "List of function tool definitions available for the model to call.",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            }
+          },
+          "parallel_tool_calls": {
+            "type": "boolean",
+            "description": "Whether to allow the model to initiate multiple tool calls in parallel."
+          },
+          "tool_choice": {
+            "$ref": "#/components/schemas/ToolChoice"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "required": [
+          "role"
+        ],
+        "description": "Single message. `assistant` messages support `tool_calls`; when the role is `assistant`, at least one of `content` or `tool_calls` must be provided.",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool"
+            ],
+            "description": "Message role."
+          },
+          "content": {
+            "type": "string",
+            "description": "Message content. Supports plain text strings."
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "List of tool calls in the assistant message.",
+            "items": {
+              "$ref": "#/components/schemas/ToolCallMessage"
+            }
+          },
+          "tool_call_id": {
+            "type": "string",
+            "description": "The ID of the previous tool call for the tool role message to correlate."
+          }
+        }
+      },
+      "ThinkingConfig": {
+        "type": "object",
+        "description": "Controls whether the model enables deep thinking mode.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "enabled",
+              "disabled"
+            ],
+            "description": "Thinking mode. `enabled` forces thinking, `disabled` directly answers."
+          }
+        }
+      },
+      "StreamOptions": {
+        "type": "object",
+        "description": "Additional options for streaming response. Only effective when `stream=true`.",
+        "properties": {
+          "include_usage": {
+            "type": "boolean",
+            "description": "If `true`, an additional chunk with the full `usage` will be returned before the stream ends."
+          },
+          "chunk_include_usage": {
+            "type": "boolean",
+            "description": "If `true`, each streaming chunk will include cumulative `usage` up to the current point."
+          }
+        }
+      },
+      "ToolDefinition": {
+        "type": "object",
+        "required": [
+          "type",
+          "function"
+        ],
+        "description": "Function tool definition.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "Currently only function tools are supported."
+          },
+          "function": {
+            "type": "object",
+            "required": [
+              "name",
+              "parameters"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Function name."
+              },
+              "description": {
+                "type": "string",
+                "description": "Function usage description."
+              },
+              "parameters": {
+                "type": "object",
+                "description": "JSON Schema-style function parameter definition."
+              }
+            }
+          }
+        }
+      },
+      "ToolChoice": {
+        "description": "Tool calling strategy. Can be a string mode or an object specifying a specific function.",
+        "oneOf": [
+          {
+            "type": "string",
+            "enum": [
+              "none",
+              "auto",
+              "required"
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "type",
+              "function"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ]
+              },
+              "function": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Specifies the function name to call."
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ResponseFormat": {
+        "type": "object",
+        "description": "Controls the answer format (Beta).",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "json_object",
+              "json_schema"
+            ],
+            "description": "Target output format."
+          },
+          "json_schema": {
+            "$ref": "#/components/schemas/ResponseJsonSchema"
+          }
+        }
+      },
+      "ResponseJsonSchema": {
+        "type": "object",
+        "required": [
+          "name",
+          "schema"
+        ],
+        "description": "JSON Schema definition used when `response_format.type=json_schema`.",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "JSON structure name."
+          },
+          "description": {
+            "type": "string",
+            "description": "Response usage description."
+          },
+          "schema": {
+            "type": "object",
+            "description": "JSON Schema object."
+          },
+          "strict": {
+            "type": "boolean",
+            "description": "Whether to strictly follow the schema."
+          }
+        }
+      },
+      "ToolCallMessage": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "function"
+        ],
+        "description": "Tool call object in the message.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Tool call ID."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "function"
+            ],
+            "description": "Currently only function tool calls are supported."
+          },
+          "function": {
+            "type": "object",
+            "required": [
+              "name",
+              "arguments"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Function name."
+              },
+              "arguments": {
+                "type": "string",
+                "description": "Call parameters in JSON string format."
+              }
+            }
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "description": "BytePlus chat completions success response.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Response ID."
+          },
+          "object": {
+            "type": "string",
+            "description": "Object type, e.g., `chat.completion`."
+          },
+          "created": {
+            "type": "integer",
+            "description": "Unix timestamp."
+          },
+          "model": {
+            "type": "string",
+            "description": "The actual model name used."
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionChoice"
+            }
+          },
+          "usage": {
+            "$ref": "#/components/schemas/Usage"
+          }
+        }
+      },
+      "ChatCompletionChoice": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "Candidate response index."
+          },
+          "message": {
+            "$ref": "#/components/schemas/AssistantMessage"
+          },
+          "finish_reason": {
+            "type": "string",
+            "description": "Finish reason, e.g., `stop`, `length`, or `tool_calls`."
+          }
+        }
+      },
+      "AssistantMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "assistant"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "description": "Text content output by the assistant."
+          },
+          "tool_calls": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolCallMessage"
+            }
+          }
+        }
+      },
+      "Usage": {
+        "type": "object",
+        "description": "Token usage statistics.",
+        "properties": {
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Input token count."
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Output token count."
+          },
+          "total_tokens": {
+            "type": "integer",
+            "description": "Total token count."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error description."
+          },
+          "type": {
+            "type": "string",
+            "description": "Error type."
+          },
+          "param": {
+            "type": "string",
+            "description": "Associated field name."
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          }
+        }
+      }
+    }
+  }
+}
