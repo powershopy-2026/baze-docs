@@ -252,10 +252,12 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ChatCompletionResponse"
+                      "$ref": "#/components/schemas/ChatCompletionResponse",
+                      "title": "chat响应对象（非流式输出）"
                     },
                     {
-                      "$ref": "#/components/schemas/ChatCompletionChunkResponse"
+                      "$ref": "#/components/schemas/ChatCompletionChunkResponse",
+                      "title": "chat响应chunk对象（流式输出）"
                     }
                   ]
                 },

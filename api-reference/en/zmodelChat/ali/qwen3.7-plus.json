@@ -252,10 +252,12 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/ChatCompletionResponse"
+                      "$ref": "#/components/schemas/ChatCompletionResponse",
+                      "title": "Chat response object (non-streaming)"
                     },
                     {
-                      "$ref": "#/components/schemas/ChatCompletionChunkResponse"
+                      "$ref": "#/components/schemas/ChatCompletionChunkResponse",
+                      "title": "Chat response chunk object (streaming)"
                     }
                   ]
                 },
