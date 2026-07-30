@@ -774,7 +774,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "包含一个或多个工具对象的数组，供模型在 Function Calling 中调用。相关文档：Function Calling。\n\n设置 tools 且模型判断需要调用工具时，响应会通过 tool_calls 返回工具信息。\n\n属性：\n- type（必选）：工具类型，当前仅支持设为 function。\n- function（必选）：工具与入参信息。\n  - name（必选）：工具名称。仅允许字母、数字、下划线（_）和短划线（-），最长 64 个 Token。\n  - description（必选）：工具描述信息，帮助模型判断何时以及如何调用该工具。\n  - parameters（可选，默认 {}）：工具的参数描述，需要是一个合法的 JSON Schema。若 parameters 参数为空，表示该工具没有入参（如时间查询工具）。为提高工具调用的准确性，建议传入 parameters。",
+            "description": "包含一个或多个工具对象的数组，供模型在 Function Calling 中调用。\n\n设置 tools 且模型判断需要调用工具时，响应会通过 tool_calls 返回工具信息。\n\n属性：\n- type（必选）：工具类型，当前仅支持设为 function。\n- function（必选）：工具与入参信息。\n  - name（必选）：工具名称。仅允许字母、数字、下划线（_）和短划线（-），最长 64 个 Token。\n  - description（必选）：工具描述信息，帮助模型判断何时以及如何调用该工具。\n  - parameters（可选，默认 {}）：工具的参数描述，需要是一个合法的 JSON Schema。若 parameters 参数为空，表示该工具没有入参（如时间查询工具）。为提高工具调用的准确性，建议传入 parameters。",
             "items": {
               "$ref": "#/components/schemas/Tool"
             }
@@ -813,7 +813,7 @@
           },
           "enable_search": {
             "type": "boolean",
-            "description": "是否开启联网搜索。相关文档：联网搜索。默认值：false。\n\n可选值：\n- true：开启。若开启后未联网搜索，可优化提示词，或设置 search_options 中的 forced_search 参数开启强制搜索；\n- false：不开启。\n\n启用互联网搜索功能可能会增加 Token 的消耗。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"enable_search\": True}。",
+            "description": "是否开启联网搜索。默认值：false。\n\n可选值：\n- true：开启。若开启后未联网搜索，可优化提示词，或设置 search_options 中的 forced_search 参数开启强制搜索；\n- false：不开启。\n\n启用互联网搜索功能可能会增加 Token 的消耗。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"enable_search\": True}。",
             "default": false
           },
           "response_format": {
@@ -856,12 +856,12 @@
           },
           "parallel_tool_calls": {
             "type": "boolean",
-            "description": "是否开启并行工具调用。相关文档：并行工具调用。默认值：false。\n\n可选值：\n- true：开启；\n- false：不开启。",
+            "description": "是否开启并行工具调用。默认值：false。\n\n可选值：\n- true：开启；\n- false：不开启。",
             "default": false
           },
           "search_options": {
             "type": "object",
-            "description": "联网搜索的策略。相关文档：联网搜索。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"search_options\": xxx}。"
+            "description": "联网搜索的策略。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"search_options\": xxx}。"
           },
           "enable_thinking": {
             "type": "boolean",
@@ -890,7 +890,7 @@
           },
           "enable_code_interpreter": {
             "type": "boolean",
-            "description": "是否开启代码解释器功能。相关文档：代码解释器。默认值：false。\n\n可选值：\n- true：开启；\n- false：不开启。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"enable_code_interpreter\": xxx}。",
+            "description": "是否开启代码解释器功能。默认值：false。\n\n可选值：\n- true：开启；\n- false：不开启。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"enable_code_interpreter\": xxx}。",
             "default": false
           },
           "vl_high_resolution_images": {
@@ -938,7 +938,7 @@
           },
           "skill": {
             "type": "array",
-            "description": "技能参数，用于启用特定生成技能（如 PPT 生成）。仅 qwen-doc-turbo 模型支持。详细用法请参见生成 PPT。默认值：[]。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"skill\": [...]}。使用 skill 时，stream 必须设置为 true。\n\n属性：\n- type（必选）：技能类型。当前支持：ppt（PPT 生成）。\n- mode（可选）：PPT 生成模式。可选值：general（默认，模板模式，需配合 template_id 使用，生成 HTML 格式的 PPT）、creative（创意模式，无需模板，生成图版 PPT 每页为图片）。\n- template_id（可选）：PPT 模板 ID。与 mode 为 general 或未设置 mode 时配合使用。可选值：news_01（新闻模板）、summary_01（总结模板）、internet_01（互联网模板）、thesis_01（论文模板）。",
+            "description": "技能参数，用于启用特定生成技能（如 PPT 生成）。仅 qwen-doc-turbo 模型支持。默认值：[]。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"skill\": [...]}。使用 skill 时，stream 必须设置为 true。\n\n属性：\n- type（必选）：技能类型。当前支持：ppt（PPT 生成）。\n- mode（可选）：PPT 生成模式。可选值：general（默认，模板模式，需配合 template_id 使用，生成 HTML 格式的 PPT）、creative（创意模式，无需模板，生成图版 PPT 每页为图片）。\n- template_id（可选）：PPT 模板 ID。与 mode 为 general 或未设置 mode 时配合使用。可选值：news_01（新闻模板）、summary_01（总结模板）、internet_01（互联网模板）、thesis_01（论文模板）。",
             "items": {
               "type": "object",
               "properties": {
