@@ -722,7 +722,7 @@
           },
           "stream": {
             "type": "boolean",
-            "description": "是否以流式输出方式回复。可选值：false（一次性返回）、true（边生成边输出）。推荐设置为 true。非流式调用超过 300 秒将中断请求。",
+            "description": "是否以流式输出方式回复。\n可选值：\n- false：模型生成全部内容后一次性返回；\n- true：边生成边输出，每生成一部分内容即返回一个数据块（chunk）。需实时逐个读取这些块以拼接完整回复。\n\n推荐设置为 true，可提升阅读体验并降低超时风险。\n\n说明：非流式调用若超过 300 秒未完成，服务将中断请求并返回已生成的内容（而非报错）。建议输出较长的场景务必使用流式调用。",
             "default": false
           },
           "stream_options": {
@@ -731,30 +731,24 @@
             "properties": {
               "include_usage": {
                 "type": "boolean",
-                "description": "是否在响应的最后一个数据块包含 Token 消耗信息。可选值：true（包含）、false（不包含）。",
+                "description": "是否在响应的最后一个数据块包含 Token 消耗信息。可选值：true（包含）、false（不包含）。流式输出时，Token 消耗信息仅可出现在响应的最后一个数据块。",
                 "default": false
               }
             }
           },
           "temperature": {
             "type": "number",
-            "description": "采样温度，控制生成文本多样性。越高越多样，越低越确定。取值范围 [0, 2)。默认值：0.7。",
+            "description": "采样温度，控制模型生成文本的多样性。temperature 越高，生成的文本更多样，反之，生成的文本更确定。取值范围：[0, 2)。temperature 与 top_p 均可以控制生成文本的多样性，建议只设置其中一个值。",
             "minimum": 0,
             "maximum": 2,
             "default": 0.7
           },
           "top_p": {
             "type": "number",
-            "description": "核采样概率阈值，控制多样性。取值范围 (0, 1.0]。默认值：0.8（非思考模式）/ 0.95（思考模式）。",
+            "description": "核采样的概率阈值，控制模型生成文本的多样性。top_p 越高，生成的文本更多样。反之，生成的文本更确定。取值范围：(0, 1.0]。temperature 与 top_p 均可以控制生成文本的多样性，建议只设置其中一个值。",
             "minimum": 0,
             "maximum": 1,
             "default": 0.95
-          },
-          "max_tokens": {
-            "type": "integer",
-            "description": "该参数即将废弃，请使用 max_completion_tokens。模型回答的最大长度（不含思维链）。",
-            "minimum": 1,
-            "deprecated": true
           },
           "stop": {
             "oneOf": [
@@ -824,7 +818,7 @@
           },
           "response_format": {
             "type": "object",
-            "description": "返回内容格式。可选值：{\"type\": \"text\"}（文字回复）、{\"type\": \"json_object\"}（JSON 字符串）。默认值：{\"type\": \"text\"}。",
+            "description": "返回内容的格式。可选值：\n- {\"type\": \"text\"}：输出文字回复；\n- {\"type\": \"json_object\"}：输出标准格式的 JSON 字符串。\n\n相关文档：结构化输出。\n\n若指定为 {\"type\": \"json_object\"}，需在提示词中明确指示模型输出 JSON，如：\"请按照json格式输出\"，否则会报错。",
             "properties": {
               "type": {
                 "type": "string",
@@ -838,26 +832,26 @@
           },
           "top_k": {
             "type": "integer",
-            "description": "采样候选 Token 数量。值越大输出越随机。取值为 >= 0 的整数。默认值：20。非标准参数，需放入 extra_body。",
+            "description": "指定生成过程中用于采样的候选 Token 数量。值越大，输出越随机；值越小，输出越确定。若设为 null 或大于 100，则禁用 top_k 策略，仅 top_p 策略生效。取值必须为大于或等于 0 的整数。默认值 20。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"top_k\":xxx}。",
             "minimum": 0,
             "default": 20
           },
           "repetition_penalty": {
             "type": "number",
-            "description": "重复度惩罚。值越高重复度越低。1.0 表示不惩罚。默认值：1.05。非标准参数，需放入 extra_body。",
+            "description": "模型生成时连续序列中的重复度。提高 repetition_penalty 时可以降低模型生成的重复度，1.0 表示不做惩罚。没有严格的取值范围，只要大于 0 即可。\n\nrepetition_penalty 默认值：\n- qwen-max、qwen-math 系列、qwen-vl-max 系列、qwen-audio-turbo 系列、QVQ 系列、QwQ 系列、Qwen3-VL：1.0；\n- qwen-coder 系列、qwen2-1.5b-instruct、qwen2-0.5b-instruct、qwen2.5-omni-7b：1.1；\n- qwen-vl-plus：1.2；\n- 其余模型为 1.05。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"repetition_penalty\":xxx}。",
             "minimum": 0,
             "default": 1.05
           },
           "presence_penalty": {
             "type": "number",
-            "description": "内容重复度控制。取值范围 [-2.0, 2.0]。正值降低重复。默认值：1.5（非思考模式）。非标准参数，需放入 extra_body。",
+            "description": "控制模型生成文本时的内容重复度。\n\n取值范围：[-2.0, 2.0]。正值降低重复度，负值增加重复度。\n\n在创意写作或头脑风暴等需要多样性、趣味性或创造力的场景中，建议调高该值；在技术文档或正式文本等强调一致性与术语准确性的场景中，建议调低该值。\n\npresence_penalty 默认值：\n- Qwen3.7（非思考模式）、Qwen3.6（非思考模式）、Qwen3.5-Omni、Qwen3.5（非思考模式）、qwen3-max-preview（思考模式）、Qwen3（非思考模式）、Qwen3-Instruct 系列/1.7b/4b（思考模式）、QVQ 系列、qwen-max、qwen2.5-vl 系列、qwen-vl-max 系列、qwen-vl-plus、Qwen3-VL（非思考）：1.5；\n- qwen3-8b/14b/32b/30b-a3b/235b-a22b（思考模式）、qwen-plus/qwen-plus-latest/2025-04-28（思考模式）、qwen-turbo/qwen-turbo/2025-04-28（思考模式）：0.5；\n- 其余均为 0.0。\n\n原理介绍：如果参数值是正数，模型将对目前文本中已存在的 Token 施加一个惩罚值（惩罚值与文本出现的次数无关），减少这些 Token 重复出现的几率，从而减少内容重复度，增加用词多样性。",
             "minimum": -2,
             "maximum": 2,
             "default": 1.5
           },
           "max_completion_tokens": {
             "type": "integer",
-            "description": "模型输出最大长度，包含思维链和回答。超过时提前停止。思考类模型推荐使用。",
+            "description": "模型输出的最大长度，包含思维链和模型回答。模型输出超过此值时生成将提前停止，返回的 finish_reason 为 length。\n\n默认值与最大值均为模型的最大输出长度。\n\n与 max_tokens 的区别：max_completion_tokens 限制模型完整输出（思维链 + 回答），而 max_tokens 仅限制回答部分。思考类模型推荐使用 max_completion_tokens。\n\n支持以下模型：\n- 千问 Max：Qwen3.7-Max 及之后的模型\n- 千问 Plus：Qwen3.5-Plus 及之后的模型\n\n实际输出 Token 数与设置的 max_completion_tokens 值之间最多可能存在 10 个 Token 的误差。",
             "minimum": 1
           },
           "parallel_tool_calls": {
@@ -871,7 +865,7 @@
           },
           "enable_thinking": {
             "type": "boolean",
-            "description": "使用混合思考（回复前既可思考也可不思考）模型时，是否开启思考模式。适用于 Qwen3.7、Qwen3.6、Qwen3.5、Qwen3、Qwen3-Omni-Flash、Qwen3-VL 模型等。DeepSeek-V4 系列默认开启思考，可通过 reasoning_effort 参数调整推理力度。开启后，思考内容通过 reasoning_content 字段返回。非标准参数，需放入 extra_body。"
+            "description": "使用混合思考（回复前既可思考也可不思考）模型时，是否开启思考模式。适用于 Qwen3.7、Qwen3.6、Qwen3.5、Qwen3、Qwen3-Omni-Flash、Qwen3-VL 模型，以及 DeepSeek-V4-Pro/V4-Flash 系列（阿里云直供）、DeepSeek-V3.2/V3.2-exp/V3.1 系列（阿里云直供、硅基流动直供、快手万擎直供）、Kimi-K2.7-code（仅思考模型）、Kimi-K2.6/K2.5 系列（阿里云直供、月之暗面直供）、GLM 系列。DeepSeek-V4 系列默认开启思考，可通过 reasoning_effort 参数调整推理力度。\n\n可选值：\n- true：开启。开启后，思考内容将通过 reasoning_content 字段返回。\n- false：不开启。\n\n不同模型的默认值：支持的模型。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"enable_thinking\": xxx}。\n\n若不使用 OpenAI SDK，而是通过 HTTP（如 curl）方式直接调用，则无需 extra_body，直接将 enable_thinking 与 model、messages 等参数一样放在请求体（body）的顶层即可，例如 \"enable_thinking\": true。"
           },
           "thinking_budget": {
             "type": "integer",
@@ -901,7 +895,7 @@
           },
           "vl_high_resolution_images": {
             "type": "boolean",
-            "description": "是否将图像像素上限提升至 16384 Token。默认值：false。非标准参数，需放入 extra_body。",
+            "description": "是否将输入图像的像素上限提升至 16384 Token 对应的像素值。相关文档：处理高分辨率图像。默认值：false。\n\nvl_high_resolution_images 为 true 时：使用固定分辨率策略，忽略 max_pixels 设置，超过此分辨率时会将图像总像素缩小至此上限内。\n\nvl_high_resolution_images 为 true 时，不同模型像素上限不同：\n- Qwen3.7 系列、Qwen3.6 系列、Qwen3.5 系列、Qwen3-VL 系列、qwen-vl-max、qwen-vl-max-0813、qwen-vl-plus、qwen-vl-plus-0815、qwen-vl-plus-0710 模型：16777216（每 Token 对应 32×32 像素，即 16384×32×32）；\n- QVQ 系列、其他 Qwen2.5-VL 系列模型：12845056（每 Token 对应 28×28 像素，即 16384×28×28）。\n\nvl_high_resolution_images 为 false 时：像素上限由 max_pixels 决定，输入图像的像素超过 max_pixels 会将图像缩小至 max_pixels 内。各模型的默认像素上限即 max_pixels 的默认值。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"vl_high_resolution_images\":xxx}。",
             "default": false
           },
           "n": {
@@ -1004,7 +998,7 @@
                 }
               }
             ],
-            "description": "消息内容。System Message：content 为 string（系统指令）。User Message：content 为 string（纯文本）或 array（多模态内容）。Assistant Message：content 为 string（可选，包含 tool_calls 时可为空）。Tool Message：content 为 string（工具输出，必选）。"
+            "description": "消息内容。System Message：content 为 string（系统指令）。User Message：content 为 string（纯文本）或 array（多模态内容）。Assistant Message：content 为 string（可选，包含 tool_calls 时可为空）。Tool Message：content 为 string（工具函数的输出内容，必须为字符串。若工具返回结构化数据如JSON，需将其序列化为字符串）。"
           },
           "tool_calls": {
             "type": "array",
@@ -1018,13 +1012,9 @@
             "description": "是否开启前缀续写。仅 role=assistant 时有效。默认值：false。",
             "default": false
           },
-          "reasoning_content": {
-            "type": "string",
-            "description": "模型的思维链内容。仅 role=assistant 时有效。"
-          },
           "tool_call_id": {
             "type": "string",
-            "description": "工具调用ID。发起 Function Calling 后返回的 id，用于标记 Tool Message 对应的工具。仅 role=tool 时必选。"
+            "description": "发起 Function Calling 后返回的 id，通过 completion.choices[0].message.tool_calls[$index].id 获取，用于标记 Tool Message 对应的工具。仅 role=tool 时必选。"
           }
         }
       },
@@ -1043,7 +1033,7 @@
               "video",
               "video_url"
             ],
-            "description": "内容类型。"
+            "description": "输入文本时需设为 text；输入图片时需设为 image_url；输入音频时需设为 input_audio；输入图片列表形式的视频时需设为 video；输入视频文件时需设为 video_url。"
           },
           "text": {
             "type": "string",
@@ -1085,7 +1075,7 @@
           },
           "video": {
             "type": "array",
-            "description": "输入的图片列表形式的视频信息。当 type 为 video 时是必选参数。",
+            "description": "输入的图片列表形式的视频信息。当 type 为 video 时是必选参数。\n\n示例值：\n[\n    \"https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241108/xzsgiz/football1.jpg\",\n    \"https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241108/tdescd/football2.jpg\",\n    \"https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241108/zefdja/football3.jpg\",\n    \"https://help-static-aliyun-doc.aliyuncs.com/file-manage-files/zh-CN/20241108/aedbqh/football4.jpg\"\n  ]",
             "items": {
               "type": "string"
             }
@@ -1104,19 +1094,19 @@
           },
           "fps": {
             "type": "number",
-            "description": "每秒抽帧数。取值范围为 [0.1, 10]，默认值为 2.0。MiniMax/MiniMax-M3 的 fps 取值范围为 [0.2, 5]，默认值为 1。\n\nfps 有两个功能：\n1. 输入视频文件时，控制抽帧频率，每 1/fps 秒抽取一帧。适用于 Qwen-VL、MiniMax/MiniMax-M3 与 QVQ 模型。\n2. 告知模型相邻帧之间的时间间隔，帮助其更好地理解视频的时间动态。同时适用于输入视频文件与图像列表时。支持 Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL、Qwen2.5-VL、Qwen3.5-Omni 与 QVQ 模型。\n\n较大的 fps 适合高速运动的场景（如体育赛事、动作电影等），较小的 fps 适合长视频或内容偏静态的场景。"
+            "description": "每秒抽帧数。取值范围为 [0.1, 10]，默认值为 2.0。MiniMax/MiniMax-M3 的 fps 取值范围为 [0.2, 5]，默认值为 1。\n\nfps 有两个功能：\n1. 输入视频文件时，控制抽帧频率，每 1/fps 秒抽取一帧。适用于 Qwen-VL、MiniMax/MiniMax-M3 与 QVQ 模型。\n2. 告知模型相邻帧之间的时间间隔，帮助其更好地理解视频的时间动态。同时适用于输入视频文件与图像列表时。支持 Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL、Qwen2.5-VL、Qwen3.5-Omni 与 QVQ 模型。\n\n较大的 fps 适合高速运动的场景（如体育赛事、动作电影等），较小的 fps 适合长视频或内容偏静态的场景。\n\n示例值：\n- 图像列表传入：{\"video\":[\"https://xx1.jpg\",...,\"https://xxn.jpg\"],\"fps\":2}\n- 视频文件传入：{\"video_url\": {\"url\": \"https://xx1.mp4\"},\"fps\":2}"
           },
           "min_pixels": {
             "type": "integer",
-            "description": "设定输入图像或视频帧的最小像素阈值。当输入图像或视频帧的像素小于 min_pixels 时，会将其进行放大，直到总像素高于 min_pixels。适用于 Qwen-VL、QVQ 模型。\n\n取值范围：\n- 输入图像：Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL 默认值和最小值均为 65536。\n- 输入视频文件或图像列表：Qwen3.7、Qwen3.6、Qwen3.5、Qwen3.5-Omni、Qwen3-VL（包括商业版和开源版）、qwen-vl-max、qwen-vl-max-0813、qwen-vl-plus、qwen-vl-plus-0815、qwen-vl-plus-0710 默认值为 65536，最小值为 4096。"
+            "description": "设定输入图像或视频帧的最小像素阈值。当输入图像或视频帧的像素小于 min_pixels 时，会将其进行放大，直到总像素高于 min_pixels。适用于 Qwen-VL、QVQ 模型。\n\n取值范围：\n- 输入图像：Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL 默认值和最小值均为 65536。\n- 输入视频文件或图像列表：Qwen3.7、Qwen3.6、Qwen3.5、Qwen3.5-Omni、Qwen3-VL（包括商业版和开源版）、qwen-vl-max、qwen-vl-max-0813、qwen-vl-plus、qwen-vl-plus-0815、qwen-vl-plus-0710 默认值为 65536，最小值为 4096。\n\n示例值：\n- 输入图像：{\"type\": \"image_url\",\"image_url\": {\"url\":\"https://xxxx.jpg\"},\"min_pixels\": 65536}\n- 输入视频文件时：{\"type\": \"video_url\",\"video_url\": {\"url\":\"https://xxxx.mp4\"},\"min_pixels\": 65536}\n- 输入图像列表时：{\"type\": \"video\",\"video\": [\"https://xx1.jpg\",...,\"https://xxn.jpg\"],\"min_pixels\": 65536}"
           },
           "max_pixels": {
             "type": "integer",
-            "description": "用于设定输入图像或视频帧的最大像素阈值。当输入图像或视频的像素在 [min_pixels, max_pixels] 区间内时，模型会按原图进行识别。当输入图像像素大于 max_pixels 时，会将图像进行缩小，直到总像素低于 max_pixels。适用于 Qwen-VL、QVQ 模型。\n\n取值范围：\n- 输入图像：\n  - 当 vl_high_resolution_images 为 False 时：Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL 默认值为 2621440，最大值为 16777216。\n  - 当 vl_high_resolution_images 为 True 时：Qwen3.7、Qwen3.6、Qwen3.5-Omni、Qwen3.5、Qwen3-VL、qwen-vl-max、qwen-vl-max-0813、qwen-vl-plus、qwen-vl-plus-0815、qwen-vl-plus-0710 的 max_pixels 无效，输入图像的最大像素固定为 16777216。\n- 输入视频文件或图像列表：Qwen3.7 系列、Qwen3.6 系列、Qwen3.5 系列、Qwen3.5-Omni、Qwen3-VL 闭源系列、qwen3-vl-235b-a22b-thinking、qwen3-vl-235b-a22b-instruct 默认值为 655360，最大值为 2048000。"
+            "description": "用于设定输入图像或视频帧的最大像素阈值。当输入图像或视频的像素在 [min_pixels, max_pixels] 区间内时，模型会按原图进行识别。当输入图像像素大于 max_pixels 时，会将图像进行缩小，直到总像素低于 max_pixels。适用于 Qwen-VL、QVQ 模型。\n\n取值范围：\n- 输入图像：\n  - 当 vl_high_resolution_images 为 False 时：Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL 默认值为 2621440，最大值为 16777216。\n  - 当 vl_high_resolution_images 为 True 时：Qwen3.7、Qwen3.6、Qwen3.5-Omni、Qwen3.5、Qwen3-VL、qwen-vl-max、qwen-vl-max-0813、qwen-vl-plus、qwen-vl-plus-0815、qwen-vl-plus-0710 的 max_pixels 无效，输入图像的最大像素固定为 16777216。\n- 输入视频文件或图像列表：Qwen3.7 系列、Qwen3.6 系列、Qwen3.5 系列、Qwen3.5-Omni、Qwen3-VL 闭源系列、qwen3-vl-235b-a22b-thinking、qwen3-vl-235b-a22b-instruct 默认值为 655360，最大值为 2048000。\n\n示例值：\n- 输入图像：{\"type\": \"image_url\",\"image_url\": {\"url\":\"https://xxxx.jpg\"},\"max_pixels\": 8388608}\n- 输入视频文件时：{\"type\": \"video_url\",\"video_url\": {\"url\":\"https://xxxx.mp4\"},\"max_pixels\": 655360}\n- 输入图像列表时：{\"type\": \"video\",\"video\": [\"https://xx1.jpg\",...,\"https://xxn.jpg\"],\"max_pixels\": 655360}"
           },
           "total_pixels": {
             "type": "integer",
-            "description": "用于限制从视频中抽取的所有帧的总像素（单帧图像像素 × 总帧数）。如果视频总像素超过此限制，系统将对视频帧进行缩放，但仍会确保单帧图像的像素值在 [min_pixels, max_pixels] 范围内。适用于 Qwen-VL、QVQ 模型。\n\n对于抽帧数量较多的长视频，可适当降低此值以减少 Token 消耗和处理时间，但这可能会导致图像细节丢失。\n\n取值范围：Qwen3.7 系列、Qwen3.6 系列、Qwen3.5 系列默认值和最大值均为 819200000，该值对应 800000 个图像 Token（每 32×32 像素对应 1 个图像 Token）。"
+            "description": "用于限制从视频中抽取的所有帧的总像素（单帧图像像素 × 总帧数）。如果视频总像素超过此限制，系统将对视频帧进行缩放，但仍会确保单帧图像的像素值在 [min_pixels, max_pixels] 范围内。适用于 Qwen-VL、QVQ 模型。\n\n对于抽帧数量较多的长视频，可适当降低此值以减少 Token 消耗和处理时间，但这可能会导致图像细节丢失。\n\n取值范围：Qwen3.7 系列、Qwen3.6 系列、Qwen3.5 系列默认值和最大值均为 819200000，该值对应 800000 个图像 Token（每 32×32 像素对应 1 个图像 Token）。\n\n示例值：\n- 输入视频文件时：{\"type\": \"video_url\",\"video_url\": {\"url\":\"https://xxxx.mp4\"},\"total_pixels\": 134217728}\n- 输入图像列表时：{\"type\": \"video\",\"video\": [\"https://xx1.jpg\",...,\"https://xxn.jpg\"],\"total_pixels\": 134217728}"
           }
         }
       },
