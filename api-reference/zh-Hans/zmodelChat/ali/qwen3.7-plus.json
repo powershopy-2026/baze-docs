@@ -764,17 +764,17 @@
                 "description": "停止词列表。"
               }
             ],
-            "description": "用于指定停止词。当模型生成的文本中出现 stop 指定的字符串或 token_id 时，生成将立即终止。可传入敏感词以控制模型的输出。stop 为数组时，不可将 token_id 和字符串同时作为元素输入。"
+            "description": "用于指定停止词。当模型生成的文本中出现 stop 指定的字符串时，生成将立即终止。\n\n可传入敏感词以控制模型的输出。\n\nstop 为数组时，不可将 token_id 和字符串同时作为元素输入，比如不可以指定为 [\"你好\", 104307]。"
           },
           "seed": {
             "type": "integer",
-            "description": "随机数种子。用于复现生成结果。取值范围：[0, 2^31-1]。",
+            "description": "随机数种子。用于确保在相同输入和参数下生成结果可复现。若调用时传入相同的 seed 且其他参数不变，模型将尽可能返回相同结果。\n\n取值范围：[0, 2^31−1]。\n\nseed 默认值：\n- qwen-vl-max、qvq-max 系列：3407；\n- qwen-vl-max-2024-02-01、qwen-vl-plus：无默认值；\n- 其余模型均为 1234。",
             "minimum": 0,
             "maximum": 2147483647
           },
           "tools": {
             "type": "array",
-            "description": "工具数组，供模型在 Function Calling 中调用。模型判断需要调用工具时，通过 tool_calls 返回工具信息。",
+            "description": "包含一个或多个工具对象的数组，供模型在 Function Calling 中调用。相关文档：Function Calling。\n\n设置 tools 且模型判断需要调用工具时，响应会通过 tool_calls 返回工具信息。\n\n属性：\n- type（必选）：工具类型，当前仅支持设为 function。\n- function（必选）：工具与入参信息。\n  - name（必选）：工具名称。仅允许字母、数字、下划线（_）和短划线（-），最长 64 个 Token。\n  - description（必选）：工具描述信息，帮助模型判断何时以及如何调用该工具。\n  - parameters（可选，默认 {}）：工具的参数描述，需要是一个合法的 JSON Schema。若 parameters 参数为空，表示该工具没有入参（如时间查询工具）。为提高工具调用的准确性，建议传入 parameters。",
             "items": {
               "$ref": "#/components/schemas/Tool"
             }
@@ -808,12 +808,12 @@
                 "description": "强制调用指定工具：{\"type\":\"function\",\"function\":{\"name\":\"the_function_to_call\"}}。思考模式的模型不支持强制调用某个工具。"
               }
             ],
-            "description": "工具选择策略。默认值：auto。可选值：auto（大模型自主选择）、none（不进行工具调用）、{\"type\":\"function\",\"function\":{\"name\":\"...\"}}（强制调用指定工具）。思考模式的模型不支持强制调用某个工具。",
+            "description": "工具选择策略。默认值：auto。若需对某类问题强制指定工具调用方式（例如始终使用某工具或禁用所有工具），可设置此参数。\n\n可选值：\n- auto：大模型自主选择工具策略；\n- none：若不希望进行工具调用，可设定 tool_choice 参数为 none；\n- {\"type\": \"function\", \"function\": {\"name\": \"the_function_to_call\"}}：若希望强制调用某个工具，可设定此参数，其中 the_function_to_call 是指定的工具函数名称。\n\n思考模式的模型不支持强制调用某个工具。",
             "default": "auto"
           },
           "enable_search": {
             "type": "boolean",
-            "description": "是否开启联网搜索。默认值：false。若开启后未联网搜索，可设置 search_options 中的 forced_search 开启强制搜索。可能增加 Token 消耗。非标准参数，需放入 extra_body。",
+            "description": "是否开启联网搜索。相关文档：联网搜索。默认值：false。\n\n可选值：\n- true：开启。若开启后未联网搜索，可优化提示词，或设置 search_options 中的 forced_search 参数开启强制搜索；\n- false：不开启。\n\n启用互联网搜索功能可能会增加 Token 的消耗。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"enable_search\": True}。",
             "default": false
           },
           "response_format": {
@@ -856,12 +856,12 @@
           },
           "parallel_tool_calls": {
             "type": "boolean",
-            "description": "是否开启并行工具调用。默认值：false。",
+            "description": "是否开启并行工具调用。相关文档：并行工具调用。默认值：false。\n\n可选值：\n- true：开启；\n- false：不开启。",
             "default": false
           },
           "search_options": {
             "type": "object",
-            "description": "联网搜索的策略配置。非标准参数，需放入 extra_body。"
+            "description": "联网搜索的策略。相关文档：联网搜索。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"search_options\": xxx}。"
           },
           "enable_thinking": {
             "type": "boolean",
@@ -869,12 +869,12 @@
           },
           "thinking_budget": {
             "type": "integer",
-            "description": "思考过程的最大 Token 数。适用于 Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL、Qwen3、GLM、Kimi 系列模型。默认值为模型最大思维链长度。非标准参数，需放入 extra_body。",
+            "description": "思考过程的最大 Token 数。适用于 Qwen3.7、Qwen3.6、Qwen3.5、Qwen3-VL、Qwen3、GLM（阿里云直供）、Kimi（阿里云直供）系列模型。相关文档：限制思考长度。\n\n默认值为模型最大思维链长度，请参见：模型列表。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"thinking_budget\": xxx}。",
             "minimum": 1
           },
           "reasoning_effort": {
             "type": "string",
-            "description": "控制模型的推理力度，不同模型支持的可选值和默认值不同。DeepSeek-V4、GLM 系列与 kimi/kimi-k3（默认值为 high）：high、max（low/medium 映射为 high，xhigh 映射为 max）。qwen3.8-max-preview（默认值为 xhigh）：xhigh、medium、low。非标准参数，需放入 extra_body。",
+            "description": "控制模型的推理力度，不同模型支持的可选值和默认值不同。\n\nDeepSeek-V4、GLM 系列与 kimi/kimi-k3（默认值为 high）：\n- 可选值：high（高力度推理）、max（最大力度推理）。low 和 medium 映射为 high，xhigh 映射为 max。\n- 适用于 glm-5.2、glm-5.1、glm-5、deepseek-v4-pro、deepseek-v4-flash（阿里云直供）、kimi/kimi-k3（月之暗面直供，仅支持 max）。\n\nqwen3.8-max-preview 模型（默认值为 xhigh）：\n- 可选值：xhigh（高力度推理）、medium（中力度推理）、low（低力度推理）。max 映射为 xhigh，high 映射为 xhigh，minimal 映射为 low，none 映射为 enable_thinking=False。设置上述可选值及映射值以外的值将会报错。\n\n重要：qwen3.8-max-preview 不支持 reasoning_effort 与 thinking_budget 同时设置，同时设置会报错。但两者支持互转：\n- 未设置 thinking_budget 时，reasoning_effort 档位自动映射 thinking_budget：low 对应 4096，medium 对应 16384，xhigh 对应 262144。\n- 未设置 reasoning_effort 时，thinking_budget 自动映射回 reasoning_effort：0~4096 对应 low，4097~16384 对应 medium，16385~262144 对应 xhigh。\n- 两者均未设置时，使用默认 thinking_budget（131072），默认 reasoning_effort（xhigh）。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"reasoning_effort\": \"high\"}。",
             "enum": [
               "low",
               "medium",
@@ -885,12 +885,12 @@
           },
           "tool_stream": {
             "type": "boolean",
-            "description": "仅在 stream=true 时生效。当前仅 Qwen 和 GLM 系列支持。tool_stream=false（默认）：复杂工具参数一次性输出，格式更准确；tool_stream=true：复杂工具参数流式输出，无超时风险。非标准参数，需放入 extra_body。",
+            "description": "仅在 stream=true 时生效。当前仅 Qwen 和 GLM 系列支持。默认值：false。\n\nQwen 系列支持列表：\n- qwen-max 系列：qwen3.7-max 系列的文本模态；\n- qwen-plus 系列：qwen3.7-plus 系列、qwen3.6-plus 系列的文本模态，以及 qwen3.5-plus 系列的全模态；\n- qwen-flash 系列：qwen3.7-flash 系列、qwen3.6-flash 系列、qwen3.5-flash 系列的全模态。\n\nQwen 系列使用参考：tool_stream 仅影响复杂工具参数的情况。普通工具参数只要开启 stream=true 就会流式输出。复杂工具是指工具定义中某些参数类型为 array 或 object。\n- tool_stream=false：复杂工具参数会一次性输出，默认行为，复杂格式会更准确；\n- tool_stream=true：复杂工具参数会流式输出，复杂格式没有超时风险。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"tool_stream\": true}。",
             "default": false
           },
           "enable_code_interpreter": {
             "type": "boolean",
-            "description": "是否开启代码解释器功能。非标准参数，需放入 extra_body。",
+            "description": "是否开启代码解释器功能。相关文档：代码解释器。默认值：false。\n\n可选值：\n- true：开启；\n- false：不开启。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"enable_code_interpreter\": xxx}。",
             "default": false
           },
           "vl_high_resolution_images": {
@@ -907,19 +907,19 @@
           },
           "logprobs": {
             "type": "boolean",
-            "description": "是否返回输出 Token 的对数概率。可选值：true（返回）、false（不返回）。思考阶段生成的内容（reasoning_content）不会返回对数概率。支持的模型：qwen-plus 系列的快照模型、qwen-turbo 系列的快照模型、qwen3-vl-plus 系列模型、qwen3-vl-flash 系列模型、Qwen3 开源模型。",
+            "description": "是否返回输出 Token 的对数概率。默认值：false。\n\n可选值：\n- true：返回；\n- false：不返回。\n\n思考阶段生成的内容（reasoning_content）不会返回对数概率。\n\n支持的模型：\n- qwen-plus 系列的快照模型（不包含稳定版模型）；\n- qwen-turbo 系列的快照模型（不包含稳定版模型）；\n- qwen3-vl-plus 系列模型（包含稳定版模型）；\n- qwen3-vl-flash 系列模型（包含稳定版模型）；\n- Qwen3 开源模型。",
             "default": false
           },
           "top_logprobs": {
             "type": "integer",
-            "description": "指定在每一步生成时，返回模型最大概率的候选 Token 个数。取值范围：[0, 5]。仅当 logprobs 为 true 时生效。默认值：0。",
+            "description": "指定在每一步生成时，返回模型最大概率的候选 Token 个数。默认值：0。\n\n取值范围：[0, 5]。\n\n仅当 logprobs 为 true 时生效。",
             "minimum": 0,
             "maximum": 5,
             "default": 0
           },
           "preserve_thinking": {
             "type": "boolean",
-            "description": "是否将对话历史中 assistant 消息的 reasoning_content 拼接至模型输入。适用于需要模型参考历史思考过程的场景。支持 qwen3.7-max、qwen3.7-plus 及后续快照等模型。开启后，历史 reasoning_content 会计入输入 Token 数量并计费。非标准参数，需放入 extra_body。",
+            "description": "是否将对话历史中 assistant 消息的 reasoning_content 拼接至模型输入。适用于需要模型参考历史思考过程的场景。默认值：false。\n\n目前支持 qwen3.8-max-preview（默认开启）、qwen3.7-max、qwen3.7-max-2026-05-20 以及后续快照、qwen3.6-max-preview、qwen3.7-plus、qwen3.7-plus-2026-05-26、qwen3.6-plus、qwen3.6-plus-2026-04-02、qwen3.7-flash、qwen3.7-flash-2026-07-15、qwen3.6-flash、qwen3.6-flash-2026-04-16、kimi-k2.6（阿里云百炼部署）、kimi-k2.7-code（阿里云百炼部署，默认开启）、kimi/kimi-k2.7-code-highspeed（月之暗面直供，默认开启）、kimi/kimi-k2.7-code（月之暗面直供，默认开启）。\n\n重要：使用 qwen3.8-max-preview 时，preserve_thinking 默认为 true，必须将历史对话中所有的 reasoning_content 完整回传。不支持将 reasoning_content 拼接到 content 字段中回传。若历史消息中不包含 reasoning_content，开启此参数不会报错，正常兼容。\n\n开启后，历史对话中的 reasoning_content 会计入输入 Token 数量并计费。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"preserve_thinking\": True}。",
             "default": false
           },
           "thinking": {
@@ -938,13 +938,13 @@
           },
           "skill": {
             "type": "array",
-            "description": "技能参数，用于 PPT 生成等。仅 qwen-doc-turbo 支持。非标准参数，需放入 extra_body。使用时 stream 必须为 true。",
+            "description": "技能参数，用于启用特定生成技能（如 PPT 生成）。仅 qwen-doc-turbo 模型支持。详细用法请参见生成 PPT。默认值：[]。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"skill\": [...]}。使用 skill 时，stream 必须设置为 true。\n\n属性：\n- type（必选）：技能类型。当前支持：ppt（PPT 生成）。\n- mode（可选）：PPT 生成模式。可选值：general（默认，模板模式，需配合 template_id 使用，生成 HTML 格式的 PPT）、creative（创意模式，无需模板，生成图版 PPT 每页为图片）。\n- template_id（可选）：PPT 模板 ID。与 mode 为 general 或未设置 mode 时配合使用。可选值：news_01（新闻模板）、summary_01（总结模板）、internet_01（互联网模板）、thesis_01（论文模板）。",
             "items": {
               "type": "object",
               "properties": {
                 "type": {
                   "type": "string",
-                  "description": "技能类型：ppt（PPT 生成）。"
+                  "description": "技能类型。当前支持：ppt（PPT 生成）。"
                 },
                 "mode": {
                   "type": "string",
@@ -952,19 +952,23 @@
                     "general",
                     "creative"
                   ],
-                  "description": "PPT 生成模式：general（模板模式，需 template_id）、creative（创意模式）。"
+                  "description": "PPT 生成模式。可选值：general（默认，模板模式，需配合 template_id 使用，生成 HTML 格式的 PPT）、creative（创意模式，无需模板，生成图版 PPT）。"
                 },
                 "template_id": {
                   "type": "string",
-                  "description": "模板 ID：news_01、summary_01、internet_01、thesis_01。"
+                  "description": "PPT 模板 ID。可选值：news_01（新闻模板）、summary_01（总结模板）、internet_01（互联网模板）、thesis_01（论文模板）。"
                 }
               }
             }
           },
           "clear_thinking": {
             "type": "boolean",
-            "description": "控制多轮对话中是否忽略历史 reasoning_content。仅 GLM 5.2/5.1/5/4.7 支持。非标准参数，需放入 extra_body。true：忽略。false（默认）：保留。",
+            "description": "用于控制多轮对话中是否将历史轮次的 reasoning_content（思考过程）作为上下文输入给模型。仅 GLM 系列 glm-5.2、glm-5.1、glm-5、glm-4.7 模型支持。默认值：false。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"enable_thinking\": True,\"clear_thinking\": True}。\n\n- true：忽略历史轮次的 reasoning_content，仅使用可见文本、工具调用与结果等非推理内容作为上下文输入，可降低上下文长度与成本；\n- false（默认）：保留历史轮次的 reasoning_content 并随上下文一同提供给模型。若希望启用 Preserved Thinking，必须在 messages 中完整、未修改、按原顺序透传历史 reasoning_content，缺失、裁剪、改写或重排会导致效果下降或无法生效。",
             "default": false
+          },
+          "X-DashScope-DataInspection": {
+            "type": "string",
+            "description": "在千问 API 的内容安全能力基础上，是否进一步识别输入输出内容的违规信息。取值如下：\n- {\"input\":\"cip\",\"output\":\"cip\"}：进一步识别；\n- 不设置该参数：不进一步识别。\n\n通过 HTTP 调用时请放入请求头：-H \"X-DashScope-DataInspection: {\\\"input\\\": \\\"cip\\\", \\\"output\\\": \\\"cip\\\"}\"；\n\n通过 Python SDK 调用时请通过 extra_headers 配置：extra_headers={'X-DashScope-DataInspection': '{\"input\":\"cip\",\"output\":\"cip\"}'}。\n\n不支持通过 Node.js SDK 设置。"
           }
         }
       },
