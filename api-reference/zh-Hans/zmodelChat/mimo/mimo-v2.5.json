@@ -12,12 +12,12 @@
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Baze API 服务地址"
+      "description": "baze API 服务端点"
     }
   ],
   "tags": [
     {
-      "name": "MIMO Chat",
+      "name": "MIMO 对话",
       "description": "MIMO 文本对话"
     }
   ],
@@ -25,10 +25,10 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "mimo-v2.5",
-        "description": "调用 MIMO chat completions 能力",
-        "operationId": "mimoChatCompletions_mimo_v2_5",
+        "description": "调用 MIMO 对话补全能力",
+        "operationId": "mimoChatCompletions_mimo_v2_5_zh",
         "tags": [
-          "MIMO Chat"
+          "MIMO 对话"
         ],
         "requestBody": {
           "required": true,
@@ -38,30 +38,265 @@
                 "$ref": "#/components/schemas/ChatCompletionRequest"
               },
               "examples": {
-                "default": {
+                "基础调用": {
                   "summary": "基础文本对话",
                   "value": {
                     "model": "mimo-v2.5",
                     "messages": [
                       {
-                        "content": "你是MiMo",
-                        "role": "system"
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
                       },
                       {
-                        "content": "介绍你自己",
-                        "role": "user"
+                        "role": "user",
+                        "content": "请介绍一下你自己"
                       }
                     ],
                     "max_completion_tokens": 1024,
                     "temperature": 1,
                     "top_p": 0.95,
                     "stream": false,
+                    "stop": null,
                     "frequency_penalty": 0,
                     "presence_penalty": 0,
                     "thinking": {
                       "type": "disabled"
-                    },
+                    }
+                  }
+                },
+                "流式响应": {
+                  "summary": "流式对话响应",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "请介绍一下你自己"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "stream": true
+                  }
+                },
+                "函数调用": {
+                  "summary": "带函数调用的对话",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "波士顿今天天气怎么样？"
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_current_weather",
+                          "description": "获取指定位置的当前天气",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "location": {
+                                "type": "string",
+                                "description": "城市和省份，例如 北京"
+                              },
+                              "unit": {
+                                "type": "string",
+                                "enum": [
+                                  "celsius",
+                                  "fahrenheit"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "location"
+                            ]
+                          }
+                        }
+                      }
+                    ],
                     "tool_choice": "auto"
+                  }
+                },
+                "联网搜索": {
+                  "summary": "带联网搜索的对话",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "请介绍一下雷军"
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "web_search",
+                        "max_keyword": 3,
+                        "force_search": true,
+                        "limit": 1,
+                        "user_location": {
+                          "type": "approximate",
+                          "country": "China",
+                          "region": "Hubei",
+                          "city": "Wuhan"
+                        }
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "temperature": 1,
+                    "top_p": 0.95,
+                    "stream": false,
+                    "stop": null,
+                    "frequency_penalty": 0,
+                    "presence_penalty": 0,
+                    "thinking": {
+                      "type": "disabled"
+                    }
+                  }
+                },
+                "图像输入": {
+                  "summary": "带图像输入的对话",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下图片的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "音频输入": {
+                  "summary": "带音频输入的对话",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下音频的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "视频输入": {
+                  "summary": "带视频输入的对话",
+                  "value": {
+                    "model": "mimo-v2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下视频的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "结构化输出": {
+                  "summary": "带结构化输出的对话",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "我叫张三，今年28岁，邮箱是zhangsan@test.com，生日是1996年5月12日。请按照以下JSON格式返回结果。注意：生日必须使用YYYY-MM-DD格式。{\"name\": \"string or null\", \"age\": \"int or null\", \"email\": \"string or null\", \"birthday\": \"string or null\"}"
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "response_format": {
+                      "type": "json_object"
+                    }
+                  }
+                },
+                "深度思考": {
+                  "summary": "带深度思考的对话",
+                  "value": {
+                    "model": "mimo-v2.5-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "用三句话介绍机器学习。"
+                      }
+                    ],
+                    "max_completion_tokens": 1024,
+                    "thinking": {
+                      "type": "enabled"
+                    }
                   }
                 }
               }
@@ -70,34 +305,290 @@
         },
         "responses": {
           "200": {
-            "description": "调用成功。非流式模式返回 JSON；流式模式返回 SSE 事件流。",
+            "description": "成功。非流式模式返回 JSON；流式模式返回 SSE 事件流。",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ChatCompletionResponse"
                 },
                 "examples": {
-                  "success": {
+                  "基础调用": {
                     "summary": "非流式成功响应",
                     "value": {
-                      "id": "test",
-                      "object": "chat.completion",
-                      "created": 1782805310,
-                      "model": "mimo-v2.5",
+                      "id": "8b51f9e0515949cb8207fbd35ea6ea5c",
                       "choices": [
                         {
+                          "finish_reason": "stop",
                           "index": 0,
                           "message": {
+                            "content": "你好！我是 MiMo，由小米 LLM Core 团队创建的小米 AI 助手。我来这里聊天、回答问题以及协助各种任务——无论是提供信息、集思广益，还是进行友好的对话。有什么问题尽管问我，我会尽力帮忙！😊",
                             "role": "assistant",
-                            "content": "你好！我是MiMo"
-                          },
-                          "finish_reason": "stop"
+                            "tool_calls": null
+                          }
                         }
                       ],
+                      "created": 1776848906,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
                       "usage": {
-                        "prompt_tokens": 10,
-                        "completion_tokens": 5,
-                        "total_tokens": 15
+                        "completion_tokens": 72,
+                        "prompt_tokens": 57,
+                        "total_tokens": 129,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 0
+                        },
+                        "prompt_tokens_details": null
+                      }
+                    }
+                  },
+                  "函数调用": {
+                    "summary": "函数调用响应",
+                    "value": {
+                      "id": "8778784df68043e39a2df03258ddeaa5",
+                      "choices": [
+                        {
+                          "finish_reason": "tool_calls",
+                          "index": 0,
+                          "message": {
+                            "content": "",
+                            "role": "assistant",
+                            "tool_calls": [
+                              {
+                                "id": "call_b837e211b7764dab9b56f4d8",
+                                "function": {
+                                  "arguments": "{\"location\": \"Boston, MA\", \"unit\": \"celsius\"}",
+                                  "name": "get_current_weather"
+                                },
+                                "type": "function"
+                              }
+                            ],
+                            "reasoning_content": "The user is asking about the current weather in Boston. I should use the get_current_weather function to get this information. Boston could refer to Boston, MA. I'll call the function with location \"Boston, MA\" and use celsius as the unit since that's more commonly used in many places, but actually the user didn't specify a unit. Looking at the function parameters, I can choose celsius or fahrenheit. Since Boston is in the US, maybe fahrenheit would be more appropriate? Actually, I should just pick a default or ask. But the instructions say not to ask about optional parameters if there are defaults. There's no default specified in the schema, so I should choose one. I'll go with celsius as it's more standard internationally. Let me call the function."
+                          }
+                        }
+                      ],
+                      "created": 1776849125,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 196,
+                        "prompt_tokens": 349,
+                        "total_tokens": 545,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 161
+                        },
+                        "prompt_tokens_details": null
+                      }
+                    }
+                  },
+                  "联网搜索": {
+                    "summary": "联网搜索响应",
+                    "value": {
+                      "id": "828d5db56ff748d8b4623d1972c8eca2",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "根据搜索结果，以下是关于雷军（Jun Lei）的介绍：\n\n雷军是中国著名的企业家和科技行业领袖。他在科技行业拥有30年的创业经验，是中国互联网的代表人物和知名企业家。\n\n雷军1969年出生于湖北仙桃。他早年就开始创业，1992年参与创办金山软件，1998年出任金山软件CEO，同年还创办了卓越网。2007年金山软件上市后，他卸任总裁兼CEO职务，担任副董事长。\n\n随后几年，雷军积极从事天使投资，投资了凡客诚品、多玩、优视科技等多家创新企业。2010年4月6日，他决定重新创业，成立了小米公司，并于2011年8月16日正式发布了第一款小米手机。\n\n此外，雷军于2011年7月重返金山，掌管网游与毒霸业务，并于2011年7月11日正式担任金山软件董事长。他的职业生涯还包括投资水羊股份、易点云、药师帮、车车等公司的案例。",
+                            "role": "assistant",
+                            "annotations": [
+                              {
+                                "type": "url_citation",
+                                "url": "https://en.shunwei.com/team",
+                                "title": "Team – Shunwei",
+                                "summary": "Jun LEI Founding Partner & Chairman Mr. Lei Jun, with 30 years of entrepreneurial experience in the science and technology industry, is a representative of China's Internet and a well-known entrepreneShe has been involved in investment cases such as Shuiyang Shares (SZ:300740), Edianyun (HK:02416), Yaoshibang (HK:09885), Cheche, Shansong, Royal Xiaohu, Yangteng Innovation, Zhiketong, Yinghe, Chaya",
+                                "site_name": "en.shunwei.com",
+                                "publish_time": "2024-10-26T07:37:04+08:00",
+                                "logo_url": "https://th.bochaai.com/favicon?domain_url=https://en.shunwei.com/team"
+                              },
+                              {
+                                "type": "url_citation",
+                                "url": "https://max.book118.com/html/2023/0519/7145010064005110.shtm",
+                                "title": "小米公司介绍-20230519110336.pptx-原创力文档",
+                                "summary": "小米公司介绍第1页/共25页小米创始人:雷军Millet founder: Lei Jun1969年出生于湖北仙桃,于1992年参与创办金山软件,1998年出任金山软件CEO,1998年创办了卓越网。1969 born in Hubei Xiantao, in 1992, and participated in the founding of Kingsoft, 1998 served as CEO of golden hill software. In 1998 founded the network of excellence.2007年,金山软件上市后,雷军卸任金山软件总裁兼CEO职务,担任副董事长。2007, Kingsoft listing, Kingsoft chairman and CEO Lei Juns office, served as vice chairman.之后几年,雷军作为天使投资人,投资了凡客诚品、多玩、优视科技等多家创新型企业。After a few years, Lei Jun as an angel investor, invested more, Eslite, superior technology and a number of innovative enterprises.2010年4月6日,雷军选择重新创业,建立了小米公司,并于2011年8月16日正式发布小米手机。In April 6, 2010, Lei choose to venture, a millet company, and officially released millet mobile phone in August 16, 2011.2011年7月,雷军重返金山执掌网游与毒霸;2011年7月11日,正式担任金山软件董事长。July 2011, Lei Ju",
+                                "site_name": "原创力文档",
+                                "publish_time": "2023-05-23T19:49:37+08:00",
+                                "logo_url": "https://th.bochaai.com/favicon?domain_url=https://max.book118.com/html/2023/0519/7145010064005110.shtm"
+                              }
+                            ],
+                            "tool_calls": null
+                          }
+                        }
+                      ],
+                      "created": 1776849240,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 387,
+                        "prompt_tokens": 1222,
+                        "total_tokens": 1609,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 0
+                        },
+                        "prompt_tokens_details": null,
+                        "web_search_usage": {
+                          "tool_usage": 3,
+                          "page_usage": 2
+                        }
+                      }
+                    }
+                  },
+                  "图像输入": {
+                    "summary": "图像输入响应",
+                    "value": {
+                      "id": "e27ffa1d3e31434daa71d6b6a83f6e38",
+                      "choices": [
+                        {
+                          "finish_reason": "length",
+                          "index": 0,
+                          "message": {
+                            "content": "根据提供的图片，以下是内容的详细描述：\n\n**整体氛围**\n这张图片描绘了一个宁静、神奇且郁郁葱葱的森林场景。它具有一种空灵的气质，可能是通过数字艺术技术或人工智能生成增强的，其特点在于",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Here's a thinking process that leads to the description:\n\n1.  **Analyze the Request:**\n*   **Input:** An image of a forest scene with a stream, sunlight, and trees.\n*   **Task:** Describe the content of the image.\n\n2.  **Initial Impression & Overall Mood:**\n*   The image depicts a serene, magical, and lush forest.\n*   The lighting is dramatic, with sunbeams filtering through the canopy.\n*   There's a sense of tranquility and nature in its undisturbed state.\n*   The style looks somewhat photorealistic but possibly enhanced or AI-generated due to the perfect lighting and composition.\n\n3.  **Break Down Visual Elements:**\n\n*   **Foreground:**\n*   *Left side:* Large, detailed ferns. They are vibrant green and look wet or dewy.\n*   *Bottom center/right:* A stream or small river flowing towards the viewer.\n*   *Water:* The water is clear but reflects the light, creating a shimmering effect. It flows over smooth, moss-covered rocks.\n*   *Rocks:* Several large, rounded stones are visible in the immediate foreground, covered in thick green moss.\n\n*   **Mid-ground:**\n*   *Trees:* Massive, ancient-looking trees with thick, gnarled trunks and exposed roots. The bark is textured and dark.\n*   *Vegetation:* More ferns, bushes, and mossy ground cover lining the banks of the stream.\n*   *Stream path:* The stream winds back into the forest, guiding the eye.\n\n*   **Background:**\n*   *Forest density:* The trees become denser and fade into a misty or foggy atmosphere.\n*   *Lighting:* This is the most striking feature. \"God rays\" or crepuscular rays are streaming down from the upper center/right, cutting through the mist and illuminating the scene.\n*   *Particles:* There are tiny specks floating in the light beams, looking like dust motes, pollen, or perhaps magical sparkles/fireflies.\n\n4.  **Structure the Description:**\n*   **Introduction:** General summary of the scene (misty forest, stream, sunlight).\n*   **The Lighting (Key Feature):** Describe the sunbeams and atmosphere.\n*   **The Vegetation (Flora):** Mention the ferns, moss, and ancient trees.\n*   **The Water (Hydrography):** Describe the stream, rocks, and reflections.\n*   **Composition/Atmosphere:** Conclude with the overall feeling (peaceful, ethereal).\n\n5.  **Drafting the Description (Iterative refinement):**\n\n*   *Draft 1 (Mental):* It's a forest with a river. Big trees on the sides. Sun is shining down in beams. There are ferns in the front left. The rocks are mossy. It looks magical.\n\n*   *Draft 2 (More detail):* A lush forest scene. A stream flows through the center over mossy rocks. On the left, there are large ferns. The trees are old with twisted branches. The sun is breaking through the canopy, creating bright rays of light. There is mist in the background. It looks like a fantasy setting.\n\n*   *Draft 3 (Polished & Descriptive - closer to final output):*\n*   Start with the atmosphere: \"This image depicts a serene and enchanting forest scene...\"\n*   Focus on the light: \"...dominated by dramatic shafts of sunlight (god rays) filtering through the dense canopy...\"\n*   Describe the water: \"A gentle stream flows through the center, winding over smooth, moss-covered stones...\"\n*   Describe the plants: \"Lush vegetation is everywhere, particularly large, detailed ferns in the foreground on the left...\"\n*   Describe the trees: \"Ancient trees with thick, gnarled trunks and exposed roots frame the scene...\"\n\n6.  **Final Polish (Reviewing against the image):**\n*   *Check:* Did I mention the moss? Yes.\n*   *Check:* Did I mention the floating particles? Yes, add that detail about the \"sparkles\" or dust motes.\n*   *Check:* Is the perspective correct? Yes, low angle looking up the stream.\n\n7.  **Final Output Generation:** (This matches the provided good response.)\n*   \"The image displays a breathtaking, ethereal forest scene...\"\n*   Break it down by lighting, vegetation, and water.\n*   Mention the color palette (greens, browns, golden light).\n\n8.  **Formatting:** Use bullet points or paragraphs for readability. (I will use a mix of general description and specific details)."
+                          }
+                        }
+                      ],
+                      "created": 1776849330,
+                      "model": "mimo-v2.5",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 1024,
+                        "prompt_tokens": 1085,
+                        "total_tokens": 2109,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 971
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 5,
+                          "image_tokens": 1024
+                        }
+                      }
+                    }
+                  },
+                  "音频输入": {
+                    "summary": "音频输入响应",
+                    "value": {
+                      "id": "87ee7097c0f7491ea27429efcc21cc26",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Good morning. Could you tell me what the weather will be like today?"
+                          }
+                        }
+                      ],
+                      "created": 1776849418,
+                      "model": "mimo-v2.5",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 17,
+                        "prompt_tokens": 86,
+                        "total_tokens": 103,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 15
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 25,
+                          "cached_tokens": 45
+                        }
+                      }
+                    }
+                  },
+                  "视频输入": {
+                    "summary": "视频输入响应",
+                    "value": {
+                      "id": "d2c3bd5a08114f78a525e09b69308dc9",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "视频中有一只白色小猫，长着明亮的蓝眼睛，坐在抛光木地板上。它靠近一扇挂着米色窗帘的窗户，阳光照进来，在地板上投下阴影。背景中可见一盆绿色的盆栽植物，类似于龟背竹。小猫好奇地环顾四周，然后张开嘴喵喵叫。",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user wants a description of the video content.\n\n1.  **Analyze the video**:\n*   **Subject**: A white kitten with blue eyes.\n*   **Setting**: Indoors, near a window. There are beige curtains, a wooden floor, and a green potted plant (Monstera) in the background.\n*   **Action**: The kitten is sitting on the wooden floor. It's looking slightly to the side. It meows. The lighting is warm and sunny, creating shadows on the floor.\n*   **Timestamps**:\n*   00:00 - 00:03: The kitten sits still, looking around, then opens its mouth to meow. The sun casts shadows.\n\n2.  **Synthesize the description**:\n*   Start with the main subject: A white kitten with blue eyes.\n*   Describe the environment: Sitting on a wooden floor near a window with beige curtains. Sunlight is streaming in. A plant is visible in the background.\n*   Describe the action: The kitten looks around and meows.\n*   Mention the atmosphere: Warm, peaceful, sunny.\n\n3.  **Draft the response**:\nThe video features a close-up of a white kitten with striking blue eyes sitting on a polished wooden floor. It is positioned near a window draped with light beige curtains. Sunlight streams through the window, casting long shadows on the floor and illuminating the kitten's fur. In the background, a green potted plant, resembling a Monstera, adds a touch of nature to the indoor setting. The kitten looks around curiously and then lets out a meow. The scene is bright and peaceful.\n\n4.  **Refine based on specific details**:\n*   The kitten is white.\n*   Blue eyes.\n*   Wooden floor.\n*   Window with curtains.\n*   Plant in background.\n*   Sunlight/Shadows.\n*   Action: Meowing.\n\n5.  **Final Polish**: Combine these points into a coherent paragraph. The video shows a white kitten with blue eyes sitting on a wooden floor in a sunlit room. It's near a window with curtains and a plant in the background. The kitten meows.\n\nLet's stick to a descriptive summary.\n\n*   **Subject**: White kitten, blue eyes.\n*   **Location**: Wooden floor, near window, curtains, plant.\n*   **Action**: Sitting, looking, meowing.\n*   **Lighting**: Sunny, warm.\n\nConstruct the final output."
+                          }
+                        }
+                      ],
+                      "created": 1776849614,
+                      "model": "mimo-v2.5",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 590,
+                        "prompt_tokens": 1260,
+                        "total_tokens": 1850,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 514
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 19,
+                          "cached_tokens": 45,
+                          "video_tokens": 1144
+                        }
+                      }
+                    }
+                  },
+                  "结构化输出": {
+                    "summary": "结构化输出响应",
+                    "value": {
+                      "id": "f88d3e6c6b0043b09871487b5c52e4b4",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "{\"name\": \"Zhang San\", \"age\": 28, \"email\": \"zhangsan@test.com\", \"birthday\": \"1996-05-12\"}",
+                            "role": "assistant",
+                            "tool_calls": null
+                          }
+                        }
+                      ],
+                      "created": 1776850034,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 41,
+                        "prompt_tokens": 145,
+                        "total_tokens": 186,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 0
+                        },
+                        "prompt_tokens_details": null
+                      }
+                    }
+                  },
+                  "深度思考": {
+                    "summary": "深度思考响应",
+                    "value": {
+                      "id": "7f2cc80f34b541c49f5fcd40ad34bc73",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "机器学习是人工智能的一个领域，它使计算机能够从数据中学习并提高性能，而无需为每项任务进行显式编程。它使用算法识别模式，并基于输入信息做出决策或预测。这种方法驱动着从个性化推荐到高级医疗诊断等一切应用。",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Hmm, the user is asking for a concise introduction to machine learning in exactly three sentences. This seems straightforward but requires careful wording to cover the core concepts without oversimplifying or overcomplicating.  \\n\\nI should start with the basic definition, then mention how it learns from data, and end with its purpose and real-world relevance. The response should flow naturally from \\\"what it is\\\" to \\\"how it works\\\" to \\\"why it matters.\\\"  \\n\\nKeeping it neutral and factual works best here—no need for examples or jargon. Just three clear, standalone sentences that collectively give a solid overview."
+                          }
+                        }
+                      ],
+                      "created": 1776850089,
+                      "model": "mimo-v2.5-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 179,
+                        "prompt_tokens": 60,
+                        "total_tokens": 239,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 121
+                        },
+                        "prompt_tokens_details": null
                       }
                     }
                   }
@@ -105,20 +596,19 @@
               },
               "text/event-stream": {
                 "schema": {
-                  "type": "string",
-                  "description": "SSE 数据流。每个 `data:` 事件都可按 DeepSeek/OpenAI 兼容的 Chat Completions Chunk 解析；结束时通常返回 `data: [DONE]`。当请求设置 `stream_options.include_usage=true` 时，结束前会额外返回带 `usage` 的 chunk。"
+                  "$ref": "#/components/schemas/ChatCompletionChunk"
                 },
                 "examples": {
-                  "stream": {
-                    "summary": "流式响应片段",
-                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"正在调用天气工具\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                  "流式响应": {
+                    "summary": "流式响应 SSE 事件",
+                    "value": "data: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":null,\"matched_stop\":null}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\"Okay, the user\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" is asking\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" me\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\n...\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\"'m ready\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\" to help!\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":null,\"content\":null,\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":\"stop\",\"matched_stop\":151645}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":{\"completion_tokens\":123,\"prompt_tokens\":55,\"total_tokens\":178,\"completion_tokens_details\":{\"reasoning_tokens\":71},\"prompt_tokens_details\":null}}\n\ndata: [DONE]"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "请求参数不合法。",
+            "description": "请求参数无效。",
             "content": {
               "application/json": {
                 "schema": {
@@ -129,7 +619,7 @@
                     "summary": "参数错误",
                     "value": {
                       "error": {
-                        "message": "messages is required",
+                        "message": "messages 是必需的",
                         "type": "invalid_request_error",
                         "param": "messages",
                         "code": "bad_request_body"
@@ -141,7 +631,7 @@
             }
           },
           "401": {
-            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "description": "身份验证失败，例如缺少或无效的 token。",
             "content": {
               "application/json": {
                 "schema": {
@@ -152,7 +642,7 @@
                     "summary": "未授权",
                     "value": {
                       "error": {
-                        "message": "无效的令牌",
+                        "message": "无效的 token",
                         "type": "api_error",
                         "code": "access_denied",
                         "param": ""
@@ -164,7 +654,7 @@
             }
           },
           "429": {
-            "description": "触发速率限制或账户额度不足。",
+            "description": "触发频率限制或账户额度不足。",
             "content": {
               "application/json": {
                 "schema": {
@@ -172,10 +662,10 @@
                 },
                 "examples": {
                   "quota_exceeded": {
-                    "summary": "额度不足或速率受限",
+                    "summary": "额度不足或频率受限",
                     "value": {
                       "error": {
-                        "message": "当前账户额度不足，请稍后重试",
+                        "message": "账户额度不足，请稍后重试",
                         "type": "api_error",
                         "code": "insufficient_user_quota",
                         "param": ""
@@ -187,7 +677,7 @@
             }
           },
           "500": {
-            "description": "服务端处理请求时发生内部错误。",
+            "description": "处理请求时发生内部服务器错误。",
             "content": {
               "application/json": {
                 "schema": {
@@ -198,7 +688,7 @@
                     "summary": "内部处理失败",
                     "value": {
                       "error": {
-                        "message": "服务内部处理失败，请稍后重试",
+                        "message": "内部处理失败，请稍后重试",
                         "type": "api_error",
                         "code": "gen_relay_info_failed",
                         "param": ""
@@ -224,7 +714,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "API Token",
-        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+        "description": "在请求头中传递 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {
@@ -234,11 +724,11 @@
           "model",
           "messages"
         ],
-        "description": "DeepSeek chat completions 请求体。",
+        "description": "MIMO 对话补全请求体。",
         "properties": {
           "model": {
             "type": "string",
-            "description": "使用的模型的 ID",
+            "description": "要使用的模型 ID",
             "enum": [
               "mimo-v2.5"
             ],
@@ -246,22 +736,40 @@
           },
           "messages": {
             "type": "array",
-            "description": "对话的消息列表。",
+            "description": "包含到目前为止对话的消息列表。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
             }
           },
-          "thinking": {
-            "$ref": "#/components/schemas/ThinkingConfig"
+          "frequency_penalty": {
+            "type": "number",
+            "nullable": true,
+            "default": 0,
+            "minimum": -2,
+            "maximum": 2,
+            "description": "取值范围在 -2.0 到 2.0 之间的数值。如果该值为正，那么新 token 会根据其在已有文本中的出现频率受到相应的惩罚，降低模型重复相同内容的可能性。"
           },
-          "stream": {
-            "type": "boolean",
-            "default": false,
-            "description": "如果设置为 true，将会以 SSE（server-sent events）的形式以流式发送消息增量。消息流以 `data: [DONE]` 结尾。"
+          "presence_penalty": {
+            "type": "number",
+            "nullable": true,
+            "default": 0,
+            "minimum": -2,
+            "maximum": 2,
+            "description": "取值范围在 -2.0 到 2.0 之间的数值。如果该值为正，那么新 token 会根据其是否已在已有文本中出现受到相应的惩罚，从而增加模型谈论新主题的可能性。"
+          },
+          "max_completion_tokens": {
+            "type": "integer",
+            "nullable": true,
+            "description": "对话补全中可以生成的 token 数的上限，包括可见的输出 token 数和推理 token 数。mimo-v2.5 的默认值为 32768。所需范围：[1, 131072]"
+          },
+          "response_format": {
+            "$ref": "#/components/schemas/ResponseFormat"
           },
           "stop": {
-            "description": "一个 string 或最多包含 16 个 string 的 list，在遇到这些词时，API 将停止生成更多的 token。",
+            "description": "最多 4 个序列，当 API 生成到这些序列时会停止继续生成 token。返回的文本中不会包含这些停止序列。",
+            "nullable": true,
+            "default": null,
             "oneOf": [
               {
                 "type": "string"
@@ -270,58 +778,52 @@
                 "type": "array",
                 "items": {
                   "type": "string"
-                }
+                },
+                "maxItems": 4
               }
             ]
           },
-          "response_format": {
-            "$ref": "#/components/schemas/ResponseFormat"
+          "stream": {
+            "type": "boolean",
+            "nullable": true,
+            "default": false,
+            "description": "如果设置为 true，模型的响应数据会在生成过程中通过 SSE（server-sent events）的形式流式传输到客户端。"
+          },
+          "thinking": {
+            "$ref": "#/components/schemas/ThinkingConfig"
           },
           "temperature": {
             "type": "number",
             "minimum": 0,
             "maximum": 1.5,
             "default": 1,
-            "description": "采样温度"
-          },
-          "top_p": {
-            "type": "number",
-            "minimum": 0.01,
-            "maximum": 1,
-            "default": 1,
-            "description": "核采样概率"
-          },
-          "tools": {
-            "type": "array",
-            "description": "模型可能会调用的 tool 的列表。目前，仅支持 function 作为工具。使用此参数来提供以 JSON 作为输入参数的 function 列表。最多支持 128 个 function。",
-            "items": {
-              "$ref": "#/components/schemas/ToolDefinition"
-            }
+            "description": "要使用的采样温度，介于 0 和 1.5 之间。较高的值（如 0.8）会使输出更加随机，而较低的值（如 0.2）会使其更加集中和确定性。我们通常建议更改此值或 top_p，但不要同时更改。在思考模式下，mimo-v2.5-pro、mimo-v2.5 模型不支持自定义 temperature 参数。即使传入该参数，实际生效值也会被模型强制采用其推荐默认值 1.0。"
           },
           "tool_choice": {
             "$ref": "#/components/schemas/ToolChoice"
           },
-          "max_completion_tokens": {
-            "type": "integer",
-            "description": "最大生成 token 数"
-          },
-          "frequency_penalty": {
+          "top_p": {
             "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "description": "频率惩罚"
+            "default": 0.95,
+            "minimum": 0.01,
+            "maximum": 1,
+            "description": "核采样的概率阈值，用于控制模型生成文本的多样性。top_p 值越高，生成的文本多样性越强；top_p 值越低，生成的文本确定性越高。由于 temperature 和 top_p 均用于控制生成文本的多样性，建议仅设置其中一个参数。在思考模式下，mimo-v2.5-pro、mimo-v2.5 模型不支持自定义 top_p 参数。即使传入该参数，实际生效值也会被模型强制采用其推荐默认值 0.95。"
           },
-          "presence_penalty": {
-            "type": "number",
-            "minimum": -2,
-            "maximum": 2,
-            "description": "存在惩罚"
+          "tools": {
+            "type": "array",
+            "description": "模型可能调用的工具列表。目前支持 function（函数）和 web_search（联网搜索）两种工具类型。注意：在思考模式下的多轮工具调用过程中，模型会在返回 tool_calls 字段的同时返回 reasoning_content 字段。若要继续对话，建议在后续每次请求的 messages 数组中保留所有历史 reasoning_content，以获得最佳表现。",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            }
           }
         }
       },
       "Message": {
-        "description": "对话的消息列表中的单条消息。根据 role 的不同，分为 system、user、assistant、tool 四种消息类型。",
+        "description": "对话中的一条消息。根据角色的不同，分为五种消息类型：developer、system、user、assistant 和 tool。",
         "oneOf": [
+          {
+            "$ref": "#/components/schemas/DeveloperMessage"
+          },
           {
             "$ref": "#/components/schemas/SystemMessage"
           },
@@ -337,122 +839,152 @@
         ]
       },
       "SystemMessage": {
-        "title": "System message",
+        "title": "System message · object",
         "type": "object",
         "required": [
           "role",
           "content"
         ],
-        "description": "System message。该消息的发起角色为 system。",
+        "description": "系统消息。此消息的角色为 system。",
         "properties": {
           "content": {
-            "type": "string",
-            "description": "system 消息的内容。"
+            "description": "系统消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/TextContentPartArray"
+              }
+            ]
           },
           "role": {
             "type": "string",
             "enum": [
               "system"
             ],
-            "description": "该消息的发起角色，其值为 system。"
+            "description": "消息作者的角色，为 system。"
           },
           "name": {
             "type": "string",
-            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+            "description": "参与者的可选名称，提供给模型以区分同一角色的不同参与者。"
           }
         }
       },
       "UserMessage": {
-        "title": "User message",
+        "title": "User message · object",
         "type": "object",
         "required": [
           "role",
           "content"
         ],
-        "description": "User message。该消息的发起角色为 user。",
+        "description": "用户消息。此消息的角色为 user。",
         "properties": {
           "content": {
-            "type": "string",
-            "description": "user 消息的内容。"
+            "description": "用户消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/ContentPartArray"
+              }
+            ]
           },
           "role": {
             "type": "string",
             "enum": [
               "user"
             ],
-            "description": "该消息的发起角色，其值为 user。"
+            "description": "消息作者的角色，为 user。"
           },
           "name": {
             "type": "string",
-            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+            "description": "参与者的可选名称，提供给模型以区分同一角色的不同参与者。"
           }
         }
       },
       "AssistantRequestMessage": {
-        "title": "Assistant message",
+        "title": "Assistant message · object",
         "type": "object",
         "required": [
           "role"
         ],
-        "description": "Assistant message。该消息的发起角色为 assistant。",
+        "description": "助手消息。此消息的角色为 assistant。",
         "properties": {
           "content": {
-            "type": "string",
-            "nullable": true,
-            "description": "assistant 消息的内容。"
+            "description": "助手消息的内容。除非指定了 tool_calls，否则为必需。",
+            "oneOf": [
+              {
+                "type": "string",
+                "nullable": true,
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/TextContentPartArray"
+              }
+            ]
           },
           "role": {
             "type": "string",
             "enum": [
               "assistant"
             ],
-            "description": "该消息的发起角色，其值为 assistant。"
+            "description": "消息作者的角色，为 assistant。"
           },
           "name": {
             "type": "string",
-            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
+            "description": "参与者的可选名称，提供给模型以区分同一角色的不同参与者。"
           },
-          "prefix": {
-            "type": "boolean",
-            "description": "(Beta) 设置此参数为 true，来强制模型在其回答中以此 assistant 消息中提供的前缀内容开始。"
-          },
-          "reasoning_content": {
-            "type": "string",
-            "nullable": true,
-            "description": "(Beta) 用于思考模式下在对话前缀续写功能下，作为最后一条 assistant 思维链内容的输入。使用此功能时，prefix 参数必须设置为 true。"
+          "tool_calls": {
+            "type": "array",
+            "description": "模型生成的工具调用，如函数调用。",
+            "items": {
+              "$ref": "#/components/schemas/ToolCallMessage"
+            }
           }
         }
       },
       "ToolMessage": {
-        "title": "Tool message",
+        "title": "Tool message · object",
         "type": "object",
         "required": [
           "role",
           "content",
           "tool_call_id"
         ],
-        "description": "Tool message。该消息的发起角色为 tool。",
+        "description": "工具消息。此消息的角色为 tool。",
         "properties": {
           "role": {
             "type": "string",
             "enum": [
               "tool"
             ],
-            "description": "该消息的发起角色，其值为 tool。"
+            "description": "消息作者的角色，为 tool。"
           },
           "content": {
-            "type": "string",
-            "description": "tool 消息的内容。"
+            "description": "工具消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "工具消息的文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/TextContentPartArray"
+              }
+            ]
           },
           "tool_call_id": {
             "type": "string",
-            "description": "此消息所响应的 tool call 的 ID。"
+            "description": "此消息所响应的工具调用的 ID。"
           }
         }
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "控制思考模式与非思考模式的转换。",
+        "description": "这个参数用于控制模型是否启用思维链。注意：在思考模式下的多轮工具调用过程中，模型会在返回 tool_calls 字段的同时返回 reasoning_content 字段。若要继续对话，建议在后续每次请求的 messages 数组中保留所有历史 reasoning_content，以获得最佳表现。在思考模式下，mimo-v2.5-pro、mimo-v2.5 模型不支持自定义 temperature 和 top_p 参数。即使传入该参数，实际生效值也会被模型强制采用其推荐默认值 1.0 和 0.95。",
         "properties": {
           "type": {
             "type": "string",
@@ -461,62 +993,155 @@
               "disabled"
             ],
             "default": "enabled",
-            "description": "如果设为 enabled，则使用思考模式。如果设为 disabled，则使用非思考模式。"
+            "description": "是否启用思维链。mimo-v2.5-pro，mimo-v2.5 默认值为 enabled。可选值：enabled，disabled"
           }
-        }
+        },
+        "required": [
+          "type"
+        ]
       },
       "StreamOptions": {
         "type": "object",
-        "description": "流式输出相关选项。只有在 stream 参数为 true 时，才可设置此参数。",
+        "description": "流式输出的选项。此参数仅在 stream 参数为 true 时才可设置。",
         "properties": {
           "include_usage": {
             "type": "boolean",
-            "description": "如果设置为 true，在流式消息最后的 `data: [DONE]` 之前将会传输一个额外的块。此块上的 usage 字段显示整个请求的 token 使用统计信息，而 choices 字段将始终是一个空数组。所有其他块也将包含一个 usage 字段，但其值为 null。"
+            "description": "如果设置为 true，在流传输结束前的 `data: [DONE]` 之前会额外传输一个数据块。该数据块上的 usage 字段显示整个请求的 token 用量统计，而 choices 字段始终为空数组。所有其他数据块也会包含 usage 字段，但其值为 null。"
           }
         }
       },
       "ToolDefinition": {
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "函数工具",
+            "required": [
+              "type",
+              "function"
+            ],
+            "description": "函数工具定义。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "function"
+                ],
+                "description": "工具类型。目前支持 function。"
+              },
+              "function": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "工具函数的名称。必须由 a-z、A-Z、0-9 组成，或包含下划线（_）和连字符（-），最大长度为 64。"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "函数功能的描述，供模型判断何时以及如何调用该函数。"
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "description": "函数接受的参数，以 JSON 模式对象的形式描述。若省略 parameters，则表示该函数的参数列表为空。",
+                    "additionalProperties": true
+                  },
+                  "strict": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "生成函数调用时是否启用严格的模式遵循。若设为 true，模型将严格遵循 parameters 字段中定义的确切模式。当 strict 为 true 时，仅支持 JSON 模式的一个子集。"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/WebSearchTool"
+          }
+        ]
+      },
+      "WebSearchUserLocation": {
         "type": "object",
         "required": [
           "type",
-          "function"
+          "country"
         ],
-        "description": "函数工具定义。",
+        "description": "用户地理位置，用于优化模型输出结果。",
         "properties": {
           "type": {
             "type": "string",
             "enum": [
-              "function"
+              "approximate"
             ],
-            "description": "tool 的类型。目前仅支持 function。"
+            "description": "位置类型，必须为 approximate。"
           },
-          "function": {
-            "type": "object",
-            "required": [
-              "name"
-            ],
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "要调用的 function 名称。必须由 a-z、A-Z、0-9 字符组成，或包含下划线和连字符，最大长度为 64 个字符。"
-              },
-              "description": {
-                "type": "string",
-                "description": "function 的功能描述，供模型理解何时以及如何调用该 function。"
-              },
-              "parameters": {
-                "type": "object",
-                "description": "function 的输入参数，以 JSON Schema 对象描述。省略 parameters 会定义一个参数列表为空的 function。",
-                "additionalProperties": true
-              },
-              "strict": {
-                "type": "boolean",
-                "default": false,
-                "description": "如果设置为 true，API 将在函数调用中使用 strict 模式，以确保输出始终符合函数的 JSON schema 定义。该功能为 Beta 功能。"
-              }
-            }
+          "country": {
+            "type": "string",
+            "description": "国家"
+          },
+          "region": {
+            "type": "string",
+            "description": "省份"
+          },
+          "city": {
+            "type": "string",
+            "description": "城市"
+          },
+          "district": {
+            "type": "string",
+            "description": "区县"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "description": "经度"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "description": "纬度"
           }
         }
+      },
+      "WebSearchTool": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "description": "联网搜索工具对象。详情请参考联网搜索文档。注意：使用前需要开通联网服务插件。暂不支持联网搜索工具。",
+        "properties": {
+          "user_location": {
+            "$ref": "#/components/schemas/WebSearchUserLocation"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "web_search"
+            ],
+            "description": "工具类型。必须为 web_search。"
+          },
+          "force_search": {
+            "type": "string",
+            "default": "false",
+            "description": "是否启用强制搜索。true 强制搜索，false 由模型判断是否需要搜索。"
+          },
+          "max_keyword": {
+            "type": "integer",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 50,
+            "description": "限制单轮搜索中可使用的最大关键词数量。"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 5,
+            "minimum": 1,
+            "maximum": 50,
+            "description": "限制单次搜索操作返回的最大结果条数。"
+          }
+        },
+        "title": "联网搜索工具"
       },
       "ToolChoice": {
         "oneOf": [
@@ -527,87 +1152,161 @@
             ]
           }
         ],
-        "description": "工具选择"
+        "description": "控制模型如何选择工具。注意：当 tool_choice 传入非 auto 值时，后端会默认移除该字段，模型响应行为仍等同于 auto 模式（该逻辑保留调整的可能性）。可选值：auto"
       },
       "ResponseFormat": {
         "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "text"
+        "description": "一个指定模型必须输出的格式的对象。",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "Text",
+            "description": "默认响应格式。用于生成文本响应。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text"
+                ],
+                "description": "所定义的响应格式类型。仅为 text。"
+              }
+            },
+            "required": [
+              "type"
+            ]
+          },
+          {
+            "type": "object",
+            "title": "JSON object",
+            "description": "JSON 对象响应格式。请注意，若系统消息或用户消息中未指示模型生成 JSON，模型将不会输出 JSON 格式内容。",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "json_object"
+                ],
+                "description": "所定义的响应格式类型。仅为 json_object。"
+              }
+            },
+            "required": [
+              "type"
             ]
           }
-        },
-        "description": "响应格式"
+        ]
       },
       "ToolCallMessage": {
         "type": "object",
-        "required": [
-          "id",
-          "type",
-          "function"
-        ],
         "description": "消息中的工具调用对象。",
         "properties": {
           "id": {
             "type": "string",
-            "description": "tool 调用的 ID。"
+            "description": "工具调用的 ID。"
           },
           "type": {
             "type": "string",
             "enum": [
               "function"
             ],
-            "description": "tool 的类型。目前仅支持 function。"
+            "description": "工具的类型。目前仅支持 function。"
           },
           "function": {
             "type": "object",
-            "description": "模型调用的 function。",
-            "required": [
-              "name",
-              "arguments"
-            ],
+            "description": "模型所调用的函数。",
             "properties": {
               "name": {
                 "type": "string",
-                "description": "模型调用的 function 名。"
+                "description": "模型所调用的函数的名称。"
               },
               "arguments": {
                 "type": "string",
-                "description": "要调用的 function 的参数，由模型生成，格式为 JSON。请注意，模型并不总是生成有效的 JSON，并且可能会臆造出你函数模式中未定义的参数。在调用函数之前，请在代码中验证这些参数。"
+                "description": "模型生成的用于调用函数的参数，格式为 JSON 字符串。请注意，模型生成的内容并非总能保证是有效的 JSON，且可能会虚构出函数模式中未定义的参数。在调用函数之前，请在代码中对这些参数进行验证。"
               }
             }
+          }
+        },
+        "title": "Function tool call · object"
+      },
+      "Annotation": {
+        "type": "object",
+        "description": "联网搜索后，模型会返回全部引用网址的注释。",
+        "properties": {
+          "logo_url": {
+            "type": "string",
+            "description": "logo 网址。"
+          },
+          "publish_time": {
+            "type": "string",
+            "description": "发布时间。"
+          },
+          "site_name": {
+            "type": "string",
+            "description": "网站名称。"
+          },
+          "summary": {
+            "type": "string",
+            "description": "总结。"
+          },
+          "title": {
+            "type": "string",
+            "description": "标题。"
+          },
+          "type": {
+            "type": "string",
+            "description": "类型。"
+          },
+          "url": {
+            "type": "string",
+            "description": "网址。"
+          }
+        }
+      },
+      "AudioResponse": {
+        "type": "object",
+        "description": "如果请求输出音频，该对象将包含有关模型音频响应的数据。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "此音频响应的唯一标识符。"
+          },
+          "data": {
+            "type": "string",
+            "description": "模型生成的 Base64 编码音频，格式为请求中指定的格式。"
+          },
+          "expires_at": {
+            "type": "number",
+            "nullable": true,
+            "description": "此音频响应过期的 Unix 时间戳（以秒为单位）。当前仅为 null。"
+          },
+          "transcript": {
+            "type": "string",
+            "nullable": true,
+            "description": "模型生成的音频的文字记录。当前仅为 null。"
           }
         }
       },
       "ChatCompletionResponse": {
         "type": "object",
-        "description": "DeepSeek chat completions 成功响应。",
+        "description": "Chat 响应对象（非流式输出）。",
         "properties": {
           "id": {
             "type": "string",
-            "description": "该对话的唯一标识符。"
+            "description": "响应的唯一标识符。"
           },
           "object": {
             "type": "string",
-            "description": "对象的类型，其值为 chat.completion。"
+            "description": "对象类型，仅为 chat.completion。"
           },
           "created": {
             "type": "integer",
-            "description": "创建聊天完成时的 Unix 时间戳（以秒为单位）。"
+            "description": "对话补全对象创建时的 Unix 时间戳（以秒为单位）。"
           },
           "model": {
             "type": "string",
-            "description": "生成该 completion 的模型名。"
-          },
-          "system_fingerprint": {
-            "type": "string",
-            "description": "该指纹代表模型运行的后端配置。"
+            "description": "用于生成结果的模型名称。"
           },
           "choices": {
             "type": "array",
-            "description": "模型生成的 completion 的选择列表。",
+            "description": "包含生成的回复选项列表。",
             "items": {
               "$ref": "#/components/schemas/ChatCompletionChoice"
             }
@@ -622,44 +1321,322 @@
         "properties": {
           "index": {
             "type": "integer",
-            "description": "该 completion 在模型生成的 completion 的选择列表中的索引。"
+            "description": "选项列表中对应选项的索引。"
           },
           "message": {
-            "$ref": "#/components/schemas/AssistantMessage"
+            "$ref": "#/components/schemas/AssistantResponseMessage"
           },
           "finish_reason": {
             "type": "string",
-            "description": "模型停止生成 token 的原因。`stop` 表示模型自然停止生成或遇到 stop 序列；`length` 表示输出长度达到了模型上下文长度限制或 max_tokens 的限制；`content_filter` 表示输出内容因触发过滤策略而被过滤；`tool_calls` 表示模型调用了工具；`insufficient_system_resource` 表示系统推理资源不足，生成被打断。"
-          },
-          "logprobs": {
-            "$ref": "#/components/schemas/ChoiceLogprobs"
+            "description": "模型停止生成 token 的原因。如果模型到达自然停止点或提供的停止序列，则为 stop；如果达到请求中指定的最大 token 数，则为 length；如果模型调用了工具，则为 tool_calls。如果内容因触发过滤策略而被拦截，则为 content_filter；如果模型检测到了复读，则为 repetition_truncation。"
           }
         }
       },
-      "AssistantMessage": {
+      "AssistantResponseMessage": {
         "type": "object",
+        "description": "模型生成的对话补全消息。",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "消息作者的角色。"
+          },
+          "content": {
+            "type": "string",
+            "description": "消息的内容。"
+          },
+          "reasoning_content": {
+            "type": "string",
+            "description": "助手消息中最终答案之前的推理内容。"
+          },
+          "tool_calls": {
+            "type": "array",
+            "description": "函数调用启动后，模型会返回待调用的工具以及该调用所需的参数。此参数可包含一个或多个工具响应对象。",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ToolCallMessage"
+                }
+              ]
+            }
+          },
+          "annotations": {
+            "type": "array",
+            "description": "联网搜索后，模型会返回全部引用网址的注释。",
+            "items": {
+              "$ref": "#/components/schemas/Annotation"
+            }
+          },
+          "error_message": {
+            "type": "string",
+            "description": "联网搜索的错误信息。"
+          },
+          "audio": {
+            "$ref": "#/components/schemas/AudioResponse"
+          },
+          "final_text_preview": {
+            "type": "string",
+            "description": "经过智能优化润色后的音频播报最终文本。仅当请求参数 optimize_text_preview 设为 true 时，该字段才会返回。"
+          }
+        }
+      },
+      "ChatCompletionChunkChoice": {
+        "type": "object",
+        "description": "Chat 响应 chunk 对象（流式输出）。",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "description": "选项列表中对应选项的索引。"
+          },
+          "delta": {
+            "type": "object",
+            "description": "流式模型响应生成的对话补全增量。",
+            "properties": {
+              "role": {
+                "type": "string",
+                "description": "消息作者的角色。"
+              },
+              "content": {
+                "type": "string",
+                "description": "数据块消息的内容。"
+              },
+              "reasoning_content": {
+                "type": "string",
+                "description": "助手消息中最终答案之前的推理内容。"
+              },
+              "tool_calls": {
+                "type": "array",
+                "description": "函数调用启动后，模型会返回待调用的工具以及该调用所需的参数。此参数可包含一个或多个工具响应对象。",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "integer",
+                      "description": "在 tool_calls 列表中被调用工具的索引，从 0 开始。"
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "工具调用的 ID。"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "function"
+                      ],
+                      "description": "工具的类型。目前仅支持 function。"
+                    },
+                    "function": {
+                      "type": "object",
+                      "description": "调用的函数。",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "description": "要调用的函数的名称。"
+                        },
+                        "arguments": {
+                          "type": "string",
+                          "description": "模型生成的用于调用函数的参数，格式为 JSON。请注意，模型生成的内容并非并非总能保证是有效的 JSON，且可能会虚构出函数模式中未定义的参数。在调用函数之前，请在代码中对这些参数进行验证。"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "annotations": {
+                "type": "array",
+                "description": "联网搜索后，模型会返回全部引用网址的注释。",
+                "items": {
+                  "$ref": "#/components/schemas/Annotation"
+                }
+              },
+              "error_message": {
+                "type": "string",
+                "description": "联网搜索链路的错误信息。"
+              }
+            }
+          },
+          "finish_reason": {
+            "type": "string",
+            "nullable": true,
+            "description": "模型停止生成 token 的原因。如果模型到达自然停止点或提供的停止序列，则为 stop；如果达到请求中指定的最大 token 数，则为 length；如果模型调用了工具，则为 tool_calls。如果内容因触发过滤策略而被拦截，则为 content_filter；如果模型检测到了复读，则为 repetition_truncation。"
+          }
+        }
+      },
+      "ChatCompletionChunk": {
+        "type": "object",
+        "description": "Chat 响应 chunk 对象（流式输出）。SSE 流中的每个 `data:` 事件对应一个 ChatCompletionChunk。流通常以 `data: [DONE]` 结束。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "对话补全对象的唯一标识符。每个数据块均使用相同的 ID。"
+          },
+          "object": {
+            "type": "string",
+            "enum": [
+              "chat.completion.chunk"
+            ],
+            "description": "对象类型，仅为 chat.completion.chunk。"
+          },
+          "created": {
+            "type": "integer",
+            "description": "对话补全对象创建时的 Unix 时间戳（以秒为单位）。每个数据块均使用相同的时间戳。"
+          },
+          "model": {
+            "type": "string",
+            "description": "用于生成结果的模型。"
+          },
+          "choices": {
+            "type": "array",
+            "description": "包含生成的回复选项列表。",
+            "items": {
+              "$ref": "#/components/schemas/ChatCompletionChunkChoice"
+            }
+          },
+          "usage": {
+            "description": "该对话补全请求的用量信息。",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Usage"
+              }
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "TextContentPart": {
+        "type": "object",
+        "title": "Text content part · object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "description": "消息中的纯文本内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "内容部分的类型，为 text。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本内容。"
+          }
+        }
+      },
+      "TextContentPartArray": {
+        "type": "array",
+        "description": "消息中的纯文本内容部分数组。",
+        "items": {
+          "$ref": "#/components/schemas/TextContentPart"
+        },
+        "title": "Array of content parts · array"
+      },
+      "ContentPartText": {
+        "type": "object",
+        "title": "Text content part · object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "description": "用户消息中的纯文本内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "内容部分的类型，为 text。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本内容。"
+          }
+        }
+      },
+      "ContentPartImage": {
+        "type": "object",
+        "title": "Image content part · object",
+        "required": [
+          "type",
+          "image_url"
+        ],
+        "description": "用户消息中的图片内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image_url"
+            ],
+            "description": "内容部分的类型，为 image_url。"
+          },
+          "image_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "图片 URL。可以是公共图片 URL 或 Base64 编码的数据 URL。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "公共图片 URL 或 Base64 编码的数据 URL。"
+              }
+            }
+          }
+        }
+      },
+      "ContentPartArray": {
+        "type": "array",
+        "description": "用户消息中内容部分的数组。可包含文本、图像、音频或视频。",
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/ContentPartText"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartImage"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartAudio"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartVideo"
+            }
+          ]
+        }
+      },
+      "DeveloperMessage": {
+        "type": "object",
+        "title": "Developer message · object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "description": "开发者消息。开发者提供的指令，无论用户发送什么消息，模型都应遵循这些指令。",
         "properties": {
           "role": {
             "type": "string",
             "enum": [
-              "assistant"
+              "developer"
             ],
-            "description": "生成这条消息的角色。"
+            "description": "消息作者的角色，为 developer。"
           },
           "content": {
-            "type": "string",
-            "description": "该 completion 的内容。"
+            "description": "开发者消息的内容。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/TextContentPartArray"
+              }
+            ]
           },
-          "reasoning_content": {
+          "name": {
             "type": "string",
-            "description": "仅适用于思考模式。内容为 assistant 消息中在最终答案之前的推理内容。"
-          },
-          "tool_calls": {
-            "type": "array",
-            "description": "模型生成的 tool 调用，例如 function 调用。",
-            "items": {
-              "$ref": "#/components/schemas/ToolCallMessage"
-            }
+            "description": "参与者的可选名称，提供给模型以区分同一角色的不同参与者。"
           }
         }
       },
@@ -669,31 +1646,59 @@
         "properties": {
           "prompt_tokens": {
             "type": "integer",
-            "description": "用户 prompt 所包含的 token 数。该值等于 prompt_cache_hit_tokens + prompt_cache_miss_tokens。"
+            "description": "提示词使用的 token 数量。"
           },
           "completion_tokens": {
             "type": "integer",
-            "description": "模型 completion 产生的 token 数。"
+            "description": "模型输出内容花费的 token。"
           },
           "total_tokens": {
             "type": "integer",
-            "description": "该请求中，所有 token 的数量（prompt + completion）。"
-          },
-          "prompt_cache_hit_tokens": {
-            "type": "integer",
-            "description": "用户 prompt 中，命中上下文缓存的 token 数。"
-          },
-          "prompt_cache_miss_tokens": {
-            "type": "integer",
-            "description": "用户 prompt 中，未命中上下文缓存的 token 数。"
+            "description": "请求中使用的 token 总数（提示词 + 补全结果）。"
           },
           "completion_tokens_details": {
             "type": "object",
-            "description": "completion tokens 的详细信息。",
+            "description": "补全中使用的 token 数量明细。",
             "properties": {
               "reasoning_tokens": {
                 "type": "integer",
-                "description": "推理模型所产生的思维链 token 数量。"
+                "description": "模型为推理生成的 token 数量。"
+              }
+            }
+          },
+          "prompt_tokens_details": {
+            "type": "object",
+            "description": "提示中使用的 token 数量明细。",
+            "properties": {
+              "cached_tokens": {
+                "type": "integer",
+                "description": "命中缓存的 token 数量。"
+              },
+              "audio_tokens": {
+                "type": "integer",
+                "description": "提示中存在的音频输入 token 数量。"
+              },
+              "image_tokens": {
+                "type": "integer",
+                "description": "提示中存在的图像输入 token 数量。"
+              },
+              "video_tokens": {
+                "type": "integer",
+                "description": "提示中存在的视频输入 token 数量。"
+              }
+            }
+          },
+          "web_search_usage": {
+            "type": "object",
+            "description": "联网搜索 API 的调用量明细。",
+            "properties": {
+              "tool_usage": {
+                "type": "integer",
+                "description": "联网搜索 API 的调用次数。"
+              },
+              "page_usage": {
+                "type": "integer",
+                "description": "联网搜索 API 返回的网页数。"
               }
             }
           }
@@ -720,11 +1725,88 @@
           },
           "param": {
             "type": "string",
-            "description": "关联字段名。"
+            "description": "关联字段名称。"
           },
           "code": {
             "type": "string",
-            "description": "错误码。"
+            "description": "错误代码。"
+          }
+        }
+      },
+      "ContentPartAudio": {
+        "type": "object",
+        "title": "Audio content part · object",
+        "required": [
+          "type",
+          "input_audio"
+        ],
+        "description": "用户消息中的音频内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_audio"
+            ],
+            "description": "内容部分的类型，类型值为 input_audio。"
+          },
+          "input_audio": {
+            "type": "object",
+            "required": [
+              "data"
+            ],
+            "description": "音频的 URL 或 Base64 编码的音频数据。",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "音频的 URL 或 Base64 编码的音频数据。"
+              }
+            }
+          }
+        }
+      },
+      "ContentPartVideo": {
+        "type": "object",
+        "title": "Video content part · object",
+        "required": [
+          "type",
+          "video_url"
+        ],
+        "description": "用户消息中的视频内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "video_url"
+            ],
+            "description": "内容部分的类型，值为 video_url。"
+          },
+          "video_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "视频 URL。可以是公共视频 URL 或 Base64 编码的数据 URL。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "视频的 URL 或 Base64 编码的视频数据。"
+              },
+              "fps": {
+                "type": "number",
+                "default": 2,
+                "description": "每秒抽帧数。所需范围：[0.1, 10.0]"
+              },
+              "media_resolution": {
+                "type": "string",
+                "default": "default",
+                "enum": [
+                  "default",
+                  "max"
+                ],
+                "description": "分辨率档次。可选值：default，max"
+              }
+            }
           }
         }
       }

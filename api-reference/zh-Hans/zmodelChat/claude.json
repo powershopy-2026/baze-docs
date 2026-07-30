@@ -140,6 +140,8 @@
               "MiniMax-M2.5-highspeed",
               "MiniMax-M2.7-highspeed",
               "MiniMax-M3",
+              "mimo-v2.5",
+              "mimo-v2.5-pro",
               "qwen3-max",
               "qwen3.5-flash",
               "qwen3.6-plus",
@@ -604,11 +606,17 @@
       "ToolChoiceMode": {
         "title": "模式选择",
         "type": "object",
-        "required": ["type"],
+        "required": [
+          "type"
+        ],
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["auto", "any", "none"],
+            "enum": [
+              "auto",
+              "any",
+              "none"
+            ],
             "description": "工具选择模式：auto（模型自行决定）、any（强制调用任意工具）、none（禁止调用工具）。"
           }
         }
@@ -616,11 +624,16 @@
       "ToolChoiceTool": {
         "title": "指定工具",
         "type": "object",
-        "required": ["type", "name"],
+        "required": [
+          "type",
+          "name"
+        ],
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["tool"],
+            "enum": [
+              "tool"
+            ],
             "description": "固定为 tool。"
           },
           "name": {
@@ -632,11 +645,16 @@
       "ResponseTextBlock": {
         "title": "文本",
         "type": "object",
-        "required": ["type", "text"],
+        "required": [
+          "type",
+          "text"
+        ],
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["text"],
+            "enum": [
+              "text"
+            ],
             "description": "固定为 text。"
           },
           "text": {
@@ -648,11 +666,17 @@
       "ResponseThinkingBlock": {
         "title": "思考过程",
         "type": "object",
-        "required": ["type", "thinking", "signature"],
+        "required": [
+          "type",
+          "thinking",
+          "signature"
+        ],
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["thinking"],
+            "enum": [
+              "thinking"
+            ],
             "description": "固定为 thinking。"
           },
           "thinking": {
@@ -668,11 +692,18 @@
       "ResponseToolUseBlock": {
         "title": "工具调用",
         "type": "object",
-        "required": ["type", "id", "name", "input"],
+        "required": [
+          "type",
+          "id",
+          "name",
+          "input"
+        ],
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["tool_use"],
+            "enum": [
+              "tool_use"
+            ],
             "description": "固定为 tool_use。"
           },
           "id": {

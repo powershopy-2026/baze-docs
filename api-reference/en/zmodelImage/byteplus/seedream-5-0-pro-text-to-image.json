@@ -196,7 +196,11 @@
             "type": "string",
             "description": "Specifies the size of the generated image, supports specifying resolution level (e.g., 2K) or width and height pixel values (e.g., 2048x2048), which cannot be mixed.\n\n**dola-seedream-5-0-pro-260628 (Seedream 5.0 pro)**\nSupports the following two methods, which cannot be mixed:\n\n* Method 1 (Recommended): Specify resolution level and describe aspect ratio, shape, or purpose in the prompt. The model determines the final image size.\n  * Default: 2K\n  * Options: 1K, 2K\n\n* Method 2: Specify width and height pixel values (widthxheight).\n  * Total pixel range: [`1280x720` (921600), `2048x2048×1.1025` (4624220)]\n  * Aspect ratio range: [1/16, 16]\n\n> Note: When using Method 2, both total pixel range and aspect ratio range must be satisfied. Total pixels refers to the product of width and height, not individual values.\n> * Valid example: `2048x1024`\n    Total pixels 2048x1024=2097152, within [921600, 4624220]; aspect ratio 2048/1024=2, within [1/16, 16], so valid.\n> * Invalid example: `512x512`\n    Total pixels 512x512=262144, below 921600 minimum, so invalid.\n\nResolution to pixel reference values when using Method 1 (not limited to these standard values, common ones listed):\n\n| Resolution | Aspect Ratio | Pixel Dimensions |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n",
             "default": "2K",
-            "example": "2K"
+            "example": "2K",
+            "x-enum": [
+              "1K",
+              "2K"
+            ]
           },
           "response_format": {
             "type": "string",

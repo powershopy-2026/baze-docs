@@ -52,6 +52,8 @@
                     "pages": [
                       "zh-Hans/zmodelChat/ali/qwen3.5-flash",
                       "zh-Hans/zmodelChat/ali/qwen3.6-plus",
+                      "zh-Hans/zmodelChat/ali/qwen3.7-plus",
+                      "zh-Hans/zmodelChat/ali/qwen3.7-max",
                       "zh-Hans/zmodelChat/ali/qwen3-coder-plus",
                       "zh-Hans/zmodelChat/ali/qwen3-max"
                     ]
@@ -208,6 +210,10 @@
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      "zh-Hans/zmodelVideo/ali/happyhorse-1.1-t2v",
+                      "zh-Hans/zmodelVideo/ali/happyhorse-1.1-i2v",
+                      "zh-Hans/zmodelVideo/ali/happyhorse-1.1-r2v",
+                      "zh-Hans/zmodelVideo/ali/task-query",
                       {
                         "group": "阿里巴巴兼容API",
                         "pages": [
@@ -402,6 +408,8 @@
                     "pages": [
                       "en/zmodelChat/ali/qwen3.5-flash",
                       "en/zmodelChat/ali/qwen3.6-plus",
+                      "en/zmodelChat/ali/qwen3.7-plus",
+                      "en/zmodelChat/ali/qwen3.7-max",
                       "en/zmodelChat/ali/qwen3-coder-plus",
                       "en/zmodelChat/ali/qwen3-max"
                     ]
@@ -558,6 +566,10 @@
                       "en/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "en/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
                       "en/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      "en/zmodelVideo/ali/happyhorse-1.1-t2v",
+                      "en/zmodelVideo/ali/happyhorse-1.1-i2v",
+                      "en/zmodelVideo/ali/happyhorse-1.1-r2v",
+                      "en/zmodelVideo/ali/task-query",
                       {
                         "group": "Alibaba Compatible API",
                         "pages": [
