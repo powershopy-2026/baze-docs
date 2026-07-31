@@ -1313,18 +1313,19 @@
           "completion_tokens_details": {
             "type": "object",
             "nullable": true,
+            "description": "输出 Token 的详细信息。",
             "properties": {
+              "audio_tokens": {
+                "type": "integer",
+                "description": "输出的音频 Token 数。"
+              },
               "reasoning_tokens": {
                 "type": "integer",
-                "description": "该参数当前固定为null。"
+                "description": "思考过程 Token 数。"
               },
               "text_tokens": {
                 "type": "integer",
-                "description": "文本 Token 数。"
-              },
-              "audio_tokens": {
-                "type": "integer",
-                "description": "该参数当前固定为null。"
+                "description": "输出文本 Token 数。"
               }
             }
           },
@@ -1494,7 +1495,7 @@
           "finish_reason": {
             "type": "string",
             "nullable": true,
-            "description": "停止原因：stop 触发或自然停止、null 未结束、length 过长、tool_calls 需调用工具。"
+            "description": "模型停止生成的原因。有四种情况：因触发输入参数中的stop参数，或自然停止输出时为stop；生成未结束时为null；生成长度过长而结束为length；需要调用工具而结束为tool_calls。"
           },
           "index": {
             "type": "integer",
@@ -1572,7 +1573,7 @@
             "properties": {
               "arguments": {
                 "type": "string",
-                "description": "增量入参，拼接后为完整入参。请在调用前校验参数有效性。"
+                "description": "增量的入参信息，所有chunk的arguments拼接后为完整的入参。由于大模型响应有一定随机性，输出的入参信息可能不符合函数签名。请在调用前校验参数有效性。"
               },
               "name": {
                 "type": "string",
@@ -1637,7 +1638,7 @@
             "items": {
               "type": "integer"
             },
-            "description": "UTF-8 原始字节列表。"
+            "description": "当前 Token 的 UTF-8 原始字节列表，用于精确还原输出内容，在处理表情符号、中文字符时有帮助。"
           },
           "logprob": {
             "type": "number",

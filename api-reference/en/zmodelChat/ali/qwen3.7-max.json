@@ -1313,18 +1313,19 @@
           "completion_tokens_details": {
             "type": "object",
             "nullable": true,
+            "description": "Output token details.",
             "properties": {
+              "audio_tokens": {
+                "type": "integer",
+                "description": "Number of output audio tokens."
+              },
               "reasoning_tokens": {
                 "type": "integer",
-                "description": "Currently fixed to null."
+                "description": "Number of thinking process tokens."
               },
               "text_tokens": {
                 "type": "integer",
-                "description": "Text tokens."
-              },
-              "audio_tokens": {
-                "type": "integer",
-                "description": "Currently fixed to null."
+                "description": "Number of output text tokens."
               }
             }
           },
@@ -1494,7 +1495,7 @@
           "finish_reason": {
             "type": "string",
             "nullable": true,
-            "description": "Stop reason: stop, null (not finished), length, tool_calls."
+            "description": "The reason why the model stopped generating. Four cases: stop (triggered by the stop parameter or natural stop), null (generation not finished), length (output too long), tool_calls (tool call required)."
           },
           "index": {
             "type": "integer",
@@ -1572,7 +1573,7 @@
             "properties": {
               "arguments": {
                 "type": "string",
-                "description": "Incremental arguments. Validate before calling."
+                "description": "Incremental input parameter information. All chunks' arguments concatenated form the complete input parameters. Due to model randomness, the output parameters may not conform to the function signature. Please validate parameter effectiveness before calling."
               },
               "name": {
                 "type": "string",
@@ -1637,7 +1638,7 @@
             "items": {
               "type": "integer"
             },
-            "description": "UTF-8 raw bytes."
+            "description": "The raw UTF-8 byte list of the current Token, used to accurately restore output content (e.g. emojis or Chinese characters)."
           },
           "logprob": {
             "type": "number",
