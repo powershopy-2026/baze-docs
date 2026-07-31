@@ -1359,16 +1359,16 @@
                   "ephemeral_5m_input_tokens": {
                     "type": "integer",
                     "description": "创建显式缓存的 Token 数。"
-                  },
-                  "cache_creation_input_tokens": {
-                    "type": "integer",
-                    "description": "创建显式缓存的 Token 数。"
-                  },
-                  "cache_type": {
-                    "type": "string",
-                    "description": "使用显式缓存时，参数值为ephemeral，否则该参数不存在。"
                   }
                 }
+              },
+              "cache_creation_input_tokens": {
+                "type": "integer",
+                "description": "创建显式缓存的 Token 数。"
+              },
+              "cache_type": {
+                "type": "string",
+                "description": "使用显式缓存时，参数值为ephemeral，否则该参数不存在。"
               }
             }
           }

@@ -322,7 +322,7 @@
                         "choices": [
                           {
                             "delta": {
-                              "content": "Hello",
+                              "content": "我是",
                               "function_call": null,
                               "refusal": null,
                               "role": null,
@@ -345,7 +345,122 @@
                         "choices": [
                           {
                             "delta": {
-                              "content": " world",
+                              "content": "来自",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "阿里",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "云的超大规模",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "语言模型，我",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "叫千问千",
+                              "function_call": null,
+                              "refusal": null,
+                              "role": null,
+                              "tool_calls": null
+                            },
+                            "finish_reason": null,
+                            "index": 0,
+                            "logprobs": null
+                          }
+                        ],
+                        "created": 1735113344,
+                        "model": "qwen-plus",
+                        "object": "chat.completion.chunk",
+                        "service_tier": null,
+                        "system_fingerprint": null,
+                        "usage": null
+                      },
+                      {
+                        "id": "chatcmpl-e30f5ae7-3063-93c4-90fe-beb5f900bd57",
+                        "choices": [
+                          {
+                            "delta": {
+                              "content": "问。",
                               "function_call": null,
                               "refusal": null,
                               "role": null,
@@ -1244,16 +1359,16 @@
                   "ephemeral_5m_input_tokens": {
                     "type": "integer",
                     "description": "Tokens used to create explicit cache."
-                  },
-                  "cache_creation_input_tokens": {
-                    "type": "integer",
-                    "description": "Tokens used to create explicit cache."
-                  },
-                  "cache_type": {
-                    "type": "string",
-                    "description": "ephemeral when using explicit cache, otherwise this parameter does not exist."
                   }
                 }
+              },
+              "cache_creation_input_tokens": {
+                "type": "integer",
+                "description": "Tokens used to create explicit cache."
+              },
+              "cache_type": {
+                "type": "string",
+                "description": "ephemeral when using explicit cache, otherwise this parameter does not exist."
               }
             }
           }
