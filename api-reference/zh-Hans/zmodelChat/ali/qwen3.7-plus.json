@@ -988,7 +988,7 @@
               "assistant",
               "tool"
             ],
-            "description": "消息发送者角色。可选值：system（系统消息）、user（用户消息）、assistant（助手消息）、tool（工具消息）。"
+            "description": "消息的角色。可选值：system（系统消息）、user（用户消息）、assistant（助手消息）、tool（工具消息）。"
           },
           "content": {
             "anyOf": [
@@ -1006,9 +1006,29 @@
             ],
             "description": "消息内容。System Message：content 为 string（系统指令）。User Message：content 为 string（纯文本）或 array（多模态内容）。Assistant Message：content 为 string（可选，包含 tool_calls 时可为空）。Tool Message：content 为 string（工具函数的输出内容，必须为字符串。若工具返回结构化数据如JSON，需将其序列化为字符串）。"
           },
+          "reasoning_content": {
+            "type": "string",
+            "description": "模型的思维链内容。",
+            "nullable": true
+          },
+          "refusal": {
+            "type": "string",
+            "description": "该参数当前固定为 null。",
+            "nullable": true
+          },
+          "audio": {
+            "type": "object",
+            "description": "该参数当前固定为 null。",
+            "nullable": true
+          },
+          "function_call": {
+            "type": "object",
+            "description": "该值固定为 null，请参考 tool_calls 参数。",
+            "nullable": true
+          },
           "tool_calls": {
             "type": "array",
-            "description": "发起 Function Calling 后，模型返回的工具与入参信息。由上一轮模型响应的 tool_calls 字段获得。仅 role=assistant 时有效。",
+            "description": "在发起 Function Calling 后，模型生成的工具与入参信息。",
             "items": {
               "$ref": "#/components/schemas/ToolCall"
             }
@@ -1202,23 +1222,73 @@
         "type": "object",
         "properties": {
           "index": {
-            "type": "integer"
+            "type": "integer",
+            "description": "当前对象在choices数组中的索引。"
           },
           "message": {
             "$ref": "#/components/schemas/Message"
           },
           "finish_reason": {
             "type": "string",
-            "description": "生成结束原因：stop、length、tool_calls、content_filter。"
+            "description": "模型停止生成的原因。有三种情况：触发输入参数中的stop参数，或自然停止输出时为stop；生成长度过长而结束为length；需要调用工具而结束为tool_calls。"
           },
           "logprobs": {
             "type": "object",
             "nullable": true,
+            "description": "模型输出的 Token 概率信息。",
             "properties": {
               "content": {
                 "type": "array",
+                "description": "包含每个 Token 及其对数概率的数组。",
                 "items": {
-                  "type": "object"
+                  "description": "每个 Token 及其对数概率的数组元素。",
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "description": "当前 Token 的文本。"
+                    },
+                    "bytes": {
+                      "type": "array",
+                      "description": "当前 Token 的 UTF‑8 原始字节列表，用于精确还原输出内容（例如表情符号或中文字符）。",
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "logprob": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "当前 Token 的对数概率。返回值为 null 表示概率值极低。",
+                      "nullable": true
+                    },
+                    "top_logprobs": {
+                      "type": "array",
+                      "description": "当前 Token 位置最可能的若干候选 Token，数量与请求参数 top_logprobs 保持一致。",
+                      "items": {
+                        "type": "object",
+                        "description": "候选 Token 及其对数概率。",
+                        "properties": {
+                          "token": {
+                            "type": "string",
+                            "description": "候选 Token 文本。"
+                          },
+                          "bytes": {
+                            "type": "array",
+                            "description": "当前 Token 的 UTF‑8 原始字节列表，用于精确还原输出内容（例如表情符号或中文字符）。",
+                            "items": {
+                              "type": "integer"
+                            }
+                          },
+                          "logprob": {
+                            "type": "number",
+                            "format": "float",
+                            "description": "该候选 Token 的对数概率。返回值为 null 表示概率值极低。",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1264,23 +1334,23 @@
             "properties": {
               "cached_tokens": {
                 "type": "integer",
-                "description": "命中缓存的 Token 数。"
+                "description": "命中 Cache 的 Token 数。Context Cache 详情请参见上下文缓存。"
               },
               "text_tokens": {
                 "type": "integer",
-                "description": "文本 Token 数。"
+                "description": "输入的文本 Token 数。"
               },
               "image_tokens": {
                 "type": "integer",
-                "description": "图像 Token 数。"
+                "description": "输入的图像 Token 数。"
               },
               "video_tokens": {
                 "type": "integer",
-                "description": "视频 Token 数。"
+                "description": "输入的视频文件或者图像列表 Token 数。"
               },
               "audio_tokens": {
                 "type": "integer",
-                "description": "该参数当前固定为null。"
+                "description": "该参数当前固定为 null。"
               },
               "cache_creation": {
                 "type": "object",
