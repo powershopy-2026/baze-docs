@@ -924,50 +924,6 @@
             "description": "是否将对话历史中 assistant 消息的 reasoning_content 拼接至模型输入。适用于需要模型参考历史思考过程的场景。默认值：false。\n\n目前支持 qwen3.8-max-preview（默认开启）、qwen3.7-max、qwen3.7-max-2026-05-20 以及后续快照、qwen3.6-max-preview、qwen3.7-plus、qwen3.7-plus-2026-05-26、qwen3.6-plus、qwen3.6-plus-2026-04-02、qwen3.7-flash、qwen3.7-flash-2026-07-15、qwen3.6-flash、qwen3.6-flash-2026-04-16、kimi-k2.6（阿里云百炼部署）、kimi-k2.7-code（阿里云百炼部署，默认开启）、kimi/kimi-k2.7-code-highspeed（月之暗面直供，默认开启）、kimi/kimi-k2.7-code（月之暗面直供，默认开启）。\n\n重要：使用 qwen3.8-max-preview 时，preserve_thinking 默认为 true，必须将历史对话中所有的 reasoning_content 完整回传。不支持将 reasoning_content 拼接到 content 字段中回传。若历史消息中不包含 reasoning_content，开启此参数不会报错，正常兼容。\n\n开启后，历史对话中的 reasoning_content 会计入输入 Token 数量并计费。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"preserve_thinking\": True}。",
             "default": false
           },
-          "thinking": {
-            "type": "object",
-            "description": "控制稀宇科技直供的 MiniMax/MiniMax-M3 的思考模式。默认值：{\"type\":\"adaptive\"}。非标准参数，需放入 extra_body。",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "adaptive",
-                  "disabled"
-                ],
-                "description": "思考类型。可选值：adaptive（自适应，模型自主判断）、disabled（关闭思考，直接回答）。"
-              }
-            }
-          },
-          "skill": {
-            "type": "array",
-            "description": "技能参数，用于启用特定生成技能（如 PPT 生成）。仅 qwen-doc-turbo 模型支持。默认值：[]。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"skill\": [...]}。使用 skill 时，stream 必须设置为 true。\n\n属性：\n- type（必选）：技能类型。当前支持：ppt（PPT 生成）。\n- mode（可选）：PPT 生成模式。可选值：general（默认，模板模式，需配合 template_id 使用，生成 HTML 格式的 PPT）、creative（创意模式，无需模板，生成图版 PPT 每页为图片）。\n- template_id（可选）：PPT 模板 ID。与 mode 为 general 或未设置 mode 时配合使用。可选值：news_01（新闻模板）、summary_01（总结模板）、internet_01（互联网模板）、thesis_01（论文模板）。",
-            "items": {
-              "type": "object",
-              "properties": {
-                "type": {
-                  "type": "string",
-                  "description": "技能类型。当前支持：ppt（PPT 生成）。"
-                },
-                "mode": {
-                  "type": "string",
-                  "enum": [
-                    "general",
-                    "creative"
-                  ],
-                  "description": "PPT 生成模式。可选值：general（默认，模板模式，需配合 template_id 使用，生成 HTML 格式的 PPT）、creative（创意模式，无需模板，生成图版 PPT）。"
-                },
-                "template_id": {
-                  "type": "string",
-                  "description": "PPT 模板 ID。可选值：news_01（新闻模板）、summary_01（总结模板）、internet_01（互联网模板）、thesis_01（论文模板）。"
-                }
-              }
-            }
-          },
-          "clear_thinking": {
-            "type": "boolean",
-            "description": "用于控制多轮对话中是否将历史轮次的 reasoning_content（思考过程）作为上下文输入给模型。仅 GLM 系列 glm-5.2、glm-5.1、glm-5、glm-4.7 模型支持。默认值：false。\n\n该参数非 OpenAI 标准参数。通过 Python SDK 调用时，请放入 extra_body 对象中。配置方式为：extra_body={\"enable_thinking\": True,\"clear_thinking\": True}。\n\n- true：忽略历史轮次的 reasoning_content，仅使用可见文本、工具调用与结果等非推理内容作为上下文输入，可降低上下文长度与成本；\n- false（默认）：保留历史轮次的 reasoning_content 并随上下文一同提供给模型。若希望启用 Preserved Thinking，必须在 messages 中完整、未修改、按原顺序透传历史 reasoning_content，缺失、裁剪、改写或重排会导致效果下降或无法生效。",
-            "default": false
-          },
           "X-DashScope-DataInspection": {
             "type": "string",
             "description": "在千问 API 的内容安全能力基础上，是否进一步识别输入输出内容的违规信息。取值如下：\n- {\"input\":\"cip\",\"output\":\"cip\"}：进一步识别；\n- 不设置该参数：不进一步识别。\n\n通过 HTTP 调用时请放入请求头：-H \"X-DashScope-DataInspection: {\\\"input\\\": \\\"cip\\\", \\\"output\\\": \\\"cip\\\"}\"；\n\n通过 Python SDK 调用时请通过 extra_headers 配置：extra_headers={'X-DashScope-DataInspection': '{\"input\":\"cip\",\"output\":\"cip\"}'}。\n\n不支持通过 Node.js SDK 设置。"
@@ -1733,10 +1689,6 @@
             "type": "boolean",
             "description": "是否开启前缀续写。默认值：false。",
             "default": false
-          },
-          "reasoning_content": {
-            "type": "string",
-            "description": "模型的思维链内容。"
           }
         },
         "title": "Assistant Message object （可选）"
