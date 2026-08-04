@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "BytePlus Chat Completions",
-        "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `dola-seed-2-1-turbo-260628`.\n\nDocumented fields: `model`, `messages`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `stop`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports plain text; `assistant` messages support `tool_calls`.",
+        "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `dola-seed-2-1-turbo-260628`.\n\nDocumented fields: `model`, `messages`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports plain text; `assistant` messages support `tool_calls`.",
         "operationId": "byteplusChatCompletions",
         "tags": [
           "BytePlus Chat"
@@ -296,20 +296,6 @@
           "max_tokens": {
             "type": "integer",
             "description": "Maximum length of the model response, in tokens."
-          },
-          "stop": {
-            "description": "Stop sequence. Can be a single string or an array of strings.",
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
           },
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
