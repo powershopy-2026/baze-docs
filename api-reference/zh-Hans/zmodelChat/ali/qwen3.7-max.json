@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "qwen3.7-max 对话补全",
-        "description": "适用于阿里渠道最终白名单中的公开对话模型：`qwen3.7-max`。\n\n公开字段：`model`、`messages`、`stream`、`temperature`、`top_p`、`max_tokens`、`stop`、`seed`、`tools`、`tool_choice`、`enable_search`、`response_format`。",
+        "description": "适用于阿里渠道最终白名单中的公开对话模型：`qwen3.7-max`。\n\n公开字段：`model`、`messages`、`stream`、`temperature`、`top_p`、`max_completion_tokens`、`stop`、`seed`、`tools`、`tool_choice`、`enable_search`、`response_format`。",
         "operationId": "aliChatCompletions",
         "tags": [
           "Qwen Chat"
@@ -53,7 +53,7 @@
                       }
                     ],
                     "temperature": 0.7,
-                    "max_tokens": 2000
+                    "max_completion_tokens": 2000
                   }
                 },
                 "streaming_chat": {
@@ -266,7 +266,7 @@
           "stream": {
             "type": "boolean",
             "description": "是否使用流式输出。默认为 false。",
-            "default": true
+            "default": false
           },
           "temperature": {
             "type": "number",
@@ -282,10 +282,9 @@
             "maximum": 1,
             "default": 0.95
           },
-          "max_tokens": {
+          "max_completion_tokens": {
             "type": "integer",
-            "description": "生成的最大 token 数。",
-            "minimum": 1
+            "description": "模型输出的最大长度，包含思维链和模型回答。模型输出超过此值时生成将提前停止，返回的 finish_reason 为 length。默认值与最大值均为模型的最大输出长度。与 max_tokens 的区别：max_completion_tokens 限制模型完整输出（思维链 + 回答），而 max_tokens 仅限制回答部分。思考类模型推荐使用 max_completion_tokens。"
           },
           "stop": {
             "type": "array",
