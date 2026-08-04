@@ -3,7 +3,7 @@
   "info": {
     "title": "BytePlus Chat Completions",
     "version": "1.0.0",
-    "description": "BytePlus Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `dola-seed-2-1-turbo-260628`\n\nThis document covers the following request fields: `model`, `messages`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `stop`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.",
+    "description": "BytePlus Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `dola-seed-2-1-turbo-260628`\n\nThis document covers the following request fields: `model`, `messages`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `stop`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "BytePlus Chat Completions",
-        "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `dola-seed-2-1-turbo-260628`.\n\nDocumented fields: `model`, `messages`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports plain text; `assistant` messages support `tool_calls`.",
+        "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `dola-seed-2-1-turbo-260628`.\n\nDocumented fields: `model`, `messages`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports plain text; `assistant` messages support `tool_calls`.",
         "operationId": "byteplusChatCompletions",
         "tags": [
           "BytePlus Chat"
@@ -331,17 +331,6 @@
           "logprobs": {
             "type": "boolean",
             "description": "Whether to return log probability information for output tokens."
-          },
-          "top_logprobs": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 20,
-            "description": "When `logprobs=true`, specifies how many candidate tokens' log probabilities to return at each position.",
-            "x-valid-when": {
-              "logprobs": [
-                true
-              ]
-            }
           },
           "tools": {
             "type": "array",
