@@ -241,16 +241,12 @@
             "description": "Output image resolution in `width*height` format, for example `1024*1536`. For the `qwen-image-2.0` series, total pixels must be between `512*512` and `2048*2048`. By default, total pixels are close to `1024*1024`, and the aspect ratio is close to the input image (for multi-image input, the last image). Recommended common resolutions: 1:1 `1024*1024`, `1536*1536`; 2:3 `768*1152`, `1024*1536`; 3:2 `1152*768`, `1536*1024`; 3:4 `960*1280`, `1080*1440`; 4:3 `1280*960`, `1440*1080`; 9:16 `720*1280`, `1080*1920`; 16:9 `1280*720`, `1920*1080`; 21:9 `1344*576`, `2048*872`.",
             "x-options": [
               {
-                "label": "512*512",
-                "value": "512*512"
-              },
-              {
                 "label": "1K",
-                "value": "1000*1000"
+                "value": "1024*1024"
               },
               {
                 "label": "2K",
-                "value": "2000*2000"
+                "value": "2048*2048"
               }
             ],
             "default": "512*512"
@@ -349,19 +345,15 @@
             "description": "Output image resolution in `width*height` format, for example `1024*1536`. For the `qwen-image-2.0` series, total pixels must be between `512*512` and `2048*2048`. By default, total pixels are close to `1024*1024`, and the aspect ratio is close to the input image (for multi-image input, the last image). Recommended common resolutions: 1:1 `1024*1024`, `1536*1536`; 2:3 `768*1152`, `1024*1536`; 3:2 `1152*768`, `1536*1024`; 3:4 `960*1280`, `1080*1440`; 4:3 `1280*960`, `1440*1080`; 9:16 `720*1280`, `1080*1920`; 16:9 `1280*720`, `1920*1080`; 21:9 `1344*576`, `2048*872`.",
             "x-options": [
               {
-                "label": "512*512",
-                "value": "512*512"
-              },
-              {
                 "label": "1K",
-                "value": "1000*1000"
+                "value": "1024*1024"
               },
               {
                 "label": "2K",
-                "value": "2000*2000"
+                "value": "2048*2048"
               }
             ],
-            "default": "512*512"
+            "default": "2048*2048"
           },
           "watermark": {
             "type": "boolean",
