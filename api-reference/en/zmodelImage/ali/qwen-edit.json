@@ -352,8 +352,7 @@
                 "label": "2K",
                 "value": "2048*2048"
               }
-            ],
-            "default": "2048*2048"
+            ]
           },
           "watermark": {
             "type": "boolean",
