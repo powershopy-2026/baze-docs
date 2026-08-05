@@ -373,7 +373,7 @@
           "watermark": {
             "type": "boolean",
             "default": false,
-            "description": "是否在图像右下角添加水印。默认值为 `false`。"
+            "description": "是否在图像右下角添加\"AI生成\"水印。默认值为 `false`。"
           }
         },
         "description": "控制图像生成的附加参数。"

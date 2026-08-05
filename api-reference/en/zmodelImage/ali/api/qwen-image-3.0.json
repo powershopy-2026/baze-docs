@@ -373,7 +373,7 @@
           "watermark": {
             "type": "boolean",
             "default": false,
-            "description": "Whether to add a watermark in the bottom-right corner of the image. Default is `false`."
+            "description": "Whether to add a \"AI生成\" watermark in the bottom-right corner of the image. Default is `false`."
           }
         },
         "description": "Additional parameters controlling image generation."

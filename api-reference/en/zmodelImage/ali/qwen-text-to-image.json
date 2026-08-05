@@ -224,7 +224,7 @@
           },
           "size": {
             "type": "string",
-            "description": "Output image resolution in `width*height` format. For the `qwen-image-2.0` and `qwen-image-3.0` series, total output pixels must be between `512*512` and `2048*2048`, and the default resolution is `2048*2048`. Recommended resolutions: `2688*1536` (16:9), `1536*2688` (9:16), `2048*2048` (1:1, default), `2368*1728` (4:3), and `1728*2368` (3:4).",
+            "description": "Output image resolution in `width*height` format. For the `qwen-image-2.0` and `qwen-image-3.0` series, total output pixels must be between `512*512` and `2048*2048`, and the default resolution is `1024*1024`. Recommended resolutions: `2688*1536` (16:9), `1536*2688` (9:16), `1024*1024` (1:1, default), `2368*1728` (4:3), and `1728*2368` (3:4).",
             "x-options": [
               {
                 "label": "1K",
@@ -235,7 +235,7 @@
                 "value": "2048*2048"
               }
             ],
-            "default": "2048*2048"
+            "default": "1024*1024"
           },
           "negative_prompt": {
             "type": "string",

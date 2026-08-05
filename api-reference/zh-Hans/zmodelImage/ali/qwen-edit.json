@@ -249,11 +249,12 @@
                 "label": "2K",
                 "value": "2048*2048"
               }
-            ]
+            ],
+            "default": "1024*1024"
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否在图像右下角添加 \"Qwen-Image\" 水印。默认值为 `false`。",
+            "description": "是否在图像右下角添加水印。默认值为 `false`。qwen-image-2.0-pro水印为 \"Qwen-Image\" ，qwen-image-3.0-pro水印为\"AI生成\"",
             "default": false
           },
           "prompt_extend": {

@@ -249,11 +249,11 @@
                 "value": "2048*2048"
               }
             ],
-            "default": "512*512"
+            "default": "1024*1024"
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a \"Qwen-Image\" watermark in the lower-right corner of the image. Default is `false`.",
+            "description": "Whether to add a watermark in the lower-right corner of the image. Default is `false`. For `qwen-image-2.0-pro`, the watermark is \"Qwen-Image\"; for `qwen-image-3.0-pro`, the watermark is \"AI生成\".",
             "default": false
           },
           "prompt_extend": {
