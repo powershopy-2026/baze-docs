@@ -1,0 +1,504 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Qwen - Image generation and editing 3.0",
+    "version": "1.0.0",
+    "description": "Alibaba Cloud Qwen Image 3.0 capability documentation. The platform unified API endpoint is `/ali/api/v1/services/aigc/multimodal-generation/generation`. This document describes the image generation and editing contract for the `qwen-image-3.0-pro` model: supports both Text-to-Image (T2I) and Image-to-Image/Editing (I2I). For T2I, `input.messages[].content[]` only contains a `text` prompt; for I2I, `content[]` carries 1-3 input images and 1 editing instruction. The `parameters` field controls resolution, count, prompt rewriting mode, negative prompt, watermark, seed, etc.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "baze platform API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Qwen Image",
+      "description": "Qwen image generation and editing capability"
+    }
+  ],
+  "paths": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
+      "post": {
+        "summary": "Qwen - Image generation and editing 3.0",
+        "description": "Call Alibaba Cloud Qwen `qwen-image-3.0-pro` model to perform image generation and editing tasks, supporting both Text-to-Image (T2I) and Image-to-Image/Editing (I2I).\n\n**Text-to-Image (T2I)**: `input.messages[0].content[]` only contains a `text` object (prompt).\n\n**Image-to-Image/Editing (I2I)**: `input.messages[0].content[]` contains 1-3 `image` objects (input image URLs or Base64) and 1 `text` object (editing instruction).\n\nThe `parameters` field controls resolution `size`, count `n`, intelligent prompt rewriting `prompt_extend` and `prompt_extend_mode`, negative prompt `negative_prompt`, watermark `watermark`, random seed `seed`, etc.",
+        "operationId": "aliQwenImage30Generation",
+        "tags": [
+          "Qwen Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageGenerationRequest"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "Text-to-Image (T2I)",
+                  "value": {
+                    "model": "qwen-image-3.0-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "A flower shop with exquisite windows and a beautiful wooden door, various fresh flowers displayed at the entrance, sunlight streaming through the windows onto the flowers, ancient European buildings on both sides of the street, warm and romantic atmosphere."
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "prompt_extend": true,
+                      "prompt_extend_mode": "direct",
+                      "n": 1,
+                      "watermark": false
+                    }
+                  }
+                },
+                "image_to_image": {
+                  "summary": "Image-to-Image / Editing (I2I)",
+                  "value": {
+                    "model": "qwen-image-3.0-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/yBRq1ZPYEaXdyOdv/img/33a80a19-7ac7-4c64-b0fa-7d685b7046a0.png"
+                            },
+                            {
+                              "text": "Generate a high-end urban style portrait photo, perfectly preserving the facial features and long black hair of this young woman from the input image. Change her outfit to an elegant urban professional look, set the scene in a modern minimalist high-end coffee shop."
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "prompt_extend": true,
+                      "prompt_extend_mode": "direct",
+                      "n": 1,
+                      "watermark": false
+                    }
+                  }
+                },
+                "multi_image_edit": {
+                  "summary": "Multi-image editing",
+                  "value": {
+                    "model": "qwen-image-3.0-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/input1.png"
+                            },
+                            {
+                              "image": "https://example.com/input2.png"
+                            },
+                            {
+                              "text": "Blend the styles of both images to generate a new artwork"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "prompt_extend": true,
+                      "n": 1,
+                      "size": "1024*1024",
+                      "watermark": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully returns image generation results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Success response",
+                    "value": {
+                      "output": {
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "message": {
+                              "content": [
+                                {
+                                  "image": "https://dashscope-result-sz.oss-cn-shenzhen.aliyuncs.com/xxx.png?Expires=xxx"
+                                }
+                              ],
+                              "role": "assistant"
+                            }
+                          }
+                        ]
+                      },
+                      "usage": {
+                        "output_height": 1024,
+                        "output_width": 1024,
+                        "input_image_count": 1,
+                        "input_image_type": "qima_input_1k",
+                        "output_image_count": 1,
+                        "output_image_type": "qima_output_1k"
+                      },
+                      "request_id": "571ae02f-5c9d-436c-83c2-f221e6df0xxx"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g., missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request body too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit triggered or account quota exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while processing the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream provider returned an abnormal response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream provider temporarily unavailable, or no available channel for the current model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ImageGenerationRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen-image-3.0-pro"
+            ],
+            "description": "Model name. Example value: `qwen-image-3.0-pro`."
+          },
+          "input": {
+            "$ref": "#/components/schemas/QwenImage30Input"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/QwenImage30Parameters"
+          }
+        }
+      },
+      "QwenImage30Input": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "Request content array. Currently only single-turn conversation is supported, so the array contains exactly one object.",
+            "items": {
+              "$ref": "#/components/schemas/QwenImage30Message"
+            }
+          }
+        },
+        "description": "Input parameter object."
+      },
+      "QwenImage30Message": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "Message sender role, must be set to `user`."
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Message content array. Different combinations based on usage scenario:\n\n**Text-to-Image (T2I)**: Only contains one `{\"text\": \"...\"}` object.\n\n**Image-to-Image (I2I)**: Contains 1-3 `{\"image\": \"...\"}` objects and 1 `{\"text\": \"...\"}` object.",
+            "items": {
+              "$ref": "#/components/schemas/QwenImage30ContentItem"
+            }
+          }
+        }
+      },
+      "QwenImage30ContentItem": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "Input image URL or Base64 encoded data. For I2I, supports 1-3 images. When multiple images are provided, the order is defined by the array sequence, and the output image aspect ratio matches the last image.\n\n**Image requirements:**\n- Formats: JPG, JPEG, PNG, BMP, TIFF, WEBP, and GIF (GIF only processes the first frame).\n- Resolution: Recommended width and height between 384 and 2048 pixels.\n- Size: No larger than 10MB.\n\n**Supported input formats:**\n- Public URL: Supports HTTP and HTTPS protocols.\n- Base64 encoding: Format `data:{MIME_type};base64,{base64_data}`."
+          },
+          "text": {
+            "type": "string",
+            "description": "Positive prompt, used to describe the image content, style, and composition you expect to generate or edit. Supports Chinese and English.\n\n**Note**: Only one `text` is supported. Not providing one or providing multiple will result in an error."
+          }
+        }
+      },
+      "QwenImage30Parameters": {
+        "type": "object",
+        "properties": {
+          "prompt_extend": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable intelligent prompt rewriting, default is `true` (recommended). When enabled, the model optimizes the positive prompt according to the `prompt_extend_mode` setting, significantly improving results for simpler prompts."
+          },
+          "prompt_extend_mode": {
+            "type": "string",
+            "default": "direct",
+            "enum": [
+              "direct",
+              "agent"
+            ],
+            "description": "Prompt rewriting method, default is `direct`. Options:\n\n- `direct`: Direct Prompt Enhancement (DPE), suitable for most scenarios. Supported for both T2I and I2I.\n- `agent`: Agent Prompt Enhancement (APE), provides more refined rewriting. **Only supports Text-to-Image (T2I)**. Passing `agent` for I2I will return a 400 error."
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "default": 1,
+            "description": "Number of output images, supports 1-6 images, default is 1."
+          },
+          "size": {
+            "type": "string",
+            "description": "Set output image resolution, format `width*height`, e.g., `1024*1024`. When not specified, the model automatically recommends a resolution based on the prompt.\n\n- **Text-to-Image (T2I)**: Pixel area range 512*512 to 2048*2048, aspect ratio limit 1:8 to 8:1.\n- **Image-to-Image (I2I)**: Pixel area range 512*512 to 2048*2048, aspect ratio limit 1:8 to 8:1."
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "Negative prompt, used to describe content you don't want to see in the image, constraining the output. Supports Chinese and English."
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed, range [0, 2147483647]. Using the same `seed` value keeps generation results relatively stable. If not provided, the algorithm uses a random seed. Note: The model generation process is probabilistic; even with the same `seed`, identical results are not guaranteed."
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to add a watermark in the bottom-right corner of the image. Default is `false`."
+          }
+        },
+        "description": "Additional parameters controlling image generation."
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "$ref": "#/components/schemas/ImageOutput",
+            "description": "Contains model generation results."
+          },
+          "usage": {
+            "$ref": "#/components/schemas/ImageUsage"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Unique request identifier. Can be used for request tracing and troubleshooting."
+          },
+          "code": {
+            "type": "string",
+            "description": "Error code for failed requests. Not returned on success."
+          },
+          "message": {
+            "type": "string",
+            "description": "Detailed error message for failed requests. Not returned on success."
+          }
+        }
+      },
+      "ImageOutput": {
+        "type": "object",
+        "properties": {
+          "choices": {
+            "type": "array",
+            "description": "Result option list.",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoice"
+            }
+          }
+        }
+      },
+      "ImageChoice": {
+        "type": "object",
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "description": "Task stop reason, `stop` when naturally completed."
+          },
+          "message": {
+            "$ref": "#/components/schemas/ImageChoiceMessage"
+          }
+        }
+      },
+      "ImageChoiceMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "Message role, always `assistant`."
+          },
+          "content": {
+            "type": "array",
+            "description": "Message content, contains generated image information.",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoiceContentItem"
+            }
+          }
+        },
+        "description": "Message returned by the model."
+      },
+      "ImageChoiceContentItem": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "URL of the generated image in PNG format. The link is valid for 24 hours, please download and save the image promptly."
+          }
+        }
+      },
+      "ImageUsage": {
+        "type": "object",
+        "properties": {
+          "output_width": {
+            "type": "integer",
+            "description": "Final output image width in pixels."
+          },
+          "output_height": {
+            "type": "integer",
+            "description": "Final output image height in pixels."
+          },
+          "input_image_count": {
+            "type": "integer",
+            "description": "Number of input images in the request. For T2I it is 0, for I2I it returns the actual count."
+          },
+          "input_image_type": {
+            "type": "string",
+            "description": "Input image metering tier. Determined by output resolution pixel area: area≤2,250,000 is `qima_input_1k`, area>2,250,000 is `qima_input_2k`."
+          },
+          "output_image_count": {
+            "type": "integer",
+            "description": "Actual number of output images returned."
+          },
+          "output_image_type": {
+            "type": "string",
+            "description": "Output image metering tier. Determined by output resolution pixel area: area≤2,250,000 is `qima_output_1k`, area>2,250,000 is `qima_output_2k`."
+          }
+        },
+        "description": "Resource usage for this call, only returned on successful calls."
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code for failed requests. Not returned on success."
+          },
+          "message": {
+            "type": "string",
+            "description": "Detailed error message for failed requests. Not returned on success."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Unique request identifier. Can be used for request tracing and troubleshooting."
+          }
+        }
+      }
+    }
+  }
+}
