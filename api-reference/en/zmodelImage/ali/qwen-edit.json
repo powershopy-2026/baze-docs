@@ -3,7 +3,7 @@
   "info": {
     "title": "Qwen image editing",
     "version": "1.0.0",
-    "description": "Ali Qwen image editing capability documentation. The unified API endpoint is `/v1/images/edits`. This document describes the public gateway contract for `qwen-image-2.0-pro`: `input.messages[].content[]` carries images and text instructions, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
+    "description": "Ali Qwen image editing capability documentation. The unified API endpoint is `/v1/images/edits`. This document describes the public gateway contract for `qwen-image-2.0-pro` and `qwen-image-3.0-pro`: `input.messages[].content[]` carries images and text instructions, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/edits": {
       "post": {
         "summary": "Qwen image editing",
-        "description": "Calls Ali `qwen-image-2.0-pro` to perform single-image editing or multi-image fusion.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `n`, `size`, `watermark`, `prompt_extend`, `negative_prompt`, `seed` as top-level fields. Input images are placed in `input.messages[0].content[].image`, and the editing instruction is in a `text` item within the same array. The request body does not accept a top-level `parameters` field.",
+        "description": "Calls Ali `qwen-image-2.0-pro` or `qwen-image-3.0-pro` to perform single-image editing or multi-image fusion.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `n`, `size`, `watermark`, `prompt_extend`, `negative_prompt`, `seed` as top-level fields. Input images are placed in `input.messages[0].content[].image`, and the editing instruction is in a `text` item within the same array. The request body does not accept a top-level `parameters` field.",
         "operationId": "aliQwenImageEdit",
         "tags": [
           "Qwen Image"
@@ -213,9 +213,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "qwen-image-2.0-pro"
+              "qwen-image-2.0-pro",
+              "qwen-image-3.0-pro"
             ],
-            "description": "Model name. Example: `qwen-image-2.0-pro`."
+            "description": "Model name. Available values: `qwen-image-2.0-pro`, `qwen-image-3.0-pro`."
           },
           "response_format": {
             "type": "string",

@@ -3,7 +3,7 @@
   "info": {
     "title": "Qwen 图像编辑",
     "version": "1.0.0",
-    "description": "阿里 Qwen 图像编辑能力文档。公开统一入口为 `/v1/images/edits`，当前文档描述 `qwen-image-2.0-pro` 对外公开的网关契约：保留 `input.messages[].content[]` 承载图片与文本指令，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
+    "description": "阿里 Qwen 图像编辑能力文档。公开统一入口为 `/v1/images/edits`，当前文档描述 `qwen-image-2.0-pro` 和 `qwen-image-3.0-pro` 对外公开的网关契约：保留 `input.messages[].content[]` 承载图片与文本指令，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/edits": {
       "post": {
         "summary": "Qwen 图像编辑",
-        "description": "调用 Ali `qwen-image-2.0-pro` 执行单图编辑或多图融合。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `n`、`size`、`watermark`、`prompt_extend`、`negative_prompt`、`seed` 设计为顶层字段。输入图片位于 `input.messages[0].content[].image`，编辑指令位于同一数组中的 `text`。请求体不接受顶层 `parameters`。",
+        "description": "调用 Ali `qwen-image-2.0-pro` 或 `qwen-image-3.0-pro` 执行单图编辑或多图融合。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `n`、`size`、`watermark`、`prompt_extend`、`negative_prompt`、`seed` 设计为顶层字段。输入图片位于 `input.messages[0].content[].image`，编辑指令位于同一数组中的 `text`。请求体不接受顶层 `parameters`。",
         "operationId": "aliQwenImageEdit",
         "tags": [
           "Qwen Image"
@@ -213,9 +213,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "qwen-image-2.0-pro"
+              "qwen-image-2.0-pro",
+              "qwen-image-3.0-pro"
             ],
-            "description": "模型名称。示例值：`qwen-image-2.0-pro`。"
+            "description": "模型名称。可选值：`qwen-image-2.0-pro`、`qwen-image-3.0-pro`。"
           },
           "response_format": {
             "type": "string",

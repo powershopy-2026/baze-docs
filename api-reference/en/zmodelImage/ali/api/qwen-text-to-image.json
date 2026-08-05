@@ -3,7 +3,7 @@
   "info": {
     "title": "Qwen text-to-image",
     "version": "1.0.0",
-    "description": "Ali Qwen text-to-image capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/multimodal-generation/generation`. This document describes the public gateway contract for `qwen-image-2.0-pro`: `input.messages[].content[].text` carries the prompt, and `parameters` controls resolution, count, negative prompt, and other options.",
+    "description": "Ali Qwen text-to-image capability documentation. The unified API endpoint is `/ali/api/v1/services/aigc/multimodal-generation/generation`. This document describes the public gateway contract for `qwen-image-2.0-pro` and `qwen-image-3.0-pro`: `input.messages[].content[].text` carries the prompt, and `parameters` controls resolution, count, negative prompt, and other options.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/ali/api/v1/services/aigc/multimodal-generation/generation": {
       "post": {
         "summary": "Qwen text-to-image",
-        "description": "Calls Ali `qwen-image-2.0-pro` model to perform text-to-image generation.\n\nThe request body contains three main fields: `model`, `input`, and `parameters`. The prompt is placed in `input.messages[0].content[0].text`. The `parameters` field controls resolution `size`, count `n`, negative prompt `negative_prompt`, smart prompt rewriting `prompt_extend`, watermark `watermark`, and random seed `seed`.",
+        "description": "Calls Ali `qwen-image-2.0-pro` or `qwen-image-3.0-pro` model to perform text-to-image generation.\n\nThe request body contains three main fields: `model`, `input`, and `parameters`. The prompt is placed in `input.messages[0].content[0].text`. The `parameters` field controls resolution `size`, count `n`, negative prompt `negative_prompt`, smart prompt rewriting `prompt_extend`, watermark `watermark`, and random seed `seed`.",
         "operationId": "aliQwenTextToImage",
         "tags": [
           "Qwen Image"
@@ -204,9 +204,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "qwen-image-2.0-pro"
+              "qwen-image-2.0-pro",
+              "qwen-image-3.0-pro"
             ],
-            "description": "Model name. Example: `qwen-image-2.0-pro`."
+            "description": "Model name. Available values: `qwen-image-2.0-pro`, `qwen-image-3.0-pro`."
           },
           "input": {
             "$ref": "#/components/schemas/QwenTextToImageInput"
