@@ -131,12 +131,10 @@
           },
           "seconds": {
             "type": "string",
-            "description": "Video duration, integer only, in seconds.\n\n* Seedance 2.5 series: [2, 30] s, or set to -1\n\n**Note**\n\nSeedance 2.5 series supports two configuration methods:\n* Specify exact duration: Any integer within the valid range.\n* Smart mode: Set to -1 to let the model choose the appropriate video length (in whole seconds) within the valid range. The actual generated video duration can be obtained from the duration field returned by the query video generation task API. Note that video duration is related to billing, so set it carefully.",
+            "description": "Video duration, integer only, in seconds.\n\n* Seedance 2.5 series: [4, 30] s, or set to -1\n\n**Note**\n\nSeedance 2.5 series supports two configuration methods:\n* Specify exact duration: Any integer within the valid range.\n* Smart mode: Set to -1 to let the model choose the appropriate video length (in whole seconds) within the valid range. The actual generated video duration can be obtained from the duration field returned by the query video generation task API. Note that video duration is related to billing, so set it carefully.",
             "default": "5",
             "example": "5",
             "enum": [
-              "2",
-              "3",
               "4",
               "5",
               "6",
