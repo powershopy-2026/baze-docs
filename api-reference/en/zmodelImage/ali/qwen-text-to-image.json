@@ -3,7 +3,7 @@
   "info": {
     "title": "Qwen text-to-image",
     "version": "1.0.0",
-    "description": "Ali Qwen text-to-image capability documentation. The unified API endpoint is `/v1/images/generations`. This document describes the public gateway contract for `qwen-image-2.0-pro`: `input.messages[].content[].text` carries the prompt, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
+    "description": "Ali Qwen text-to-image capability documentation. The unified API endpoint is `/v1/images/generations`. This document describes the public gateway contract for `qwen-image-2.0-pro` and `qwen-image-3.0-pro`: `input.messages[].content[].text` carries the prompt, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Qwen text-to-image",
-        "description": "Calls Ali `qwen-image-2.0-pro` to perform text-to-image generation.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `n`, `size`, `negative_prompt`, `prompt_extend`, `watermark`, `seed` as top-level fields. The prompt is placed in `input.messages[0].content[0].text`. The request body does not accept a top-level `parameters` field.",
+        "description": "Calls Ali `qwen-image-2.0-pro` or `qwen-image-3.0-pro` to perform text-to-image generation.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `n`, `size`, `negative_prompt`, `prompt_extend`, `watermark`, `seed` as top-level fields. The prompt is placed in `input.messages[0].content[0].text`. The request body does not accept a top-level `parameters` field.",
         "operationId": "aliQwenTextToImage",
         "tags": [
           "Qwen Image"
@@ -199,9 +199,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "qwen-image-2.0-pro"
+              "qwen-image-2.0-pro",
+              "qwen-image-3.0-pro"
             ],
-            "description": "Model name. Example: `qwen-image-2.0-pro`."
+            "description": "Model name. Available values: `qwen-image-2.0-pro`, `qwen-image-3.0-pro`."
           },
           "response_format": {
             "type": "string",
@@ -219,26 +220,22 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 6,
-            "description": "Number of output images. Default is 1. For the `qwen-image-2.0` series, you can generate 1-6 images."
+            "description": "Number of output images. Default is 1. For the `qwen-image-2.0` and `qwen-image-3.0` series, you can generate 1-6 images."
           },
           "size": {
             "type": "string",
-            "description": "Output image resolution in `width*height` format. For the `qwen-image-2.0` series, total output pixels must be between `512*512` and `2048*2048`, and the default resolution is `2048*2048`. Recommended resolutions: `2688*1536` (16:9), `1536*2688` (9:16), `2048*2048` (1:1, default), `2368*1728` (4:3), and `1728*2368` (3:4).",
+            "description": "Output image resolution in `width*height` format. For the `qwen-image-2.0` and `qwen-image-3.0` series, total output pixels must be between `512*512` and `2048*2048`, and the default resolution is `1024*1024`. Recommended resolutions: `2688*1536` (16:9), `1536*2688` (9:16), `1024*1024` (1:1, default), `2368*1728` (4:3), and `1728*2368` (3:4).",
             "x-options": [
               {
-                "label": "512*512",
-                "value": "512*512"
-              },
-              {
                 "label": "1K",
-                "value": "1000*1000"
+                "value": "1024*1024"
               },
               {
                 "label": "2K",
-                "value": "2000*2000"
+                "value": "2048*2048"
               }
             ],
-            "default": "512*512"
+            "default": "1024*1024"
           },
           "negative_prompt": {
             "type": "string",
@@ -250,7 +247,7 @@
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a \"Qwen-Image\" watermark in the lower-right corner of the image. Default is `false`.",
+            "description": "Whether to add a watermark in the lower-right corner of the image. Default is `false`. For `qwen-image-2.0-pro`, the watermark is \"Qwen-Image\"; for `qwen-image-3.0-pro`, the watermark is \"AI生成\".",
             "default": false
           },
           "seed": {
@@ -311,7 +308,7 @@
         "properties": {
           "text": {
             "type": "string",
-            "description": "Positive prompt used to describe the image content, style, and composition you want to generate. Chinese and English are supported. The `qwen-image-2.0` series supports up to 1300 tokens; other models support up to 800 tokens. Extra content is automatically truncated."
+            "description": "Positive prompt used to describe the image content, style, and composition you want to generate. Chinese and English are supported. The `qwen-image-2.0` and `qwen-image-3.0` series support up to 1300 tokens; other models support up to 800 tokens. Extra content is automatically truncated."
           }
         }
       },
@@ -320,14 +317,14 @@
         "properties": {
           "size": {
             "type": "string",
-            "description": "Output image resolution in `width*height` format. For the `qwen-image-2.0` series, total output pixels must be between `512*512` and `2048*2048`, and the default resolution is `2048*2048`. Recommended resolutions: `2688*1536` (16:9), `1536*2688` (9:16), `2048*2048` (1:1, default), `2368*1728` (4:3), and `1728*2368` (3:4)."
+            "description": "Output image resolution in `width*height` format. For the `qwen-image-2.0` and `qwen-image-3.0` series, total output pixels must be between `512*512` and `2048*2048`, and the default resolution is `2048*2048`. Recommended resolutions: `2688*1536` (16:9), `1536*2688` (9:16), `2048*2048` (1:1, default), `2368*1728` (4:3), and `1728*2368` (3:4)."
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 6,
             "default": 1,
-            "description": "Number of output images. Default is 1. For the `qwen-image-2.0` series, you can generate 1-6 images."
+            "description": "Number of output images. Default is 1. For the `qwen-image-2.0` and `qwen-image-3.0` series, you can generate 1-6 images."
           },
           "negative_prompt": {
             "type": "string",

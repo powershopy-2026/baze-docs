@@ -3,7 +3,7 @@
   "info": {
     "title": "Qwen 文生图",
     "version": "1.0.0",
-    "description": "阿里 Qwen 文生图能力文档。公开统一入口为 `/v1/images/generations`，当前文档描述 `qwen-image-2.0-pro` 对外公开的网关契约：保留 `input.messages[].content[].text` 承载提示词，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
+    "description": "阿里 Qwen 文生图能力文档。公开统一入口为 `/v1/images/generations`，当前文档描述 `qwen-image-2.0-pro` 和 `qwen-image-3.0-pro` 对外公开的网关契约：保留 `input.messages[].content[].text` 承载提示词，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Qwen 文生图",
-        "description": "调用 Ali `qwen-image-2.0-pro` 执行文生图。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `n`、`size`、`negative_prompt`、`prompt_extend`、`watermark`、`seed` 设计为顶层字段。提示词位于 `input.messages[0].content[0].text`。请求体不接受顶层 `parameters`。",
+        "description": "调用 Ali `qwen-image-2.0-pro` 或 `qwen-image-3.0-pro` 执行文生图。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `n`、`size`、`negative_prompt`、`prompt_extend`、`watermark`、`seed` 设计为顶层字段。提示词位于 `input.messages[0].content[0].text`。请求体不接受顶层 `parameters`。",
         "operationId": "aliQwenTextToImage",
         "tags": [
           "Qwen Image"
@@ -199,9 +199,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "qwen-image-2.0-pro"
+              "qwen-image-2.0-pro",
+              "qwen-image-3.0-pro"
             ],
-            "description": "模型名称。示例值：`qwen-image-2.0-pro`。"
+            "description": "模型名称。可选值：`qwen-image-2.0-pro`、`qwen-image-3.0-pro`。"
           },
           "response_format": {
             "type": "string",
@@ -219,26 +220,22 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 6,
-            "description": "输出图像数量，默认值为 1。对于 `qwen-image-2.0` 系列模型，可选择输出 1-6 张图片。"
+            "description": "输出图像数量，默认值为 1。对于 `qwen-image-2.0` 和 `qwen-image-3.0` 系列模型，可选择输出 1-6 张图片。"
           },
           "size": {
             "type": "string",
-            "description": "输出图像分辨率，格式为 `宽*高`。`qwen-image-2.0` 系列模型输出图像总像素需在 `512*512` 至 `2048*2048` 之间，默认分辨率为 `2048*2048`。推荐分辨率：`2688*1536`（16:9）、`1536*2688`（9:16）、`2048*2048`（1:1，默认值）、`2368*1728`（4:3）、`1728*2368`（3:4）。",
+            "description": "输出图像分辨率，格式为 `宽*高`。`qwen-image-2.0` 和 `qwen-image-3.0` 系列模型输出图像总像素需在 `512*512` 至 `2048*2048` 之间，默认分辨率为 `1024*1024`。推荐分辨率：`2688*1536`（16:9）、`1536*2688`（9:16）、`1024*1024`（1:1，默认值）、`2368*1728`（4:3）、`1728*2368`（3:4）。",
             "x-options": [
               {
-                "label": "512*512",
-                "value": "512*512"
-              },
-              {
                 "label": "1K",
-                "value": "1000*1000"
+                "value": "1024*1024"
               },
               {
                 "label": "2K",
-                "value": "2000*2000"
+                "value": "2048*2048"
               }
             ],
-            "default": "512*512"
+            "default": "1024*1024"
           },
           "negative_prompt": {
             "type": "string",
@@ -250,7 +247,7 @@
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否在图像右下角添加 \"Qwen-Image\" 水印。默认值为 `false`。",
+            "description": "是否在图像右下角添加水印。默认值为 `false`。qwen-image-2.0-pro水印为 \"Qwen-Image\" ，qwen-image-3.0-pro水印为\"AI生成\"",
             "default": false
           },
           "seed": {
@@ -312,7 +309,7 @@
         "properties": {
           "text": {
             "type": "string",
-            "description": "正向提示词，用于描述您期望生成的图像内容、风格和构图。支持中英文，`qwen-image-2.0` 系列模型长度上限为 1300 Token，其他模型为 800 Token，超出部分将自动截断。"
+            "description": "正向提示词，用于描述您期望生成的图像内容、风格和构图。支持中英文，`qwen-image-2.0` 和 `qwen-image-3.0` 系列模型长度上限为 1300 Token，其他模型为 800 Token，超出部分将自动截断。"
           }
         }
       },
@@ -321,14 +318,14 @@
         "properties": {
           "size": {
             "type": "string",
-            "description": "输出图像的分辨率，格式为 `宽*高`。`qwen-image-2.0` 系列模型输出图像总像素需在 `512*512` 至 `2048*2048` 之间，默认分辨率为 `2048*2048`。推荐分辨率：`2688*1536`（16:9）、`1536*2688`（9:16）、`2048*2048`（1:1，默认值）、`2368*1728`（4:3）、`1728*2368`（3:4）。"
+            "description": "输出图像的分辨率，格式为 `宽*高`。`qwen-image-2.0` 和 `qwen-image-3.0` 系列模型输出图像总像素需在 `512*512` 至 `2048*2048` 之间，默认分辨率为 `2048*2048`。推荐分辨率：`2688*1536`（16:9）、`1536*2688`（9:16）、`2048*2048`（1:1，默认值）、`2368*1728`（4:3）、`1728*2368`（3:4）。"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 6,
             "default": 1,
-            "description": "输出图像的数量，默认值为 1。对于 `qwen-image-2.0` 系列模型，可选择输出 1-6 张图片。"
+            "description": "输出图像的数量，默认值为 1。对于 `qwen-image-2.0` 和 `qwen-image-3.0` 系列模型，可选择输出 1-6 张图片。"
           },
           "negative_prompt": {
             "type": "string",

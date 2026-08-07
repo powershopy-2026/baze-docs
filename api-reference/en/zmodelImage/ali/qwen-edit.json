@@ -3,7 +3,7 @@
   "info": {
     "title": "Qwen image editing",
     "version": "1.0.0",
-    "description": "Ali Qwen image editing capability documentation. The unified API endpoint is `/v1/images/edits`. This document describes the public gateway contract for `qwen-image-2.0-pro`: `input.messages[].content[]` carries images and text instructions, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
+    "description": "Ali Qwen image editing capability documentation. The unified API endpoint is `/v1/images/edits`. This document describes the public gateway contract for `qwen-image-2.0-pro` and `qwen-image-3.0-pro`: `input.messages[].content[]` carries images and text instructions, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/edits": {
       "post": {
         "summary": "Qwen image editing",
-        "description": "Calls Ali `qwen-image-2.0-pro` to perform single-image editing or multi-image fusion.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `n`, `size`, `watermark`, `prompt_extend`, `negative_prompt`, `seed` as top-level fields. Input images are placed in `input.messages[0].content[].image`, and the editing instruction is in a `text` item within the same array. The request body does not accept a top-level `parameters` field.",
+        "description": "Calls Ali `qwen-image-2.0-pro` or `qwen-image-3.0-pro` to perform single-image editing or multi-image fusion.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `n`, `size`, `watermark`, `prompt_extend`, `negative_prompt`, `seed` as top-level fields. Input images are placed in `input.messages[0].content[].image`, and the editing instruction is in a `text` item within the same array. The request body does not accept a top-level `parameters` field.",
         "operationId": "aliQwenImageEdit",
         "tags": [
           "Qwen Image"
@@ -213,9 +213,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "qwen-image-2.0-pro"
+              "qwen-image-2.0-pro",
+              "qwen-image-3.0-pro"
             ],
-            "description": "Model name. Example: `qwen-image-2.0-pro`."
+            "description": "Model name. Available values: `qwen-image-2.0-pro`, `qwen-image-3.0-pro`."
           },
           "response_format": {
             "type": "string",
@@ -240,23 +241,19 @@
             "description": "Output image resolution in `width*height` format, for example `1024*1536`. For the `qwen-image-2.0` series, total pixels must be between `512*512` and `2048*2048`. By default, total pixels are close to `1024*1024`, and the aspect ratio is close to the input image (for multi-image input, the last image). Recommended common resolutions: 1:1 `1024*1024`, `1536*1536`; 2:3 `768*1152`, `1024*1536`; 3:2 `1152*768`, `1536*1024`; 3:4 `960*1280`, `1080*1440`; 4:3 `1280*960`, `1440*1080`; 9:16 `720*1280`, `1080*1920`; 16:9 `1280*720`, `1920*1080`; 21:9 `1344*576`, `2048*872`.",
             "x-options": [
               {
-                "label": "512*512",
-                "value": "512*512"
-              },
-              {
                 "label": "1K",
-                "value": "1000*1000"
+                "value": "1024*1024"
               },
               {
                 "label": "2K",
-                "value": "2000*2000"
+                "value": "2048*2048"
               }
             ],
-            "default": "512*512"
+            "default": "1024*1024"
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a \"Qwen-Image\" watermark in the lower-right corner of the image. Default is `false`.",
+            "description": "Whether to add a watermark in the lower-right corner of the image. Default is `false`. For `qwen-image-2.0-pro`, the watermark is \"Qwen-Image\"; for `qwen-image-3.0-pro`, the watermark is \"AI生成\".",
             "default": false
           },
           "prompt_extend": {
@@ -348,19 +345,14 @@
             "description": "Output image resolution in `width*height` format, for example `1024*1536`. For the `qwen-image-2.0` series, total pixels must be between `512*512` and `2048*2048`. By default, total pixels are close to `1024*1024`, and the aspect ratio is close to the input image (for multi-image input, the last image). Recommended common resolutions: 1:1 `1024*1024`, `1536*1536`; 2:3 `768*1152`, `1024*1536`; 3:2 `1152*768`, `1536*1024`; 3:4 `960*1280`, `1080*1440`; 4:3 `1280*960`, `1440*1080`; 9:16 `720*1280`, `1080*1920`; 16:9 `1280*720`, `1920*1080`; 21:9 `1344*576`, `2048*872`.",
             "x-options": [
               {
-                "label": "512*512",
-                "value": "512*512"
-              },
-              {
                 "label": "1K",
-                "value": "1000*1000"
+                "value": "1024*1024"
               },
               {
                 "label": "2K",
-                "value": "2000*2000"
+                "value": "2048*2048"
               }
-            ],
-            "default": "512*512"
+            ]
           },
           "watermark": {
             "type": "boolean",

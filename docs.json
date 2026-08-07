@@ -126,6 +126,7 @@
                       {
                         "group": "阿里巴巴兼容API",
                         "pages": [
+                          "zh-Hans/zmodelImage/ali/api/qwen-image-3.0",
                           "zh-Hans/zmodelImage/ali/api/qwen-text-to-image",
                           "zh-Hans/zmodelImage/ali/api/qwen-image-edit",
                           "zh-Hans/zmodelImage/ali/api/wan2.7-image-generation"
@@ -482,6 +483,7 @@
                       {
                         "group": "Alibaba Compatible API",
                         "pages": [
+                          "en/zmodelImage/ali/api/qwen-image-3.0",
                           "en/zmodelImage/ali/api/qwen-text-to-image",
                           "en/zmodelImage/ali/api/qwen-image-edit",
                           "en/zmodelImage/ali/api/wan2.7-image-generation"
