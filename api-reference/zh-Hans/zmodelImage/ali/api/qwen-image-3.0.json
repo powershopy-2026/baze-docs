@@ -1,0 +1,504 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "千问-图像生成与编辑3.0",
+    "version": "1.0.0",
+    "description": "阿里云千问图像生成与编辑3.0能力文档。平台统一接口端点为 `/ali/api/v1/services/aigc/multimodal-generation/generation`。本文档描述了 `qwen-image-3.0-pro` 模型的图像生成与编辑调用契约：支持文生图（T2I）和图生图/图像编辑（I2I）两种模式。文生图时 `input.messages[].content[]` 仅包含 `text` 提示词；图生图时 `content[]` 携带 1-3 张输入图像和 1 条编辑指令。`parameters` 控制分辨率、数量、提示词改写模式、反向提示词、水印、随机种子等参数。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "baze平台 API 服务端点"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Qwen Image",
+      "description": "千问图像生成与编辑能力"
+    }
+  ],
+  "paths": {
+    "/ali/api/v1/services/aigc/multimodal-generation/generation": {
+      "post": {
+        "summary": "千问-图像生成与编辑3.0",
+        "description": "调用阿里云千问 `qwen-image-3.0-pro` 模型执行图像生成与编辑任务，同时支持文生图（T2I）和图生图/图像编辑（I2I）。\n\n**文生图（T2I）**：`input.messages[0].content[]` 仅包含一个 `text` 对象（提示词）。\n\n**图生图/图像编辑（I2I）**：`input.messages[0].content[]` 包含 1-3 个 `image` 对象（输入图像 URL 或 Base64）和 1 个 `text` 对象（编辑指令）。\n\n`parameters` 字段控制分辨率 `size`、数量 `n`、提示词智能改写 `prompt_extend` 和 `prompt_extend_mode`、反向提示词 `negative_prompt`、水印 `watermark`、随机种子 `seed` 等。",
+        "operationId": "aliQwenImage30Generation",
+        "tags": [
+          "Qwen Image"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageGenerationRequest"
+              },
+              "examples": {
+                "文生图": {
+                  "summary": "文生图（T2I）",
+                  "value": {
+                    "model": "qwen-image-3.0-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "text": "一间有着精致窗户的花店，漂亮的木质门，门口摆放着各种鲜花，阳光透过窗户洒在花朵上，街道两旁是古老的欧洲建筑，画面温馨而浪漫。"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "prompt_extend": true,
+                      "prompt_extend_mode": "direct",
+                      "n": 1,
+                      "watermark": false
+                    }
+                  }
+                },
+                "图生图": {
+                  "summary": "图生图/图像编辑（I2I）",
+                  "value": {
+                    "model": "qwen-image-3.0-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://alidocs.oss-cn-zhangjiakou.aliyuncs.com/res/yBRq1ZPYEaXdyOdv/img/33a80a19-7ac7-4c64-b0fa-7d685b7046a0.png"
+                            },
+                            {
+                              "text": "帮我生成一张充满高级感的都市风格女性写真，画面中人物完美保留输入图片中这位年轻女性的面部特征与一头柔顺的黑色长发。人物换上一套彰显高雅气质的都市职场穿搭，场景设定在一家装修现代简约的高端咖啡店内。"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "prompt_extend": true,
+                      "prompt_extend_mode": "direct",
+                      "n": 1,
+                      "watermark": false
+                    }
+                  }
+                },
+                "多图编辑": {
+                  "summary": "多图输入编辑",
+                  "value": {
+                    "model": "qwen-image-3.0-pro",
+                    "input": {
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": [
+                            {
+                              "image": "https://example.com/input1.png"
+                            },
+                            {
+                              "image": "https://example.com/input2.png"
+                            },
+                            {
+                              "text": "将两张图片的风格融合，生成一张新的艺术作品"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "parameters": {
+                      "prompt_extend": true,
+                      "n": 1,
+                      "size": "1024*1024",
+                      "watermark": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功返回图像生成结果。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "成功响应",
+                    "value": {
+                      "output": {
+                        "choices": [
+                          {
+                            "finish_reason": "stop",
+                            "message": {
+                              "content": [
+                                {
+                                  "image": "https://dashscope-result-sz.oss-cn-shenzhen.aliyuncs.com/xxx.png?Expires=xxx"
+                                }
+                              ],
+                              "role": "assistant"
+                            }
+                          }
+                        ]
+                      },
+                      "usage": {
+                        "output_height": 1024,
+                        "output_width": 1024,
+                        "input_image_count": 1,
+                        "input_image_type": "qima_input_1k",
+                        "output_image_count": 1,
+                        "output_image_type": "qima_output_1k"
+                      },
+                      "request_id": "571ae02f-5c9d-436c-83c2-f221e6df0xxx"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "认证失败，例如缺少或无效的令牌。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "请求体过大。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发限流或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "处理请求时发生内部服务器错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游渠道返回了异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游渠道暂时不可用，或当前模型无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传递 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ImageGenerationRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "qwen-image-3.0-pro"
+            ],
+            "description": "模型名称。示例值：`qwen-image-3.0-pro`。"
+          },
+          "input": {
+            "$ref": "#/components/schemas/QwenImage30Input"
+          },
+          "parameters": {
+            "$ref": "#/components/schemas/QwenImage30Parameters"
+          }
+        }
+      },
+      "QwenImage30Input": {
+        "type": "object",
+        "required": [
+          "messages"
+        ],
+        "properties": {
+          "messages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "description": "请求内容数组。当前仅支持单轮对话，数组内有且只有一个对象。",
+            "items": {
+              "$ref": "#/components/schemas/QwenImage30Message"
+            }
+          }
+        },
+        "description": "输入参数对象。"
+      },
+      "QwenImage30Message": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user"
+            ],
+            "description": "消息发送者角色，必须设置为 `user`。"
+          },
+          "content": {
+            "type": "array",
+            "minItems": 1,
+            "description": "消息内容数组。根据使用场景有不同的组合方式：\n\n**文生图（T2I）**：仅包含一个 `{\"text\": \"...\"}` 对象。\n\n**图生图（I2I）**：包含 1-3 个 `{\"image\": \"...\"}` 对象和 1 个 `{\"text\": \"...\"}` 对象。",
+            "items": {
+              "$ref": "#/components/schemas/QwenImage30ContentItem"
+            }
+          }
+        }
+      },
+      "QwenImage30ContentItem": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "输入图像的 URL 或 Base64 编码数据。I2I 场景下支持传入 1-3 张图像。多图输入时，按照数组顺序定义图像顺序。\n\n**图像要求：**\n- 图像格式：JPG、JPEG、PNG、BMP、TIFF、WEBP 和 GIF。\n- 图像分辨率：建议宽高均在 384 像素至 2048 像素之间。\n- 图像大小：不超过 10MB。\n\n**支持的输入格式：**\n- 公网 URL：支持 HTTP 和 HTTPS 协议。\n- Base64 编码：格式为 `data:{MIME_type};base64,{base64_data}`。"
+          },
+          "text": {
+            "type": "string",
+            "description": "正向提示词，用于描述您期望生成或编辑的图像内容、风格和构图。支持中英文。\n\n**注意**：仅支持传入一个 `text`，不传或传入多个将报错。"
+          }
+        }
+      },
+      "QwenImage30Parameters": {
+        "type": "object",
+        "properties": {
+          "prompt_extend": {
+            "type": "boolean",
+            "default": true,
+            "description": "是否开启提示词智能改写，默认值为 `true`（建议开启）。开启后，模型会按照 `prompt_extend_mode` 指定的方式优化正向提示词，对描述较简单的提示词效果提升明显。"
+          },
+          "prompt_extend_mode": {
+            "type": "string",
+            "default": "direct",
+            "enum": [
+              "direct",
+              "agent"
+            ],
+            "description": "提示词改写方式，默认值为 `direct`。可选值：\n\n- `direct`：直接提示词增强（DPE），适用于大多数场景。T2I 和 I2I 均支持。\n- `agent`：智能体提示词增强（APE），提供更精细的改写效果。**仅支持文生图（T2I）**，图生图（I2I）场景传入 `agent` 将返回 400 错误。"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "default": 1,
+            "description": "输出图像的数量，支持输出 1-6 张图片，默认值为 1。"
+          },
+          "size": {
+            "type": "string",
+            "description": "设置输出图像的分辨率，格式为 `宽*高`，例如 `1024*1024`。未指定时由模型根据提示词自动推荐分辨率。\n\n- **文生图（T2I）**：像素面积范围 `512*512` 至 `2048*2048`，宽高比限制 1:8 至 8:1。\n- **图生图（I2I）**：像素面积范围 `512*512` 至 `2048*2048`，宽高比限制 1:8 至 8:1。"
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "反向提示词，用来描述不希望在画面中看到的内容，可以对画面进行限制。支持中英文。"
+          },
+          "seed": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "随机数种子，取值范围 [0, 2147483647]。使用相同的 `seed` 参数值可使生成内容保持相对稳定。若不提供，算法将自动使用随机数种子。注意：模型生成过程具有概率性，即使使用相同的 `seed`，也不能保证每次生成结果完全一致。"
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否在图像右下角添加\"AI生成\"水印。默认值为 `false`。"
+          }
+        },
+        "description": "控制图像生成的附加参数。"
+      },
+      "ImageResponse": {
+        "type": "object",
+        "properties": {
+          "output": {
+            "$ref": "#/components/schemas/ImageOutput",
+            "description": "包含模型生成结果。"
+          },
+          "usage": {
+            "$ref": "#/components/schemas/ImageUsage"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求唯一标识。可用于请求明细溯源和问题排查。"
+          },
+          "code": {
+            "type": "string",
+            "description": "请求失败的错误码。请求成功时不会返回此参数。"
+          },
+          "message": {
+            "type": "string",
+            "description": "请求失败的详细信息。请求成功时不会返回此参数。"
+          }
+        }
+      },
+      "ImageOutput": {
+        "type": "object",
+        "properties": {
+          "choices": {
+            "type": "array",
+            "description": "结果选项列表。",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoice"
+            }
+          }
+        }
+      },
+      "ImageChoice": {
+        "type": "object",
+        "properties": {
+          "finish_reason": {
+            "type": "string",
+            "description": "任务停止原因，自然停止时为 `stop`。"
+          },
+          "message": {
+            "$ref": "#/components/schemas/ImageChoiceMessage"
+          }
+        }
+      },
+      "ImageChoiceMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "description": "消息的角色，固定为 `assistant`。"
+          },
+          "content": {
+            "type": "array",
+            "description": "消息内容，包含生成的图像信息。",
+            "items": {
+              "$ref": "#/components/schemas/ImageChoiceContentItem"
+            }
+          }
+        },
+        "description": "模型返回的消息。"
+      },
+      "ImageChoiceContentItem": {
+        "type": "object",
+        "properties": {
+          "image": {
+            "type": "string",
+            "description": "生成图像的 URL，格式为 PNG。链接有效期为 24 小时，请及时下载并保存图像。"
+          }
+        }
+      },
+      "ImageUsage": {
+        "type": "object",
+        "properties": {
+          "output_width": {
+            "type": "integer",
+            "description": "最终输出图片的宽度（像素）。"
+          },
+          "output_height": {
+            "type": "integer",
+            "description": "最终输出图片的高度（像素）。"
+          },
+          "input_image_count": {
+            "type": "integer",
+            "description": "用户请求中输入图片的数量。文生图（T2I）时为 0，图生图（I2I）按实际输入图片数返回。"
+          },
+          "input_image_type": {
+            "type": "string",
+            "description": "输入图片计量档位。按输出分辨率像素面积判断：面积≤2,250,000 为 `qima_input_1k`，面积>2,250,000 为 `qima_input_2k`。"
+          },
+          "output_image_count": {
+            "type": "integer",
+            "description": "实际返回的输出图片数量。"
+          },
+          "output_image_type": {
+            "type": "string",
+            "description": "输出图片计量档位。按输出分辨率像素面积判断：面积≤2,250,000 为 `qima_output_1k`，面积>2,250,000 为 `qima_output_2k`。"
+          }
+        },
+        "description": "本次调用的资源使用情况，仅调用成功时返回。"
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "请求失败的错误码。请求成功时不会返回此参数。"
+          },
+          "message": {
+            "type": "string",
+            "description": "请求失败的详细信息。请求成功时不会返回此参数。"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求唯一标识。可用于请求明细溯源和问题排查。"
+          }
+        }
+      }
+    }
+  }
+}

@@ -280,13 +280,16 @@
               "qwen3-max",
               "qwen3.5-flash",
               "qwen3.6-plus",
+              "qwen3.7-max",
+              "qwen3.7-plus",
               "deepseek-v3-2-251201",
               "seed-1-6-250915",
               "seed-1-6-flash-250715",
               "seed-1-8-251228",
               "seed-2-0-lite-260228",
               "seed-2-0-mini-260215",
-              "seed-2-0-pro-260328"
+              "seed-2-0-pro-260328",
+              "dola-seed-2-1-turbo-260628"
             ],
             "description": "模型名称。请使用平台接口已公开且支持 Responses API 的模型；具体模型是否支持工具、OCR 或思考模式，取决于当前渠道能力。",
             "example": "qwen3.6-plus"

@@ -52,6 +52,8 @@
                     "pages": [
                       "zh-Hans/zmodelChat/ali/qwen3.5-flash",
                       "zh-Hans/zmodelChat/ali/qwen3.6-plus",
+                      "zh-Hans/zmodelChat/ali/qwen3.7-plus",
+                      "zh-Hans/zmodelChat/ali/qwen3.7-max",
                       "zh-Hans/zmodelChat/ali/qwen3-coder-plus",
                       "zh-Hans/zmodelChat/ali/qwen3-max"
                     ]
@@ -65,7 +67,8 @@
                       "zh-Hans/zmodelChat/byteplus/seed-1-8-251228",
                       "zh-Hans/zmodelChat/byteplus/seed-2-0-lite-260228",
                       "zh-Hans/zmodelChat/byteplus/seed-2-0-mini-260215",
-                      "zh-Hans/zmodelChat/byteplus/seed-2-0-pro-260328"
+                      "zh-Hans/zmodelChat/byteplus/seed-2-0-pro-260328",
+                      "zh-Hans/zmodelChat/byteplus/dola-seed-2-1-turbo-260628"
                     ]
                   },
                   {
@@ -123,6 +126,7 @@
                       {
                         "group": "阿里巴巴兼容API",
                         "pages": [
+                          "zh-Hans/zmodelImage/ali/api/qwen-image-3.0",
                           "zh-Hans/zmodelImage/ali/api/qwen-text-to-image",
                           "zh-Hans/zmodelImage/ali/api/qwen-image-edit",
                           "zh-Hans/zmodelImage/ali/api/wan2.7-image-generation"
@@ -405,6 +409,8 @@
                     "pages": [
                       "en/zmodelChat/ali/qwen3.5-flash",
                       "en/zmodelChat/ali/qwen3.6-plus",
+                      "en/zmodelChat/ali/qwen3.7-plus",
+                      "en/zmodelChat/ali/qwen3.7-max",
                       "en/zmodelChat/ali/qwen3-coder-plus",
                       "en/zmodelChat/ali/qwen3-max"
                     ]
@@ -418,7 +424,8 @@
                       "en/zmodelChat/byteplus/seed-1-8-251228",
                       "en/zmodelChat/byteplus/seed-2-0-lite-260228",
                       "en/zmodelChat/byteplus/seed-2-0-mini-260215",
-                      "en/zmodelChat/byteplus/seed-2-0-pro-260328"
+                      "en/zmodelChat/byteplus/seed-2-0-pro-260328",
+                      "en/zmodelChat/byteplus/dola-seed-2-1-turbo-260628"
                     ]
                   },
                   {
@@ -476,6 +483,7 @@
                       {
                         "group": "Alibaba Compatible API",
                         "pages": [
+                          "en/zmodelImage/ali/api/qwen-image-3.0",
                           "en/zmodelImage/ali/api/qwen-text-to-image",
                           "en/zmodelImage/ali/api/qwen-image-edit",
                           "en/zmodelImage/ali/api/wan2.7-image-generation"

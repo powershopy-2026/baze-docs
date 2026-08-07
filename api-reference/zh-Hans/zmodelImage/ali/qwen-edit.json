@@ -3,7 +3,7 @@
   "info": {
     "title": "Qwen 图像编辑",
     "version": "1.0.0",
-    "description": "阿里 Qwen 图像编辑能力文档。公开统一入口为 `/v1/images/edits`，当前文档描述 `qwen-image-2.0-pro` 对外公开的网关契约：保留 `input.messages[].content[]` 承载图片与文本指令，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
+    "description": "阿里 Qwen 图像编辑能力文档。公开统一入口为 `/v1/images/edits`，当前文档描述 `qwen-image-2.0-pro` 和 `qwen-image-3.0-pro` 对外公开的网关契约：保留 `input.messages[].content[]` 承载图片与文本指令，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/edits": {
       "post": {
         "summary": "Qwen 图像编辑",
-        "description": "调用 Ali `qwen-image-2.0-pro` 执行单图编辑或多图融合。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `n`、`size`、`watermark`、`prompt_extend`、`negative_prompt`、`seed` 设计为顶层字段。输入图片位于 `input.messages[0].content[].image`，编辑指令位于同一数组中的 `text`。请求体不接受顶层 `parameters`。",
+        "description": "调用 Ali `qwen-image-2.0-pro` 或 `qwen-image-3.0-pro` 执行单图编辑或多图融合。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `n`、`size`、`watermark`、`prompt_extend`、`negative_prompt`、`seed` 设计为顶层字段。输入图片位于 `input.messages[0].content[].image`，编辑指令位于同一数组中的 `text`。请求体不接受顶层 `parameters`。",
         "operationId": "aliQwenImageEdit",
         "tags": [
           "Qwen Image"
@@ -213,9 +213,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "qwen-image-2.0-pro"
+              "qwen-image-2.0-pro",
+              "qwen-image-3.0-pro"
             ],
-            "description": "模型名称。示例值：`qwen-image-2.0-pro`。"
+            "description": "模型名称。可选值：`qwen-image-2.0-pro`、`qwen-image-3.0-pro`。"
           },
           "response_format": {
             "type": "string",
@@ -241,23 +242,19 @@
             "description": "输出图像分辨率，格式为 `宽*高`，例如 `1024*1536`。`qwen-image-2.0` 系列模型输出图像总像素需在 `512*512` 至 `2048*2048` 之间。默认总像素接近 `1024*1024`，宽高比贴近输入图片（多图时以最后一张为准）。推荐常用分辨率：1:1 `1024*1024`、`1536*1536`；2:3 `768*1152`、`1024*1536`；3:2 `1152*768`、`1536*1024`；3:4 `960*1280`、`1080*1440`；4:3 `1280*960`、`1440*1080`；9:16 `720*1280`、`1080*1920`；16:9 `1280*720`、`1920*1080`；21:9 `1344*576`、`2048*872`。",
             "x-options": [
               {
-                "label": "512*512",
-                "value": "512*512"
-              },
-              {
                 "label": "1K",
-                "value": "1000*1000"
+                "value": "1024*1024"
               },
               {
                 "label": "2K",
-                "value": "2000*2000"
+                "value": "2048*2048"
               }
             ],
-            "default": "512*512"
+            "default": "1024*1024"
           },
           "watermark": {
             "type": "boolean",
-            "description": "是否在图像右下角添加 \"Qwen-Image\" 水印。默认值为 `false`。",
+            "description": "是否在图像右下角添加水印。默认值为 `false`。qwen-image-2.0-pro水印为 \"Qwen-Image\" ，qwen-image-3.0-pro水印为\"AI生成\"",
             "default": false
           },
           "prompt_extend": {
