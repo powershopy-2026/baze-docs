@@ -336,7 +336,7 @@
               "mp4",
               "mov"
             ],
-            "description": "> Only supported by Seedance 2.5 series, Seedance 2.0 series, and Seedance 1.5 pro\n\nThe format of the output video.\n\n* mp4: A universal format with the best compatibility, using standard color precision. It can be played directly on web pages, mobile devices, various players, and distribution platforms. Supported by all models.\n* mov: A high-color-precision format for professional scenarios, which better maintains color and brightness consistency. Suitable for professional post-processing such as color grading, keying, and compositing, and recommended for video editing and video extension scenarios. Supported by Seedance 1.5 pro, Seedance 2.0 series, and Seedance 2.5 series.",
+            "description": "> Only supported by Seedance 2.5 series \n\nThe format of the output video.\n\n* mp4: A universal format with the best compatibility, using standard color precision. It can be played directly on web pages, mobile devices, various players, and distribution platforms. Supported by all models.\n* mov: A high-color-precision format for professional scenarios, which better maintains color and brightness consistency. Suitable for professional post-processing such as color grading, keying, and compositing, and recommended for video editing and video extension scenarios. Supported by Seedance 1.5 pro, Seedance 2.0 series, and Seedance 2.5 series.",
             "default": "mp4"
           },
           "duration": {
