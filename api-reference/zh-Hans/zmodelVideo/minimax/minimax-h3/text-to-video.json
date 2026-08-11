@@ -61,7 +61,7 @@
         },
         "responses": {
           "200": {
-            "description": "创建成功后返回 task_id。使用该 task_id 调用查询任务接口获取任务状态与结果。\n\n查询任务成功响应示例\n\n{\n  \"task\": {\n    \"id\": \"424010985738629\",\n    \"model\": \"MiniMax-H3\",\n    \"status\": \"succeeded\",\n    \"created_at\": 1785125529,\n    \"updated_at\": 1785125946,\n    \"content\": {\n      \"url\": \"`https://your-cdn.example.com/h3-generated-2k-output.mp4`\"\n    },\n    \"resolution\": \"2K\",\n    \"duration\": 5,\n    \"usage\": {\n      \"total_seconds\": 5,\n      \"input_seconds\": 0,\n      \"output_seconds\": 5,\n      \"input_image_count\": 0\n    },\n    \"ratio\": \"16:9\",\n    \"task_type\": \"generation\",\n    \"modality\": \"video\"\n  }\n}",
+            "description": "创建成功后返回 task_id。使用该 task_id 调用查询任务接口获取任务状态与结果。\n\n查询任务成功响应示例\n```json\n{\n  \"task\": {\n    \"id\": \"424010985738629\",\n    \"model\": \"MiniMax-H3\",\n    \"status\": \"succeeded\",\n    \"created_at\": 1785125529,\n    \"updated_at\": 1785125946,\n    \"content\": {\n      \"url\": \"`https://your-cdn.example.com/h3-generated-2k-output.mp4`\"\n    },\n    \"resolution\": \"2K\",\n    \"duration\": 5,\n    \"usage\": {\n      \"total_seconds\": 5,\n      \"input_seconds\": 0,\n      \"output_seconds\": 5,\n      \"input_image_count\": 0\n    },\n    \"ratio\": \"16:9\",\n    \"task_type\": \"generation\",\n    \"modality\": \"video\"\n  }\n}```",
             "content": {
               "application/json": {
                 "schema": {
