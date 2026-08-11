@@ -190,13 +190,6 @@
             "description": "> Only supported by Seedance 2.5 series\n\nOutput video format.\n\n* mp4: Universal format with the best compatibility, using standard color precision. Can be played directly on web pages, mobile devices, various players, and distribution platforms.\n* mov: Professional high color precision format, better preserving color and brightness consistency. Suitable for professional post-processing such as color grading, compositing, and synthesis. Recommended for video editing and video extension scenarios.",
             "default": "mp4"
           },
-          "seed": {
-            "type": "integer",
-            "description": "> Temporarily not supported by Seedance 2.5 series\n\nSeed integer for controlling the randomness of generated content. Range: integer in [-1, 2^32-1].\n\nNotes:\n* With the same request, if the model receives different seed values (e.g., not specifying a seed, setting seed to -1 which uses a random number, or manually changing the seed value), different results will be generated.\n* With the same request, if the model receives the same seed value, similar results will be generated, but exact consistency is not guaranteed.",
-            "default": -1,
-            "minimum": -1,
-            "maximum": 4294967295
-          },
           "watermark": {
             "type": "boolean",
             "description": "Whether the generated video contains a watermark.\n\n* false: The generated video does not contain a watermark.\n* true: The generated video displays an \"AI Generated\" watermark in the bottom-right corner.",
