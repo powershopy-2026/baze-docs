@@ -35,28 +35,55 @@
                 "schema": {
                   "$ref": "#/components/schemas/VideoGenerationResp"
                 },
-                "example": {
-                  "output": {
-                    "task": {
-                      "id": "424010985738629",
-                      "model": "MiniMax-H3",
-                      "status": "succeeded",
-                      "created_at": 1785125529,
-                      "updated_at": 1785125946,
-                      "content": {
-                        "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/89f8c0bbee5b_denoise_ids_0_final.mp4"
-                      },
-                      "resolution": "2K",
-                      "duration": 5,
-                      "usage": {
-                        "total_seconds": 5,
-                        "input_seconds": 0,
-                        "output_seconds": 5,
-                        "input_image_count": 0
-                      },
-                      "ratio": "16:9",
-                      "task_type": "generation",
-                      "modality": "video"
+                "examples": {
+                  "success": {
+                    "value": {
+                      "task": {
+                        "id": "424010985738629",
+                        "model": "MiniMax-H3",
+                        "status": "succeeded",
+                        "created_at": 1785125529,
+                        "updated_at": 1785125946,
+                        "content": {
+                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/89f8c0bbee5b_denoise_ids_0_final.mp4"
+                        },
+                        "resolution": "2K",
+                        "duration": 5,
+                        "usage": {
+                          "total_seconds": 5,
+                          "input_seconds": 0,
+                          "output_seconds": 5,
+                          "input_image_count": 0
+                        },
+                        "ratio": "16:9",
+                        "task_type": "generation",
+                        "modality": "video"
+                      }
+                    }
+                  },
+                  "failed": {
+                    "value": {
+                      "task": {
+                        "id": "424010985738630",
+                        "model": "MiniMax-H3",
+                        "status": "failed",
+                        "error": {
+                          "code": "1026",
+                          "message": "video description contains sensitive content"
+                        },
+                        "created_at": 1785125529,
+                        "updated_at": 1785125700,
+                        "resolution": "2K",
+                        "duration": 5,
+                        "usage": {
+                          "total_seconds": 0,
+                          "input_seconds": 0,
+                          "output_seconds": 0,
+                          "input_image_count": 0
+                        },
+                        "ratio": "16:9",
+                        "task_type": "generation",
+                        "modality": "video"
                     }
                   }
                 }
@@ -99,7 +126,7 @@
               },
               "status": {
                 "type": "string",
-                "description": "Task status:\n\nqueued: Queued\nrunning: Running\nsucceeded: Succeeded\nfailed: Failed\ncancelled: Cancelled",
+                "description": "Task status:\n\n- queued: Queued\n- running: Running\n- succeeded: Succeeded\n- failed: Failed\n- cancelled: Cancelled",
                 "enum": [
                   "queued",
                   "running",
