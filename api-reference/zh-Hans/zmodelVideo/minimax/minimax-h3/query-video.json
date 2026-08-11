@@ -35,7 +35,7 @@
                 "schema": {
                   "$ref": "#/components/schemas/VideoGenerationResp"
                 },
-                "example": {
+                "examples": {
                   "视频生成成功": {
                     "value": {
                       "task": {
