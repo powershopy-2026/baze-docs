@@ -15,7 +15,7 @@
       "delete": {
         "summary": "Video Generation",
         "operationId": "videoGeneration",
-        "description": "Cancel queued tasks based on current task status, or delete successful and failed video generation, H3-Context-IR, and video regeneration task records.\n\nThis API automatically performs cancellation or deletion based on the task's current status. Behavior:\nTask Status\tAction\tDescription\nqueued\tcancelled\tCancel the task; the task has not started processing, no charges apply\nsucceeded\tdeleted\tDelete the task record\nfailed\tdeleted\tDelete the task record\nrunning\t—\tOperation not allowed; returns an error (cannot cancel while processing)\ncancelled\t—\tOperation not allowed; returns an error\n",
+        "description": "Cancel queued tasks based on current task status, or delete successful and failed video generation, H3-Context-IR, and video regeneration task records.\n\nThis API automatically performs cancellation or deletion based on the task's current status. Behavior:\n\n| Task Status | Action | Description |\n| --- | --- | --- |\n| queued | cancelled | Cancel the task; the task has not started processing, no charges apply |\n| succeeded | deleted | Delete the task record |\n| failed | deleted | Delete the task record |\n| running | — | Operation not allowed; returns an error (cannot cancel while processing) |\n| cancelled | — | Operation not allowed; returns an error |",
         "parameters": [
           {
             "name": "task_id",

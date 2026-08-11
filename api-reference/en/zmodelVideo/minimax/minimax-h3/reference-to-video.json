@@ -13,9 +13,9 @@
   "paths": {
     "/minimax/v2/video_generation": {
       "post": {
-        "summary": "Video Generation",
+        "summary": "Multimodal reference-to-video (t2va)",
         "operationId": "videoGeneration",
-        "description": "",
+        "description": "Video generation V2 API. Input via multimodal content array (text / image / video / audio). Supports text-to-video, image-to-video (first/last frame), and multimodal reference-to-video with 2K output.",
         "parameters": [
           {
             "name": "Content-Type",
@@ -33,7 +33,7 @@
         ],
         "requestBody": {
           "required": true,
-          "description": "Video generation V2 API. Input via multimodal content array (text / image / video / audio). Supports text-to-video, image-to-video (first/last frame), and multimodal reference-to-video with 2K output.",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -75,7 +75,7 @@
         },
         "responses": {
           "200": {
-            "description": "Returns task_id upon successful creation. Use this task_id to call the query task API to retrieve task status and results.\n\nQuery task success response example\n\n{\n  \"task\": {\n    \"id\": \"424010985738629\",\n    \"model\": \"MiniMax-H3\",\n    \"status\": \"succeeded\",\n    \"created_at\": 1785125529,\n    \"updated_at\": 1785125946,\n    \"content\": {\n      \"url\": \"https://your-cdn.example.com/h3-generated-2k-output.mp4\"\n    },\n    \"resolution\": \"2K\",\n    \"duration\": 5,\n    \"usage\": {\n      \"total_seconds\": 5,\n      \"input_seconds\": 0,\n      \"output_seconds\": 5,\n      \"input_image_count\": 0\n    },\n    \"ratio\": \"16:9\",\n    \"task_type\": \"generation\",\n    \"modality\": \"video\"\n  }\n}",
+            "description": "Returns task_id upon successful creation. Use this task_id to call the query task API to retrieve task status and results.\n\nQuery task success response example\n\n```json\n{\n  \"task\": {\n    \"id\": \"424010985738629\",\n    \"model\": \"MiniMax-H3\",\n    \"status\": \"succeeded\",\n    \"created_at\": 1785125529,\n    \"updated_at\": 1785125946,\n    \"content\": {\n      \"url\": \"https://your-cdn.example.com/h3-generated-2k-output.mp4\"\n    },\n    \"resolution\": \"2K\",\n    \"duration\": 5,\n    \"usage\": {\n      \"total_seconds\": 5,\n      \"input_seconds\": 0,\n      \"output_seconds\": 5,\n      \"input_image_count\": 0\n    },\n    \"ratio\": \"16:9\",\n    \"task_type\": \"generation\",\n    \"modality\": \"video\"\n  }\n}\n```",
             "content": {
               "application/json": {
                 "schema": {
@@ -126,7 +126,7 @@
           },
           "content": {
             "type": "array",
-            "description": "Multimodal input content array describing the information used to generate the video. Each element is distinguished by type (text / image_url / video_url / audio_url) and can be annotated with a role.\n\nEach request must contain a non-empty text item (prompt is required); omission will return a parameter error.\nSupported input combinations (corresponding to different generation scenarios):\n\nText-to-video: a single text element only.",
+            "description": "Multimodal input content array describing the information used to generate the video. Each element is distinguished by type (text / image_url / video_url / audio_url) and can be annotated with a role.\n\nEach request must contain a non-empty text item (prompt is required); omission will return a parameter error.\n\nSupported input combinations (corresponding to different generation scenarios):\n\n- Multimodal reference-to-video: text + reference images (role=reference_image) + reference videos (role=reference_video) + reference audio (role=reference_audio) in combination.\nImage-to-video and multimodal reference-to-video are mutually exclusive: if any of reference_image / reference_video / reference_audio roles appear in content, first_frame / last_frame must not appear (and vice versa); they cannot be mixed.\n\nInput media limits (total request body size ≤ 64 MB; use public URLs for large files, do not use Base64)\n\nImage image_url:\n\n| Item | Limit |\n| --- | --- |\n| Format | JPG, JPEG, PNG, WEBP, HEIC, HEIF |\n| Single file size | ≤ 30 MB |\n| Width/height range | [256, 5760] px |\n| Aspect ratio (width/height) | [0.4, 2.5] |\n| Count | First frame ≤ 1, last frame ≤ 1, reference images ≤ 9 |\n\nVideo video_url (multimodal reference scenario only):\n\n| Item | Limit |\n| --- | --- |\n| Container / Format | MP4 (.mp4), MOV (.mov) |\n| Encoding | Video H.264/AVC, H.265/HEVC; Audio AAC, MP3 |\n| Single file size | ≤ 50 MB |\n| Count | ≤ 3 |\n| Single segment duration | [2, 15] s; total duration ≤ 15 s |\n| Width/height range | [256, 5760] px |\n| Aspect ratio (width/height) | [0.4, 2.5] |\n| Frame rate | [23.976, 60] |\n\nAudio audio_url (multimodal reference scenario only):\n\n| Item | Limit |\n| --- | --- |\n| Format | WAV, MP3 |\n| Single file size | ≤ 15 MB |\n| Count | ≤ 3 |\n| Single segment duration | [2, 15] s; total duration ≤ 15 s |",
             "items": {
               "type": "object",
               "required": [
@@ -185,7 +185,7 @@
                 },
                 "role": {
                   "type": "string",
-                  "description": "The position or purpose of the content, conditionally required:\n\nfirst_frame: First frame image (image-to-video; if only one image is provided and role is not set, it defaults to first_frame).\nlast_frame: Last frame image (image-to-video first-last frame; must be paired with first_frame).\nreference_image: Reference image (multimodal reference-to-video).\nreference_video: Reference video (multimodal reference-to-video).\nreference_audio: Reference audio (multimodal reference-to-video).\nVideo video_url (multimodal reference scenario only):\n\nItem\tLimit\nContainer / Format\tMP4 (.mp4), MOV (.mov)\nEncoding\tVideo H.264/AVC, H.265/HEVC; Audio AAC, MP3\nSingle file size\t≤ 50 MB\nCount\t≤ 3\nSingle segment duration\t[2, 15] s; total duration ≤ 15 s\nWidth/height range\t[256, 5760] px\nAspect ratio (width/height)\t[0.4, 2.5]\nFrame rate\t[23.976, 60]\nAudio audio_url (multimodal reference scenario only):\n\nItem\tLimit\nFormat\tWAV, MP3\nSingle file size\t≤ 15 MB\nCount\t≤ 3\nSingle segment duration\t[2, 15] s; total duration ≤ 15 s",
+                  "description": "The position or purpose of the content, conditionally required:\n\n- first_frame: First frame image (image-to-video; if only one image is provided and role is not set, it defaults to first_frame).\n- last_frame: Last frame image (image-to-video first-last frame; must be paired with first_frame).\n- reference_image: Reference image (multimodal reference-to-video).\n- reference_video: Reference video (multimodal reference-to-video).\n- reference_audio: Reference audio (multimodal reference-to-video).",
                   "enum": [
                     "first_frame",
                     "last_frame",
