@@ -13,7 +13,7 @@
   "paths": {
     "/minimax/v2/query/video_generation": {
       "get": {
-        "summary": "Video Generation",
+        "summary": "查询任务",
         "operationId": "videoGeneration",
         "description": "按 task_id 查询最近 7 天内单个视频生成、H3-Context-IR 或视频再生成任务的状态与结果。",
         "parameters": [
@@ -29,34 +29,62 @@
         ],
         "responses": {
           "200": {
-            "description": "创建成功后返回 task_id。使用该 task_id 调用查询任务接口获取任务状态与结果。\n\n查询任务成功响应示例\n\n{\n  \"task\": {\n    \"id\": \"424010985738629\",\n    \"model\": \"MiniMax-H3\",\n    \"status\": \"succeeded\",\n    \"created_at\": 1785125529,\n    \"updated_at\": 1785125946,\n    \"content\": {\n      \"url\": \"https://your-cdn.example.com/h3-generated-2k-output.mp4\"\n    },\n    \"resolution\": \"2K\",\n    \"duration\": 5,\n    \"usage\": {\n      \"total_seconds\": 5,\n      \"input_seconds\": 0,\n      \"output_seconds\": 5,\n      \"input_image_count\": 0\n    },\n    \"ratio\": \"16:9\",\n    \"task_type\": \"generation\",\n    \"modality\": \"video\"\n  }\n}",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/VideoGenerationResp"
                 },
                 "example": {
-                  "output": {
-                    "task": {
-                      "id": "424010985738629",
-                      "model": "MiniMax-H3",
-                      "status": "succeeded",
-                      "created_at": 1785125529,
-                      "updated_at": 1785125946,
-                      "content": {
-                        "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/89f8c0bbee5b_denoise_ids_0_final.mp4"
-                      },
-                      "resolution": "2K",
-                      "duration": 5,
-                      "usage": {
-                        "total_seconds": 5,
-                        "input_seconds": 0,
-                        "output_seconds": 5,
-                        "input_image_count": 0
-                      },
-                      "ratio": "16:9",
-                      "task_type": "generation",
-                      "modality": "video"
+                  "视频生成成功": {
+                    "value": {
+                      "task": {
+                        "id": "424010985738629",
+                        "model": "MiniMax-H3",
+                        "status": "succeeded",
+                        "created_at": 1785125529,
+                        "updated_at": 1785125946,
+                        "content": {
+                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/89f8c0bbee5b_denoise_ids_0_final.mp4"
+                        },
+                        "resolution": "2K",
+                        "duration": 5,
+                        "usage": {
+                          "total_seconds": 5,
+                          "input_seconds": 0,
+                          "output_seconds": 5,
+                          "input_image_count": 0
+                        },
+                        "ratio": "16:9",
+                        "task_type": "generation",
+                        "modality": "video"
+                      }
+                    }
+                  },
+                  "视频生成失败": {
+                    "value": {
+                      "task": {
+                        "id": "424010985738630",
+                        "model": "MiniMax-H3",
+                        "status": "failed",
+                        "error": {
+                          "code": "1026",
+                          "message": "video description contains sensitive content"
+                        },
+                        "created_at": 1785125529,
+                        "updated_at": 1785125700,
+                        "resolution": "2K",
+                        "duration": 5,
+                        "usage": {
+                          "total_seconds": 0,
+                          "input_seconds": 0,
+                          "output_seconds": 0,
+                          "input_image_count": 0
+                        },
+                        "ratio": "16:9",
+                        "task_type": "generation",
+                        "modality": "video"
+                      }
                     }
                   }
                 }
