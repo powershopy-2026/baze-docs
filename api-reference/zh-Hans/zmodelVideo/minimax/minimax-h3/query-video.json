@@ -127,7 +127,7 @@
               },
               "status": {
                 "type": "string",
-                "description": "任务状态：\n\nqueued：排队中\nrunning：运行中\nsucceeded：成功\nfailed：失败\ncancelled：已取消",
+                "description": "任务状态：\n\n- queued：排队中\n- running：运行中\n- succeeded：成功\n- failed：失败\n- cancelled：已取消",
                 "enum": [
                   "queued",
                   "running",
