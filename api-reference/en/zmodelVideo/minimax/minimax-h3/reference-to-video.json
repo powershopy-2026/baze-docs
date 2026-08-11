@@ -1,0 +1,259 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "Create a video generation task.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "paths": {
+    "/minimax/v2/video_generation": {
+      "post": {
+        "summary": "Video Generation",
+        "operationId": "videoGeneration",
+        "description": "",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "description": "Media type of the request body. Set to `application/json`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "application/json"
+              ],
+              "default": "application/json"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Video generation V2 API. Input via multimodal content array (text / image / video / audio). Supports text-to-video, image-to-video (first/last frame), and multimodal reference-to-video with 2K output.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoGenerationReq"
+              },
+              "examples": {
+                "Multimodal reference-to-video (t2va)": {
+                  "summary": "Multimodal reference-to-video (t2va)",
+                  "value": {
+                    "model": "MiniMax-H3",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Character speaks: Follow the wind, live free. Leave worries behind, enjoy the moment, voice tone references audio 1"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/297573323635_00_%E8%A7%86%E9%A2%911_YnyRbxEwio_video_20260525_163755_1927e9d3.mp4"
+                        },
+                        "role": "reference_video"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/f463d523c5ce_01_%E9%9F%B3%E9%A2%911_RSLcbpzJPo_6%E6%9C%885%E6%97%A5(1).mp3"
+                        },
+                        "role": "reference_audio"
+                      }
+                    ],
+                    "resolution": "2K",
+                    "duration": 5,
+                    "ratio": "adaptive"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns task_id upon successful creation. Use this task_id to call the query task API to retrieve task status and results.\n\nQuery task success response example\n\n{\n  \"task\": {\n    \"id\": \"424010985738629\",\n    \"model\": \"MiniMax-H3\",\n    \"status\": \"succeeded\",\n    \"created_at\": 1785125529,\n    \"updated_at\": 1785125946,\n    \"content\": {\n      \"url\": \"https://your-cdn.example.com/h3-generated-2k-output.mp4\"\n    },\n    \"resolution\": \"2K\",\n    \"duration\": 5,\n    \"usage\": {\n      \"total_seconds\": 5,\n      \"input_seconds\": 0,\n      \"output_seconds\": 5,\n      \"input_image_count\": 0\n    },\n    \"ratio\": \"16:9\",\n    \"task_type\": \"generation\",\n    \"modality\": \"video\"\n  }\n}",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoGenerationResp"
+                },
+                "example": {
+                  "output": {
+                    "task_id": "424010985738629"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "VideoGenerationReq": {
+        "type": "object",
+        "required": [
+          "model",
+          "content",
+          "resolution",
+          "duration"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model name. Currently available: `MiniMax-H3`.",
+            "enum": [
+              "MiniMax-H3"
+            ]
+          },
+          "content": {
+            "type": "array",
+            "description": "Multimodal input content array describing the information used to generate the video. Each element is distinguished by type (text / image_url / video_url / audio_url) and can be annotated with a role.\n\nEach request must contain a non-empty text item (prompt is required); omission will return a parameter error.\nSupported input combinations (corresponding to different generation scenarios):\n\nText-to-video: a single text element only.",
+            "items": {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Type of the input content.",
+                  "enum": [
+                    "text","image_url","video_url","audio_url"
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "description": "Text prompt. All scenarios require a non-empty text describing the expected video. Single text max 7000 characters."
+                },
+                "image_url": {
+                  "type": "object",
+                  "description": "Image object when type=image_url (format / size / dimension / count limits see content description above).",
+                  "required": [
+                    "url"
+                  ],
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "Image address. Supports: public URL; mm_file://{file_id} (reference platform existing files, such as uploaded or historical output file_id); data:image/<format>;base64,<Base64> data URI (<format> in lowercase)."
+                    }
+                  }
+                },
+                "video_url": {
+                  "type": "object",
+                  "description": "Video object when type=video_url (reference video, multimodal reference scenario only; format / size / duration limits see content description above).",
+                  "required": [
+                    "url"
+                  ],
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "Video address. Supports: public URL; mm_file://{file_id} (reference platform existing file_id); data:video/mp4;base64,<Base64> data URI. Note: total request body size ≤ 64 MB, Base64 expands by ~33%, use public URL or mm_file:// for large videos."
+                    }
+                  }
+                },
+                "audio_url": {
+                  "type": "object",
+                  "description": "Audio object when type=audio_url (reference audio, multimodal reference scenario only; format / size / duration limits see content description above).",
+                  "required": [
+                    "url"
+                  ],
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "Audio address. Supports: public URL; mm_file://{file_id} (reference platform existing file_id); data:audio/<format>;base64,<Base64> data URI (<format> in lowercase)."
+                    }
+                  }
+                },
+                "role": {
+                  "type": "string",
+                  "description": "The position or purpose of the content, conditionally required:\n\nfirst_frame: First frame image (image-to-video; if only one image is provided and role is not set, it defaults to first_frame).\nlast_frame: Last frame image (image-to-video first-last frame; must be paired with first_frame).\nreference_image: Reference image (multimodal reference-to-video).\nreference_video: Reference video (multimodal reference-to-video).\nreference_audio: Reference audio (multimodal reference-to-video).\nVideo video_url (multimodal reference scenario only):\n\nItem\tLimit\nContainer / Format\tMP4 (.mp4), MOV (.mov)\nEncoding\tVideo H.264/AVC, H.265/HEVC; Audio AAC, MP3\nSingle file size\t≤ 50 MB\nCount\t≤ 3\nSingle segment duration\t[2, 15] s; total duration ≤ 15 s\nWidth/height range\t[256, 5760] px\nAspect ratio (width/height)\t[0.4, 2.5]\nFrame rate\t[23.976, 60]\nAudio audio_url (multimodal reference scenario only):\n\nItem\tLimit\nFormat\tWAV, MP3\nSingle file size\t≤ 15 MB\nCount\t≤ 3\nSingle segment duration\t[2, 15] s; total duration ≤ 15 s",
+                  "enum": [
+                    "first_frame",
+                    "last_frame",
+                    "reference_image",
+                    "reference_video",
+                    "reference_audio"
+                  ]
+                }
+              }
+            }
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Video resolution. Currently available: 768P, 2K.",
+            "enum": [
+              "768P",
+              "2K"
+            ]
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds. Required, integer. Available: 4~15.",
+            "enum": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ]
+          },
+          "ratio": {
+            "type": "string",
+            "description": "Output video aspect ratio, default adaptive (automatically selects the most suitable aspect ratio based on input; the actual ratio can be retrieved from the ratio field in the query API).\n\nText-to-video (t2va, content contains only text): ratio is required and cannot be adaptive; available values: 21:9, 16:9, 4:3, 1:1, 3:4, 9:16.",
+            "enum": [
+              "21:9",
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16"
+            ]
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback notification URL for task status changes. After configuration, the MiniMax server will first send a verification request containing a challenge field (must return the challenge value unchanged within 3 seconds to complete verification). Once verified, whenever the task status changes, a POST push will be sent to this URL, with the push body structure matching the query task API response.\n\nCallback status values: queued, running, succeeded, failed, cancelled."
+          },
+          "aigc_watermark": {
+            "type": "boolean",
+            "description": "Whether to add an AIGC watermark to the generated video. Default false."
+          }
+        }
+      },
+      "VideoGenerationResp": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Task ID, used to query task status and results."
+          }
+        }
+      }
+    }
+  }
+}

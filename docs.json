@@ -199,6 +199,18 @@
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/query-video-task",
                           "zh-Hans/zmodelVideo/minimax/minimax兼容API/download-video-file"
                         ]
+                      },
+                      {
+                        "group": "MiniMax-H3",
+                        "pages": [
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/text-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/first-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/last-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/reference-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/query-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/delete-video"
+                        ]
                       }
                     ]
                   },
@@ -560,6 +572,18 @@
                           "en/zmodelVideo/minimax/video-generation/first-last-frame-to-video",
                           "en/zmodelVideo/minimax/video-generation/query-video-task",
                           "en/zmodelVideo/minimax/video-generation/download-video-file"
+                        ]
+                      },
+                      {
+                        "group": "MiniMax-H3",
+                        "pages": [
+                          "en/zmodelVideo/minimax/minimax-h3/text-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/first-frame-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/last-frame-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/first-last-frame-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/reference-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/query-video",
+                          "en/zmodelVideo/minimax/minimax-h3/delete-video"
                         ]
                       }
                     ]

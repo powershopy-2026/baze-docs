@@ -1,0 +1,92 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "Create a video generation task.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "paths": {
+    "/minimax/v2/video_generation": {
+      "delete": {
+        "summary": "Video Generation",
+        "operationId": "videoGeneration",
+        "description": "Cancel queued tasks based on current task status, or delete successful and failed video generation, H3-Context-IR, and video regeneration task records.\n\nThis API automatically performs cancellation or deletion based on the task's current status. Behavior:\nTask Status\tAction\tDescription\nqueued\tcancelled\tCancel the task; the task has not started processing, no charges apply\nsucceeded\tdeleted\tDelete the task record\nfailed\tdeleted\tDelete the task record\nrunning\t—\tOperation not allowed; returns an error (cannot cancel while processing)\ncancelled\t—\tOperation not allowed; returns an error\n",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The task ID to cancel or delete."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoGenerationResp"
+                },
+                "example": {
+                  "output": {
+                    "task_id": "424010985738629",
+                    "action": "cancelled",
+                    "status": "cancelled"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "VideoGenerationResp": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "The task ID that was operated on."
+          },
+          "action": {
+            "type": "string",
+            "description": "The actual operation performed: cancelled (cancel, only for queued status) or deleted (delete successful or failed task records).",
+            "enum": [
+              "cancelled","deleted"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "The operation result status: cancelled (cancelled) or deleted (record deleted).",
+            "enum": [
+              "cancelled","deleted"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
