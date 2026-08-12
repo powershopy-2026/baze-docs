@@ -45,27 +45,30 @@
                     "media": [
                       {
                         "type": "text",
-                        "text": "补充的提示词"
+                        "text": "全程使用视频1的第一视角构图，全程使用音频1作为背景音乐。第一人称视角果茶宣传广告，seedance牌「苹苹安安」苹果果茶限定款；首帧为图片1，你的手摘下一颗带晨露的阿克苏红苹果，轻脆的苹果碰撞声；2-4 秒：快速切镜，你的手将苹果块投入雪克杯，加入冰块与茶底，用力摇晃，冰块碰撞声与摇晃声卡点轻快鼓点，背景音：「鲜切现摇」；4-6 秒：第一人称成品特写，分层果茶倒入透明杯，你的手轻挤奶盖在顶部铺展，在杯身贴上粉红包标，镜头拉近看奶盖与果茶的分层纹理；6-8 秒：第一人称手持举杯，你将图片2中的果茶举到镜头前（模拟递到观众面前的视角），杯身标签清晰可见，背景音「来一口鲜爽」，尾帧定格为图片2。背景声音统一为女生音色。"
                       },
                       {
                         "type": "reference_image",
-                        "url": "https://example.com/img1.jpg"
+                        "url": "https://example.com/ref-pic1.jpg"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/ref-pic2.jpg"
                       },
                       {
                         "type": "reference_video",
-                        "url": "https://example.com/motion.mp4"
+                        "url": "https://example.com/ref-video.mp4"
                       },
                       {
                         "type": "reference_audio",
-                        "url": "https://example.com/audio.mp3"
+                        "url": "https://example.com/ref-audio.mp3"
                       }
                     ],
-                    "seconds": "-1",
+                    "seconds": "11",
                     "size": "720p",
-                    "ratio": "adaptive",
-                    "generate_audio": false,
-                    "return_last_frame": false,
-                    "safety_identifier": "user_123"
+                    "ratio": "16:9",
+                    "generate_audio": true,
+                    "watermark": false
                   }
                 }
               }
@@ -191,7 +194,7 @@
           },
           "output_format": {
             "type": "string",
-            "description": "输出视频格式。",
+            "description": "输出视频的格式。\n\n* mp4：通用格式，兼容性最好，采用标准色彩精度，可在网页、移动端、各类播放器及分发平台直接播放。\n* mov：面向专业场景的高色彩精度格式，更好地保持画面色彩与亮度一致性、适用于调色、抠像、合成等对色彩还原要求高的专业后期加工。推荐在视频编辑、视频延长场景使用 mov 格式作为输入和输出。\n\n**mov 格式播放兼容性**\n\nmov 格式采用专业编码（H.264 视频编码 + yuv444p 色度采样 + PCM 音频编码），部分播放器可能不兼容。以下为常见的支持播放 mov 格式的播放器：\n\n| 播放器 | macOS | Windows |\n|---|---|---|\n| IINA | ✓ | ✕ |\n| VLC | ✓ | ✓ |\n| mpv | ✓ | ✓ |\n| ffplay | ✓ | ✓ |\n\n**模型支持：** Seedance 2.5",
             "enum": [
               "mp4",
               "mov"
@@ -216,6 +219,15 @@
           "safety_identifier": {
             "type": "string",
             "description": "终端用户的唯一标识符，用于协助平台检测您的应用中可能违反火山方舟使用政策的用户。该标识符为英文字符串，需保证对单个用户固定且唯一，长度不超过 64 个字符。推荐传入对用户名、用户 ID 或邮箱进行哈希处理后生成的字符串，避免泄露用户隐私信息。"
+          },
+          "omni_reference_task_type": {
+            "type": "string",
+            "enum": [
+              "generate",
+              "edit",
+              "extend"
+            ],
+            "description": "指定全模态参考生视频的子任务类型。当 `media` 中包含 `reference_image`、`reference_video` 或 `reference_audio` 类型时，可通过此参数显式指定任务类型，避免模型根据提示词自动判定。\n\n* `generate`：生成全新视频。基于参考素材生成一段新视频。\n* `edit`：编辑视频。对参考视频进行画面或音频编辑（如替换主体、增删对象、局部重绘等）。\n* `extend`：延长视频。对参考视频进行向前或向后延长。\n\n**注意**\n* 若不传此参数，模型将根据提示词意图自动判定任务类型。\n* 不同子任务类型对 `ratio` 和 `seconds` 参数有不同限制：\n  * 视频编辑任务仅支持 `ratio` 为 `adaptive`，`seconds` 为 `-1`。\n  * 视频延长任务仅支持 `ratio` 为 `adaptive`。"
           }
         }
       },

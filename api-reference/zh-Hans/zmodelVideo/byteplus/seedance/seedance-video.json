@@ -151,6 +151,115 @@
                     "duration": 5,
                     "watermark": false
                   }
+                },
+                "Seedance 2.5 文生视频": {
+                  "value": {
+                    "model": "dreamina-seedance-2-5-260628",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "小猫对着镜头打哈欠"
+                      }
+                    ],
+                    "resolution": "720p",
+                    "ratio": "16:9",
+                    "duration": 5,
+                    "generate_audio": true,
+                    "watermark": false
+                  }
+                },
+                "Seedance 2.5 首帧生视频": {
+                  "value": {
+                    "model": "dreamina-seedance-2-5-260628",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "镜头缓缓推进，女孩微笑"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        }
+                      }
+                    ],
+                    "generate_audio": true,
+                    "ratio": "adaptive",
+                    "duration": 5,
+                    "watermark": false
+                  }
+                },
+                "Seedance 2.5 首尾帧生视频": {
+                  "value": {
+                    "model": "dreamina-seedance-2-5-260628",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "图中女孩对着镜头说\"茄子\"，360度环绕运镜"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/first-frame.jpg"
+                        },
+                        "role": "first_frame"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/last-frame.jpg"
+                        },
+                        "role": "last_frame"
+                      }
+                    ],
+                    "generate_audio": true,
+                    "ratio": "adaptive",
+                    "duration": 5,
+                    "watermark": false
+                  }
+                },
+                "Seedance 2.5 多模态参考生视频": {
+                  "value": {
+                    "model": "dreamina-seedance-2-5-260628",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "全程使用视频1的第一视角构图，全程使用音频1作为背景音乐。第一人称视角果茶宣传广告..."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/ref-pic1.jpg"
+                        },
+                        "role": "reference_image"
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://example.com/ref-pic2.jpg"
+                        },
+                        "role": "reference_image"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://example.com/ref-video.mp4"
+                        },
+                        "role": "reference_video"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://example.com/ref-audio.mp3"
+                        },
+                        "role": "reference_audio"
+                      }
+                    ],
+                    "generate_audio": true,
+                    "ratio": "16:9",
+                    "duration": 11,
+                    "watermark": false
+                  }
                 }
               }
             }
@@ -214,7 +323,7 @@
               "dreamina-seedance-2-0-260128",
               "dreamina-seedance-2-0-fast-260128",
               "dreamina-seedance-2-0-mini-260615",
-              "dreamina-seedance-2-5-260628"
+                "dreamina-seedance-2-5-260628"
             ],
             "description": "您需要调用的模型的 ID （Model ID）"
           },
@@ -336,7 +445,7 @@
               "mp4",
               "mov"
             ],
-            "description": "> 仅 Seedance 2.5 系列 支持\n\n输出视频的格式。\n\n* mp4：通用格式，兼容性最好，采用标准色彩精度，可在网页、移动端、各类播放器及分发平台直接播放。所有模型均支持。\n* mov：面向专业场景的高色彩精度格式，更好地保持画面色彩与亮度一致性，适用于调色、抠像、合成等对色彩还原要求高的专业后期加工，推荐在视频编辑、视频延长场景使用。Seedance 1.5 pro、Seedance 2.0 系列、Seedance 2.5 系列支持。",
+            "description": "输出视频的格式。\n\n* mp4：通用格式，兼容性最好，采用标准色彩精度，可在网页、移动端、各类播放器及分发平台直接播放。\n* mov：面向专业场景的高色彩精度格式，更好地保持画面色彩与亮度一致性、适用于调色、抠像、合成等对色彩还原要求高的专业后期加工。推荐在视频编辑、视频延长场景使用 mov 格式作为输入和输出。\n\n**mov 格式播放兼容性**\n\nmov 格式采用专业编码（H.264 视频编码 + yuv444p 色度采样 + PCM 音频编码），部分播放器可能不兼容。以下为常见的支持播放 mov 格式的播放器：\n\n| 播放器 | macOS | Windows |\n|---|---|---|\n| IINA | ✓ | ✕ |\n| VLC | ✓ | ✓ |\n| mpv | ✓ | ✓ |\n| ffplay | ✓ | ✓ |\n\n**模型支持：** Seedance 2.5",
             "default": "mp4"
           },
           "duration": {
@@ -368,6 +477,15 @@
             "type": "boolean",
             "description": "生成视频是否包含水印。\n\n* false：生成视频不含水印。\n* true：生成视频右下角会展示 AI 生成 水印。",
             "default": false
+          },
+          "omni_reference_task_type": {
+            "type": "string",
+            "enum": [
+              "generate",
+              "edit",
+              "extend"
+            ],
+            "description": "> 仅 Seedance 2.5 系列、Seedance 2.0 系列支持\n\n指定全模态参考生视频的子任务类型。当 `content` 中包含 `reference_image`、`reference_video` 或 `reference_audio` 角色时，可通过此参数显式指定任务类型，避免模型根据提示词自动判定。\n\n* `generate`：生成全新视频。基于参考素材生成一段新视频。\n* `edit`：编辑视频。对参考视频进行画面或音频编辑（如替换主体、增删对象、局部重绘等）。\n* `extend`：延长视频。对参考视频进行向前或向后延长。\n\n**注意**\n* 若不传此参数，模型将根据提示词意图自动判定任务类型。\n* 不同子任务类型对 `ratio` 和 `duration` 参数有不同限制，请参见各任务类型说明。\n* 视频编辑任务仅支持 `ratio` 为 `adaptive`，`duration` 为 `-1`。\n* 视频延长任务仅支持 `ratio` 为 `adaptive`。"
           }
         }
       },
