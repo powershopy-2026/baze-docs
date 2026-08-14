@@ -165,9 +165,10 @@
             "type": "string",
             "enum": [
               "480p",
-              "720p"
+              "720p",
+              "1080p"
             ],
-            "description": "Video resolution. Enum values:\n\n* 480p\n* 720p\n\nDefault: `720p`",
+            "description": "Video resolution. Enum values:\n\n* 480p\n* 720p\n* 1080p: Supported in image to video scenarios.\n\nDefault: `720p`",
             "default": "720p"
           },
           "ratio": {

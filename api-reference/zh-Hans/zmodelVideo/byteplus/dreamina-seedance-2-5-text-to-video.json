@@ -163,9 +163,10 @@
             "type": "string",
             "enum": [
               "480p",
-              "720p"
+              "720p",
+              "1080p"
             ],
-            "description": "> Seedance 2.5 系列默认值：`720p`\n\n视频分辨率，枚举值：\n\n* 480p\n* 720p\n\n**注意** Seedance 2.5 不支持 1080p 和 4k 分辨率。",
+            "description": "> Seedance 2.5 系列默认值：`720p`\n\n视频分辨率，枚举值：\n\n* 480p\n* 720p\n* 1080p：文生视频场景支持。",
             "default": "720p"
           },
           "ratio": {

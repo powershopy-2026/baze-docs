@@ -169,9 +169,10 @@
             "type": "string",
             "enum": [
               "480p",
-              "720p"
+              "720p",
+              "1080p"
             ],
-            "description": "> Seedance 2.5 series default: `720p`\n\nVideo resolution. Enum values:\n\n* 480p\n* 720p",
+            "description": "> Seedance 2.5 series default: `720p`\n\nVideo resolution. Enum values:\n\n* 480p\n* 720p\n* 1080p: Supported in first & last frame to video scenarios.",
             "default": "720p"
           },
           "ratio": {
@@ -179,7 +180,7 @@
             "enum": [
               "adaptive"
             ],
-            "description": "> Seedance 2.5 series default: `adaptive`\n\nThe aspect ratio of the generated video. See the table below for pixel dimensions for different aspect ratios.\n\n* adaptive: Automatically selects the most suitable aspect ratio based on input (see details below)\n\n**adaptive Rules**\n\nWhen ratio is set to adaptive, the model automatically adjusts the aspect ratio based on the generation scenario. The actual video aspect ratio can be obtained from the ratio field returned by the query video generation task API.\n\n**Supported models:**\n* Seedance 2.5 series supported\n\n**Rules:**\n* First Frame / First & Last Frame: Automatically selects the closest aspect ratio based on the uploaded first frame image ratio.\n\nPixel dimensions corresponding to different aspect ratios\n\nNote: For First & Last Frame to Video, if the selected aspect ratio does not match the uploaded image ratio, the platform will crop your image from the center.\n\n| Resolution | Aspect Ratio | Pixel Dimensions Seedance 2.5 Series |\n|---|---|---|\n| 480p | 16:9 | 864×496 |\n| | 4:3 | 752×560 |\n| | 1:1 | 640×640 |\n| | 3:4 | 560×752 |\n| | 9:16 | 496×864 |\n| | 21:9 | 992×432 |\n| 720p | 16:9 | 1280×720 |\n| | 4:3 | 1112×834 |\n| | 1:1 | 960×960 |\n| | 3:4 | 834×1112 |\n| | 9:16 | 720×1280 |\n| | 21:9 | 1470×630 |",
+            "description": "> Seedance 2.5 series default: `adaptive`\n\nThe aspect ratio of the generated video. See the table below for pixel dimensions for different aspect ratios.\n\n* adaptive: Automatically selects the most suitable aspect ratio based on input (see details below)\n\n**adaptive Rules**\n\nWhen ratio is set to adaptive, the model automatically adjusts the aspect ratio based on the generation scenario. The actual video aspect ratio can be obtained from the ratio field returned by the query video generation task API.\n\n**Supported models:**\n* Seedance 2.5 series supported\n\n**Rules:**\n* First Frame / First & Last Frame: Automatically selects the closest aspect ratio based on the uploaded first frame image ratio.\n\nPixel dimensions corresponding to different aspect ratios\n\nNote: For First & Last Frame to Video, if the selected aspect ratio does not match the uploaded image ratio, the platform will crop your image from the center.\n\n| Resolution | Aspect Ratio | Pixel Dimensions Seedance 2.5 Series |\n|---|---|---|\n| 480p | 16:9 | 864×496 |\n| | 4:3 | 752×560 |\n| | 1:1 | 640×640 |\n| | 3:4 | 560×752 |\n| | 9:16 | 496×864 |\n| | 21:9 | 992×432 |\n| 720p | 16:9 | 1280×720 |\n| | 4:3 | 1112×834 |\n| | 1:1 | 960×960 |\n| | 3:4 | 834×1112 |\n| | 9:16 | 720×1280 |\n| | 21:9 | 1470×630 |\n| 1080p | 16:9 | 1920×1080 |\n| | 4:3 | 1664×1248 |\n| | 1:1 | 1440×1440 |\n| | 3:4 | 1248×1664 |\n| | 9:16 | 1080×1920 |\n| | 21:9 | 2206×946 |",
             "default": "adaptive"
           },
           "output_format": {
