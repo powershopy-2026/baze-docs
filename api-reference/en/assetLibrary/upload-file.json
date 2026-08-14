@@ -60,7 +60,7 @@
                   "file": {
                     "format": "binary",
                     "type": "string",
-                    "description": "file（图片：JPEG、PNG、WebP、BMP、TIFF、GIF,HEIC。< 30MB。比例 0.4-2.5。300-6000px，视频：MP4、MOV。480p/720p。2-15s。≤ 50MB。24-60fps，音频：WAV、MP3。2-15s。≤ 15MB）",
+                    "description": "file（Image：JPEG、PNG、WebP、BMP、TIFF、GIF,HEIC。< 30MB。Aspect ratio 0.4-2.5。300-6000px，Video：MP4、MOV。480p/720p。2-30s。≤ 100MB。24-60fps，Audio：WAV、MP3。2-30s。≤ 15MB）",
                     "example": ""
                   },
                   "group_id": {
@@ -140,7 +140,7 @@
   "servers": [
     {
       "url": "https://powertokens.ai/api",
-      "description": "生产环境"
+      "description": "Production server"
     }
   ],
   "security": []
