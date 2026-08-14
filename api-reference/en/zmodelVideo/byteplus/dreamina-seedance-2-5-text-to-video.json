@@ -165,7 +165,7 @@
               "720p",
               "1080p"
             ],
-            "description": "> Seedance 2.5 series default: `720p`\n\nVideo resolution. Enum values:\n\n* 480p\n* 720p\n* 1080p: Supported in text to video scenarios.",
+            "description": "Video resolution. Enum values:\n\n* 480p\n* 720p\n* 1080p\n\nDefault: `720p`",
             "default": "720p"
           },
           "ratio": {
