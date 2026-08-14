@@ -313,7 +313,7 @@
               "1080p",
               "4k"
             ],
-            "description": "> Seedance 2.5 series, Seedance 2.0 series, and Seedance 1.5 pro default: `720p`\n> Seedance 1.0 pro & pro-fast default: `1080p`\n\nVideo resolution. Enum values:\n\n* 480p: Supported by Seedance 2.5 series, Seedance 2.0 series, Seedance 1.5 pro, and Seedance 1.0 pro & pro-fast.\n* 720p: Supported by all models.\n* 1080p: Not supported by Seedance 2.5 series, Seedance 2.0 Fast, and Seedance 2.0 Mini.\n* 4k: Only supported by Seedance 2.0.\n\n```Note\n- Compared to typical 8-bit color depth, Seedance 2.0 4k output uses 10-bit encoding, fully preserving rich color gradations and smooth transitions, meeting professional film production and HDR video content requirements.\n- 4k videos are output in H.265 (HEVC) format; some players/browsers may not support direct playback.",
+            "description": "> Seedance 2.5 series, Seedance 2.0 series, and Seedance 1.5 pro default: `720p`\n> Seedance 1.0 pro & pro-fast default: `1080p`\n\nVideo resolution. Enum values:\n\n* 480p: Supported by Seedance 2.5 series, Seedance 2.0 series, Seedance 1.5 pro, and Seedance 1.0 pro & pro-fast.\n* 720p: Supported by all models.\n* 1080p: Not supported by Seedance 2.0 Fast and Seedance 2.0 Mini.\n* 4k: Only supported by Seedance 2.0.\n\n```Note\n- Compared to typical 8-bit color depth, Seedance 2.0 4k output uses 10-bit encoding, fully preserving rich color gradations and smooth transitions, meeting professional film production and HDR video content requirements.\n- 4k videos are output in H.265 (HEVC) format; some players/browsers may not support direct playback.",
             "default": "720p"
           },
           "ratio": {
