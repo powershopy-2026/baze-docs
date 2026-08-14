@@ -60,7 +60,7 @@
                   "file": {
                     "format": "binary",
                     "type": "string",
-                    "description": "文件（图片：JPEG、PNG、WebP、BMP、TIFF、GIF。< 30MB。比例 0.4-2.5。300-6000px，视频：MP4、MOV。480p/720p。2-15s。≤ 50MB。24-60fps，音频：WAV、MP3。2-15s。≤ 15MB）",
+                    "description": "文件（图片：JPEG、PNG、WebP、BMP、TIFF、GIF。< 30MB。比例 0.4-2.5。300-6000px，视频：MP4、MOV。480p/720p。2-30s。≤ 100MB。24-60fps，音频：WAV、MP3。2-30s。≤ 15MB）",
                     "example": ""
                   },
                   "group_id": {
