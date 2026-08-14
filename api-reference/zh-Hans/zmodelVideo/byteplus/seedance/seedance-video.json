@@ -152,113 +152,62 @@
                     "watermark": false
                   }
                 },
-                "Seedance 2.5 文生视频": {
+                "编辑视频": {
                   "value": {
-                    "model": "dreamina-seedance-2-5-260628",
+                    "model": "dola-seedream-5-0-pro-260628",
                     "content": [
                       {
                         "type": "text",
-                        "text": "小猫对着镜头打哈欠"
-                      }
-                    ],
-                    "resolution": "720p",
-                    "ratio": "16:9",
-                    "duration": 5,
-                    "generate_audio": true,
-                    "watermark": false
-                  }
-                },
-                "Seedance 2.5 首帧生视频": {
-                  "value": {
-                    "model": "dreamina-seedance-2-5-260628",
-                    "content": [
-                      {
-                        "type": "text",
-                        "text": "镜头缓缓推进，女孩微笑"
-                      },
-                      {
-                        "type": "image_url",
-                        "image_url": {
-                          "url": "https://example.com/first-frame.jpg"
-                        }
-                      }
-                    ],
-                    "generate_audio": true,
-                    "ratio": "adaptive",
-                    "duration": 5,
-                    "watermark": false
-                  }
-                },
-                "Seedance 2.5 首尾帧生视频": {
-                  "value": {
-                    "model": "dreamina-seedance-2-5-260628",
-                    "content": [
-                      {
-                        "type": "text",
-                        "text": "图中女孩对着镜头说\"茄子\"，360度环绕运镜"
-                      },
-                      {
-                        "type": "image_url",
-                        "image_url": {
-                          "url": "https://example.com/first-frame.jpg"
-                        },
-                        "role": "first_frame"
-                      },
-                      {
-                        "type": "image_url",
-                        "image_url": {
-                          "url": "https://example.com/last-frame.jpg"
-                        },
-                        "role": "last_frame"
-                      }
-                    ],
-                    "generate_audio": true,
-                    "ratio": "adaptive",
-                    "duration": 5,
-                    "watermark": false
-                  }
-                },
-                "Seedance 2.5 多模态参考生视频": {
-                  "value": {
-                    "model": "dreamina-seedance-2-5-260628",
-                    "content": [
-                      {
-                        "type": "text",
-                        "text": "全程使用视频1的第一视角构图，全程使用音频1作为背景音乐。第一人称视角果茶宣传广告..."
-                      },
-                      {
-                        "type": "image_url",
-                        "image_url": {
-                          "url": "https://example.com/ref-pic1.jpg"
-                        },
-                        "role": "reference_image"
-                      },
-                      {
-                        "type": "image_url",
-                        "image_url": {
-                          "url": "https://example.com/ref-pic2.jpg"
-                        },
-                        "role": "reference_image"
+                        "text": "视频编辑：删除 @视频1中的所有人，除了主角。"
                       },
                       {
                         "type": "video_url",
                         "video_url": {
-                          "url": "https://example.com/ref-video.mp4"
+                          "url": "https://arkdocs.tos-cn-beijing.volces.com/videos/video-generation/seedance2.5_edit_input.mov"
+                        },
+                        "role": "reference_video"
+                      }
+                    ],
+                    "generate_audio": true,
+                    "ratio": "adaptive",
+                    "duration": -1,
+                    "output_format": "mov"
+                  }
+                },
+                "延长视频": {
+                  "value": {
+                    "model": "dola-seedream-5-0-pro-260628",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "延长@视频1，窗户打开后进入@视频2的美术馆室内，最后镜头进入@视频3的画内"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://arkdocs.tos-cn-beijing.volces.com/videos/video-generation/r2v_extend_video1_75.mov"
                         },
                         "role": "reference_video"
                       },
                       {
-                        "type": "audio_url",
-                        "audio_url": {
-                          "url": "https://example.com/ref-audio.mp3"
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_extend_video2.mp4"
                         },
-                        "role": "reference_audio"
+                        "role": "reference_video"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_extend_video3.mp4"
+                        },
+                        "role": "reference_video"
                       }
                     ],
                     "generate_audio": true,
-                    "ratio": "16:9",
+                    "ratio": "adaptive",
                     "duration": 11,
-                    "watermark": false
+                    "output_format": "mov"
                   }
                 }
               }

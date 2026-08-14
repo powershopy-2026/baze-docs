@@ -151,6 +151,64 @@
                     "duration": 5,
                     "watermark": false
                   }
+                },
+                "Edit Video": {
+                  "value": {
+                    "model": "dola-seedream-5-0-pro-260628",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Video editing: Remove all people from @video1 except the main character."
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://arkdocs.tos-cn-beijing.volces.com/videos/video-generation/seedance2.5_edit_input.mov"
+                        },
+                        "role": "reference_video"
+                      }
+                    ],
+                    "generate_audio": true,
+                    "ratio": "adaptive",
+                    "duration": -1,
+                    "output_format": "mov"
+                  }
+                },
+                "Extend Video": {
+                  "value": {
+                    "model": "dola-seedream-5-0-pro-260628",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Extend @video1, after the window opens enter the art gallery interior of @video2, finally the camera enters the painting in @video3"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://arkdocs.tos-cn-beijing.volces.com/videos/video-generation/r2v_extend_video1_75.mov"
+                        },
+                        "role": "reference_video"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_extend_video2.mp4"
+                        },
+                        "role": "reference_video"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_extend_video3.mp4"
+                        },
+                        "role": "reference_video"
+                      }
+                    ],
+                    "generate_audio": true,
+                    "ratio": "adaptive",
+                    "duration": 11,
+                    "output_format": "mov"
+                  }
                 }
               }
             }
