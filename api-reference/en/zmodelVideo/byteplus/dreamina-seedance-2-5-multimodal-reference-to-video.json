@@ -45,27 +45,30 @@
                     "media": [
                       {
                         "type": "text",
-                        "text": "Supplementary prompt"
+                        "text": "Use the first-person composition of video 1 throughout, with audio 1 as background music throughout. First-person fruit tea promotional ad, seedance brand \"Peace & Sweet\" Apple Fruit Tea Limited Edition; First frame is image 1, your hand picks an Aksu red apple with morning dew, crisp apple crunch sound; 2-4s: Quick cut, your hand throws apple chunks into a shaker, adds ice and tea base, shakes vigorously, ice clinking and shaking sounds sync with upbeat drum beats, background audio: \"Freshly Cut, Freshly Shaken\"; 4-6s: First-person product close-up, layered fruit tea poured into a clear cup, your hand gently spreads cream cheese topping, sticks a pink-gold label on the cup, camera zooms in on the layered texture of cream and fruit tea; 6-8s: First-person hand holding the cup, you raise the fruit tea from image 2 to the camera (simulating handing it to the viewer), cup label clearly visible, background audio \"Take a Fresh Sip\", final frame frozen on image 2. All background audio uses a female voice."
                       },
                       {
                         "type": "reference_image",
-                        "url": "https://example.com/img1.jpg"
+                        "url": "https://example.com/ref-pic1.jpg"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/ref-pic2.jpg"
                       },
                       {
                         "type": "reference_video",
-                        "url": "https://example.com/motion.mp4"
+                        "url": "https://example.com/ref-video.mp4"
                       },
                       {
                         "type": "reference_audio",
-                        "url": "https://example.com/audio.mp3"
+                        "url": "https://example.com/ref-audio.mp3"
                       }
                     ],
-                    "seconds": "-1",
+                    "seconds": "11",
                     "size": "720p",
-                    "ratio": "adaptive",
-                    "generate_audio": false,
-                    "return_last_frame": false,
-                    "safety_identifier": "user_123"
+                    "ratio": "16:9",
+                    "generate_audio": true,
+                    "watermark": false
                   }
                 }
               }
@@ -198,7 +201,7 @@
           },
           "output_format": {
             "type": "string",
-            "description": "Output video format.",
+            "description": "Output video format.\n\n* mp4: Universal format with the best compatibility, using standard color precision. Can be played directly on web pages, mobile devices, various players, and distribution platforms.\n* mov: Professional high color precision format, better preserving color and brightness consistency. Suitable for professional post-processing such as color grading, compositing, and synthesis. Recommended for video editing and video extension scenarios.\n\n**mov format playback compatibility**\n\nmov format uses professional encoding (H.264 video encoding + yuv444p chroma subsampling + PCM audio encoding), which may not be compatible with some players. The following are common players that support mov format playback:\n\n| Player | macOS | Windows |\n|---|---|---|\n| IINA | ✓ | ✕ |\n| VLC | ✓ | ✓ |\n| mpv | ✓ | ✓ |\n| ffplay | ✓ | ✓ |\n\n**Model support:** Seedance 2.5",
             "enum": [
               "mp4",
               "mov"

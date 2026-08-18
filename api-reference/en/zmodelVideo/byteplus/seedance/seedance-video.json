@@ -171,6 +171,7 @@
                     "generate_audio": true,
                     "ratio": "adaptive",
                     "duration": -1,
+                    "omni_reference_task_type": "edit",
                     "output_format": "mov"
                   }
                 },
@@ -207,6 +208,7 @@
                     "generate_audio": true,
                     "ratio": "adaptive",
                     "duration": 11,
+                    "omni_reference_task_type": "extend",
                     "output_format": "mov"
                   }
                 }
@@ -394,7 +396,7 @@
               "mp4",
               "mov"
             ],
-            "description": "> Only supported by Seedance 2.5 series \n\nThe format of the output video.\n\n* mp4: A universal format with the best compatibility, using standard color precision. It can be played directly on web pages, mobile devices, various players, and distribution platforms. Supported by all models.\n* mov: A high-color-precision format for professional scenarios, which better maintains color and brightness consistency. Suitable for professional post-processing such as color grading, keying, and compositing, and recommended for video editing and video extension scenarios. Supported by Seedance 1.5 pro, Seedance 2.0 series, and Seedance 2.5 series.",
+            "description": "Output video format.\n\n* mp4: Universal format with the best compatibility, using standard color precision. Can be played directly on web pages, mobile devices, various players, and distribution platforms.\n* mov: Professional high color precision format, better preserving color and brightness consistency. Suitable for professional post-processing such as color grading, compositing, and synthesis. Recommended for video editing and video extension scenarios.\n\n**mov format playback compatibility**\n\nmov format uses professional encoding (H.264 video encoding + yuv444p chroma subsampling + PCM audio encoding), which may not be compatible with some players. The following are common players that support mov format playback:\n\n| Player | macOS | Windows |\n|---|---|---|\n| IINA | ✓ | ✕ |\n| VLC | ✓ | ✓ |\n| mpv | ✓ | ✓ |\n| ffplay | ✓ | ✓ |\n\n**Model support:** Seedance 2.5",
             "default": "mp4"
           },
           "duration": {

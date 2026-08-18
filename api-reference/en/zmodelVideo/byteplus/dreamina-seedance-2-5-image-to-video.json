@@ -54,7 +54,9 @@
                     ],
                     "seconds": "5",
                     "size": "720p",
-                    "ratio": "adaptive"
+                    "ratio": "adaptive",
+                    "generate_audio": true,
+                    "watermark": false
                   }
                 }
               }
@@ -185,7 +187,7 @@
               "mp4",
               "mov"
             ],
-            "description": "Output video format.\n\n* mp4: MP4 format.\n* mov: MOV format.",
+            "description": "Output video format.\n\n* mp4: Universal format with the best compatibility, using standard color precision. Can be played directly on web pages, mobile devices, various players, and distribution platforms.\n* mov: Professional high color precision format, better preserving color and brightness consistency. Suitable for professional post-processing such as color grading, compositing, and synthesis. Recommended for video editing and video extension scenarios.\n\n**mov format playback compatibility**\n\nmov format uses professional encoding (H.264 video encoding + yuv444p chroma subsampling + PCM audio encoding), which may not be compatible with some players. The following are common players that support mov format playback:\n\n| Player | macOS | Windows |\n|---|---|---|\n| IINA | ✓ | ✕ |\n| VLC | ✓ | ✓ |\n| mpv | ✓ | ✓ |\n| ffplay | ✓ | ✓ |\n\n**Model support:** Seedance 2.5",
             "default": "mp4"
           },
           "watermark": {
