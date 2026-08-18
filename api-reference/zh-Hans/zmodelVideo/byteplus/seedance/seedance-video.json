@@ -171,6 +171,7 @@
                     "generate_audio": true,
                     "ratio": "adaptive",
                     "duration": -1,
+                    "omni_reference_task_type": "edit",
                     "output_format": "mov"
                   }
                 },
@@ -207,6 +208,7 @@
                     "generate_audio": true,
                     "ratio": "adaptive",
                     "duration": 11,
+                    "omni_reference_task_type": "extend",
                     "output_format": "mov"
                   }
                 }
