@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/minimax/v2/query/video_generation": {
+    "/minimax/v2/query/video_generation/{task_id}": {
       "get": {
         "summary": "查询任务",
         "operationId": "videoGeneration",
@@ -39,27 +39,32 @@
                   "视频生成成功": {
                     "value": {
                       "task": {
-                        "id": "424010985738629",
-                        "model": "MiniMax-H3",
-                        "status": "succeeded",
-                        "created_at": 1785125529,
-                        "updated_at": 1785125946,
-                        "content": {
-                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/89f8c0bbee5b_denoise_ids_0_final.mp4"
-                        },
-                        "resolution": "2K",
-                        "duration": 5,
-                        "usage": {
-                          "total_seconds": 5,
-                          "input_seconds": 0,
-                          "output_seconds": 5,
-                          "input_image_count": 0
-                        },
-                        "ratio": "16:9",
-                        "task_type": "generation",
-                        "modality": "video"
+                        "task": {
+                          "id": "424010985738629",
+                          "model": "MiniMax-H3",
+                          "status": "succeeded",
+                          "created_at": 1785125529,
+                          "updated_at": 1785125946,
+                          "content": {
+                            "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/89f8c0bbee5b_denoise_ids_0_final.mp4"
+                          },
+                          "resolution": "2K",
+                          "duration": 5,
+                          "usage": {
+                            "total_seconds": 5,
+                            "input_seconds": 0,
+                            "output_seconds": 5,
+                            "input_image_count": 1,
+                            "input_audio_seconds": 6,
+                            "total_tokens": 273890,
+                            "prompt_tokens": 13500,
+                            "completion_tokens": 260390
+                          },
+                          "ratio": "16:9",
+                          "task_type": "generation",
+                          "modality": "video"
+                        }
                       }
-                    }
                   },
                   "视频生成失败": {
                     "value": {
@@ -198,19 +203,19 @@
                   },
                   "input_image_count": {
                     "type": "integer",
-                    "description": "本次计费涉及的图片数量。"
+                    "description": "本次计费涉及的图片数量（first_frame + middle_frame + last_frame + reference_image 全部相加）。"
                   },
                   "total_tokens": {
                     "type": "integer",
-                    "description": "H3-Context-IR 任务使用的 Token 总数。"
+                    "description": "本次总 Token 数 = prompt_tokens + completion_tokens。\n\n- 视频任务由用量折算；\n- H3-Context-IR 任务使用的 Token 总数。"
                   },
                   "prompt_tokens": {
                     "type": "integer",
-                    "description": "H3-Context-IR 任务的输入 Token 数。"
+                    "description": "输入 Token 数。\n\n- 视频任务 = 输入参考视频秒数折算 + 全部输入图片数折算 + 输入参考音频秒数折算，无上述输入时为 0；\n- H3-Context-IR 任务的输入 Token 数。"
                   },
                   "completion_tokens": {
                     "type": "integer",
-                    "description": "H3-Context-IR 任务的输出 Token 数。"
+                    "description": "输出 Token 数。\n\n- 视频任务 = 输出视频秒数折算；\n- H3-Context-IR 任务的输出 Token 数。"
                   }
                 }
               },

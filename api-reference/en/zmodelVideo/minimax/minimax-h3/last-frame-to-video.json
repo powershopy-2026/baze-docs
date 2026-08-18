@@ -130,12 +130,13 @@
                   "type": "string",
                   "description": "Type of the input content.",
                   "enum": [
-                    "text"
+                    "text",
+                    "image_url"
                   ]
                 },
                 "text": {
                   "type": "string",
-                  "description": "Text prompt. All scenarios require a non-empty text describing the expected video. Single text max 7000 characters."
+                  "description": "Text prompt (prompt), required: Every scenario must include a non-empty text describing the video you want to generate. Length is calculated by character count, with a maximum of 7,000 characters for a single text."
                 },
                 "image_url": {
                   "type": "object",
@@ -152,13 +153,10 @@
                 },
                 "role": {
                   "type": "string",
-                  "description": "The position or purpose of the content, conditionally required:\n\n- first_frame: First frame image (image-to-video; if only one image is provided and role is not set, it defaults to first_frame).\n- last_frame: Last frame image (image-to-video first-last frame; must be paired with first_frame).\n- reference_image: Reference image (multimodal reference-to-video).\n- reference_video: Reference video (multimodal reference-to-video).\n- reference_audio: Reference audio (multimodal reference-to-video).",
+                  "description": "The position or purpose of the content, conditionally required:\n\n- first_frame: First frame image (image-to-video; if only one image is provided and role is not set, it defaults to first_frame).\n- last_frame: Last frame image (image-to-video first-last frame; must be paired with first_frame).",
                   "enum": [
                     "first_frame",
-                    "last_frame",
-                    "reference_image",
-                    "reference_video",
-                    "reference_audio"
+                    "last_frame"
                   ]
                 }
               }
@@ -192,14 +190,9 @@
           },
           "ratio": {
             "type": "string",
-            "description": "Output video aspect ratio, default adaptive (automatically selects the most suitable aspect ratio based on input; the actual ratio can be retrieved from the ratio field in the query API).\n\nText-to-video (t2va, content contains only text): ratio is required and cannot be adaptive; available values: 21:9, 16:9, 4:3, 1:1, 3:4, 9:16.",
+            "description": "Output video aspect ratio, default adaptive (automatically selects the most suitable aspect ratio based on input; the actual ratio can be retrieved from the ratio field in the query API).\n\nImage-to-video (i2va, content includes first_frame / last_frame images): the aspect ratio is determined by the input images, ratio is always set to adaptive; passing in other reasonable values won’t cause errors, but they will be ignored and treated as adaptive.",
             "enum": [
-              "21:9",
-              "16:9",
-              "4:3",
-              "1:1",
-              "3:4",
-              "9:16"
+              "adaptive"
             ]
           },
           "callback_url": {

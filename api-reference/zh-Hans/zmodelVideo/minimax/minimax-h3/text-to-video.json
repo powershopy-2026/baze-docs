@@ -98,7 +98,9 @@
         "type": "object",
         "required": [
           "model",
-          "content"
+          "content",
+          "resolution",
+          "duration"
         ],
         "properties": {
           "model": {
@@ -126,7 +128,7 @@
                 },
                 "text": {
                   "type": "string",
-                  "description": "文本提示词（prompt）。所有场景都需包含一个非空 text，描述期望生成的视频。单个 text 最多 7000 字符。"
+                  "description": "文本提示词（prompt），必填：所有场景都需包含一个非空 text，描述期望生成的视频。按字符数计算长度，单个 text 最多 7000 个字符。"
                 }
               }
             }
