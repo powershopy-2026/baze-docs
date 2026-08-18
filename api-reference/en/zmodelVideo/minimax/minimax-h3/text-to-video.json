@@ -98,7 +98,9 @@
         "type": "object",
         "required": [
           "model",
-          "content"
+          "content",
+          "resolution",
+          "duration"
         ],
         "properties": {
           "model": {

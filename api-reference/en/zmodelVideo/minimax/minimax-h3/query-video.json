@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/minimax/v2/query/video_generation": {
+    "/minimax/v2/query/video_generation/{task_id}": {
       "get": {
         "summary": "Video Generation",
         "operationId": "videoGeneration",
@@ -53,7 +53,11 @@
                           "total_seconds": 5,
                           "input_seconds": 0,
                           "output_seconds": 5,
-                          "input_image_count": 0
+                          "input_image_count": 1,
+                          "input_audio_seconds": 6,
+                          "total_tokens": 273890,
+                          "prompt_tokens": 13500,
+                          "completion_tokens": 260390
                         },
                         "ratio": "16:9",
                         "task_type": "generation",
@@ -197,19 +201,19 @@
                   },
                   "input_image_count": {
                     "type": "integer",
-                    "description": "Number of images involved in this billing."
+                    "description": "Number of images involved in this billing (first_frame + middle_frame + last_frame + reference_image all added together)."
                   },
                   "total_tokens": {
                     "type": "integer",
-                    "description": "Total tokens used by the H3-Context-IR task."
+                    "description": "Total tokens this time = prompt_tokens + completion_tokens.\n\n- Video tasks are calculated based on usage;\n- Total tokens used by the H3-Context-IR task."
                   },
                   "prompt_tokens": {
                     "type": "integer",
-                    "description": "Input tokens for the H3-Context-IR task."
+                    "description": "Enter the number of tokens.\n\n- Video task = converted seconds of reference video input + converted number of all input images + converted seconds of reference audio input, 0 if none of the above are provided;\n- Input tokens for the H3-Context-IR task."
                   },
                   "completion_tokens": {
                     "type": "integer",
-                    "description": "Output tokens for the H3-Context-IR task."
+                    "description": "Output the number of tokens.\n\n- Video task = output converted video seconds;\n- Output tokens for the H3-Context-IR task."
                   }
                 }
               },
