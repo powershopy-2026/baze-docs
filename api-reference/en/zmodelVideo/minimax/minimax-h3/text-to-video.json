@@ -128,7 +128,7 @@
                 },
                 "text": {
                   "type": "string",
-                  "description": "Text prompt. All scenarios require a non-empty text describing the expected video. Single text max 7000 characters."
+                  "description": "Text prompt (prompt), required: Every scenario must include a non-empty text describing the video you want to generate. Length is calculated by character count, with a maximum of 7,000 characters for a single text."
                 }
               }
             }
