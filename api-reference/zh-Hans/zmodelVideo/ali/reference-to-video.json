@@ -27,6 +27,7 @@
         "summary": "创建 wan2.7-r2v 参考生视频任务",
         "description": "提交一个异步 Ali `wan2.7-r2v` 视频生成任务。\n\n该能力使用顶层 `media` 数组作为公开多模态输入。当前支持的 `media.type` 包括 `reference_image`、`reference_video` 和 `first_frame`。\n\n当前公开规则：\n- `prompt` 为必填；\n- 至少提供一个 `reference_image` 或 `reference_video`；\n- `reference_image` 与 `reference_video` 合计最多 5 个；\n- `first_frame` 为可选，最多 1 个；\n- `size` 仅支持 `720P` 和 `1080P`；\n- `ratio` 仅支持 `16:9`、`9:16`、`1:1`、`4:3`、`3:4`；\n- `seconds` 仅接受 `2` 到 `15` 的整数字符串；若包含任意 `reference_video`，则允许范围收窄为 `2` 到 `10`。\n\n当提供多个参考素材时，请在提示词中按提交顺序引用：图片参考写作 `图1`、`图2`，视频参考写作 `视频1`、`视频2`，图像和视频分别计数。",
         "operationId": "aliReferenceToVideoCreate",
+        "x-capability": "reference_to_video",
         "tags": [
           "Wan 2.7 视频"
         ],

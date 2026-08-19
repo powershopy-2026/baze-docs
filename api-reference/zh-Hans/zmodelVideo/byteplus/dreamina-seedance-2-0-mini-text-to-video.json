@@ -27,6 +27,7 @@
         "summary": "Seedance 2.0 Mini 文生视频",
         "description": "适用于 `dreamina-seedance-2-0-mini-260615` 模型。",
         "operationId": "seedance20MiniTextToVideo",
+        "x-capability": "text_to_video",
         "tags": [
           "Seedance Video"
         ],

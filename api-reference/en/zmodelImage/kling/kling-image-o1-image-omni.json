@@ -23,6 +23,7 @@
         "summary": "Kling Omni Image Task",
         "description": "Submit a Kling native omni image task via `/kling/v1/images/omni-image`. Task results may contain `images` or `series_images`.",
         "operationId": "createKlingOmniO1ImageGeneration",
+        "x-capability": "image_generation",
         "tags": [
           "Kling"
         ],

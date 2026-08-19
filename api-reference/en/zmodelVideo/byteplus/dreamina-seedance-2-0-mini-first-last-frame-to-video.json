@@ -26,6 +26,7 @@
       "post": {
         "summary": "Seedance 2.0 Mini First and Last Frame to Video",
         "operationId": "seedance20MiniFirstLastFrameToVideo",
+        "x-capability": "start&end_frame_to_video",
         "description": "For the `dreamina-seedance-2-0-mini-260615` model.",
         "tags": [
           "Seedance Video"

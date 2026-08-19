@@ -27,6 +27,7 @@
         "summary": "Hailuo Text to Video",
         "description": "Applies to `MiniMax-Hailuo-02` Text to Video model. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `prompt`, `seconds`, `size`.",
         "operationId": "minimaxTextToVideo",
+        "x-capability": "text_to_video",
         "tags": [
           "Hailuo Video"
         ],

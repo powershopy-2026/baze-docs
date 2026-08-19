@@ -14,6 +14,7 @@
       "post": {
         "summary": "Vidu Text-to-Video (viduq3-pro)",
         "operationId": "viduTextToVideoEnViduq3Pro",
+        "x-capability": "text_to_video",
         "description": "Convert text prompts to videos using Vidu models. After submission, query status via `GET /vidu/v1/videos/{task_id}`. Uses model viduq3-pro.",
         "requestBody": {
           "required": true,

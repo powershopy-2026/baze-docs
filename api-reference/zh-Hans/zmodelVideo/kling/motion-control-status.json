@@ -23,6 +23,7 @@
         "summary": "查询可灵运镜控制任务状态",
         "description": "返回已持久化的可灵运镜控制任务响应。task_id 路径参数为提交端点返回的公开任务 ID。",
         "operationId": "getKlingMotionControlStatus",
+        "x-capability": "motion_control",
         "tags": [
           "Kling"
         ],

@@ -14,6 +14,7 @@
       "post": {
         "summary": "Vidu Start-End-to-Video (viduq3-turbo)",
         "operationId": "viduStartEndToVideoEnViduq3Turbo",
+        "x-capability": "start&end_frame_to_video",
         "description": "Generate videos using the Vidu model based on start and end frames. Provide two images (start frame and end frame), and AI will generate the transition animation. After submission, query status via `GET /vidu/v1/videos/{task_id}`. Uses model viduq3-turbo.",
         "requestBody": {
           "required": true,

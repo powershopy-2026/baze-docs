@@ -27,6 +27,7 @@
         "summary": "Hailuo First-Last Frame to Video",
         "description": "Applies to `MiniMax-Hailuo-02` First-Last Frame to Video model. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `images`, `prompt`, `seconds`, `size`. The `images` array must contain exactly two images in the order `[first frame, last frame]`.",
         "operationId": "minimaxStartEndToVideo",
+        "x-capability": "start&end_frame_to_video",
         "tags": [
           "Hailuo Video"
         ],

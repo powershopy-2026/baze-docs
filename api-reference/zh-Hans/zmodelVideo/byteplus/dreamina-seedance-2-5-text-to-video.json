@@ -27,6 +27,7 @@
         "summary": "Seedance 2.5 文生视频",
         "description": "适用于 `dreamina-seedance-2-5-260628` 模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。",
         "operationId": "seedance25TextToVideo",
+        "x-capability": "text_to_video",
         "tags": [
           "Seedance Video"
         ],

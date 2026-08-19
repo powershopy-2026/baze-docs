@@ -23,6 +23,7 @@
         "summary": "Kling Image-to-Video Task (kling-v2-1-master)",
         "description": "Submit a Kling image-to-video task via `/kling/v1/videos/image2video`. The request body is forwarded to the Kling official API after model mapping and public task ID injection.",
         "operationId": "createKlingV21MasterImage2Video",
+        "x-capability": "image_to_video",
         "tags": [
           "Kling"
         ],

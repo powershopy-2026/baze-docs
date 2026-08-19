@@ -26,7 +26,7 @@
       "post": {
         "summary": "Create Wan image-to-video task (first and last frame)",
         "description": "Submit an asynchronous Wan 2.2 image-to-video task, generating a video based on a first frame (and optional last frame) image.\n\nAfter submitting a task, query its status via `GET /ali/api/v1/tasks/{task_id}`.",
-        "operationId": "aliLegacyI2VFirstLastFrameCreate",
+        "operationId": "aliLegacyDualFrameCreate",
         "tags": [
           "Wan Legacy Video"
         ],
@@ -192,7 +192,7 @@
       "get": {
         "summary": "Query Wan image-to-video task status (first and last frame)",
         "description": "Query the status and result of a video generation task by task ID.\n\nTask status flow: PENDING (queued) -> RUNNING (processing) -> SUCCEEDED (success) / FAILED (failure).",
-        "operationId": "aliLegacyI2VFirstLastFrameQuery",
+        "operationId": "aliLegacyDualFrameQuery",
         "tags": [
           "Wan Legacy Video"
         ],

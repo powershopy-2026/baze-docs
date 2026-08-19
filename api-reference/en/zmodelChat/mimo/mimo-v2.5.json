@@ -27,6 +27,7 @@
         "summary": "mimo-v2.5",
         "description": "Invoke MIMO chat completions capability",
         "operationId": "mimoChatCompletions_mimo_v2_5_en",
+        "x-capability": "chat",
         "tags": [
           "MIMO Chat"
         ],

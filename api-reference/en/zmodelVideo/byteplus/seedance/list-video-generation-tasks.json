@@ -26,7 +26,7 @@
       "get": {
         "summary": "List Video Generation Tasks",
         "description": "Filter parameters to query matching video generation tasks. Only supports the last 7 days of task records, time range [T-7 days, T), where T is the UTC timestamp (seconds) of the request.\n\n> Note: The following parameters are Query String Parameters, passed in the URL string.",
-        "operationId": "byteplusListVideoGenerationTasks",
+        "operationId": "byteplusListVideoTasks",
         "tags": [
           "Seedance Video"
         ],

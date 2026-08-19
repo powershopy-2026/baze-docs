@@ -22,7 +22,7 @@
       "post": {
         "summary": "Ali text-to-speech",
         "description": "Call Ali `qwen3-tts-instruct-flash` through the unified `/ali/api/v1/services/aigc/multimodal-generation/generation` endpoint.\n\nResponse contract:\n- non-streaming returns the official Ali JSON response;\n- streaming returns `text/event-stream` and forwards Ali SSE payloads.",
-        "operationId": "aliAudioSpeechCompat",
+        "operationId": "aliAudioQwenSynthesis",
         "tags": [
           "Ali Audio"
         ],

@@ -27,6 +27,7 @@
         "summary": "Wan text-to-video",
         "description": "Applies to Wan series text-to-video models. The platform currently supports Ali `wan2.7-t2v`. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `prompt`, `seconds`, `size`, `prompt_extend`, `watermark`, `seed`, `negative_prompt`.",
         "operationId": "aliTextToVideo",
+        "x-capability": "text_to_video",
         "tags": [
           "Wan Video"
         ],

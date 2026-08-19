@@ -23,6 +23,7 @@
         "summary": "Kling Text-to-Video Task (kling-v2-5-turbo)",
         "description": "Submit a Kling text-to-video task via `/kling/v1/videos/text2video`. The request body is forwarded to the Kling official API after model mapping and public task ID injection.",
         "operationId": "createKlingV25TurboText2Video",
+        "x-capability": "text_to_video",
         "tags": [
           "Kling"
         ],

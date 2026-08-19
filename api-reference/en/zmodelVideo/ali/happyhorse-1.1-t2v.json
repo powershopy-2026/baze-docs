@@ -27,6 +27,7 @@
         "summary": "Create happyhorse-1.1-t2v text-to-video task",
         "description": "Submit an asynchronous Aliyun HappyHorse `happyhorse-1.1-t2v` text-to-video task.\n\nAfter submitting a task, query its status via `GET /ali/api/v1/tasks/{task_id}`.",
         "operationId": "aliHappyHorse11T2VCreate",
+        "x-capability": "text_to_video",
         "tags": [
           "HappyHorse Video"
         ],

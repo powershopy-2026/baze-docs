@@ -14,6 +14,7 @@
       "post": {
         "summary": "文生音频",
         "operationId": "viduTextToAudio",
+        "x-capability": "text_to_audio",
         "description": "适用于通过输入提示词，生成一段音频（支持生成音效和背景音乐 BGM）。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}/creations` 查询状态。",
         "requestBody": {
           "required": true,
@@ -26,10 +27,10 @@
                 "basic_audio_generation": {
                   "summary": "基础文生音频",
                   "value": {
-                      "model": "audio1.0",
-                      "prompt": "清晨的鸟叫声",
-                      "duration": 10,
-                      "seed": 0
+                    "model": "audio1.0",
+                    "prompt": "清晨的鸟叫声",
+                    "duration": 10,
+                    "seed": 0
                   }
                 }
               }

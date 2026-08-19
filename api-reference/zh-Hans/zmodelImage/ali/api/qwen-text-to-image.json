@@ -26,7 +26,7 @@
       "post": {
         "summary": "千问-文生图",
         "description": "调用阿里云千问 `qwen-image-2.0-pro` 模型执行文生图任务。\n\n请求体包含 `model`、`input`、`parameters` 三个主要字段。`input.messages[0].content[0].text` 放置正向提示词。`parameters` 字段控制分辨率 `size`、数量 `n`、反向提示词 `negative_prompt`、提示词智能改写 `prompt_extend`、水印 `watermark`、随机种子 `seed` 等。",
-        "operationId": "aliQwenTextToImage",
+        "operationId": "aliQwenImageSynthesis",
         "tags": [
           "Qwen Image"
         ],

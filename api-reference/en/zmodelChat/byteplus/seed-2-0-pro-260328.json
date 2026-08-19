@@ -27,6 +27,7 @@
         "summary": "BytePlus Chat Completions",
         "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `seed-2-0-pro-260328`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
         "operationId": "byteplusChatCompletions",
+        "x-capability": "chat",
         "tags": [
           "BytePlus Chat"
         ],

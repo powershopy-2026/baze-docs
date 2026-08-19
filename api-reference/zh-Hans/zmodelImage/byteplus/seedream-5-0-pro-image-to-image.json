@@ -27,6 +27,7 @@
         "summary": "Seedream 5.0 Pro 图生图",
         "description": "支持模型包括 `dola-seedream-5-0-pro-260628`。本文档覆盖图生图、多图参考生成与分层解析场景。公开字段包括 `model`、`prompt`、`image`、`size`、`background`、`layer_decomposition`、`response_format`、`watermark`。\n\n**模型能力**\n- 生成单图（不支持配置 sequential_image_generation）\n- 分层解析：支持将单张图片分解为 1 张底图与多个输出图层（最多 16 层）。\n- 交互编辑：支持通过坐标、选框、箭头等多种方式精准指定编辑位置。\n- 多图生图：输入多张参考图片（2-10）+ 文本提示词，生成单张图片。\n- 单图生图：输入单张参考图片 + 文本提示词，生成单张图片。\n- 暂不支持组图生成、联网搜索、流式输出。",
         "operationId": "byteplusImageToImage50Pro",
+        "x-capability": "image_to_image",
         "tags": [
           "Seedream Image"
         ],

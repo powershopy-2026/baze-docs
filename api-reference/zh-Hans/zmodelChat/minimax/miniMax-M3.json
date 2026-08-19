@@ -23,6 +23,7 @@
         "summary": "MiniMax-M3",
         "description": "调用 MiniMax OpenAI 兼容聊天模型。当前稳定模型为 `MiniMax-M3`。",
         "operationId": "minimaxChatCompletions",
+        "x-capability": "chat",
         "tags": [
           "MiniMax Chat"
         ],
@@ -199,12 +200,18 @@
                 "description": "多模态消息内容块。MiniMax-M3 支持文本、图片和视频输入。",
                 "items": {
                   "type": "object",
-                  "required": ["type"],
+                  "required": [
+                    "type"
+                  ],
                   "description": "多模态消息内容块。每个内容块通过 `type` 声明类型，仅填写与该类型匹配的字段。",
                   "properties": {
                     "type": {
                       "type": "string",
-                      "enum": ["text", "image_url", "video_url"],
+                      "enum": [
+                        "text",
+                        "image_url",
+                        "video_url"
+                      ],
                       "description": "内容块类型：\n- `text`：文本块\n- `image_url`：图片输入\n- `video_url`：视频输入"
                     },
                     "text": {
@@ -214,7 +221,9 @@
                     "image_url": {
                       "type": "object",
                       "description": "图片输入（当 `type` 为 `image_url` 时）。单张图片最大 10 MB。支持 JPEG、PNG、GIF、WEBP 格式。",
-                      "required": ["url"],
+                      "required": [
+                        "url"
+                      ],
                       "properties": {
                         "url": {
                           "type": "string",
@@ -222,7 +231,11 @@
                         },
                         "detail": {
                           "type": "string",
-                          "enum": ["low", "default", "high"],
+                          "enum": [
+                            "low",
+                            "default",
+                            "high"
+                          ],
                           "default": "default",
                           "description": "控制图片解析分辨率，默认值为 default。"
                         }
@@ -231,7 +244,9 @@
                     "video_url": {
                       "type": "object",
                       "description": "视频输入（当 `type` 为 `video_url` 时）。支持 MP4、AVI、MOV、MKV 格式。",
-                      "required": ["url"],
+                      "required": [
+                        "url"
+                      ],
                       "properties": {
                         "url": {
                           "type": "string",
@@ -239,7 +254,11 @@
                         },
                         "detail": {
                           "type": "string",
-                          "enum": ["low", "default", "high"],
+                          "enum": [
+                            "low",
+                            "default",
+                            "high"
+                          ],
                           "default": "default",
                           "description": "控制视频抽帧分辨率，默认值为 default。"
                         },

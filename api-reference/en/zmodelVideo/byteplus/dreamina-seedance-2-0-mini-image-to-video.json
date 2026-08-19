@@ -26,6 +26,7 @@
       "post": {
         "summary": "Seedance 2.0 Mini Image to Video",
         "operationId": "seedance20MiniImageToVideo",
+        "x-capability": "image_to_video",
         "description": "For the `dreamina-seedance-2-0-mini-260615` model.",
         "tags": [
           "Seedance Video"

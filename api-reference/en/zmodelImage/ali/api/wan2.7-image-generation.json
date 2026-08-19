@@ -26,7 +26,7 @@
       "post": {
         "summary": "Wan2.7 image generation and edit",
         "description": "Calls Ali `wan2.7-image-pro` model to perform image generation and editing.\n\nThe `input.messages[0].content[]` array may contain `text` objects (prompt) and/or `image` objects (input images). The `parameters` field controls bbox region `bbox_list`, sequential mode `enable_sequential`, resolution `size`, count `n`, thinking mode `thinking_mode`, color palette `color_palette`, watermark `watermark`, and random seed `seed`. This model supports text-to-image, image-to-image, and interactive editing.",
-        "operationId": "aliWan27ImageGeneration",
+        "operationId": "aliWan27ImageSynthesis",
         "tags": [
           "Wan Image"
         ],

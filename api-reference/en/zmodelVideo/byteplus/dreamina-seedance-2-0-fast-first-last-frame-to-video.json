@@ -26,6 +26,7 @@
       "post": {
         "summary": "Seedance 2.0 Fast First and Last Frame to Video",
         "operationId": "seedance20FastFirstLastFrameToVideo",
+        "x-capability": "start&end_frame_to_video",
         "description": "Compatible with the `dreamina-seedance-2-0-fast-260128` model.",
         "tags": [
           "Seedance Video"

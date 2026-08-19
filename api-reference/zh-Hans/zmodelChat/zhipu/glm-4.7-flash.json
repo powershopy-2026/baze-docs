@@ -27,6 +27,7 @@
         "summary": "智谱对话补全",
         "description": "面向智谱 GLM 系列聊天模型的统一入口。\n\n支持模型包括 `glm-4.7-flash`。\n\n本文档公开字段：`model`、`messages`、`stream`、`thinking`、`temperature`、`top_p`、`max_tokens`、`stop`、`tools`、`tool_choice`。",
         "operationId": "zhipuChatCompletions",
+        "x-capability": "chat",
         "tags": [
           "Zhipu Chat"
         ],

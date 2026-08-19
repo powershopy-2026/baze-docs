@@ -27,6 +27,7 @@
         "summary": "Seedream 5.0 Pro Image-to-Image",
         "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Image-to-Image, Multi-Image Reference Generation, and Layer Decomposition scenarios. Public fields include `model`, `prompt`, `image`, `size`, `background`, `layer_decomposition`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Layer decomposition: Supports decomposing a single image into one base image and multiple output layers, with up to 16 layers.\n- Interactive editing: Supports specifying edit locations in multiple ways, such as coordinates, selection boxes, and arrows, for precise image editing.\n- Multi-Image Reference Generation: Input multiple reference images (2-10) + text prompt to generate a single image.\n- Single Image Generation: Input a single reference image + text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
         "operationId": "byteplusImageToImage50Pro",
+        "x-capability": "image_to_image",
         "tags": [
           "Seedream Image"
         ],
