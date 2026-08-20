@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/minimax/v2/query/video_generation/{task_id}": {
+    "/minimax/v2/query/video_generation": {
       "get": {
         "summary": "查询任务",
         "operationId": "minimaxH3QueryVideo",
