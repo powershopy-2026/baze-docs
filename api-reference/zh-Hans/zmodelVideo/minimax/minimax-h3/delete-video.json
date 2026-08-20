@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/minimax/v2/video_generation/{task_id}": {
+    "/minimax/v2/video_generation": {
       "delete": {
         "summary": "Video Generation",
         "operationId": "minimaxH3DeleteVideo",
