@@ -109,7 +109,7 @@
                       "zh-Hans/zmodelImage/minimax/image01-image-to-image",
                       "zh-Hans/zmodelImage/minimax/image01-text-to-image",
                       {
-                        "group": "minimax原生透传",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelImage/minimax/minimax/text-to-image",
                           "zh-Hans/zmodelImage/minimax/minimax/image-to-image"
@@ -125,7 +125,7 @@
                       "zh-Hans/zmodelImage/ali/wan-edit",
                       "zh-Hans/zmodelImage/ali/wan-text-to-image",
                       {
-                        "group": "阿里巴巴原生透传",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelImage/ali/api/qwen-image-3.0",
                           "zh-Hans/zmodelImage/ali/api/qwen-text-to-image",
@@ -147,7 +147,7 @@
                       "zh-Hans/zmodelImage/byteplus/seedream-5-0-pro-text-to-image",
                       "zh-Hans/zmodelImage/byteplus/seedream-5-0-pro-image-to-image",
                       {
-                        "group": "字节原生透传",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelImage/byteplus/seedream/seedream-image-create",
                           "zh-Hans/zmodelImage/byteplus/seedream/seedream-streaming"
@@ -191,7 +191,7 @@
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
                       {
-                        "group": "minimax原生透传",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelVideo/minimax/minimax/text-to-video",
                           "zh-Hans/zmodelVideo/minimax/minimax/image-to-video",
@@ -229,7 +229,7 @@
                       "zh-Hans/zmodelVideo/ali/happyhorse-1.1-r2v",
                       "zh-Hans/zmodelVideo/ali/task-query",
                       {
-                        "group": "阿里巴巴原生透传",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-i2v",
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-t2v",
@@ -268,7 +268,7 @@
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-5-first-last-frame-to-video",
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-5-multimodal-reference-to-video",
                       {
-                        "group": "字节原生透传",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelVideo/byteplus/seedance/seedance-video",
                           "zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query",
@@ -328,7 +328,7 @@
                       "zh-Hans/zmodelAudio/minimax/speech-02-hd",
                       "zh-Hans/zmodelAudio/minimax/speech-02-turbo",
                       {
-                        "group": "minimax原生透传",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelAudio/minimax/minimax/t2a-v2"
                         ]
@@ -340,7 +340,7 @@
                     "pages": [
                       "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash",
                       {
-                        "group": "阿里巴巴原生透传",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelAudio/ali/api/qwen-tts"
                         ]
