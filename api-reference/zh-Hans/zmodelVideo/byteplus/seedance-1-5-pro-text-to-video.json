@@ -15,6 +15,7 @@
       "post": {
         "summary": "Seedance 1.5 Pro 文生视频",
         "operationId": "seedance15ProTextToVideo",
+        "x-capability": "text_to_video",
         "description": "适用于 `seedance-1-5-pro-251215` 模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。",
         "requestBody": {
           "required": true,

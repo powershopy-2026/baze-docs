@@ -25,7 +25,7 @@
           "Text to Audio"
         ],
         "summary": "Text to Audio V2",
-        "operationId": "t2aV2",
+        "operationId": "minimaxAudioSynthesisV2",
         "parameters": [
           {
             "name": "Content-Type",

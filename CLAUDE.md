@@ -9,6 +9,7 @@
 - 除新增文件外，不允许全量生成/覆盖文件，只允许增量变动（使用 Edit 工具进行局部修改）。
 - 除非得到明确指令，否则不允许使用 `git checkout` 还原文件。
 - 每次变更 OpenAPI JSON 文档（`api-reference/` 目录下的 `.json` 文件）后，必须使用 `swagger-cli validate` 校验文档合规性。
+- 生成或修改 OpenAPI 文档时，请遵循 `OPENAPI_EXTENSIONS.md` 中的 `x-` 扩展字段规范（`x-capability`、`x-linkage`、`x-valid-when`、`x-options`）。
 
 ---
 

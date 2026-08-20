@@ -27,6 +27,7 @@
         "summary": "Seedream 5.0 文生图",
         "description": "支持模型包括 `seedream-5-0-260128`。本文档覆盖文生图与组图生成场景。公开字段包括 `model`、`prompt`、`size`、`seed`、`sequential_image_generation`、`sequential_image_generation_options`、`response_format`、`watermark`。",
         "operationId": "byteplusTextToImage50",
+        "x-capability": "text_to_image",
         "tags": [
           "Seedream Image"
         ],
@@ -207,7 +208,7 @@
             ],
             "description": "图像生成模型名称。支持的模型包括 `seedream-5-0-260128`。"
           },
-           "prompt": {
+          "prompt": {
             "type": "string",
             "description": "用于生成图像的提示词，支持中英文。建议不超过 300 个汉字或 600 个英文单词。字数过多信息容易分散，模型可能因此忽略细节，只关注重点，造成图片缺失部分元素。",
             "example": "充满活力的特写编辑肖像，模特眼神犀利，头戴雕塑感帽子，色彩拼接丰富。"
@@ -241,7 +242,10 @@
           },
           "response_format": {
             "type": "string",
-            "enum": ["url", "b64_json"],
+            "enum": [
+              "url",
+              "b64_json"
+            ],
             "description": "指定生成图像的返回格式。支持以下两种返回方式：\n- `url`：返回图片下载链接；链接在图片生成后 24 小时内有效，请及时下载图片。\n- `b64_json`：以 Base64 编码字符串的 JSON 格式返回图像数据。",
             "default": "url"
           },
@@ -254,7 +258,10 @@
           },
           "sequential_image_generation": {
             "type": "string",
-            "enum": ["auto", "disabled"],
+            "enum": [
+              "auto",
+              "disabled"
+            ],
             "description": "控制是否关闭组图功能。\n- `auto`：自动判断模式，模型会根据用户提供的提示词自主判断是否返回组图以及组图包含的图片数量。\n- `disabled`：关闭组图功能，模型只会生成一张图。\n\n仅 seedream 5.0/4.5/4.0 支持该参数。",
             "default": "disabled"
           },

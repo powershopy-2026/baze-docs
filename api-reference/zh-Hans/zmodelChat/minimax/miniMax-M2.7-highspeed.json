@@ -23,6 +23,7 @@
         "summary": "MiniMax-M2.7-highspeed",
         "description": "调用历史 MiniMax OpenAI 兼容聊天模型。当前稳定模型为 `MiniMax-M2.7-highspeed`。",
         "operationId": "minimaxChatCompletions",
+        "x-capability": "chat",
         "tags": [
           "MiniMax Chat"
         ],

@@ -27,6 +27,7 @@
         "summary": "Seedance 2.0 Mini Text to Video",
         "description": "For the `dreamina-seedance-2-0-mini-260615` model.",
         "operationId": "seedance20MiniTextToVideo",
+        "x-capability": "text_to_video",
         "tags": [
           "Seedance Video"
         ],

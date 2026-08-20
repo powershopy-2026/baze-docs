@@ -26,6 +26,7 @@
       "post": {
         "summary": "Seedance 2.0 Fast Multimodal Reference to Video",
         "operationId": "seedance20FastReferenceToVideoZh",
+        "x-capability": "reference_to_video",
         "description": "Compatible with the `dreamina-seedance-2-0-fast-260128` model.",
         "tags": [
           "Seedance Video"

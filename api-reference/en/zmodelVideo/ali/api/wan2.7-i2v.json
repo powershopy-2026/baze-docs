@@ -26,7 +26,7 @@
       "post": {
         "summary": "Create wan2.7-i2v image-to-video task",
         "description": "Submit an asynchronous Ali `wan2.7-i2v` image-to-video task. Specify the first frame image, last frame image, driving audio, or first video clip via `input.media`.\n\nAfter submitting a task, query its status via `GET /ali/api/v1/tasks/{task_id}`.",
-        "operationId": "aliWan27I2VCreate",
+        "operationId": "aliWan27ImageDrivenCreate",
         "tags": [
           "Wan 2.7 Video"
         ],
@@ -209,7 +209,7 @@
       "get": {
         "summary": "Query wan2.7-i2v video task status",
         "description": "Query the status and result of a video generation task by task ID.\n\nTask status flow: PENDING (queued) -> RUNNING (processing) -> SUCCEEDED (success) / FAILED (failure).",
-        "operationId": "aliWan27I2VQuery",
+        "operationId": "aliWan27ImageDrivenQuery",
         "tags": [
           "Wan 2.7 Video"
         ],

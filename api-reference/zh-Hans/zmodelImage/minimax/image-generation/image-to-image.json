@@ -25,7 +25,7 @@
           "Image"
         ],
         "summary": "图生图",
-        "operationId": "imageGeneration",
+        "operationId": "minimaxImageModify",
         "parameters": [
           {
             "name": "Content-Type",

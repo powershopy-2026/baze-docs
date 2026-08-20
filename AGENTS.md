@@ -8,6 +8,7 @@
 - OpenAPI reference files live under `api-reference/`
 - Run `mint dev` to preview the docs locally
 - Run `mint broken-links` before you claim the docs are complete
+- Follow `OPENAPI_EXTENSIONS.md` for `x-` extension fields (`x-capability`, `x-linkage`, `x-valid-when`, `x-options`) when generating or updating OpenAPI reference files
 
 ## Terminology
 

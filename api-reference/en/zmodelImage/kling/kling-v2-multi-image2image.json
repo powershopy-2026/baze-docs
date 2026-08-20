@@ -23,6 +23,7 @@
         "summary": "Kling Multi Image-to-Image Task",
         "description": "Submit a Kling native multi image-to-image task via `/kling/v1/images/multi-image2image`.",
         "operationId": "createKlingMultiReference2Image",
+        "x-capability": "reference_to_image",
         "tags": [
           "Kling"
         ],

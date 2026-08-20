@@ -3,7 +3,7 @@
   "info": {
     "title": "Seedream 5.0 Pro Image-to-Image",
     "version": "1.0.0",
-    "description": "Seedream 5.0 pro Image-to-Image and multi-image reference capability documentation. The public unified endpoint is `/v1/images/generations`.",
+    "description": "Seedream 5.0 pro Image-to-Image, multi-image reference, and layer decomposition capability documentation. The public unified endpoint is `/v1/images/generations`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,8 +25,9 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream 5.0 Pro Image-to-Image",
-        "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Image-to-Image and Multi-Image Reference Generation scenarios. Public fields include `model`, `prompt`, `image`, `size`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Multi-Image Generation: Input multiple reference images (2-10) + text prompt to generate a single image.\n- Single Image Generation: Input single reference image + text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
+        "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Image-to-Image, Multi-Image Reference Generation, and Layer Decomposition scenarios. Public fields include `model`, `prompt`, `image`, `size`, `background`, `layer_decomposition`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Layer decomposition: Supports decomposing a single image into one base image and multiple output layers, with up to 16 layers.\n- Interactive editing: Supports specifying edit locations in multiple ways, such as coordinates, selection boxes, and arrows, for precise image editing.\n- Multi-Image Reference Generation: Input multiple reference images (2-10) + text prompt to generate a single image.\n- Single Image Generation: Input a single reference image + text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
         "operationId": "byteplusImageToImage50Pro",
+        "x-capability": "image_to_image",
         "tags": [
           "Seedream Image"
         ],
@@ -57,6 +58,16 @@
                       "https://example.com/ref2.jpg"
                     ],
                     "size": "2K"
+                  }
+                },
+                "layer_decomposition": {
+                  "summary": "Layer Decomposition",
+                  "value": {
+                    "model": "dola-seedream-5-0-pro-260628",
+                    "prompt": "Decompose the main subject and background into separate layers",
+                    "image": "https://example.com/input.png",
+                    "size": "auto",
+                    "layer_decomposition": true
                   }
                 }
               }
@@ -198,11 +209,11 @@
             "enum": [
               "dola-seedream-5-0-pro-260628"
             ],
-            "description": "Image generation model name. Supported models include `dola-seedream-5-0-pro-260628` (Seedream 5.0 pro, supports interactive editing, does not support sequential image generation)."
+            "description": "Image generation model name. Supported models include `dola-seedream-5-0-pro-260628` (Seedream 5.0 pro, supports interactive editing and layer decomposition, does not support sequential image generation)."
           },
-           "prompt": {
+          "prompt": {
             "type": "string",
-            "description": "Prompt for image generation, supports Chinese and English. It is recommended not to exceed 300 Chinese characters or 600 English words. Too many words may disperse information, causing the model to ignore details and focus only on key points, resulting in missing elements in the image.",
+            "description": "Prompt for image generation or intended layer decomposition, supports Chinese and English. It is recommended not to exceed 300 Chinese characters or 600 English words. Too many words may disperse information, causing the model to ignore details and focus only on key points, resulting in missing elements in the image.\n\n- **Image generation scenario (Required)**: Describes the content to generate.\n- **Layer decomposition scenario (Optional)**: Specifies the intended layer decomposition. If omitted, the model automatically decomposes all major elements into separate layers.",
             "example": "Dynamic close-up editorial portrait with sharp gaze, sculptural hat, rich color blocking."
           },
           "image": {
@@ -220,27 +231,46 @@
                 "maxItems": 10
               }
             ],
-            "description": "Input image information, supports URL or Base64 encoding. Supports single or multiple image inputs.\n\n- Image URL: Ensure the image URL is accessible.\n- Base64 encoding: Follow the format `data:image/<image_format>;base64,<Base64_encoded>`. Note that `<image_format>` should be lowercase, e.g., `data:image/png;base64,<base64_image>`.\n\nNotes:\n- Single image requirements:\n  - Format: jpeg, png, webp, bmp, tiff, gif, heic, heif\n  - Aspect ratio (width/height) range: [1/16, 16]\n  - Width/height (px) > 14\n  - Size: no more than 30MB\n  - Total pixels: no more than 6000×6000 = 36000000 px (limit on the product of width and height, not individual values)\n- Seedream 5.0 pro supports up to 10 reference images."
+            "description": "Input image information, supports URL or Base64 encoding.\n\n- **Image URL**: Ensure the image URL is accessible.\n- **Base64 encoding**: Follow the format `data:image/<image_format>;base64,<Base64_encoded>`. Note that `<image_format>` must be lowercase, e.g., `data:image/png;base64,<base64_image>`.\n\n**Image generation scenario (Optional)**:\n- Seedream 5.0 pro supports up to 10 reference images.\n- Single-image input requirements:\n  - Format: jpeg, png, webp, bmp, tiff, gif, heic, or heif\n  - Aspect ratio (width / height): [1/16, 16]\n  - Width and height (px): > 14\n  - Size: Up to 30 MB\n  - Total pixels: [196, `6000×6000` (36,000,000)]. Limit on the product of width and height.\n\n**Layer decomposition scenario (Required)**:\n- When layer decomposition is enabled (`layer_decomposition` is `true`), `image` is required and supports only a single image. Passing multiple images causes an error.\n- Single-image input requirements:\n  - Format: png or jpeg\n  - Aspect ratio: [1/16, 16]\n  - Size: Up to 30 MB\n  - Total pixels: [`512×512` (262,144), `6000×6000` (36,000,000)]."
           },
           "size": {
             "type": "string",
-            "description": "Specifies the size of the generated image, supports specifying resolution level (e.g., 2K) or width and height pixel values (e.g., 2048x2048), which cannot be mixed.\n\n**dola-seedream-5-0-pro-260628 (Seedream 5.0 pro)**\nSupports the following two methods, which cannot be mixed:\n\n* Method 1 (Recommended): Specify resolution level and describe aspect ratio, shape, or purpose in the prompt. The model determines the final image size.\n  * Default: 2K\n  * Options: 1K, 2K\n\n* Method 2: Specify width and height pixel values (widthxheight).\n  * Total pixel range: [`1280x720` (921600), `2048x2048×1.1025` (4624220)]\n  * Aspect ratio range: [1/16, 16]\n\n> Note: When using Method 2, both total pixel range and aspect ratio range must be satisfied. Total pixels refers to the product of width and height, not individual values.\n> * Valid example: `2048x1024`\n    Total pixels 2048x1024=2097152, within [921600, 4624220]; aspect ratio 2048/1024=2, within [1/16, 16], so valid.\n> * Invalid example: `512x512`\n    Total pixels 512x512=262144, below 921600 minimum, so invalid.\n\nResolution to pixel reference values when using Method 1 (not limited to these standard values, common ones listed):\n\n| Resolution | Aspect Ratio | Pixel Dimensions |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n",
-            "default": "2K",
-            "example": "2K",
+            "description": "Specifies the dimensions of the generated image. Configuration methods and options vary by scenario:\n\n**Image generation scenario**\nTwo methods are available, but they cannot be used at the same time:\n\n* **Method 1 (Recommended)**: Specify the resolution level of the generated image, and describe its aspect ratio, shape, or purpose in the prompt using natural language. The model determines the final image size.\n  * Default: `auto`\n  * Available values: `1K`, `1.5K`, `2K`\n  * *Pricing note*: `1.5K` has the same price as `1K` while providing better image generation quality.\n\n* **Method 2**: Specify the width and height of the generated image in pixels (`widthxheight`):\n  * Total pixels range: [`1280x720` (921,600), `2048x2048x1.1025` (4,624,220)]\n  * Aspect ratio range: [1/16, 16]\n  * *Note*: When using Method 2, both the total pixel range and aspect ratio range must be satisfied. The total pixel limit applies to the product of width and height.\n    * Valid example: `2048x1024` (Total pixels 2048x1024=2,097,152; aspect ratio 2)\n    * Invalid example: `512x512` (Total pixels 512x512=262,144, below 921,600 minimum)\n\n**Resolution to Pixel Reference Values (Method 1)**:\n\n| Resolution | Aspect Ratio | Width and Height Pixel Values |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 1.5K | 1:1 | 1536x1536 |\n| | 4:3 | 1792x1344 |\n| | 3:4 | 1344x1792 |\n| | 16:9 | 2048x1152 |\n| | 9:16 | 1152x2048 |\n| | 3:2 | 1872x1248 |\n| | 2:3 | 1248x1872 |\n| | 21:9 | 2352x1008 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n\n**Layer decomposition scenario**\nOnly resolution levels are supported:\n* **Base image**: Output resolution is consistent with the resolution specified by `size`, keeping the original aspect ratio.\n* **Layers**: Each output layer resolution is close to the resolution specified by `size`, keeping the aspect ratio of its region.\n* Default: `auto`\n* Supported values: `1K`, `1.5K`, `2K`, `auto`\n* **`auto` adaptation rules**:\n  * If original dimensions of base image and each layer are between [`1280x720` (921,600), `2048x2048x1.1025` (4,624,220)], output at original dimensions.\n  * If smaller than 1K, output at 1K.\n  * If larger than 2K, output at 2K.",
+            "default": "auto",
+            "example": "auto",
             "x-enum": [
               "1K",
-              "2K"
+              "1.5K",
+              "2K",
+              "auto"
             ]
+          },
+          "background": {
+            "type": "string",
+            "enum": [
+              "opaque",
+              "transparent"
+            ],
+            "description": "Controls whether to generate an image with an alpha channel. Valid values:\n- `opaque`: Opaque background mode (default). The output image has a standard, opaque background.\n- `transparent`: Transparent background mode. The output image has a transparent background.\n\n**Usage restrictions**:\n- Supported only for image-to-image generation with exactly one input image that has an alpha channel.\n- In transparent background mode, the output image format defaults to `png`. If `output_format` is set to `jpeg`, the request returns an error.\n- If the input image uses a format that does not support an alpha channel (such as `jpeg`), the request returns an error.\n\n**Supported model**: `dola-seedream-5-0-pro-260628` (Seedream 5.0 pro).",
+            "default": "opaque"
+          },
+          "layer_decomposition": {
+            "type": "boolean",
+            "description": "Controls whether to enable layer decomposition. Layer decomposition automatically decomposes subjects, backgrounds, text, and other content in a single image into one base image and up to 16 independently editable layers. Each layer is a PNG image with an alpha channel.\n- `true`: Layer decomposition mode. The model decomposes the input image into one base image and multiple layers.\n- `false`: Image generation mode (default). Layer decomposition is not performed.\n\n**Usage notes**:\n- Only one image to be decomposed is supported. Passing multiple images causes an error.\n- If any layer fails to generate, the entire request fails. Partial success is not supported.\n- If the prompt requests more layers than the upper limit (16), some layer information may be lost.\n- The `data` response object returns the position and content information of each output layer, including layer order (`z_index`), bounding box information (`bounding_box`), name (`name`), and description (`description`).\n\n**Supported model**: `dola-seedream-5-0-pro-260628` (Seedream 5.0 pro).",
+            "default": false
           },
           "response_format": {
             "type": "string",
-            "enum": ["url", "b64_json"],
-            "description": "Specifies the return format of the generated image. Supported options:\n- `url`: Returns image download URL; valid for 24 hours after generation.\n- `b64_json`: Returns image data as Base64 encoded JSON.",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "Specifies how generated images are returned. Supported options:\n- `url`: Returns a download URL for the image; valid for 24 hours after generation.\n- `b64_json`: Returns image data as a Base64-encoded string in JSON.",
             "default": "url"
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add watermark to generated images.\n- `false`: No watermark.\n- `true`: Add \"AI Generated\" watermark at bottom right corner.",
+            "description": "Controls whether to add a watermark to the generated image.\n- `false`: Does not add a watermark.\n- `true`: Adds an \"AI-generated\" watermark in the lower-right corner of the image.",
             "default": true
           }
         }
@@ -262,7 +292,7 @@
             "items": {
               "$ref": "#/components/schemas/ImageData"
             },
-            "description": "List of generated images."
+            "description": "List of generated images. In layer decomposition, includes base image and decomposed layers."
           },
           "usage": {
             "type": "object",
@@ -271,6 +301,10 @@
               "generated_images": {
                 "type": "integer",
                 "description": "Number of successfully generated images, excluding failed ones."
+              },
+              "input_images": {
+                "type": "integer",
+                "description": "Number of images input to the model."
               },
               "output_tokens": {
                 "type": "integer",
@@ -298,6 +332,42 @@
           "size": {
             "type": "string",
             "description": "Image dimensions (widthxheight)."
+          },
+          "output_format": {
+            "type": "string",
+            "description": "Output image format (`png` or `jpeg`). In layer decomposition, base image output format matches this field, while layers are always output in `png` format."
+          },
+          "z_index": {
+            "type": "integer",
+            "description": "Layer stacking order index (returned in layer decomposition). The base image is fixed to `0`; layers start from `1` and increment."
+          },
+          "name": {
+            "type": "string",
+            "description": "Layer name or label (returned in layer decomposition) identifying the main content of the layer."
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed semantic description of the decomposed layer (returned in layer decomposition)."
+          },
+          "bounding_box": {
+            "type": "object",
+            "description": "Bounding box coordinates of the output layer in the coordinate system of the output base image (returned for layers in layer decomposition).",
+            "properties": {
+              "absolute": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "description": "Absolute pixel coordinates `[left, top, right, bottom]` in the coordinate system of the output base image."
+              },
+              "normalized": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "description": "Normalized coordinates `[left, top, right, bottom]` converted to discrete integers in the range `[0, 1000]`."
+              }
+            }
           }
         }
       },

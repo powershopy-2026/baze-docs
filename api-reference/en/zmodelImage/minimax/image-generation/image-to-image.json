@@ -25,7 +25,7 @@
           "Image"
         ],
         "summary": "Image Generation",
-        "operationId": "imageGeneration",
+        "operationId": "minimaxImageModify",
         "parameters": [
           {
             "name": "Content-Type",

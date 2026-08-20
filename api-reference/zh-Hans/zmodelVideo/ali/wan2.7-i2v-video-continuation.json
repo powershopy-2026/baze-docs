@@ -27,6 +27,7 @@
         "summary": "创建 Wan 2.7 视频续写任务",
         "description": "提交一个异步 Ali `wan2.7-i2v` 视频续写任务。\n\n使用 `first_clip` 指定首段视频，可选搭配 `last_frame` 作为尾帧参考。\n\n支持的 `media` 组合：\n- `first_clip`\n- `first_clip + last_frame`\n\n`prompt` 字段为可选。`size` 仅支持 `720P` 和 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。同时支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 和 `seed`。",
         "operationId": "aliWan27I2VVideoContinuation",
+        "x-capability": "video_continuation",
         "tags": [
           "Wan 2.7 视频"
         ],

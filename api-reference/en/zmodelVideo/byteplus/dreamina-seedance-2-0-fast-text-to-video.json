@@ -27,6 +27,7 @@
         "summary": "Seedance 2.0 Fast Text to Video",
         "description": "Compatible with the `dreamina-seedance-2-0-fast-260128` model.",
         "operationId": "seedance20FastTextToVideo",
+        "x-capability": "text_to_video",
         "tags": [
           "Seedance Video"
         ],

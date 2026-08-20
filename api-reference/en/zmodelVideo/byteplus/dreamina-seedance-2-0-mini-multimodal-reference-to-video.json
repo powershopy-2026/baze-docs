@@ -26,6 +26,7 @@
       "post": {
         "summary": "Seedance 2.0 Mini Multimodal Reference to Video",
         "operationId": "seedance20MiniReferenceToVideoZh",
+        "x-capability": "reference_to_video",
         "description": "For the `dreamina-seedance-2-0-mini-260615` model.",
         "tags": [
           "Seedance Video"

@@ -27,6 +27,7 @@
         "summary": "Seedance 2.0 Image to Video",
         "description": "For the `dreamina-seedance-2-0-260128` model. After submitting, query status via `GET /v1/videos/{task_id}`.",
         "operationId": "seedance20ImageToVideo",
+        "x-capability": "image_to_video",
         "tags": [
           "Seedance Video"
         ],

@@ -23,6 +23,7 @@
         "summary": "Kling Image Generation Task",
         "description": "Submit a Kling native async image generation or image-to-image task via `/kling/v1/images/generations`.",
         "operationId": "createKlingImageGeneration",
+        "x-capability": "image_generation",
         "tags": [
           "Kling"
         ],
@@ -156,8 +157,13 @@
             "x-linkage": {
               "rules": [
                 {
-                  "when": { "field": "image", "operator": "has_value" },
-                  "set_options": ["1k"]
+                  "when": {
+                    "field": "image",
+                    "operator": "has_value"
+                  },
+                  "set_options": [
+                    "1k"
+                  ]
                 }
               ]
             }

@@ -14,7 +14,8 @@
     "/minimax/v2/video_generation": {
       "post": {
         "summary": "Image-to-video (t2va)",
-        "operationId": "videoGeneration",
+        "operationId": "minimaxH3TailFrameCreate",
+        "x-capability": "end_frame_to_video",
         "description": "Video generation V2 API. Input via multimodal content array (text / image / video / audio). Supports text-to-video, image-to-video (first/last frame), and multimodal reference-to-video with 2K output.",
         "parameters": [
           {

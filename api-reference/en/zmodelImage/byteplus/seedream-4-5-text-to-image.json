@@ -27,6 +27,7 @@
         "summary": "Seedream 4.5 Text-to-Image",
         "description": "Supported models include `seedream-4-5-251128`. This document covers Text-to-Image and Sequential Image Generation scenarios. Public fields include `model`, `prompt`, `image`, `size`, `seed`, `sequential_image_generation`, `sequential_image_generation_options`, `response_format`, and `watermark`.",
         "operationId": "byteplusTextToImage45",
+        "x-capability": "text_to_image",
         "tags": [
           "Seedream Image"
         ],
@@ -241,7 +242,10 @@
           },
           "response_format": {
             "type": "string",
-            "enum": ["url", "b64_json"],
+            "enum": [
+              "url",
+              "b64_json"
+            ],
             "description": "Specifies the return format of the generated image. Supports the following two return methods:\n- `url`: Returns an image download link; the link is valid for 24 hours after image generation, please download the image promptly.\n- `b64_json`: Returns image data in JSON format as a Base64-encoded string.",
             "default": "url"
           },
@@ -254,7 +258,10 @@
           },
           "sequential_image_generation": {
             "type": "string",
-            "enum": ["auto", "disabled"],
+            "enum": [
+              "auto",
+              "disabled"
+            ],
             "description": "Controls whether to disable the sequential image generation feature.\n- `auto`: Automatic determination mode. The model will autonomously decide whether to return a set of images and the number of images based on the user's prompt.\n- `disabled`: Disable the sequential image generation feature. The model will only generate one image.\n\nOnly seedream 5.0/4.5/4.0 support this parameter.",
             "default": "disabled"
           },

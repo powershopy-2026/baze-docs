@@ -14,6 +14,7 @@
       "post": {
         "summary": "可控文生音效",
         "operationId": "viduTimingToAudio",
+        "x-capability": "timing_to_audio",
         "description": "使用 Vidu 模型基于时间轴生成可控音效片段。创作者可以通过时间轴自由控制音频中多个声音事件的时机。（不支持背景音乐）提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}/creations` 查询状态。",
         "requestBody": {
           "required": true,
@@ -30,17 +31,17 @@
                     "duration": 10,
                     "timing_prompts": [
                       {
-                        "from": 0.0,
-                        "to": 3.0,
+                        "from": 0,
+                        "to": 3,
                         "prompt": "清晨的鸟叫声"
                       },
                       {
-                        "from": 3.0,
-                        "to": 6.0,
+                        "from": 3,
+                        "to": 6,
                         "prompt": "远处传来火车驶过的声音"
                       },
                       {
-                        "from": 5.0,
+                        "from": 5,
                         "to": 9.5,
                         "prompt": "海浪轻轻拍打沙滩"
                       }
@@ -69,17 +70,17 @@
                       "duration": 10,
                       "timing_prompts": [
                         {
-                          "from": 0.0,
-                          "to": 3.0,
+                          "from": 0,
+                          "to": 3,
                           "prompt": "清晨的鸟叫声"
                         },
                         {
-                          "from": 3.0,
-                          "to": 6.0,
+                          "from": 3,
+                          "to": 6,
                           "prompt": "远处传来火车驶过的声音"
                         },
                         {
-                          "from": 5.0,
+                          "from": 5,
                           "to": 9.5,
                           "prompt": "海浪轻轻拍打沙滩"
                         }

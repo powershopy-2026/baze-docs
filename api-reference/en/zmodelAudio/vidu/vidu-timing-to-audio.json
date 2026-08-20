@@ -14,6 +14,7 @@
       "post": {
         "summary": "Vidu Timing-to-Audio",
         "operationId": "viduTimingToAudioEn",
+        "x-capability": "timing_to_audio",
         "description": "Generate controllable sound effect clips using the Vidu model based on timeline. Creators can freely control the timing of multiple sound events within the audio through a timeline. (BGM not supported) After submission, query status via `GET /vidu/ent/v2/tasks/{task_id}/creations`.",
         "requestBody": {
           "required": true,
@@ -128,17 +129,17 @@
                       "duration": 10,
                       "timing_prompts": [
                         {
-                          "from": 0.0,
-                          "to": 3.0,
+                          "from": 0,
+                          "to": 3,
                           "prompt": "Birds chirping in the morning"
                         },
                         {
-                          "from": 3.0,
-                          "to": 6.0,
+                          "from": 3,
+                          "to": 6,
                           "prompt": "A distant train passing by"
                         },
                         {
-                          "from": 5.0,
+                          "from": 5,
                           "to": 9.5,
                           "prompt": "Waves gently lapping the beach"
                         }

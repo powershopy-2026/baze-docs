@@ -26,7 +26,7 @@
       "post": {
         "summary": "Qwen text-to-image",
         "description": "Calls Ali `qwen-image-2.0-pro` model to perform text-to-image generation.\n\nThe request body contains three main fields: `model`, `input`, and `parameters`. The prompt is placed in `input.messages[0].content[0].text`. The `parameters` field controls resolution `size`, count `n`, negative prompt `negative_prompt`, smart prompt rewriting `prompt_extend`, watermark `watermark`, and random seed `seed`.",
-        "operationId": "aliQwenTextToImage",
+        "operationId": "aliQwenImageSynthesis",
         "tags": [
           "Qwen Image"
         ],

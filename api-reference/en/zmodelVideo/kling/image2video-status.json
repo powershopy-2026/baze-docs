@@ -23,6 +23,7 @@
         "summary": "Query Kling image-to-video task status",
         "description": "Returns the persisted Kling image-to-video task response. The task_id path parameter is the public task ID returned by the submit endpoint.",
         "operationId": "getKlingImage2VideoStatus",
+        "x-capability": "image_to_video",
         "tags": [
           "Kling"
         ],

@@ -26,7 +26,7 @@
       "post": {
         "summary": "创建万相图生视频任务（首尾帧）",
         "description": "提交一个异步的万相 2.2 图生视频任务，基于首帧（及可选尾帧）图像生成视频。\n\n提交任务后，请通过 `GET /ali/api/v1/tasks/{task_id}` 查询任务状态。",
-        "operationId": "aliLegacyI2VFirstLastFrameCreate",
+        "operationId": "aliLegacyDualFrameCreate",
         "tags": [
           "Wan Legacy Video"
         ],
@@ -192,7 +192,7 @@
       "get": {
         "summary": "查询万相图生视频任务状态（首尾帧）",
         "description": "根据任务 ID 查询视频生成任务的状态和结果。\n\n任务状态流转：PENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。",
-        "operationId": "aliLegacyI2VFirstLastFrameQuery",
+        "operationId": "aliLegacyDualFrameQuery",
         "tags": [
           "Wan Legacy Video"
         ],

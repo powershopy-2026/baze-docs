@@ -26,7 +26,7 @@
       "post": {
         "summary": "千问-图像编辑",
         "description": "调用阿里云千问 `qwen-image-2.0-pro` 模型执行图像编辑任务。`input.messages[0].content[]` 数组需包含 1-3 个 `image` 对象（输入图像 URL 或 Base64）和 1 个 `text` 对象（编辑指令）。`parameters` 字段控制输出数量 `n`、反向提示词 `negative_prompt`、分辨率 `size`、提示词智能改写 `prompt_extend`、水印 `watermark`、随机种子 `seed` 等。",
-        "operationId": "aliQwenImageEdit",
+        "operationId": "aliQwenImageModify",
         "tags": [
           "Qwen Image"
         ],

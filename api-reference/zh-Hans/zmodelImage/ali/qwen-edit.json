@@ -27,6 +27,7 @@
         "summary": "Qwen 图像编辑",
         "description": "调用 Ali `qwen-image-2.0-pro` 或 `qwen-image-3.0-pro` 执行单图编辑或多图融合。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `n`、`size`、`watermark`、`prompt_extend`、`negative_prompt`、`seed` 设计为顶层字段。输入图片位于 `input.messages[0].content[].image`，编辑指令位于同一数组中的 `text`。请求体不接受顶层 `parameters`。",
         "operationId": "aliQwenImageEdit",
+        "x-capability": "image_to_image",
         "tags": [
           "Qwen Image"
         ],

@@ -14,6 +14,7 @@
       "post": {
         "summary": "Vidu Text-to-Audio",
         "operationId": "viduTextToAudioEn",
+        "x-capability": "text_to_audio",
         "description": "Generate an audio clip (supports sound effects & BGM) by inputting a text prompt. After submission, query status via `GET /vidu/ent/v2/tasks/{task_id}/creations`.",
         "requestBody": {
           "required": true,

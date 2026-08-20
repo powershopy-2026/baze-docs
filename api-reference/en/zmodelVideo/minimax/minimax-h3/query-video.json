@@ -14,7 +14,7 @@
     "/minimax/v2/query/video_generation/{task_id}": {
       "get": {
         "summary": "Video Generation",
-        "operationId": "videoGeneration",
+        "operationId": "minimaxH3QueryVideo",
         "description": "Query the status and results of a single video generation, H3-Context-IR, or video regeneration task within the last 7 days by task_id.",
         "parameters": [
           {
@@ -88,6 +88,7 @@
                         "ratio": "16:9",
                         "task_type": "generation",
                         "modality": "video"
+                      }
                     }
                   }
                 }

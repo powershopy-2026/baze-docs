@@ -23,6 +23,7 @@
         "summary": "Query Kling motion control task status",
         "description": "Returns the persisted Kling motion control task response. The task_id path parameter is the public task ID returned by the submit endpoint.",
         "operationId": "getKlingMotionControlStatus",
+        "x-capability": "motion_control",
         "tags": [
           "Kling"
         ],

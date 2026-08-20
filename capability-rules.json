@@ -1,0 +1,165 @@
+{
+    "capabilityOrder": [
+        "chat",
+        "text_to_speech",
+        "text_to_audio",
+        "timing_to_audio",
+        "text_to_image",
+        "text_to_video",
+        "image_to_image",
+        "image_to_video",
+        "end_frame_to_video",
+        "start&end_frame_to_video",
+        "reference_to_image",
+        "layer_decomposition",
+        "reference_to_video",
+        "video_continuation",
+        "motion_control",
+        "image_generation",
+        "video_generation"
+    ],
+    "operationIdRules": [
+        {
+            "capability": "chat",
+            "keywords": [
+                "chat"
+            ]
+        },
+        {
+            "capability": "text_to_speech",
+            "keywords": [
+                "speech"
+            ]
+        },
+        {
+            "capability": "video_continuation",
+            "keywords": [
+                "videocontinuation"
+            ]
+        },
+        {
+            "capability": "motion_control",
+            "keywords": [
+                "motioncontrol",
+                "motion"
+            ]
+        },
+        {
+            "capability": "layer_decomposition",
+            "keywords": [
+                "layerdecomposition"
+            ]
+        },
+        {
+            "capability": "start&end_frame_to_video",
+            "keywords": [
+                "startendtovideo",
+                "startend2video",
+                "firstlast"
+            ]
+        },
+        {
+            "capability": "end_frame_to_video",
+            "keywords": [
+                "endframetovideo",
+                "endframe2video"
+            ]
+        },
+        {
+            "capability": "reference_to_video",
+            "keywords": [
+                "referencetovideo",
+                "reference2video",
+                "r2v"
+            ]
+        },
+        {
+            "capability": "reference_to_image",
+            "keywords": [
+                "referencetoimage",
+                "reference2image",
+                "r2i"
+            ]
+        },
+        {
+            "capability": "image_to_image",
+            "keywords": [
+                "imagetoimage",
+                "image2image",
+                "imageedit",
+                "i2i"
+            ]
+        },
+        {
+            "capability": "image_to_video",
+            "keywords": [
+                "imagetovideo",
+                "image2video",
+                "img2video",
+                "i2v"
+            ]
+        },
+        {
+            "capability": "text_to_image",
+            "keywords": [
+                "texttoimage",
+                "text2image",
+                "t2i"
+            ]
+        },
+        {
+            "capability": "text_to_video",
+            "keywords": [
+                "texttovideo",
+                "text2video",
+                "t2v"
+            ]
+        },
+        {
+            "capability": "image_generation",
+            "keywords": [
+                "imagegeneration"
+            ]
+        },
+        {
+            "capability": "video_generation",
+            "keywords": [
+                "videogeneration"
+            ]
+        },
+        {
+            "capability": "timing_to_audio",
+            "keywords": [
+                "timingtoaudio",
+                "timing2audio"
+            ]
+        },
+        {
+            "capability": "text_to_audio",
+            "keywords": [
+                "texttoaudio",
+                "text2audio",
+                "t2a"
+            ]
+        }
+    ],
+    "resultModeByCapability": {
+        "text_to_speech": "audio",
+        "text_to_audio": "audio",
+        "timing_to_audio": "audio",
+        "chat": "text",
+        "image_generation": "image",
+        "text_to_image": "image",
+        "image_to_image": "image",
+        "reference_to_image": "image",
+        "layer_decomposition": "image",
+        "motion_control": "task",
+        "reference_to_video": "task",
+        "image_to_video": "task",
+        "end_frame_to_video": "task",
+        "start&end_frame_to_video": "task",
+        "text_to_video": "task",
+        "video_continuation": "task",
+        "video_generation": "task"
+    }
+}

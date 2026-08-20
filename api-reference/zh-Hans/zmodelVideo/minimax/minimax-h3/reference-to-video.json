@@ -14,7 +14,8 @@
     "/minimax/v2/video_generation": {
       "post": {
         "summary": "多模态参考生视频 (t2va)",
-        "operationId": "videoGeneration",
+        "operationId": "minimaxH3RefVideoCreate",
+        "x-capability": "reference_to_video",
         "description": "视频生成 V2 接口，通过多模态 content 数组输入（文本 / 图片 / 视频 / 音频），支持文生视频、图生视频（首尾帧）、多模态参考生视频，2K 直出。",
         "parameters": [
           {
@@ -137,7 +138,10 @@
                   "type": "string",
                   "description": "输入内容的类型。",
                   "enum": [
-                    "text","image_url","video_url","audio_url"
+                    "text",
+                    "image_url",
+                    "video_url",
+                    "audio_url"
                   ]
                 },
                 "text": {
