@@ -111,8 +111,8 @@
                       {
                         "group": "minimax原生透传",
                         "pages": [
-                          "zh-Hans/zmodelImage/minimax/minimax原生透传/text-to-image",
-                          "zh-Hans/zmodelImage/minimax/minimax原生透传/image-to-image"
+                          "zh-Hans/zmodelImage/minimax/minimax/text-to-image",
+                          "zh-Hans/zmodelImage/minimax/minimax/image-to-image"
                         ]
                       }
                     ]
@@ -193,11 +193,11 @@
                       {
                         "group": "minimax原生透传",
                         "pages": [
-                          "zh-Hans/zmodelVideo/minimax/minimax原生透传/text-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax原生透传/image-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax原生透传/first-last-frame-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax原生透传/query-video-task",
-                          "zh-Hans/zmodelVideo/minimax/minimax原生透传/download-video-file"
+                          "zh-Hans/zmodelVideo/minimax/minimax/text-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax/image-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax/first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax/query-video-task",
+                          "zh-Hans/zmodelVideo/minimax/minimax/download-video-file"
                         ]
                       },
                       {
@@ -330,7 +330,7 @@
                       {
                         "group": "minimax原生透传",
                         "pages": [
-                          "zh-Hans/zmodelAudio/minimax/minimax原生透传/t2a-v2"
+                          "zh-Hans/zmodelAudio/minimax/minimax/t2a-v2"
                         ]
                       }
                     ]
