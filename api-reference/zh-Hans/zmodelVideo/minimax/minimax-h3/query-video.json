@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "MiniMax API",
-    "description": "创建视频生成任务。",
+    "description": "查询视频生成任务。",
     "version": "1.0.0"
   },
   "servers": [
@@ -29,7 +29,7 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "查询成功返回 task_id。使用该 task_id 调用查询任务接口获取任务状态与结果。",
             "content": {
               "application/json": {
                 "schema": {
@@ -198,6 +198,10 @@
                   "input_image_count": {
                     "type": "integer",
                     "description": "本次计费涉及的图片数量（first_frame + middle_frame + last_frame + reference_image 全部相加）。"
+                  },
+                  "input_audio_seconds": {
+                    "type": "integer",
+                    "description": "输入参考音频秒数（各段取和四舍五入）；无参考音频时不返回。"
                   },
                   "total_tokens": {
                     "type": "integer",
