@@ -79,12 +79,7 @@
                         "updated_at": 1785125700,
                         "resolution": "2K",
                         "duration": 5,
-                        "usage": {
-                          "total_seconds": 0,
-                          "input_seconds": 0,
-                          "output_seconds": 0,
-                          "input_image_count": 0
-                        },
+                        "usage": {},
                         "ratio": "16:9",
                         "task_type": "generation",
                         "modality": "video"
