@@ -15,7 +15,7 @@
       "get": {
         "summary": "查询任务",
         "operationId": "minimaxH3QueryVideo",
-        "description": "按 task_id 查询最近 7 天内单个视频生成、H3-Context-IR 或视频再生成任务的状态与结果。",
+        "description": "按 task_id 查询最近 7 天内单个视频生成、H3-Context-IR 或视频再生成任务的状态与结果。1038",
         "parameters": [
           {
             "name": "task_id",
