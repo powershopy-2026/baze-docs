@@ -29,7 +29,7 @@
         ],
         "responses": {
           "200": {
-            "description": " test",
+            "description": "查询成功返回任务详情。使用创建任务返回的 task_id 调用本接口即可获取任务状态与结果。",
             "content": {
               "application/json": {
                 "schema": {
