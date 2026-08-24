@@ -14,6 +14,7 @@
       "post": {
         "summary": "Vidu Reference-to-Image",
         "operationId": "viduReferenceToImageEn",
+        "x-capability": "reference_to_image",
         "description": "Generate images using the Vidu model based on reference images.",
         "requestBody": {
           "required": true,

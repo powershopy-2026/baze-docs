@@ -27,6 +27,7 @@
         "summary": "Qwen 文生图",
         "description": "调用 Ali `qwen-image-2.0-pro` 或 `qwen-image-3.0-pro` 执行文生图。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `n`、`size`、`negative_prompt`、`prompt_extend`、`watermark`、`seed` 设计为顶层字段。提示词位于 `input.messages[0].content[0].text`。请求体不接受顶层 `parameters`。",
         "operationId": "aliQwenTextToImage",
+        "x-capability": "text_to_image",
         "tags": [
           "Qwen Image"
         ],

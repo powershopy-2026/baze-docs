@@ -27,6 +27,7 @@
         "summary": "创建 happyhorse-1.1-r2v 参考生视频任务",
         "description": "提交一个异步的阿里云 HappyHorse `happyhorse-1.1-r2v` 参考生视频任务。\n\n提交任务后，请通过 `GET /ali/api/v1/tasks/{task_id}` 查询任务状态。",
         "operationId": "aliHappyHorse11R2VCreate",
+        "x-capability": "reference_to_video",
         "tags": [
           "HappyHorse Video"
         ],

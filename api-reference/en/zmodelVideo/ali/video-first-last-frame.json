@@ -27,6 +27,7 @@
         "summary": "Wan first-last-frame image-to-video",
         "description": "wan2.2-kf2v-flash\n\nApplies to Wan series first-last-frame image-to-video models. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `images`, `prompt`, `seconds`, `size`, `prompt_extend`, `watermark`, `seed`, and `negative_prompt`. The `images` array must contain exactly 2 images in order: `images[0]` is the first frame and `images[1]` is the last frame. The first frame determines the base composition, while the last frame controls the closing scene.",
         "operationId": "aliFirstLastFrameToVideo",
+        "x-capability": "start&end_frame_to_video",
         "tags": [
           "Wan Video"
         ],

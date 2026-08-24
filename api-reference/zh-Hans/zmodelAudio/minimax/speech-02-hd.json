@@ -23,6 +23,7 @@
         "summary": "MiniMax 语音合成",
         "description": "调用历史 MiniMax `t2a_v2` 能力生成语音。\n\n当前稳定模型：`speech-02-hd`。",
         "operationId": "minimaxAudioSpeech",
+        "x-capability": "text_to_speech",
         "tags": [
           "MiniMax Audio"
         ],

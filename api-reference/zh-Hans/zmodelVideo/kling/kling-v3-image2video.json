@@ -23,6 +23,7 @@
         "summary": "Kling 图生视频任务 (kling-v3)",
         "description": "通过 `/kling/v1/videos/image2video` 提交 Kling 图生视频任务。请求体经模型映射和公共任务 ID 注入后转发至 Kling 官方接口。",
         "operationId": "createKlingV3Image2Video",
+        "x-capability": "image_to_video",
         "tags": [
           "Kling"
         ],

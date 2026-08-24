@@ -23,6 +23,7 @@
         "summary": "Ali text-to-speech",
         "description": "Call Ali `qwen3-tts-instruct-flash` through the unified `/v1/audio/speech` endpoint.\n\nResponse contract:\n- non-streaming returns the official Ali JSON response;\n- streaming returns `text/event-stream` and forwards Ali SSE payloads.",
         "operationId": "aliAudioSpeech",
+        "x-capability": "text_to_speech",
         "tags": [
           "Ali Audio"
         ],

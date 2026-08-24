@@ -23,6 +23,7 @@
         "summary": "查询 Kling 图生视频任务状态",
         "description": "返回已持久化的 Kling 图生视频任务响应。task_id 路径参数为提交端点返回的公开任务 ID。",
         "operationId": "getKlingImage2VideoStatus",
+        "x-capability": "image_to_video",
         "tags": [
           "Kling"
         ],

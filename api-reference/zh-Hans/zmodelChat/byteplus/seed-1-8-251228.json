@@ -27,6 +27,7 @@
         "summary": "seed-1-8-251228",
         "description": "调用 BytePlus chat completions 能力。\n\n支持模型包括 `seed-1-8-251228` \n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`stream_options.chunk_include_usage`、`max_tokens`、`max_completion_tokens`、`stop`、`reasoning_effort`、`response_format`、`frequency_penalty`、`presence_penalty`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`parallel_tool_calls`、`tool_choice`。`messages[].content` 支持 `text`、`image_url`、`video_url` 多模态分片；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
         "operationId": "byteplusChatCompletions",
+        "x-capability": "chat",
         "tags": [
           "BytePlus Chat"
         ],

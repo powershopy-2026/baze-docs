@@ -27,6 +27,7 @@
         "summary": "创建 wan2.7-i2v 首尾帧生视频任务",
         "description": "提交一个异步的 Ali `wan2.7-i2v` 首尾帧生视频任务。\n\n使用 `first_frame` 指定首帧图像，`last_frame` 指定尾帧图像，可选搭配 `driving_audio` 驱动音频。\n\n支持的 `media` 组合为：\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\n本能力下 `prompt` 为可选字段。`size` 仅支持 `720P` 与 `1080P`。`seconds` 仅支持 `2` 到 `15` 的整数字符串。还支持官方字段 `negative_prompt`、`prompt_extend`、`watermark` 与 `seed`。",
         "operationId": "aliWan27I2VFirstLastFrame",
+        "x-capability": "start&end_frame_to_video",
         "tags": [
           "Wan 2.7 Video"
         ],

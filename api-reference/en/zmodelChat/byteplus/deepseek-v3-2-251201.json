@@ -27,6 +27,7 @@
         "summary": "deepseek-v3-2-251201",
         "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `deepseek-v3-2-251201`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`. `assistant` messages support `reasoning_content` and `tool_calls`.",
         "operationId": "byteplusChatCompletions",
+        "x-capability": "chat",
         "tags": [
           "BytePlus Chat"
         ],

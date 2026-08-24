@@ -27,6 +27,7 @@
         "summary": "Image-01 图生图",
         "description": "适用于 `Image-01` 模型的图生图能力。\n\n公开字段：`model`、`prompt`、`subject_reference`、`aspect_ratio`、`width`、`height`、`response_format`、`seed`、`n`、`prompt_optimizer`。`subject_reference` 在该文档中按 JSON 请求展开。",
         "operationId": "minimaxImageToImage",
+        "x-capability": "image_to_image",
         "tags": [
           "Image Generation"
         ],

@@ -1,0 +1,262 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "创建视频生成任务。",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "paths": {
+    "/minimax/v2/video_generation": {
+      "post": {
+        "summary": "多模态参考生视频 (t2va)",
+        "operationId": "minimaxH3RefVideoCreate",
+        "x-capability": "reference_to_video",
+        "description": "视频生成 V2 接口，通过多模态 content 数组输入（文本 / 图片 / 视频 / 音频），支持文生视频、图生视频（首尾帧）、多模态参考生视频，2K 直出。",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "description": "请求体的媒介类型，请设置为 `application/json`。",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "application/json"
+              ],
+              "default": "application/json"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoGenerationReq"
+              },
+              "examples": {
+                "多模态参考生视频 (t2va)": {
+                  "summary": "多模态参考生视频 (t2va)",
+                  "value": {
+                    "model": "MiniMax-H3",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "角色说话：Follow the wind, live free.Leave worries behind, enjoy the moment，音色参考音频1"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/297573323635_00_%E8%A7%86%E9%A2%911_YnyRbxEwio_video_20260525_163755_1927e9d3.mp4"
+                        },
+                        "role": "reference_video"
+                      },
+                      {
+                        "type": "audio_url",
+                        "audio_url": {
+                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/f463d523c5ce_01_%E9%9F%B3%E9%A2%911_RSLcbpzJPo_6%E6%9C%885%E6%97%A5(1).mp3"
+                        },
+                        "role": "reference_audio"
+                      }
+                    ],
+                    "resolution": "2K",
+                    "duration": 5,
+                    "ratio": "adaptive"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "创建成功后返回 task_id。使用该 task_id 调用查询任务接口获取任务状态与结果。\n\n查询任务成功响应示例\n\n```json\n{\n  \"task\": {\n    \"id\": \"424010985738629\",\n    \"model\": \"MiniMax-H3\",\n    \"status\": \"succeeded\",\n    \"created_at\": 1785125529,\n    \"updated_at\": 1785125946,\n    \"content\": {\n      \"url\": \"https://your-cdn.example.com/h3-generated-2k-output.mp4\"\n    },\n    \"resolution\": \"2K\",\n    \"duration\": 5,\n    \"usage\": {\n      \"total_seconds\": 5,\n      \"input_seconds\": 0,\n      \"output_seconds\": 5,\n      \"input_image_count\": 0\n    },\n    \"ratio\": \"16:9\",\n    \"task_type\": \"generation\",\n    \"modality\": \"video\"\n  }\n}\n```",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoGenerationResp"
+                },
+                "example": {
+                  "output": {
+                    "task_id": "424010985738629"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "VideoGenerationReq": {
+        "type": "object",
+        "required": [
+          "model",
+          "content",
+          "resolution",
+          "duration"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "模型名称。当前可用值：`MiniMax-H3`。",
+            "enum": [
+              "MiniMax-H3"
+            ]
+          },
+          "content": {
+            "type": "array",
+            "description": "多模态输入内容数组，描述用于生成视频的信息。每个元素通过 type 区分类型（text / image_url / video_url / audio_url），并可通过 role 标注用途。\n\n每次请求必须包含一个非空 text 项（prompt 必填）；缺失会返回参数错误。\n\n支持的输入组合（对应不同生成场景）：\n\n- 多模态参考生视频：text + 参考图片（role=reference_image）+ 参考视频（role=reference_video）+ 参考音频（role=reference_audio）的组合。\n图生视频与多模态参考生视频互斥：content 中出现 reference_image / reference_video / reference_audio 任一 role，就不能再出现 first_frame / last_frame（反之亦然），二者不可混用。\n\n输入媒体限制（请求体总大小 ≤ 64 MB，大文件请用公网 URL，勿用 Base64）\n\n图片 image_url：\n\n| 项 | 限制 |\n| --- | --- |\n| 格式 | JPG、JPEG、PNG、WEBP、HEIC、HEIF |\n| 单文件大小 | ≤ 30 MB |\n| 宽高范围 | [256, 5760] px |\n| 长宽比（宽/高） | [0.4, 2.5] |\n| 数量 | 首帧 ≤ 1、尾帧 ≤ 1、参考图 ≤ 9 |\n\n视频 video_url（仅多模态参考场景）：\n\n| 项 | 限制 |\n| --- | --- |\n| 容器 / 格式 | MP4（.mp4）、MOV（.mov） |\n| 编码 | 视频 H.264/AVC、H.265/HEVC；音频 AAC、MP3 |\n| 单文件大小 | ≤ 50 MB |\n| 个数 | ≤ 3 |\n| 单段时长 | [2, 15] s；总时长 ≤ 15 s |\n| 宽高范围 | [256, 5760] px |\n| 长宽比（宽/高） | [0.4, 2.5] |\n| 帧率 | [23.976, 60] |\n\n音频 audio_url（仅多模态参考场景）：\n\n| 项 | 限制 |\n| --- | --- |\n| 格式 | WAV、MP3 |\n| 单文件大小 | ≤ 15 MB |\n| 个数 | ≤ 3 |\n| 单段时长 | [2, 15] s；总时长 ≤ 15 s |",
+            "items": {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "输入内容的类型。",
+                  "enum": [
+                    "text",
+                    "image_url",
+                    "video_url",
+                    "audio_url"
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "description": "文本提示词（prompt），必填：所有场景都需包含一个非空 text，描述期望生成的视频。按字符数计算长度，单个 text 最多 7000 个字符。"
+                },
+                "image_url": {
+                  "type": "object",
+                  "description": "当 type=image_url 时的图片对象（格式 / 大小 / 尺寸 / 数量限制见上方 content 说明）。",
+                  "required": [
+                    "url"
+                  ],
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "图片地址,支持:公网 URL;mm_file://{file_id}(引用平台已有文件,如上传或历史产物的 file_id);data:image/<格式>;base64,<Base64> data URI(<格式> 小写)。"
+                    }
+                  }
+                },
+                "video_url": {
+                  "type": "object",
+                  "description": "当 type=video_url 时的视频对象（参考视频，仅多模态参考场景；格式 / 大小 / 时长限制见上方 content 说明）。",
+                  "required": [
+                    "url"
+                  ],
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "视频地址,支持:公网 URL;mm_file://{file_id}(引用平台已有文件的 file_id);data:video/mp4;base64,<Base64> data URI。注意请求体总大小 ≤ 64 MB、Base64 会放大约 33%,大视频请用公网 URL 或 mm_file://。"
+                    }
+                  }
+                },
+                "audio_url": {
+                  "type": "object",
+                  "description": "当 type=audio_url 时的音频对象（参考音频，仅多模态参考场景；格式 / 大小 / 时长限制见上方 content 说明）。",
+                  "required": [
+                    "url"
+                  ],
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "音频地址,支持:公网 URL;mm_file://{file_id}(引用平台已有文件的 file_id);data:audio/<格式>;base64,<Base64> data URI(<格式> 小写)。"
+                    }
+                  }
+                },
+                "role": {
+                  "type": "string",
+                  "description": "内容的位置或用途，条件必填：\n\n- reference_image：参考图片（多模态参考生视频）。\n- reference_video：参考视频（多模态参考生视频）。\n- reference_audio：参考音频（多模态参考生视频）。",
+                  "enum": [
+                    "reference_image",
+                    "reference_video",
+                    "reference_audio"
+                  ]
+                }
+              }
+            }
+          },
+          "resolution": {
+            "type": "string",
+            "description": "视频分辨率。当前可用值：768P、2K。",
+            "enum": [
+              "768P",
+              "2K"
+            ]
+          },
+          "duration": {
+            "type": "integer",
+            "description": "生成视频时长（秒），必选，整数。可用值：4~15。",
+            "enum": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ]
+          },
+          "ratio": {
+            "type": "string",
+            "description": "生成视频的宽高比，默认 adaptive（自动，由输入自适应选择最合适的宽高比，实际比例可在查询接口的 ratio 字段获取）。\n\n多模态参考生视频（r2va，content 含 reference_image / reference_video / reference_audio）：ratio 可选，默认 adaptive；也可显式指定上述任一具体比例。",
+            "enum": [
+              "adaptive",
+              "21:9",
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16"
+            ]
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "任务状态变更的回调通知地址。配置后 MiniMax 服务器会先发送含 challenge 字段的验证请求（需 3 秒内原样返回 challenge 完成验证），验证成功后每当任务状态变更即向该地址 POST 推送，推送体结构与查询任务接口的响应一致。\n\n回调 status 取值：queued（排队中）、running（运行中）、succeeded（成功）、failed（失败）、cancelled（已取消）。"
+          },
+          "aigc_watermark": {
+            "type": "boolean",
+            "description": "是否在生成视频中添加 AIGC 标识水印，默认 false。"
+          }
+        }
+      },
+      "VideoGenerationResp": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "任务 ID，用于后续查询任务状态与结果。"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "Create a video generation task.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "paths": {
+    "/minimax/v2/video_generation": {
+      "post": {
+        "summary": "Image-to-video (t2va)",
+        "operationId": "minimaxH3TailFrameCreate",
+        "x-capability": "end_frame_to_video",
+        "description": "Video generation V2 API. Input via multimodal content array (text / image / video / audio). Supports text-to-video, image-to-video (first/last frame), and multimodal reference-to-video with 2K output.",
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "description": "Media type of the request body. Set to `application/json`.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "application/json"
+              ],
+              "default": "application/json"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VideoGenerationReq"
+              },
+              "examples": {
+                "Image-to-video (t2va)": {
+                  "summary": "Image-to-video (t2va)",
+                  "value": {
+                    "model": "MiniMax-H3",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Pull focus to the people in the background and add more steam to the ramen bowl."
+                      },
+                      {
+                        "type": "image_url",
+                        "image_url": {
+                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/H3_AA_I2VA/gallery/sr_v17_variants_seed42_43_20260724/inputs/4a3a90bf9100_KDmcbkhzYo5sjjxr9FqcVmWVnzb.png"
+                        },
+                        "role": "first_frame"
+                      }
+                    ],
+                    "resolution": "2K",
+                    "duration": 5,
+                    "ratio": "adaptive"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns task_id upon successful creation. Use this task_id to call the query task API to retrieve task status and results.\n\nQuery task success response example\n```json\n{\n  \"task\": {\n    \"id\": \"424010985738629\",\n    \"model\": \"MiniMax-H3\",\n    \"status\": \"succeeded\",\n    \"created_at\": 1785125529,\n    \"updated_at\": 1785125946,\n    \"content\": {\n      \"url\": \"https://your-cdn.example.com/h3-generated-2k-output.mp4\"\n    },\n    \"resolution\": \"2K\",\n    \"duration\": 5,\n    \"usage\": {\n      \"total_seconds\": 5,\n      \"input_seconds\": 0,\n      \"output_seconds\": 5,\n      \"input_image_count\": 0\n    },\n    \"ratio\": \"16:9\",\n    \"task_type\": \"generation\",\n    \"modality\": \"video\"\n  }\n}",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoGenerationResp"
+                },
+                "example": {
+                  "output": {
+                    "task_id": "424010985738629"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "VideoGenerationReq": {
+        "type": "object",
+        "required": [
+          "model",
+          "content",
+          "resolution",
+          "duration"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model name. Currently available: `MiniMax-H3`.",
+            "enum": [
+              "MiniMax-H3"
+            ]
+          },
+          "content": {
+            "type": "array",
+            "description": "Multimodal input content array describing the information used to generate the video. Each element is distinguished by type (text / image_url / video_url / audio_url) and can be annotated with a role.\n\nEach request must contain a non-empty text item (prompt is required); omission will return a parameter error.\nSupported input combinations (corresponding to different generation scenarios):\n\nImage-to-video (first frame): text + 1 image_url (role=first_frame or omitted).\nImage-to-video (last frame): text + 1 image_url (role=last_frame).\nImage-to-video (first-last frame): text + 2 image_url (roles first_frame and last_frame respectively).\nImage-to-video and multimodal reference-to-video are mutually exclusive: if any of reference_image / reference_video / reference_audio roles appear in content, first_frame / last_frame must not appear (and vice versa); they cannot be mixed.\n\nInput media limits (total request body size ≤ 64 MB; use public URLs for large files, do not use Base64)\n\nImage image_url:\n\n| Item | Limit |\n| :--- | :--- |\n| Format | JPG, JPEG, PNG, WEBP, HEIC, HEIF |\n| Single file size | ≤ 30 MB |\n| Width/height range | [256, 5760] px |\n| Aspect ratio (w/h) | [0.4, 2.5] |\n| Count | first frame ≤ 1, last frame ≤ 1, reference images ≤ 9 |\n",
+            "items": {
+              "type": "object",
+              "required": [
+                "type"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "description": "Type of the input content.",
+                  "enum": [
+                    "text",
+                    "image_url"
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "description": "Text prompt (prompt), required: Every scenario must include a non-empty text describing the video you want to generate. Length is calculated by character count, with a maximum of 7,000 characters for a single text."
+                },
+                "image_url": {
+                  "type": "object",
+                  "description": "Image object when type=image_url (format / size / dimension / count limits see content description above).",
+                  "required": [
+                    "url"
+                  ],
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "description": "Image address. Supports: public URL; mm_file://{file_id} (reference platform existing files, such as uploaded or historical output file_id); data:image/<format>;base64,<Base64> data URI (<format> in lowercase)."
+                    }
+                  }
+                },
+                "role": {
+                  "type": "string",
+                  "description": "The position or purpose of the content, conditionally required:\n\n- first_frame: First frame image (image-to-video; if only one image is provided and role is not set, it defaults to first_frame).\n- last_frame: Last frame image (image-to-video first-last frame; must be paired with first_frame).",
+                  "enum": [
+                    "first_frame",
+                    "last_frame"
+                  ]
+                }
+              }
+            }
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Video resolution. Currently available: 768P, 2K.",
+            "enum": [
+              "768P",
+              "2K"
+            ]
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration in seconds. Required, integer. Available: 4~15.",
+            "enum": [
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ]
+          },
+          "ratio": {
+            "type": "string",
+            "description": "Output video aspect ratio, default adaptive (automatically selects the most suitable aspect ratio based on input; the actual ratio can be retrieved from the ratio field in the query API).\n\nImage-to-video (i2va, content includes first_frame / last_frame images): the aspect ratio is determined by the input images, ratio is always set to adaptive; passing in other reasonable values won’t cause errors, but they will be ignored and treated as adaptive.",
+            "enum": [
+              "adaptive"
+            ]
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback notification URL for task status changes. After configuration, the MiniMax server will first send a verification request containing a challenge field (must return the challenge value unchanged within 3 seconds to complete verification). Once verified, whenever the task status changes, a POST push will be sent to this URL, with the push body structure matching the query task API response.\n\nCallback status values: queued, running, succeeded, failed, cancelled."
+          },
+          "aigc_watermark": {
+            "type": "boolean",
+            "description": "Whether to add an AIGC watermark to the generated video. Default false."
+          }
+        }
+      },
+      "VideoGenerationResp": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Task ID, used to query task status and results."
+          }
+        }
+      }
+    }
+  }
+}

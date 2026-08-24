@@ -23,6 +23,7 @@
         "summary": "Kling 文生视频任务 (kling-v2-1-master)",
         "description": "通过 `/kling/v1/videos/text2video` 提交 Kling 文生视频任务。请求体经模型映射和公共任务 ID 注入后转发至 Kling 官方接口。",
         "operationId": "createKlingV21MasterText2Video",
+        "x-capability": "text_to_video",
         "tags": [
           "Kling"
         ],

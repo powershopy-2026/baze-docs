@@ -1,0 +1,243 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "Create a video generation task.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "paths": {
+    "/minimax/v2/query/video_generation/{task_id}": {
+      "get": {
+        "summary": "Video Generation",
+        "operationId": "minimaxH3QueryVideo",
+        "description": "Query the status and results of a single video generation, H3-Context-IR, or video regeneration task within the last 7 days by task_id.",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The task ID to query (the task_id returned when creating a task)."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns task_id upon successful creation. Use this task_id to call the query task API to retrieve task status and results.\n\nQuery task success response example\n\n{\n  \"task\": {\n    \"id\": \"424010985738629\",\n    \"model\": \"MiniMax-H3\",\n    \"status\": \"succeeded\",\n    \"created_at\": 1785125529,\n    \"updated_at\": 1785125946,\n    \"content\": {\n      \"url\": \"https://your-cdn.example.com/h3-generated-2k-output.mp4\"\n    },\n    \"resolution\": \"2K\",\n    \"duration\": 5,\n    \"usage\": {\n      \"total_seconds\": 5,\n      \"input_seconds\": 0,\n      \"output_seconds\": 5,\n      \"input_image_count\": 0\n    },\n    \"ratio\": \"16:9\",\n    \"task_type\": \"generation\",\n    \"modality\": \"video\"\n  }\n}",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoGenerationResp"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "task": {
+                        "id": "424010985738629",
+                        "model": "MiniMax-H3",
+                        "status": "succeeded",
+                        "created_at": 1785125529,
+                        "updated_at": 1785125946,
+                        "content": {
+                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/89f8c0bbee5b_denoise_ids_0_final.mp4"
+                        },
+                        "resolution": "2K",
+                        "duration": 5,
+                        "usage": {
+                          "total_seconds": 5,
+                          "input_seconds": 0,
+                          "output_seconds": 5,
+                          "input_image_count": 1,
+                          "input_audio_seconds": 6,
+                          "total_tokens": 273890,
+                          "prompt_tokens": 13500,
+                          "completion_tokens": 260390
+                        },
+                        "ratio": "16:9",
+                        "task_type": "generation",
+                        "modality": "video"
+                      }
+                    }
+                  },
+                  "failed": {
+                    "value": {
+                      "task": {
+                        "id": "424010985738630",
+                        "model": "MiniMax-H3",
+                        "status": "failed",
+                        "error": {
+                          "code": "1026",
+                          "message": "video description contains sensitive content"
+                        },
+                        "created_at": 1785125529,
+                        "updated_at": 1785125700,
+                        "resolution": "2K",
+                        "duration": 5,
+                        "usage": {},
+                        "ratio": "16:9",
+                        "task_type": "generation",
+                        "modality": "video"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "VideoGenerationResp": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "type": "object",
+            "description": "The task object returned by the H3 shared task query and list API.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Task ID."
+              },
+              "model": {
+                "type": "string",
+                "description": "The model name used for the task, e.g. MiniMax-H3."
+              },
+              "status": {
+                "type": "string",
+                "description": "Task status:\n\n- queued: Queued\n- running: Running\n- succeeded: Succeeded\n- failed: Failed\n- cancelled: Cancelled",
+                "enum": [
+                  "queued",
+                  "running",
+                  "succeeded",
+                  "failed",
+                  "cancelled"
+                ]
+              },
+              "error": {
+                "type": "object",
+                "description": "Error information. Not returned when the task succeeds; returns code and message when the task fails.",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "Error code."
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "Error message."
+                  }
+                }
+              },
+              "created_at": {
+                "type": "integer",
+                "description": "Unix timestamp (seconds) of task creation time."
+              },
+              "updated_at": {
+                "type": "integer",
+                "description": "Unix timestamp (seconds) of task status update time."
+              },
+              "content": {
+                "type": "object",
+                "description": "Task output content, returned after the task succeeds.",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "Time-limited download URL for the video task output. Download or transfer promptly; can be re-queried after expiration."
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "Structured enhanced prompt generated by the H3-Context-IR task. Only returned when task_type=h3_context_ir and the task succeeds."
+                  }
+                }
+              },
+              "resolution": {
+                "type": "string",
+                "description": "Resolution of the task output."
+              },
+              "duration": {
+                "type": "integer",
+                "description": "Duration of the task output in seconds."
+              },
+              "usage": {
+                "type": "object",
+                "description": "Billing usage for this request. Video tasks return per-second metering fields; H3-Context-IR tasks return token usage fields.",
+                "properties": {
+                  "total_seconds": {
+                    "type": "integer",
+                    "description": "Total billed seconds = input seconds + output seconds."
+                  },
+                  "input_seconds": {
+                    "type": "integer",
+                    "description": "Billed seconds for input reference video (counted when reference video is included)."
+                  },
+                  "output_seconds": {
+                    "type": "integer",
+                    "description": "Billed seconds for output video."
+                  },
+                  "input_image_count": {
+                    "type": "integer",
+                    "description": "Number of images involved in this billing (first_frame + middle_frame + last_frame + reference_image all added together)."
+                  },
+                  "total_tokens": {
+                    "type": "integer",
+                    "description": "Total tokens this time = prompt_tokens + completion_tokens.\n\n- Video tasks are calculated based on usage;\n- Total tokens used by the H3-Context-IR task."
+                  },
+                  "prompt_tokens": {
+                    "type": "integer",
+                    "description": "Enter the number of tokens.\n\n- Video task = converted seconds of reference video input + converted number of all input images + converted seconds of reference audio input, 0 if none of the above are provided;\n- Input tokens for the H3-Context-IR task."
+                  },
+                  "completion_tokens": {
+                    "type": "integer",
+                    "description": "Output the number of tokens.\n\n- Video task = output converted video seconds;\n- Output tokens for the H3-Context-IR task."
+                  }
+                }
+              },
+              "ratio": {
+                "type": "string",
+                "description": "Aspect ratio of the task output; may return an empty string when not applicable to the current task type."
+              },
+              "task_type": {
+                "type": "string",
+                "description": "Task type:\n\ngeneration: Video generation\nh3_context_ir: H3-Context-IR (/v2/h3_context_ir)\nregeneration: Video regeneration (/v2/video_regeneration)",
+                "enum": [
+                  "generation",
+                  "h3_context_ir",
+                  "regeneration"
+                ]
+              },
+              "modality": {
+                "type": "string",
+                "description": "Output modality. Video generation and video regeneration tasks return video; H3-Context-IR tasks return text.",
+                "enum": [
+                  "video",
+                  "text"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

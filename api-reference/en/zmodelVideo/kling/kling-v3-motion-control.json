@@ -23,6 +23,7 @@
         "summary": "Kling Motion Control Video Task (kling-v3)",
         "description": "Submit a Kling native motion control task via `/kling/v1/videos/motion-control`.",
         "operationId": "createKlingV3MotionControl",
+        "x-capability": "motion_control",
         "tags": [
           "Kling"
         ],

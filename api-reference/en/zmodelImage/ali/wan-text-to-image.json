@@ -27,6 +27,7 @@
         "summary": "Wan text-to-image",
         "description": "Calls Ali `wan2.7-image-pro` to perform text-to-image generation.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `size`, `n`, `watermark`, `thinking_mode`, `enable_sequential`, `color_palette`, `seed` as top-level fields. The prompt is placed in `input.messages[0].content[0].text`. The request body does not accept a top-level `parameters` field.",
         "operationId": "aliWanTextToImage",
+        "x-capability": "text_to_image",
         "tags": [
           "Wan Image"
         ],

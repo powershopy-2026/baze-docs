@@ -27,6 +27,7 @@
         "summary": "Seedream 5.0 Pro Text-to-Image",
         "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Text-to-Image scenarios. Public fields include `model`, `prompt`, `size`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Text-to-Image: Input text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
         "operationId": "byteplusTextToImage50Pro",
+        "x-capability": "text_to_image",
         "tags": [
           "Seedream Image"
         ],
@@ -187,30 +188,34 @@
             ],
             "description": "Image generation model name. Supported models include `dola-seedream-5-0-pro-260628` (Seedream 5.0 pro, supports interactive editing, does not support sequential image generation)."
           },
-           "prompt": {
+          "prompt": {
             "type": "string",
             "description": "Prompt for image generation, supports Chinese and English. It is recommended not to exceed 300 Chinese characters or 600 English words. Too many words may disperse information, causing the model to ignore details and focus only on key points, resulting in missing elements in the image.",
             "example": "Dynamic close-up editorial portrait with sharp gaze, sculptural hat, rich color blocking."
           },
           "size": {
             "type": "string",
-            "description": "Specifies the size of the generated image, supports specifying resolution level (e.g., 2K) or width and height pixel values (e.g., 2048x2048), which cannot be mixed.\n\n**dola-seedream-5-0-pro-260628 (Seedream 5.0 pro)**\nSupports the following two methods, which cannot be mixed:\n\n* Method 1 (Recommended): Specify resolution level and describe aspect ratio, shape, or purpose in the prompt. The model determines the final image size.\n  * Default: 2K\n  * Options: 1K, 2K\n\n* Method 2: Specify width and height pixel values (widthxheight).\n  * Total pixel range: [`1280x720` (921600), `2048x2048×1.1025` (4624220)]\n  * Aspect ratio range: [1/16, 16]\n\n> Note: When using Method 2, both total pixel range and aspect ratio range must be satisfied. Total pixels refers to the product of width and height, not individual values.\n> * Valid example: `2048x1024`\n    Total pixels 2048x1024=2097152, within [921600, 4624220]; aspect ratio 2048/1024=2, within [1/16, 16], so valid.\n> * Invalid example: `512x512`\n    Total pixels 512x512=262144, below 921600 minimum, so invalid.\n\nResolution to pixel reference values when using Method 1 (not limited to these standard values, common ones listed):\n\n| Resolution | Aspect Ratio | Pixel Dimensions |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n",
+            "description": "Specifies the dimensions of the generated image. Supports the following two methods, which cannot be used at the same time:\n\n* **Method 1 (Recommended)**: Specify the resolution level of the generated image, and describe its aspect ratio, shape, or purpose in the prompt using natural language. The model determines the final image size.\n  * Default: `2K`\n  * Available values: `1K`, `1.5K`, `2K`\n  * *Pricing note*: `1.5K` has the same price as `1K` while providing better image generation quality.\n\n* **Method 2**: Specify the width and height of the generated image in pixels (`widthxheight`):\n  * Total pixels range: [`1280x720` (921,600), `2048x2048x1.1025` (4,624,220)]\n  * Aspect ratio range: [1/16, 16]\n  * *Note*: When using Method 2, both the total pixel range and aspect ratio range must be satisfied. The total pixel limit applies to the product of width and height, rather than to either dimension individually.\n    * Valid example: `2048x1024` (Total pixel count: 2048x1024=2,097,152; aspect ratio: 2048/1024=2)\n    * Invalid example: `512x512` (Total pixel count: 512x512=262,144, below 921,600 minimum)\n\n**Resolution to Pixel Reference Values (Method 1)**:\n\n| Resolution | Aspect Ratio | Width and Height Pixel Values |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 1.5K | 1:1 | 1536x1536 |\n| | 4:3 | 1792x1344 |\n| | 3:4 | 1344x1792 |\n| | 16:9 | 2048x1152 |\n| | 9:16 | 1152x2048 |\n| | 3:2 | 1872x1248 |\n| | 2:3 | 1248x1872 |\n| | 21:9 | 2352x1008 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |",
             "default": "2K",
             "example": "2K",
             "x-enum": [
               "1K",
+              "1.5K",
               "2K"
             ]
           },
           "response_format": {
             "type": "string",
-            "enum": ["url", "b64_json"],
-            "description": "Specifies the return format of the generated image. Supported options:\n- `url`: Returns image download URL; valid for 24 hours after generation.\n- `b64_json`: Returns image data as Base64 encoded JSON.",
+            "enum": [
+              "url",
+              "b64_json"
+            ],
+            "description": "Specifies how generated images are returned. Supported options:\n- `url`: Returns a download URL for the image; valid for 24 hours after generation.\n- `b64_json`: Returns image data as a Base64-encoded string in JSON.",
             "default": "url"
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add watermark to generated images.\n- `false`: No watermark.\n- `true`: Add \"AI Generated\" watermark at bottom right corner.",
+            "description": "Controls whether to add a watermark to the generated image.\n- `false`: Does not add a watermark.\n- `true`: Adds an \"AI-generated\" watermark in the lower-right corner of the image.",
             "default": true
           }
         }

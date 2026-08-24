@@ -54,6 +54,7 @@
                       "zh-Hans/zmodelChat/ali/qwen3.6-plus",
                       "zh-Hans/zmodelChat/ali/qwen3.7-plus",
                       "zh-Hans/zmodelChat/ali/qwen3.7-max",
+                      "zh-Hans/zmodelChat/ali/qwen3.8-max",
                       "zh-Hans/zmodelChat/ali/qwen3-coder-plus",
                       "zh-Hans/zmodelChat/ali/qwen3-max"
                     ]
@@ -108,10 +109,10 @@
                       "zh-Hans/zmodelImage/minimax/image01-image-to-image",
                       "zh-Hans/zmodelImage/minimax/image01-text-to-image",
                       {
-                        "group": "minimax兼容API",
+                        "group": "原生透传",
                         "pages": [
-                          "zh-Hans/zmodelImage/minimax/minimax兼容API/text-to-image",
-                          "zh-Hans/zmodelImage/minimax/minimax兼容API/image-to-image"
+                          "zh-Hans/zmodelImage/minimax/minimax/text-to-image",
+                          "zh-Hans/zmodelImage/minimax/minimax/image-to-image"
                         ]
                       }
                     ]
@@ -124,7 +125,7 @@
                       "zh-Hans/zmodelImage/ali/wan-edit",
                       "zh-Hans/zmodelImage/ali/wan-text-to-image",
                       {
-                        "group": "阿里巴巴兼容API",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelImage/ali/api/qwen-image-3.0",
                           "zh-Hans/zmodelImage/ali/api/qwen-text-to-image",
@@ -146,7 +147,7 @@
                       "zh-Hans/zmodelImage/byteplus/seedream-5-0-pro-text-to-image",
                       "zh-Hans/zmodelImage/byteplus/seedream-5-0-pro-image-to-image",
                       {
-                        "group": "字节API兼容",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelImage/byteplus/seedream/seedream-image-create",
                           "zh-Hans/zmodelImage/byteplus/seedream/seedream-streaming"
@@ -190,13 +191,25 @@
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
                       "zh-Hans/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
                       {
-                        "group": "minimax兼容API",
+                        "group": "原生透传",
                         "pages": [
-                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/text-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/image-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/first-last-frame-to-video",
-                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/query-video-task",
-                          "zh-Hans/zmodelVideo/minimax/minimax兼容API/download-video-file"
+                          "zh-Hans/zmodelVideo/minimax/minimax/text-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax/image-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax/first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax/query-video-task",
+                          "zh-Hans/zmodelVideo/minimax/minimax/download-video-file"
+                        ]
+                      },
+                      {
+                        "group": "MiniMax-H3",
+                        "pages": [
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/text-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/first-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/last-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/first-last-frame-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/reference-to-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/query-video",
+                          "zh-Hans/zmodelVideo/minimax/minimax-h3/delete-video"
                         ]
                       }
                     ]
@@ -216,7 +229,7 @@
                       "zh-Hans/zmodelVideo/ali/happyhorse-1.1-r2v",
                       "zh-Hans/zmodelVideo/ali/task-query",
                       {
-                        "group": "阿里巴巴兼容API",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-i2v",
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-t2v",
@@ -255,7 +268,7 @@
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-5-first-last-frame-to-video",
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-5-multimodal-reference-to-video",
                       {
-                        "group": "字节API兼容",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelVideo/byteplus/seedance/seedance-video",
                           "zh-Hans/zmodelVideo/byteplus/seedance/seedance-tasks-query",
@@ -315,9 +328,9 @@
                       "zh-Hans/zmodelAudio/minimax/speech-02-hd",
                       "zh-Hans/zmodelAudio/minimax/speech-02-turbo",
                       {
-                        "group": "minimax兼容API",
+                        "group": "原生透传",
                         "pages": [
-                          "zh-Hans/zmodelAudio/minimax/minimax兼容API/t2a-v2"
+                          "zh-Hans/zmodelAudio/minimax/minimax/t2a-v2"
                         ]
                       }
                     ]
@@ -327,7 +340,7 @@
                     "pages": [
                       "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash",
                       {
-                        "group": "阿里巴巴兼容API",
+                        "group": "原生透传",
                         "pages": [
                           "zh-Hans/zmodelAudio/ali/api/qwen-tts"
                         ]
@@ -361,7 +374,7 @@
             ]
           },
           {
-            "tab": "生态工具",
+            "tab": "Agent工具",
             "pages": [
               "zh-Hans/ecosystem-tools/text-model-protocols",
               "zh-Hans/ecosystem-tools/opencode",
@@ -415,6 +428,7 @@
                       "en/zmodelChat/ali/qwen3.6-plus",
                       "en/zmodelChat/ali/qwen3.7-plus",
                       "en/zmodelChat/ali/qwen3.7-max",
+                      "en/zmodelChat/ali/qwen3.8-max",
                       "en/zmodelChat/ali/qwen3-coder-plus",
                       "en/zmodelChat/ali/qwen3-max"
                     ]
@@ -469,7 +483,7 @@
                       "en/zmodelImage/minimax/image01-image-to-image",
                       "en/zmodelImage/minimax/image01-text-to-image",
                       {
-                        "group": "minimax Compatible API",
+                        "group": "minimax Native Passthrough",
                         "pages": [
                           "en/zmodelImage/minimax/image-generation/text-to-image",
                           "en/zmodelImage/minimax/image-generation/image-to-image"
@@ -485,7 +499,7 @@
                       "en/zmodelImage/ali/wan-edit",
                       "en/zmodelImage/ali/wan-text-to-image",
                       {
-                        "group": "Alibaba Compatible API",
+                        "group": "Alibaba Native Passthrough",
                         "pages": [
                           "en/zmodelImage/ali/api/qwen-image-3.0",
                           "en/zmodelImage/ali/api/qwen-text-to-image",
@@ -507,7 +521,7 @@
                       "en/zmodelImage/byteplus/seedream-5-0-pro-text-to-image",
                       "en/zmodelImage/byteplus/seedream-5-0-pro-image-to-image",
                       {
-                        "group": "BytePlus API Compat",
+                        "group": "BytePlus Native Passthrough",
                         "pages": [
                           "en/zmodelImage/byteplus/seedream/seedream-image-create",
                           "en/zmodelImage/byteplus/seedream/seedream-streaming"
@@ -551,13 +565,25 @@
                       "en/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
                       "en/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
                       {
-                        "group": "minimax Compatible API",
+                        "group": "minimax Native Passthrough",
                         "pages": [
                           "en/zmodelVideo/minimax/video-generation/text-to-video",
                           "en/zmodelVideo/minimax/video-generation/image-to-video",
                           "en/zmodelVideo/minimax/video-generation/first-last-frame-to-video",
                           "en/zmodelVideo/minimax/video-generation/query-video-task",
                           "en/zmodelVideo/minimax/video-generation/download-video-file"
+                        ]
+                      },
+                      {
+                        "group": "MiniMax-H3",
+                        "pages": [
+                          "en/zmodelVideo/minimax/minimax-h3/text-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/first-frame-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/last-frame-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/first-last-frame-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/reference-to-video",
+                          "en/zmodelVideo/minimax/minimax-h3/query-video",
+                          "en/zmodelVideo/minimax/minimax-h3/delete-video"
                         ]
                       }
                     ]
@@ -577,7 +603,7 @@
                       "en/zmodelVideo/ali/happyhorse-1.1-r2v",
                       "en/zmodelVideo/ali/task-query",
                       {
-                        "group": "Alibaba Compatible API",
+                        "group": "Alibaba Native Passthrough",
                         "pages": [
                           "en/zmodelVideo/ali/api/wan2.7-i2v",
                           "en/zmodelVideo/ali/api/wan2.7-t2v",
@@ -616,7 +642,7 @@
                       "en/zmodelVideo/byteplus/dreamina-seedance-2-5-first-last-frame-to-video",
                       "en/zmodelVideo/byteplus/dreamina-seedance-2-5-multimodal-reference-to-video",
                       {
-                        "group": "BytePlus API Compat",
+                        "group": "BytePlus Native Passthrough",
                         "pages": [
                           "en/zmodelVideo/byteplus/seedance/seedance-video",
                           "en/zmodelVideo/byteplus/seedance/seedance-tasks-query",
@@ -676,7 +702,7 @@
                       "en/zmodelAudio/minimax/speech-02-hd",
                       "en/zmodelAudio/minimax/speech-02-turbo",
                       {
-                        "group": "minimax Compatible API",
+                        "group": "minimax Native Passthrough",
                         "pages": [
                           "en/zmodelAudio/minimax/audio-generation/t2a-v2"
                         ]
@@ -688,7 +714,7 @@
                     "pages": [
                       "en/zmodelAudio/ali/qwen3-tts-instruct-flash",
                       {
-                        "group": "Alibaba Compatible API",
+                        "group": "Alibaba Native Passthrough",
                         "pages": [
                           "en/zmodelAudio/ali/api/qwen-tts"
                         ]
@@ -722,7 +748,7 @@
             ]
           },
           {
-            "tab": "Ecosystem tools",
+            "tab": "Agent Tools",
             "pages": [
               "en/ecosystem-tools/text-model-protocols",
               "en/ecosystem-tools/opencode",

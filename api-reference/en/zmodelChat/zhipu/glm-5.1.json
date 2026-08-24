@@ -27,6 +27,7 @@
         "summary": "Zhipu Chat Completions",
         "description": "Unified endpoint for Zhipu GLM series chat models exposed through the baze platform.\n\nSupported model: `glm-5.1`.\n\nDocumented fields: `model`, `messages`, `stream`, `thinking`, `temperature`, `top_p`, `max_tokens`, `stop`, `tools`, `tool_choice`.",
         "operationId": "zhipuChatCompletionsGlm51",
+        "x-capability": "chat",
         "tags": [
           "Zhipu Chat"
         ],

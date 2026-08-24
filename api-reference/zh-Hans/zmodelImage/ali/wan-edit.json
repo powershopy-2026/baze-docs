@@ -27,6 +27,7 @@
         "summary": "Wan 图像编辑",
         "description": "调用 Ali `wan2.7-image-pro` 执行图像编辑。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `size`、`n`、`watermark`、`negative_prompt`、`seed`、`bbox_list` 设计为顶层字段。输入图片位于 `input.messages[0].content[].image`，编辑指令位于同一数组中的 `text`。请求体不接受顶层 `parameters`。",
         "operationId": "aliWanImageEdit",
+        "x-capability": "image_to_image",
         "tags": [
           "Wan Image"
         ],

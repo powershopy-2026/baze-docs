@@ -23,6 +23,7 @@
         "summary": "Kling Omni Video Task",
         "description": "Omni models can achieve various capabilities through prompts combined with elements, images, videos, and more.",
         "operationId": "createKlingVideoO1OmniVideoGeneration",
+        "x-capability": "video_generation",
         "tags": [
           "Kling"
         ],

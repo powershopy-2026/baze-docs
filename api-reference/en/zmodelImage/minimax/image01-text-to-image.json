@@ -27,6 +27,7 @@
         "summary": "Image-01 text-to-image",
         "description": "Text-to-image capability for the `image-01` model.\n\nExposed fields: `model`, `prompt`, `aspect_ratio`, `width`, `height`, `response_format`, `seed`, `n`, `prompt_optimizer`.",
         "operationId": "minimaxTextToImage",
+        "x-capability": "text_to_image",
         "tags": [
           "Image Generation"
         ],

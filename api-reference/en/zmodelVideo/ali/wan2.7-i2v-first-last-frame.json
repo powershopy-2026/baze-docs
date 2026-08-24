@@ -27,6 +27,7 @@
         "summary": "Create Wan 2.7 First & Last Frame task",
         "description": "Submit an asynchronous Ali `wan2.7-i2v` first-and-last-frame video generation task.\n\nUse `first_frame` to specify the start frame, `last_frame` to specify the end frame, optionally paired with `driving_audio` for audio-driven generation.\n\nSupported `media` combinations:\n- `first_frame + last_frame`\n- `first_frame + last_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
         "operationId": "aliWan27I2VFirstLastFrame",
+        "x-capability": "start&end_frame_to_video",
         "tags": [
           "Wan 2.7 Video"
         ],

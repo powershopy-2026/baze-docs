@@ -23,6 +23,7 @@
         "summary": "MiniMax text-to-speech",
         "description": "Call the historical MiniMax `t2a_v2` capability through the unified `/v1/audio/speech` endpoint.\n\nStable model: `speech-02-turbo`.",
         "operationId": "minimaxAudioSpeech",
+        "x-capability": "text_to_speech",
         "tags": [
           "MiniMax Audio"
         ],

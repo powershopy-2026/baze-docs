@@ -27,6 +27,7 @@
         "summary": "Seedream 4.5 图生图",
         "description": "支持模型包括 `seedream-4-5-251128`。本文档覆盖图生图与多图参考生成场景。公开字段包括 `model`、`prompt`、`image`、`size`、`seed`、`sequential_image_generation`、`sequential_image_generation_options`、`response_format`、`watermark`。",
         "operationId": "byteplusImageToImage45",
+        "x-capability": "image_to_image",
         "tags": [
           "Seedream Image"
         ],
@@ -231,9 +232,12 @@
             "default": "2K",
             "example": "2048x2048"
           },
-           "response_format": {
+          "response_format": {
             "type": "string",
-            "enum": ["url", "b64_json"],
+            "enum": [
+              "url",
+              "b64_json"
+            ],
             "description": "指定生成图像的返回格式。支持以下两种返回方式：\n- `url`：返回图片下载链接；链接在图片生成后 24 小时内有效，请及时下载图片。\n- `b64_json`：以 Base64 编码字符串的 JSON 格式返回图像数据。",
             "default": "url"
           },
@@ -244,9 +248,12 @@
             "minimum": -1,
             "maximum": 2147483647
           },
-         "sequential_image_generation": {
+          "sequential_image_generation": {
             "type": "string",
-            "enum": ["auto", "disabled"],
+            "enum": [
+              "auto",
+              "disabled"
+            ],
             "description": "控制是否关闭组图功能。\n- `auto`：自动判断模式，模型会根据用户提供的提示词自主判断是否返回组图以及组图包含的图片数量。\n- `disabled`：关闭组图功能，模型只会生成一张图。\n\n仅 seedream 5.0/4.5/4.0 支持该参数。",
             "default": "disabled"
           },
@@ -263,7 +270,7 @@
               }
             }
           },
-           "watermark": {
+          "watermark": {
             "type": "boolean",
             "description": "是否在生成的图片中添加水印。\n- `false`：不添加水印。\n- `true`：在图片右下角添加「AI生成」字样的水印标识。",
             "default": true

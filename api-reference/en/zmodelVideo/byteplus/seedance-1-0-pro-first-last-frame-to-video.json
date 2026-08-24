@@ -14,6 +14,7 @@
       "post": {
         "summary": "Seedance 1.0 Pro First and Last Frame to Video",
         "operationId": "seedance10ProFirstLastFrameToVideo",
+        "x-capability": "start&end_frame_to_video",
         "description": "For the `seedance-1-0-pro-250528` model. After submitting, query status via `GET /v1/videos/{task_id}`.",
         "requestBody": {
           "required": true,

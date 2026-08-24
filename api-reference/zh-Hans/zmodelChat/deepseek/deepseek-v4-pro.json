@@ -27,6 +27,7 @@
         "summary": "deepseek-v4-pro",
         "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-v4-pro`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`stop`、`reasoning_effort`、`response_format`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`tool_choice`、`user_id`。`messages[].content` 支持文本内容（string）；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
         "operationId": "deepseekChatCompletions_deepseek_v4_pro",
+        "x-capability": "chat",
         "tags": [
           "DeepSeek Chat"
         ],

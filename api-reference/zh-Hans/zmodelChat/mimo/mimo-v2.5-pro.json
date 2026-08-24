@@ -27,6 +27,7 @@
         "summary": "mimo-v2.5-pro",
         "description": "调用 MIMO 对话补全能力",
         "operationId": "mimoChatCompletions_mimo_v2_5_pro_zh",
+        "x-capability": "chat",
         "tags": [
           "MIMO 对话"
         ],

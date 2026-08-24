@@ -151,6 +151,66 @@
                     "duration": 5,
                     "watermark": false
                   }
+                },
+                "Edit Video": {
+                  "value": {
+                    "model": "dola-seedream-5-0-pro-260628",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Video editing: Remove all people from @video1 except the main character."
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://arkdocs.tos-cn-beijing.volces.com/videos/video-generation/seedance2.5_edit_input.mov"
+                        },
+                        "role": "reference_video"
+                      }
+                    ],
+                    "generate_audio": true,
+                    "ratio": "adaptive",
+                    "duration": -1,
+                    "omni_reference_task_type": "edit",
+                    "output_format": "mov"
+                  }
+                },
+                "Extend Video": {
+                  "value": {
+                    "model": "dola-seedream-5-0-pro-260628",
+                    "content": [
+                      {
+                        "type": "text",
+                        "text": "Extend @video1, after the window opens enter the art gallery interior of @video2, finally the camera enters the painting in @video3"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://arkdocs.tos-cn-beijing.volces.com/videos/video-generation/r2v_extend_video1_75.mov"
+                        },
+                        "role": "reference_video"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_extend_video2.mp4"
+                        },
+                        "role": "reference_video"
+                      },
+                      {
+                        "type": "video_url",
+                        "video_url": {
+                          "url": "https://ark-project.tos-cn-beijing.volces.com/doc_video/r2v_extend_video3.mp4"
+                        },
+                        "role": "reference_video"
+                      }
+                    ],
+                    "generate_audio": true,
+                    "ratio": "adaptive",
+                    "duration": 11,
+                    "omni_reference_task_type": "extend",
+                    "output_format": "mov"
+                  }
                 }
               }
             }
@@ -313,7 +373,7 @@
               "1080p",
               "4k"
             ],
-            "description": "> Seedance 2.5 series, Seedance 2.0 series, and Seedance 1.5 pro default: `720p`\n> Seedance 1.0 pro & pro-fast default: `1080p`\n\nVideo resolution. Enum values:\n\n* 480p: Supported by Seedance 2.5 series, Seedance 2.0 series, Seedance 1.5 pro, and Seedance 1.0 pro & pro-fast.\n* 720p: Supported by all models.\n* 1080p: Not supported by Seedance 2.5 series, Seedance 2.0 Fast, and Seedance 2.0 Mini.\n* 4k: Only supported by Seedance 2.0.\n\n```Note\n- Compared to typical 8-bit color depth, Seedance 2.0 4k output uses 10-bit encoding, fully preserving rich color gradations and smooth transitions, meeting professional film production and HDR video content requirements.\n- 4k videos are output in H.265 (HEVC) format; some players/browsers may not support direct playback.",
+            "description": "> Seedance 2.5 series, Seedance 2.0 series, and Seedance 1.5 pro default: `720p`\n> Seedance 1.0 pro & pro-fast default: `1080p`\n\nVideo resolution. Enum values:\n\n* 480p: Supported by Seedance 2.5 series, Seedance 2.0 series, Seedance 1.5 pro, and Seedance 1.0 pro & pro-fast.\n* 720p: Supported by all models.\n* 1080p: Not supported by Seedance 2.0 Fast and Seedance 2.0 Mini.\n* 4k: Only supported by Seedance 2.0.\n\n```Note\n- Compared to typical 8-bit color depth, Seedance 2.0 4k output uses 10-bit encoding, fully preserving rich color gradations and smooth transitions, meeting professional film production and HDR video content requirements.\n- 4k videos are output in H.265 (HEVC) format; some players/browsers may not support direct playback.",
             "default": "720p"
           },
           "ratio": {
@@ -336,7 +396,7 @@
               "mp4",
               "mov"
             ],
-            "description": "> Only supported by Seedance 2.5 series \n\nThe format of the output video.\n\n* mp4: A universal format with the best compatibility, using standard color precision. It can be played directly on web pages, mobile devices, various players, and distribution platforms. Supported by all models.\n* mov: A high-color-precision format for professional scenarios, which better maintains color and brightness consistency. Suitable for professional post-processing such as color grading, keying, and compositing, and recommended for video editing and video extension scenarios. Supported by Seedance 1.5 pro, Seedance 2.0 series, and Seedance 2.5 series.",
+            "description": "Output video format.\n\n* mp4: Universal format with the best compatibility, using standard color precision. Can be played directly on web pages, mobile devices, various players, and distribution platforms.\n* mov: Professional high color precision format, better preserving color and brightness consistency. Suitable for professional post-processing such as color grading, compositing, and synthesis. Recommended for video editing and video extension scenarios.\n\n**mov format playback compatibility**\n\nmov format uses professional encoding (H.264 video encoding + yuv444p chroma subsampling + PCM audio encoding), which may not be compatible with some players. The following are common players that support mov format playback:\n\n| Player | macOS | Windows |\n|---|---|---|\n| IINA | ✓ | ✕ |\n| VLC | ✓ | ✓ |\n| mpv | ✓ | ✓ |\n| ffplay | ✓ | ✓ |\n\n**Model support:** Seedance 2.5",
             "default": "mp4"
           },
           "duration": {
@@ -368,6 +428,17 @@
             "type": "boolean",
             "description": "Whether the generated video contains a watermark.\n\n* false: The generated video does not contain a watermark.\n* true: The generated video displays an \"AI Generated\" watermark in the bottom-right corner.",
             "default": false
+          },
+          "omni_reference_task_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "reference",
+              "edit",
+              "extend"
+            ],
+            "default": "auto",
+            "description": "> Only supported by Seedance 2.5 series\n\n**Task Type Guidance**\n\nSeedance 2.5 **multimodal reference-to-video tasks** include 3 sub-task types: reference video generation, video editing, and video extension. Different task types have specific parameter constraints. To reduce asynchronous errors after task creation, you can specify the sub-task type via this parameter to validate constraints in advance.\n\n* By default, i.e. `omni_reference_task_type=auto`: The model automatically determines the task type based on input materials and prompt, then validates parameter values. If parameters are incompatible with the actual task type, the task will trigger an asynchronous error (error code: `InvalidParameter.TaskTypeMismatch`).\n\n* Explicitly specifying the task type, i.e. `omni_reference_task_type` set to `reference`, `edit`, or `extend`: The API validates the special parameter constraints for the corresponding task at submission time. If requirements are not met, the API returns an error immediately and the task is not created.\n\n**Note**\n\nWhen actually processing the task, the model will further determine the task type based on the prompt. If the actual determined task type differs from the specified one, an asynchronous error will still be triggered (error code: `InvalidParameter.TaskTypeMismatch`). It is recommended to follow the prompt writing guidelines for each task type to reduce the probability of errors.\n\n**Valid values:**\n\n* `auto`: The model automatically determines the task type based on input materials and prompt.\n* `reference`: Reference video generation task, i.e. generating a new video based on reference images, reference videos, or reference audio. When set to `reference`, `ratio` or `duration` have no special restrictions.\n* `edit`: Video editing task, i.e. editing the video or audio of the original video. When set to `edit`, `content` must contain at least one `reference_video`, and the video duration must be 4–30 seconds; `ratio` must be `adaptive`; `duration` must be `-1`.\n* `extend`: Video extension task, i.e. extending the original video forward or backward. When set to `extend`, `content` must contain at least one `reference_video`; `ratio` must be `adaptive`.\n\n**Model support**:\n\n* `Seedance 2.5`"
           }
         }
       },

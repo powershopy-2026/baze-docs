@@ -26,7 +26,7 @@
       "post": {
         "summary": "万相-图像生成与编辑2.7",
         "description": "调用阿里云万相 `wan2.7-image-pro` 模型执行图像生成与编辑任务。\n\n请求体的 `input.messages[0].content[]` 数组可包含 `text` 对象（提示词）和/或 `image` 对象（输入图像）。`parameters` 字段控制框选区域 `bbox_list`、组图模式 `enable_sequential`、分辨率 `size`、数量 `n`、思考模式 `thinking_mode`、颜色主题 `color_palette`、水印 `watermark`、随机种子 `seed` 等。该模型支持文生图、图生图和交互式编辑。",
-        "operationId": "aliWan27ImageGeneration",
+        "operationId": "aliWan27ImageSynthesis",
         "tags": [
           "Wan Image"
         ],

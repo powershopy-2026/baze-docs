@@ -14,6 +14,7 @@
       "post": {
         "summary": "Vidu Reference-to-Video (viduq3)",
         "operationId": "viduReferenceToVideoEnViduq3",
+        "x-capability": "reference_to_video",
         "description": "Generate videos using the Vidu model based on reference subjects. Supports defining characters/objects through images and text, and referencing them in prompts. After submission, query status via `GET /vidu/ent/v2/tasks/{task_id}`. Uses model viduq3.",
         "requestBody": {
           "required": true,

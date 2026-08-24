@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "创建视频生成任务。",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "paths": {
+    "/minimax/v2/video_generation/{task_id}": {
+      "delete": {
+        "summary": "Video Generation",
+        "operationId": "minimaxH3DeleteVideo",
+        "description": "按任务当前状态取消排队中的任务，或删除成功和失败的视频生成、H3-Context-IR 及视频再生成任务记录。\n\n本接口会根据任务的当前状态自动执行取消或删除，行为如下：\n\n| 任务状态 | 执行操作（action） | 说明 |\n| --- | --- | --- |\n| queued（排队中） | cancelled | 取消任务，任务尚未开始处理，无扣费 |\n| succeeded（成功） | deleted | 删除任务记录 |\n| failed（失败） | deleted | 删除任务记录 |\n| running（运行中） | — | 不可操作，返回错误（处理中无法取消） |\n| cancelled（已取消） | — | 不可操作，返回错误。 |",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "要取消或删除的任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoGenerationResp"
+                },
+                "example": {
+                  "task_id": "424010985738629",
+                  "action": "cancelled",
+                  "status": "cancelled"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "VideoGenerationResp": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "被操作的任务 ID。"
+          },
+          "action": {
+            "type": "string",
+            "description": "实际执行的操作：cancelled（取消，仅 queued 态）或 deleted（删除成功或失败的任务记录）。",
+            "enum": [
+              "cancelled","deleted"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "操作结果状态：cancelled（已取消）或 deleted（记录已删除）。",
+            "enum": [
+              "cancelled","deleted"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

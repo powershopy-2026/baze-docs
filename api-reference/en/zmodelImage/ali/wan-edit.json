@@ -27,6 +27,7 @@
         "summary": "Wan image editing",
         "description": "Calls Ali `wan2.7-image-pro` to perform image editing.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `size`, `n`, `watermark`, `negative_prompt`, `seed`, `bbox_list` as top-level fields. Input images are placed in `input.messages[0].content[].image`, and the editing instruction is in a `text` item within the same array. The request body does not accept a top-level `parameters` field.",
         "operationId": "aliWanImageEdit",
+        "x-capability": "image_to_image",
         "tags": [
           "Wan Image"
         ],

@@ -27,6 +27,7 @@
         "summary": "Seedance 2.5 多模态参考生视频",
         "description": "适用于 `dreamina-seedance-2-5-260628` 模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。",
         "operationId": "seedance25MultimodalReferenceToVideoZh",
+        "x-capability": "reference_to_video",
         "tags": [
           "Seedance Video"
         ],
@@ -45,27 +46,30 @@
                     "media": [
                       {
                         "type": "text",
-                        "text": "补充的提示词"
+                        "text": "全程使用视频1的第一视角构图，全程使用音频1作为背景音乐。第一人称视角果茶宣传广告，seedance牌「苹苹安安」苹果果茶限定款；首帧为图片1，你的手摘下一颗带晨露的阿克苏红苹果，轻脆的苹果碰撞声；2-4 秒：快速切镜，你的手将苹果块投入雪克杯，加入冰块与茶底，用力摇晃，冰块碰撞声与摇晃声卡点轻快鼓点，背景音：「鲜切现摇」；4-6 秒：第一人称成品特写，分层果茶倒入透明杯，你的手轻挤奶盖在顶部铺展，在杯身贴上粉红包标，镜头拉近看奶盖与果茶的分层纹理；6-8 秒：第一人称手持举杯，你将图片2中的果茶举到镜头前（模拟递到观众面前的视角），杯身标签清晰可见，背景音「来一口鲜爽」，尾帧定格为图片2。背景声音统一为女生音色。"
                       },
                       {
                         "type": "reference_image",
-                        "url": "https://example.com/img1.jpg"
+                        "url": "https://example.com/ref-pic1.jpg"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/ref-pic2.jpg"
                       },
                       {
                         "type": "reference_video",
-                        "url": "https://example.com/motion.mp4"
+                        "url": "https://example.com/ref-video.mp4"
                       },
                       {
                         "type": "reference_audio",
-                        "url": "https://example.com/audio.mp3"
+                        "url": "https://example.com/ref-audio.mp3"
                       }
                     ],
-                    "seconds": "-1",
+                    "seconds": "11",
                     "size": "720p",
-                    "ratio": "adaptive",
-                    "generate_audio": false,
-                    "return_last_frame": false,
-                    "safety_identifier": "user_123"
+                    "ratio": "16:9",
+                    "generate_audio": true,
+                    "watermark": false
                   }
                 }
               }
@@ -176,34 +180,34 @@
             "type": "string",
             "enum": [
               "480p",
-              "720p"
+              "720p",
+              "1080p"
             ],
-            "description": "> Seedance 2.5 系列默认值：`720p`\n\n视频分辨率，枚举值：\n\n* 480p\n* 720p",
+            "description": "视频分辨率，枚举值：\n\n* 480p\n* 720p\n* 1080p\n\n默认值：`720p`",
             "default": "720p"
           },
           "ratio": {
             "type": "string",
             "enum": [
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16",
+              "21:9",
               "adaptive"
             ],
-            "description": "> Seedance 2.5 系列默认值为 `adaptive`\n\n生成视频的宽高比例。不同宽高比对应的宽高像素值见下方表格。\n\n* adaptive：根据输入自动选择最合适的宽高比（详见下文说明）\n\n**adaptive 适配规则**\n\n当配置 ratio 为 adaptive 时，模型会根据生成场景自动适配宽高比；实际生成的视频宽高比可通过查询视频生成任务 API 返回的 ratio 字段获取。\n\n**支持模型：**\n* Seedance 2.5 系列支持\n\n**取值规则：**\n* 文生视频：根据输入的提示词，智能选择最合适的宽高比。\n* 首帧 / 首尾帧生视频：根据上传的首帧图片比例，自动选择最接近的宽高比。\n* 多模态参考生视频：根据用户提示词意图判断，如果是首帧生视频/编辑视频/延长视频，以该图片/视频为准选择最接近的宽高比；否则，以传入的第一个媒体文件为准（优先级：视频＞图片）选择最接近的宽高比。\n\n不同宽高比对应的宽高像素值\n\n注意：图生视频，选择的宽高比与您上传的图片宽高比不一致时，方舟会对您的图片进行裁剪，裁剪时会居中裁剪。\n\n| 分辨率 | 宽高比 | 宽高像素值 Seedance 2.5 系列 |\n|---|---|---|\n| 480p | 16:9 | 864×496 |\n| | 4:3 | 752×560 |\n| | 1:1 | 640×640 |\n| | 3:4 | 560×752 |\n| | 9:16 | 496×864 |\n| | 21:9 | 992×432 |\n| 720p | 16:9 | 1280×720 |\n| | 4:3 | 1112×834 |\n| | 1:1 | 960×960 |\n| | 3:4 | 834×1112 |\n| | 9:16 | 720×1280 |\n| | 21:9 | 1470×630 |",
+            "description": "> Seedance 2.5 系列默认值为 `adaptive`\n\n生成视频的宽高比例。不同宽高比对应的宽高像素值见下方表格。\n\n* adaptive：根据输入自动选择最合适的宽高比（详见下文说明）\n\n**adaptive 适配规则**\n\n当配置 ratio 为 adaptive 时，模型会根据生成场景自动适配宽高比；实际生成的视频宽高比可通过查询视频生成任务 API 返回的 ratio 字段获取。\n\n**支持模型：**\n* Seedance 2.5 系列支持\n\n**取值规则：**\n* 文生视频：根据输入的提示词，智能选择最合适的宽高比。\n* 首帧 / 首尾帧生视频：根据上传的首帧图片比例，自动选择最接近的宽高比。\n* 多模态参考生视频：根据用户提示词意图判断，如果是首帧生视频/编辑视频/延长视频，以该图片/视频为准选择最接近的宽高比；否则，以传入的第一个媒体文件为准（优先级：视频＞图片）选择最接近的宽高比。\n\n不同宽高比对应的宽高像素值\n\n注意：图生视频，选择的宽高比与您上传的图片宽高比不一致时，方舟会对您的图片进行裁剪，裁剪时会居中裁剪。\n\n| 分辨率 | 宽高比 | 宽高像素值 Seedance 2.5 系列 |\n|---|---|---|\n| 480p | 16:9 | 864×496 |\n| | 4:3 | 752×560 |\n| | 1:1 | 640×640 |\n| | 3:4 | 560×752 |\n| | 9:16 | 496×864 |\n| | 21:9 | 992×432 |\n| 720p | 16:9 | 1280×720 |\n| | 4:3 | 1112×834 |\n| | 1:1 | 960×960 |\n| | 3:4 | 834×1112 |\n| | 9:16 | 720×1280 |\n| | 21:9 | 1470×630 |\n| 1080p | 16:9 | 1920×1080 |\n| | 4:3 | 1664×1248 |\n| | 1:1 | 1440×1440 |\n| | 3:4 | 1248×1664 |\n| | 9:16 | 1080×1920 |\n| | 21:9 | 2206×946 |",
             "default": "adaptive"
           },
           "output_format": {
             "type": "string",
-            "description": "输出视频格式。",
+            "description": "输出视频的格式。\n\n* mp4：通用格式，兼容性最好，采用标准色彩精度，可在网页、移动端、各类播放器及分发平台直接播放。\n* mov：面向专业场景的高色彩精度格式，更好地保持画面色彩与亮度一致性、适用于调色、抠像、合成等对色彩还原要求高的专业后期加工。推荐在视频编辑、视频延长场景使用 mov 格式作为输入和输出。\n\n**mov 格式播放兼容性**\n\nmov 格式采用专业编码（H.264 视频编码 + yuv444p 色度采样 + PCM 音频编码），部分播放器可能不兼容。以下为常见的支持播放 mov 格式的播放器：\n\n| 播放器 | macOS | Windows |\n|---|---|---|\n| IINA | ✓ | ✕ |\n| VLC | ✓ | ✓ |\n| mpv | ✓ | ✓ |\n| ffplay | ✓ | ✓ |\n\n**模型支持：** Seedance 2.5",
             "enum": [
               "mp4",
               "mov"
             ],
             "default": "mp4"
-          },
-          "seed": {
-            "type": "integer",
-            "description": "> Seedance 2.5系列暂不支持\n\n 种子整数，用于控制生成内容的随机性。取值范围：[-1, 2^32-1]之间的整数。\n\n注意：\n* 相同的请求下，模型收到不同的seed值，如：不指定seed值或令seed取值为-1（会使用随机数替代）、或手动变更seed值，将生成不同的结果。\n* 相同的请求下，模型收到相同的seed值，会生成类似的结果，但不保证完全一致。",
-            "default": -1,
-            "minimum": -1,
-            "maximum": 4294967295
           },
           "watermark": {
             "type": "boolean",
@@ -223,6 +227,17 @@
           "safety_identifier": {
             "type": "string",
             "description": "终端用户的唯一标识符，用于协助平台检测您的应用中可能违反火山方舟使用政策的用户。该标识符为英文字符串，需保证对单个用户固定且唯一，长度不超过 64 个字符。推荐传入对用户名、用户 ID 或邮箱进行哈希处理后生成的字符串，避免泄露用户隐私信息。"
+          },
+          "omni_reference_task_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "reference",
+              "edit",
+              "extend"
+            ],
+            "default": "auto",
+            "description": "> 仅 Seedance 2.5 系列支持\n\n**任务类型引导**\n\nSeedance 2.5 **全模态参考生视频任务** 包括参考生视频、视频编辑和视频延长 3 类子任务。不同任务类型对参数有特殊限制，为减少任务创建后异步报错的情况，可通过本参数指定子任务类型，以提前校验对应限制。\n\n* 默认情况下，即 `omni_reference_task_type=auto`：模型根据输入素材和提示词自动判定任务类型，再校验参数取值。如果参数与实际任务类型不兼容，任务将触发异步报错（错误码：`InvalidParameter.TaskTypeMismatch`）。\n\n* 显式指定任务类型，即 `omni_reference_task_type` 为 `reference`、`edit` 或 `extend`：接口在提交任务时提前校验对应任务的特殊参数限制。不符合要求时，接口立即报错，任务不会创建。\n\n**注意**\n\n实际处理任务时，模型仍会进一步结合提示词判断任务类型。若实际判定的任务类型和指定的不一致，仍会触发异步报错（错误码：`InvalidParameter.TaskTypeMismatch`）。建议遵循各任务类型的提示词写法，降低报错概率。\n\n**可选值：**\n\n* `auto`：由模型根据输入素材和提示词自动判定任务类型。\n* `reference`：参考生视频任务，即基于参考图片、参考视频或参考音频生成新视频。设置 `reference` 时，`ratio` 或 `duration` 无特殊限制。\n* `edit`：视频编辑任务，即对原视频的画面或音频进行编辑操作。设置 `edit` 时，`content` 中必须至少包含一个 `reference_video`，且视频时长必须为 4–30 秒；`ratio` 必须为 `adaptive`；`duration` 必须为 `-1`。\n* `extend`：视频延长任务，即对原视频向前或向后延长。设置 `extend` 时，`content` 中必须至少包含一个 `reference_video`；`ratio` 必须为 `adaptive`。\n\n**模型支持**：\n\n* `Seedance 2.5`"
           }
         }
       },

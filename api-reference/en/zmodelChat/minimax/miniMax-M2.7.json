@@ -23,6 +23,7 @@
         "summary": "MiniMax-M2.7",
         "description": "Call the MiniMax OpenAI-compatible chat model via the baze platform. The currently stable model is `MiniMax-M2.7`.",
         "operationId": "minimaxChatCompletions",
+        "x-capability": "chat",
         "tags": [
           "MiniMax Chat"
         ],

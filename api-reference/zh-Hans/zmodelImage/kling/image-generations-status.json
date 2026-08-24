@@ -23,6 +23,7 @@
         "summary": "查询 Kling 任务状态",
         "description": "返回 Kling 原生任务的持久化响应。task_id 路径参数为提交接口返回的公共任务 ID。",
         "operationId": "createKlingImageGenerationStatus",
+        "x-capability": "image_generation",
         "tags": [
           "Kling"
         ],

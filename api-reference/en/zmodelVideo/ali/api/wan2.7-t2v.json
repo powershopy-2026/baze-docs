@@ -26,7 +26,7 @@
       "post": {
         "summary": "Create wan2.7-t2v text-to-video task",
         "description": "Submit an asynchronous Ali `wan2.7-t2v` text-to-video task.\n\nAfter submitting a task, query its status via `GET /ali/api/v1/tasks/{task_id}`.",
-        "operationId": "aliWan27T2VCreate",
+        "operationId": "aliWan27TextDrivenVideoCreate",
         "tags": [
           "Wan 2.7 Video"
         ],
@@ -193,7 +193,7 @@
       "get": {
         "summary": "Query wan2.7-t2v video task status",
         "description": "Query the status and result of a video generation task by task ID.\n\nTask status flow: PENDING (queued) -> RUNNING (processing) -> SUCCEEDED (success) / FAILED (failure).",
-        "operationId": "aliWan27T2VQuery",
+        "operationId": "aliWan27TextDrivenVideoQuery",
         "tags": [
           "Wan 2.7 Video"
         ],

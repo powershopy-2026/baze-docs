@@ -14,6 +14,7 @@
       "post": {
         "summary": "Vidu 参考生视频 (viduq3)",
         "operationId": "viduReferenceToVideoViduq3",
+        "x-capability": "reference_to_video",
         "description": "使用 Vidu 模型基于参考主体生成视频。支持通过图片、文本定义角色/物体，并在提示词中引用。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}` 查询状态。 使用模型 viduq3。",
         "requestBody": {
           "required": true,
@@ -300,10 +301,22 @@
             "minimum": 1,
             "maximum": 4,
             "x-options": [
-              { "label": "左上角", "value": 1 },
-              { "label": "右上角", "value": 2 },
-              { "label": "右下角", "value": 3 },
-              { "label": "左下角", "value": 4 }
+              {
+                "label": "左上角",
+                "value": 1
+              },
+              {
+                "label": "右上角",
+                "value": 2
+              },
+              {
+                "label": "右下角",
+                "value": 3
+              },
+              {
+                "label": "左下角",
+                "value": 4
+              }
             ]
           },
           "wm_url": {

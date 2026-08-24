@@ -26,7 +26,7 @@
       "post": {
         "summary": "Qwen image edit",
         "description": "Calls the Ali `qwen-image-2.0-pro` model to perform image editing. The `input.messages[0].content[]` array must contain 1-3 `image` objects (input image URL or Base64 data) and 1 `text` object (edit instruction). The `parameters` field controls output count `n`, negative prompt `negative_prompt`, resolution `size`, smart prompt rewriting `prompt_extend`, watermark `watermark`, and random seed `seed`.",
-        "operationId": "aliQwenImageEdit",
+        "operationId": "aliQwenImageModify",
         "tags": [
           "Qwen Image"
         ],

@@ -27,6 +27,7 @@
         "summary": "Hailuo Image to Video",
         "description": "Applies to `MiniMax-Hailuo-02` Image to Video model. After submitting a task, query its status via `GET /v1/videos/{task_id}`.\n\nPublic fields: `model`, `image`, `prompt`, `seconds`, `size`.",
         "operationId": "minimaxImageToVideo",
+        "x-capability": "image_to_video",
         "tags": [
           "Hailuo Video"
         ],

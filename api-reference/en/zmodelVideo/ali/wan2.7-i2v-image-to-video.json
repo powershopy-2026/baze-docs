@@ -27,6 +27,7 @@
         "summary": "Create Wan 2.7 Image to Video task",
         "description": "Submit an asynchronous Ali `wan2.7-i2v` image-to-video task.\n\nUse `first_frame` to specify the initial frame image, optionally paired with `driving_audio` for audio-driven video generation.\n\nSupported `media` combinations:\n- `first_frame`\n- `first_frame + driving_audio`\n\nThe `prompt` field is optional for this capability. `size` only supports `720P` and `1080P`. `seconds` only supports integer strings from `2` to `15`. Also supports official fields `negative_prompt`, `prompt_extend`, `watermark`, and `seed`.",
         "operationId": "aliWan27I2VImageToVideo",
+        "x-capability": "image_to_video",
         "tags": [
           "Wan 2.7 Video"
         ],

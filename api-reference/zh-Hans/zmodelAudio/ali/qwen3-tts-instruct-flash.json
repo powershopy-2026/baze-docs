@@ -23,6 +23,7 @@
         "summary": "阿里语音合成",
         "description": "调用阿里 `qwen3-tts-instruct-flash` 生成语音。\n\n响应约定：\n- 非流式返回阿里官方 JSON 响应；\n- 流式返回 `text/event-stream`，透传阿里 SSE 数据。",
         "operationId": "aliAudioSpeech",
+        "x-capability": "text_to_speech",
         "tags": [
           "Ali Audio"
         ],

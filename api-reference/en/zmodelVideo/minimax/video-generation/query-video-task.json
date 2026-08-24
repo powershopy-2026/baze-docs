@@ -25,7 +25,7 @@
           "Video"
         ],
         "summary": "Query Video Generation Task",
-        "operationId": "queryVideoGenerationTask",
+        "operationId": "minimaxQueryVideoTask",
         "parameters": [
           {
             "name": "task_id",

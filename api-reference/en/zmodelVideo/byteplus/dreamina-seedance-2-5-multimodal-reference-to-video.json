@@ -27,6 +27,7 @@
         "summary": "Seedance 2.5 Multimodal Reference to Video",
         "description": "For the `dreamina-seedance-2-5-260628` model. After submitting, query status via `GET /v1/videos/{task_id}`.",
         "operationId": "seedance25MultimodalReferenceToVideo",
+        "x-capability": "reference_to_video",
         "tags": [
           "Seedance Video"
         ],
@@ -45,27 +46,30 @@
                     "media": [
                       {
                         "type": "text",
-                        "text": "Supplementary prompt"
+                        "text": "Use the first-person composition of video 1 throughout, with audio 1 as background music throughout. First-person fruit tea promotional ad, seedance brand \"Peace & Sweet\" Apple Fruit Tea Limited Edition; First frame is image 1, your hand picks an Aksu red apple with morning dew, crisp apple crunch sound; 2-4s: Quick cut, your hand throws apple chunks into a shaker, adds ice and tea base, shakes vigorously, ice clinking and shaking sounds sync with upbeat drum beats, background audio: \"Freshly Cut, Freshly Shaken\"; 4-6s: First-person product close-up, layered fruit tea poured into a clear cup, your hand gently spreads cream cheese topping, sticks a pink-gold label on the cup, camera zooms in on the layered texture of cream and fruit tea; 6-8s: First-person hand holding the cup, you raise the fruit tea from image 2 to the camera (simulating handing it to the viewer), cup label clearly visible, background audio \"Take a Fresh Sip\", final frame frozen on image 2. All background audio uses a female voice."
                       },
                       {
                         "type": "reference_image",
-                        "url": "https://example.com/img1.jpg"
+                        "url": "https://example.com/ref-pic1.jpg"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/ref-pic2.jpg"
                       },
                       {
                         "type": "reference_video",
-                        "url": "https://example.com/motion.mp4"
+                        "url": "https://example.com/ref-video.mp4"
                       },
                       {
                         "type": "reference_audio",
-                        "url": "https://example.com/audio.mp3"
+                        "url": "https://example.com/ref-audio.mp3"
                       }
                     ],
-                    "seconds": "-1",
+                    "seconds": "11",
                     "size": "720p",
-                    "ratio": "adaptive",
-                    "generate_audio": false,
-                    "return_last_frame": false,
-                    "safety_identifier": "user_123"
+                    "ratio": "16:9",
+                    "generate_audio": true,
+                    "watermark": false
                   }
                 }
               }
@@ -176,34 +180,34 @@
             "type": "string",
             "enum": [
               "480p",
-              "720p"
+              "720p",
+              "1080p"
             ],
-            "description": "> Seedance 2.5 series default: `720p`\n\nVideo resolution. Enum values:\n\n* 480p\n* 720p",
+            "description": "Video resolution. Enum values:\n\n* 480p\n* 720p\n* 1080p\n\nDefault: `720p`",
             "default": "720p"
           },
           "ratio": {
             "type": "string",
             "enum": [
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16",
+              "21:9",
               "adaptive"
             ],
-            "description": "> Seedance 2.5 series default: `adaptive`\n\nThe aspect ratio of the generated video. See the table below for pixel dimensions for different aspect ratios.\n\n* adaptive: Automatically selects the most suitable aspect ratio based on input (see details below)\n\n**adaptive Rules**\n\nWhen ratio is set to adaptive, the model automatically adjusts the aspect ratio based on the generation scenario. The actual video aspect ratio can be obtained from the ratio field returned by the query video generation task API.\n\n**Supported models:**\n* Seedance 2.5 series supported\n\n**Rules:**\n* Text-to-Video: Based on the input prompt, intelligently selects the most suitable aspect ratio.\n* First Frame / First & Last Frame: Automatically selects the closest aspect ratio based on the uploaded first frame image ratio.\n* Multimodal Reference-to-Video: Determines based on user prompt intent. If it is first-frame video/editing video/extending video, selects the closest aspect ratio based on that image/video; otherwise, selects the closest aspect ratio based on the first media file (priority: video > image).\n\nPixel dimensions corresponding to different aspect ratios\n\nNote: For Image-to-Video, if the selected aspect ratio does not match the uploaded image ratio, the platform will crop your image from the center.\n\n| Resolution | Aspect Ratio | Pixel Dimensions Seedance 2.5 Series |\n|---|---|---|\n| 480p | 16:9 | 864×496 |\n| | 4:3 | 752×560 |\n| | 1:1 | 640×640 |\n| | 3:4 | 560×752 |\n| | 9:16 | 496×864 |\n| | 21:9 | 992×432 |\n| 720p | 16:9 | 1280×720 |\n| | 4:3 | 1112×834 |\n| | 1:1 | 960×960 |\n| | 3:4 | 834×1112 |\n| | 9:16 | 720×1280 |\n| | 21:9 | 1470×630 |",
+            "description": "> Seedance 2.5 series default: `adaptive`\n\nThe aspect ratio of the generated video. See the table below for pixel dimensions for different aspect ratios.\n\n* 16:9\n* 4:3\n* 1:1\n* 3:4\n* 9:16\n* 21:9\n* adaptive: Automatically selects the most suitable aspect ratio based on input (see details below)\n\n**adaptive Rules**\n\nWhen ratio is set to adaptive, the model automatically adjusts the aspect ratio based on the generation scenario. The actual video aspect ratio can be obtained from the ratio field returned by the query video generation task API.\n\n**Supported models:**\n* Seedance 2.5 series supported\n\n**Rules:**\n* Text-to-Video: Based on the input prompt, intelligently selects the most suitable aspect ratio.\n\nPixel dimensions corresponding to different aspect ratios\n\nNote: For Image-to-Video, if the selected aspect ratio does not match the uploaded image ratio, the platform will crop your image from the center.\n\n| Resolution | Aspect Ratio | Pixel Dimensions Seedance 2.5 Series |\n|---|---|---|\n| 480p | 16:9 | 864×496 |\n| | 4:3 | 752×560 |\n| | 1:1 | 640×640 |\n| | 3:4 | 560×752 |\n| | 9:16 | 496×864 |\n| | 21:9 | 992×432 |\n| 720p | 16:9 | 1280×720 |\n| | 4:3 | 1112×834 |\n| | 1:1 | 960×960 |\n| | 3:4 | 834×1112 |\n| | 9:16 | 720×1280 |\n| | 21:9 | 1470×630 |",
             "default": "adaptive"
           },
           "output_format": {
             "type": "string",
-            "description": "Output video format.",
+            "description": "Output video format.\n\n* mp4: Universal format with the best compatibility, using standard color precision. Can be played directly on web pages, mobile devices, various players, and distribution platforms.\n* mov: Professional high color precision format, better preserving color and brightness consistency. Suitable for professional post-processing such as color grading, compositing, and synthesis. Recommended for video editing and video extension scenarios.\n\n**mov format playback compatibility**\n\nmov format uses professional encoding (H.264 video encoding + yuv444p chroma subsampling + PCM audio encoding), which may not be compatible with some players. The following are common players that support mov format playback:\n\n| Player | macOS | Windows |\n|---|---|---|\n| IINA | ✓ | ✕ |\n| VLC | ✓ | ✓ |\n| mpv | ✓ | ✓ |\n| ffplay | ✓ | ✓ |\n\n**Model support:** Seedance 2.5",
             "enum": [
               "mp4",
               "mov"
             ],
             "default": "mp4"
-          },
-          "seed": {
-            "type": "integer",
-            "description": "> Temporarily not supported by Seedance 2.5 series\n\nSeed integer for controlling the randomness of generated content. Range: integer in [-1, 2^32-1].\n\nNotes:\n* With the same request, if the model receives different seed values (e.g., not specifying a seed, setting seed to -1 which uses a random number, or manually changing the seed value), different results will be generated.\n* With the same request, if the model receives the same seed value, similar results will be generated, but exact consistency is not guaranteed.",
-            "default": -1,
-            "minimum": -1,
-            "maximum": 4294967295
           },
           "watermark": {
             "type": "boolean",
@@ -223,6 +227,17 @@
           "safety_identifier": {
             "type": "string",
             "description": "Unique identifier of end users, used to help the platform detect users in your application who may violate the ModelArk usage policy. This identifier is an English string, which must be fixed and unique for a single user, and the length cannot exceed 64 characters. It is recommended to pass in a string generated by hashing the username, user ID or email address to avoid leaking user privacy information."
+          },
+          "omni_reference_task_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "reference",
+              "edit",
+              "extend"
+            ],
+            "default": "auto",
+            "description": "> Only supported by Seedance 2.5 series\n\n**Task Type Guidance**\n\nSeedance 2.5 **multimodal reference-to-video tasks** include 3 sub-task types: reference video generation, video editing, and video extension. Different task types have specific parameter constraints. To reduce asynchronous errors after task creation, you can specify the sub-task type via this parameter to validate constraints in advance.\n\n* By default, i.e. `omni_reference_task_type=auto`: The model automatically determines the task type based on input materials and prompt, then validates parameter values. If parameters are incompatible with the actual task type, the task will trigger an asynchronous error (error code: `InvalidParameter.TaskTypeMismatch`).\n\n* Explicitly specifying the task type, i.e. `omni_reference_task_type` set to `reference`, `edit`, or `extend`: The API validates the special parameter constraints for the corresponding task at submission time. If requirements are not met, the API returns an error immediately and the task is not created.\n\n**Note**\n\nWhen actually processing the task, the model will further determine the task type based on the prompt. If the actual determined task type differs from the specified one, an asynchronous error will still be triggered (error code: `InvalidParameter.TaskTypeMismatch`). It is recommended to follow the prompt writing guidelines for each task type to reduce the probability of errors.\n\n**Valid values:**\n\n* `auto`: The model automatically determines the task type based on input materials and prompt.\n* `reference`: Reference video generation task, i.e. generating a new video based on reference images, reference videos, or reference audio. When set to `reference`, `ratio` or `duration` have no special restrictions.\n* `edit`: Video editing task, i.e. editing the video or audio of the original video. When set to `edit`, `content` must contain at least one `reference_video`, and the video duration must be 4–30 seconds; `ratio` must be `adaptive`; `duration` must be `-1`.\n* `extend`: Video extension task, i.e. extending the original video forward or backward. When set to `extend`, `content` must contain at least one `reference_video`; `ratio` must be `adaptive`.\n\n**Model support**:\n\n* `Seedance 2.5`"
           }
         }
       },

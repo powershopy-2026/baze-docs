@@ -1,17 +1,17 @@
 ---
-title: "opencode 接入指南"
-description: "通过 OpenAI-compatible custom provider，把 opencode 接入 powertokens 平台。"
+title: "OpenCode 接入指南"
+description: "通过 OpenAI-compatible custom provider，把 OpenCode 接入 powertokens 平台。"
 ---
 
-opencode 通过 `provider` 配置管理模型。接入 `powertokens 平台` 时，推荐先使用 OpenAI-compatible custom provider，把 opencode 指向平台的 `/v1/chat/completions` 兼容接口。
+OpenCode 通过 `provider` 配置管理模型。接入 `powertokens 平台` 时，推荐先使用 OpenAI-compatible custom provider，把 opencode 指向平台的 `/v1/chat/completions` 兼容接口。
 
-本文面向 opencode 文本代理场景。`/v1/models` 中部分图片、语音、视频任务模型也会声明 `openai`，但它们不等于 opencode 可直接使用的文本 Chat Completions 模型。
+本文面向 OpenCode 文本代理场景。`/v1/models` 中部分图片、语音、视频任务模型也会声明 `openai`，但它们不等于 opencode 可直接使用的文本 Chat Completions 模型。
 
 如果你需要先判断模型应走哪个端点，请先看 [文本模型协议与端点支持说明](/zh-Hans/ecosystem-tools/text-model-protocols)。
 
 ## 路径选择
 
-| 目标 | opencode provider | Base URL | 推荐模型 |
+| 目标 | OpenCode provider | Base URL | 推荐模型 |
 | --- | --- | --- | --- |
 | 推荐文本路径 | custom provider + `@ai-sdk/openai-compatible` | `https://api.powertokens.ai/v1` | `glm-5.2` |
 | MiniMax 文本路径 | custom provider + `@ai-sdk/openai-compatible` | `https://api.powertokens.ai/v1` | `MiniMax-M3` |
@@ -25,7 +25,7 @@ opencode 通过 `provider` 配置管理模型。接入 `powertokens 平台` 时�
 export POWERTOKENS_API_KEY="YOUR_POWERTOKENS_API_KEY"
 ```
 
-也可以在 opencode TUI 里运行 `/connect`，按 provider 保存凭据。配置文件里的 provider ID 需要和 `/connect` 保存的 provider ID 一致。
+也可以在 OpenCode TUI 里运行 `/connect`，按 provider 保存凭据。配置文件里的 provider ID 需要和 `/connect` 保存的 provider ID 一致。
 
 ## OpenAI-compatible provider 示例
 
@@ -69,11 +69,11 @@ export POWERTOKENS_API_KEY="YOUR_POWERTOKENS_API_KEY"
 
 OpenAI-compatible 路径默认使用 `glm-5.2`；MiniMax 场景使用 `MiniMax-M3`。需要 BytePlus 或 Seed 文本模型时，也优先放在 OpenAI-compatible provider 中。
 
-不要把 `image-generation`、`openai-video`、TTS、Kling、Vidu 或 Wan 任务模型加入 opencode 文本 provider。完整文本模型矩阵见 [文本模型协议与端点支持说明](/zh-Hans/ecosystem-tools/text-model-protocols)。
+不要把 `image-generation`、`openai-video`、TTS、Kling、Vidu 或 Wan 任务模型加入 OpenCode 文本 provider。完整文本模型矩阵见 [文本模型协议与端点支持说明](/zh-Hans/ecosystem-tools/text-model-protocols)。
 
 ## Anthropic provider 示例
 
-如果你要让 opencode 走 Claude/Anthropic Messages 路径，可以单独配置一个 `@ai-sdk/anthropic` custom provider。该路径会走平台的 `/v1/messages`，请单独复核当前 opencode 版本与目标模型的端到端行为。
+如果你要让 OpenCode 走 Claude/Anthropic Messages 路径，可以单独配置一个 `@ai-sdk/anthropic` custom provider。该路径会走平台的 `/v1/messages`，请单独复核当前 opencode 版本与目标模型的端到端行为。
 
 ```json
 {
@@ -111,7 +111,7 @@ Anthropic 路径默认优先使用 `glm-5.2`；MiniMax 场景推荐使用 `MiniM
 
 ## 验证
 
-先确认 opencode 能读到 provider 和模型：
+先确认 OpenCode 能读到 provider 和模型：
 
 ```bash
 opencode models powertokens
@@ -150,10 +150,10 @@ Reply with ok and print the active model name.
 
 ## 能力边界
 
-- opencode 的 `@ai-sdk/openai-compatible` provider 只覆盖文本 Chat Completions 语义。
-- `supported_endpoint_types` 里带 `openai` 不代表该模型适合 opencode 文本代理；请排除图片、语音、视频和任务型模型。
+- OpenCode 的 `@ai-sdk/openai-compatible` provider 只覆盖文本 Chat Completions 语义。
+- `supported_endpoint_types` 里带 `openai` 不代表该模型适合 OpenCode 文本代理；请排除图片、语音、视频和任务型模型。
 - `MiniMax-M3` 等 reasoning 模型可能返回思考内容或消耗额外输出 token，请用真实任务确认展示效果。
-- `supported_endpoint_types` 里带 `anthropic` 不代表该模型适合 opencode Anthropic provider；opencode 会携带工具参数并使用流式输出，需要按端到端行为筛选模型。
-- `deepseek-v3-2-251201` 已通过 opencode Anthropic provider 带工具任务复测。
+- `supported_endpoint_types` 里带 `anthropic` 不代表该模型适合 OpenCode Anthropic provider；OpenCode 会携带工具参数并使用流式输出，需要按端到端行为筛选模型。
+- `deepseek-v3-2-251201` 已通过 OpenCode Anthropic provider 带工具任务复测。
 - `seed-1-6-flash-250715` 上游不支持 `/v1/messages`；请优先走 OpenAI-compatible provider。
 - 不要把真实 API Key 写入 `.opencode/opencode.json` 或提交到仓库。

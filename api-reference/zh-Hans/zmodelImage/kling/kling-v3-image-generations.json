@@ -23,6 +23,7 @@
         "summary": "Kling 图像生成任务",
         "description": "通过 `/kling/v1/images/generations` 提交 Kling 原生异步图像生成或图生图任务。",
         "operationId": "createKlingImageGeneration",
+        "x-capability": "image_generation",
         "tags": [
           "Kling"
         ],

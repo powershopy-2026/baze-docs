@@ -26,7 +26,7 @@
       "post": {
         "summary": "Create wan2.7-r2v reference-to-video task",
         "description": "Submit an asynchronous Ali `wan2.7-r2v` reference-to-video task. Specify reference images, reference videos, or first frame images via `input.media`, optionally paired with `reference_voice` for voice reference.\n\nAfter submitting a task, query its status via `GET /ali/api/v1/tasks/{task_id}`.",
-        "operationId": "aliWan27R2VCreate",
+        "operationId": "aliWan27RefVideoCreate",
         "tags": [
           "Wan 2.7 Video"
         ],
@@ -193,7 +193,7 @@
       "get": {
         "summary": "Query wan2.7-r2v video task status",
         "description": "Query the status and result of a video generation task by task ID.\n\nTask status flow: PENDING (queued) -> RUNNING (processing) -> SUCCEEDED (success) / FAILED (failure).",
-        "operationId": "aliWan27R2VQuery",
+        "operationId": "aliWan27RefVideoQuery",
         "tags": [
           "Wan 2.7 Video"
         ],

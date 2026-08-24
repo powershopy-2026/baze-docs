@@ -14,6 +14,7 @@
       "post": {
         "summary": "Vidu Image-to-Video (viduq3-pro-fast)",
         "operationId": "viduImageToVideoEnViduq3ProFast",
+        "x-capability": "image_to_video",
         "description": "Convert images to videos using the Vidu model. After submission, query status via `GET /vidu/v1/videos/{task_id}`. Uses model viduq3-pro-fast.",
         "requestBody": {
           "required": true,

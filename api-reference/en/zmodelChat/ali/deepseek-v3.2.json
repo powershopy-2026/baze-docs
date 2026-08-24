@@ -27,6 +27,7 @@
         "summary": "deepseek-v3.2 Chat Completions",
         "description": "Applicable to the publicly available chat model in the Ali channel's final whitelist: `deepseek-v3.2`.\n\nSupported fields: `model`, `messages`, `stream`, `temperature`, `top_p`, `max_tokens`, `stop`, `seed`, `tools`, `tool_choice`, `enable_search`, `response_format`.",
         "operationId": "aliChatCompletions",
+        "x-capability": "chat",
         "tags": [
           "Qwen Chat"
         ],

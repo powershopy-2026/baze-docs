@@ -1,0 +1,247 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax API",
+    "description": "查询视频生成任务。",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "paths": {
+    "/minimax/v2/query/video_generation/{task_id}": {
+      "get": {
+        "summary": "查询任务",
+        "operationId": "minimaxH3QueryVideo",
+        "description": "按 task_id 查询最近 7 天内单个视频生成、H3-Context-IR 或视频再生成任务的状态与结果。",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "要查询的任务 ID（创建任务返回的 task_id）。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoGenerationResp"
+                },
+                "examples": {
+                  "视频生成成功": {
+                    "value": {
+                      "task": {
+                        "id": "424010985738629",
+                        "model": "MiniMax-H3",
+                        "status": "succeeded",
+                        "created_at": 1785125529,
+                        "updated_at": 1785125946,
+                        "content": {
+                          "url": "https://cdn.hailuoai.com/prod/hailuo_demo/testsets/h3_promo_eval_ref2va/gallery/sr_v2p26_trio_seed42_20260724/inputs/89f8c0bbee5b_denoise_ids_0_final.mp4"
+                        },
+                        "resolution": "2K",
+                        "duration": 5,
+                        "usage": {
+                          "total_seconds": 5,
+                          "input_seconds": 0,
+                          "output_seconds": 5,
+                          "input_image_count": 1,
+                          "input_audio_seconds": 6,
+                          "total_tokens": 273890,
+                          "prompt_tokens": 13500,
+                          "completion_tokens": 260390
+                        },
+                        "ratio": "16:9",
+                        "task_type": "generation",
+                        "modality": "video"
+                      }
+                    }
+                  },
+                  "视频生成失败": {
+                    "value": {
+                      "task": {
+                        "id": "424010985738630",
+                        "model": "MiniMax-H3",
+                        "status": "failed",
+                        "error": {
+                          "code": "1026",
+                          "message": "video description contains sensitive content"
+                        },
+                        "created_at": 1785125529,
+                        "updated_at": 1785125700,
+                        "resolution": "2K",
+                        "duration": 5,
+                        "usage": {},
+                        "ratio": "16:9",
+                        "task_type": "generation",
+                        "modality": "video"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "VideoGenerationResp": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "type": "object",
+            "description": "H3 共享任务查询和列表接口返回的任务对象。",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "任务 ID。"
+              },
+              "model": {
+                "type": "string",
+                "description": "任务使用的模型名称，如 MiniMax-H3。"
+              },
+              "status": {
+                "type": "string",
+                "description": "任务状态：\n\n- queued：排队中\n- running：运行中\n- succeeded：成功\n- failed：失败\n- cancelled：已取消",
+                "enum": [
+                  "queued",
+                  "running",
+                  "succeeded",
+                  "failed",
+                  "cancelled"
+                ]
+              },
+              "error": {
+                "type": "object",
+                "description": "错误信息，任务成功时不返回；任务失败时返回 code 与 message。",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "错误码。"
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "错误提示信息。"
+                  }
+                }
+              },
+              "created_at": {
+                "type": "integer",
+                "description": "任务创建时间的 Unix 时间戳（秒）。"
+              },
+              "updated_at": {
+                "type": "integer",
+                "description": "任务状态更新时间的 Unix 时间戳（秒）。"
+              },
+              "content": {
+                "type": "object",
+                "description": "任务输出内容，任务成功后返回。",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "description": "视频任务产物的限时下载 URL，请及时下载或转存；过期后可重新查询获取。"
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "description": "H3-Context-IR 任务生成的结构化增强提示词。仅当 task_type=h3_context_ir 且任务成功时返回。"
+                  }
+                }
+              },
+              "resolution": {
+                "type": "string",
+                "description": "任务产物的分辨率。"
+              },
+              "duration": {
+                "type": "integer",
+                "description": "任务产物的时长（秒）。"
+              },
+              "usage": {
+                "type": "object",
+                "description": "本次请求的计费用量。视频任务返回按秒计量的字段；H3-Context-IR 任务返回 Token 用量字段。",
+                "properties": {
+                  "total_seconds": {
+                    "type": "integer",
+                    "description": "本次计费总秒数 = 输入秒数 + 输出秒数。"
+                  },
+                  "input_seconds": {
+                    "type": "integer",
+                    "description": "输入参考视频计费秒数（含参考视频时计）。"
+                  },
+                  "output_seconds": {
+                    "type": "integer",
+                    "description": "输出视频计费秒数。"
+                  },
+                  "input_image_count": {
+                    "type": "integer",
+                    "description": "本次计费涉及的图片数量（first_frame + middle_frame + last_frame + reference_image 全部相加）。"
+                  },
+                  "input_audio_seconds": {
+                    "type": "integer",
+                    "description": "输入参考音频秒数（各段取和四舍五入）；无参考音频时不返回。"
+                  },
+                  "total_tokens": {
+                    "type": "integer",
+                    "description": "本次总 Token 数 = prompt_tokens + completion_tokens。\n\n- 视频任务由用量折算；\n- H3-Context-IR 任务使用的 Token 总数。"
+                  },
+                  "prompt_tokens": {
+                    "type": "integer",
+                    "description": "输入 Token 数。\n\n- 视频任务 = 输入参考视频秒数折算 + 全部输入图片数折算 + 输入参考音频秒数折算，无上述输入时为 0；\n- H3-Context-IR 任务的输入 Token 数。"
+                  },
+                  "completion_tokens": {
+                    "type": "integer",
+                    "description": "输出 Token 数。\n\n- 视频任务 = 输出视频秒数折算；\n- H3-Context-IR 任务的输出 Token 数。"
+                  }
+                }
+              },
+              "ratio": {
+                "type": "string",
+                "description": "任务产物的宽高比；不适用于当前任务类型时可能返回空字符串。"
+              },
+              "task_type": {
+                "type": "string",
+                "description": "任务类型：\n\ngeneration：视频生成\nh3_context_ir：H3-Context-IR（/v2/h3_context_ir）\nregeneration：视频再生成（/v2/video_regeneration）",
+                "enum": [
+                  "generation",
+                  "h3_context_ir",
+                  "regeneration"
+                ]
+              },
+              "modality": {
+                "type": "string",
+                "description": "产物模态。视频生成和视频再生成任务返回 video；H3-Context-IR 任务返回 text。",
+                "enum": [
+                  "video",
+                  "text"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

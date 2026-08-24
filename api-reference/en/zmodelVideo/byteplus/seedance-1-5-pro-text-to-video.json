@@ -15,6 +15,7 @@
       "post": {
         "summary": "Seedance 1.5 Pro Text to Video",
         "operationId": "seedance15ProTextToVideo",
+        "x-capability": "text_to_video",
         "description": "For the `seedance-1-5-pro-251215` model. After submitting, query status via `GET /v1/videos/{task_id}`.",
         "requestBody": {
           "required": true,

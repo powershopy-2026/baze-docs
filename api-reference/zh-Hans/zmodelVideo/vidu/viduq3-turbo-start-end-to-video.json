@@ -14,6 +14,7 @@
       "post": {
         "summary": "Vidu 首尾帧生视频 (viduq3-turbo)",
         "operationId": "viduStartEndToVideoViduq3Turbo",
+        "x-capability": "start&end_frame_to_video",
         "description": "使用 Vidu 模型基于首尾帧生成视频。提供起始帧和结束帧两张图片，AI 将生成中间过渡动画。提交任务后，请通过 `GET /vidu/v1/videos/{task_id}` 查询状态。 使用模型 viduq3-turbo。",
         "requestBody": {
           "required": true,
@@ -261,10 +262,22 @@
             "minimum": 1,
             "maximum": 4,
             "x-options": [
-              { "label": "左上角", "value": 1 },
-              { "label": "右上角", "value": 2 },
-              { "label": "右下角", "value": 3 },
-              { "label": "左下角", "value": 4 }
+              {
+                "label": "左上角",
+                "value": 1
+              },
+              {
+                "label": "右上角",
+                "value": 2
+              },
+              {
+                "label": "右下角",
+                "value": 3
+              },
+              {
+                "label": "左下角",
+                "value": 4
+              }
             ]
           },
           "wm_url": {

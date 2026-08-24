@@ -26,7 +26,7 @@
       "post": {
         "summary": "创建 wan2.7-i2v 图生视频任务",
         "description": "提交一个异步的阿里云万相 `wan2.7-i2v` 图生视频任务。通过 `input.media` 指定首帧图像、尾帧图像、驱动音频或首帧视频片段。\n\n提交任务后，请通过 `GET /ali/api/v1/tasks/{task_id}` 查询任务状态。",
-        "operationId": "aliWan27I2VCreate",
+        "operationId": "aliWan27ImageDrivenCreate",
         "tags": [
           "Wan 2.7 Video"
         ],
@@ -209,7 +209,7 @@
       "get": {
         "summary": "查询 wan2.7-i2v 图生视频任务状态",
         "description": "根据任务 ID 查询视频生成任务的状态和结果。\n\n任务状态流转：PENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。",
-        "operationId": "aliWan27I2VQuery",
+        "operationId": "aliWan27ImageDrivenQuery",
         "tags": [
           "Wan 2.7 Video"
         ],

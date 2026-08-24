@@ -14,6 +14,7 @@
       "post": {
         "summary": "图片生成",
         "operationId": "viduReferenceToImage",
+        "x-capability": "reference_to_image",
         "description": "使用 Vidu 模型基于参考图片生成新图片。",
         "requestBody": {
           "required": true,

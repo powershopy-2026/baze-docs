@@ -23,6 +23,7 @@
         "summary": "可灵运镜控制视频任务 (kling-v3)",
         "description": "通过 `/kling/v1/videos/motion-control` 提交可灵原生运镜控制任务。",
         "operationId": "createKlingV3MotionControl",
+        "x-capability": "motion_control",
         "tags": [
           "Kling"
         ],

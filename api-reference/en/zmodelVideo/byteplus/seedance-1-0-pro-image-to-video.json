@@ -14,6 +14,7 @@
       "post": {
         "summary": "Seedance 1.0 Pro Image to Video",
         "operationId": "seedance10ProImageToVideo",
+        "x-capability": "image_to_video",
         "description": "For the `seedance-1-0-pro-250528` model. After submitting, query status via `GET /v1/videos/{task_id}`.",
         "requestBody": {
           "required": true,

@@ -14,6 +14,7 @@
       "post": {
         "summary": "Seedance 1.0 Pro 图生视频",
         "operationId": "seedance10ProImageToVideo",
+        "x-capability": "image_to_video",
         "description": "适用于 `seedance-1-0-pro-250528` 模型。提交任务后，请通过 `GET /v1/videos/{task_id}` 查询状态。",
         "requestBody": {
           "required": true,
