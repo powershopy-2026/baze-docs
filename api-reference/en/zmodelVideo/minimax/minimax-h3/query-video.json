@@ -195,6 +195,10 @@
                     "type": "integer",
                     "description": "Billed seconds for output video."
                   },
+                  "input_audio_seconds": {
+                    "type": "integer",
+                    "description": "Billed seconds for input reference audio (sum of each segment, rounded). Not returned when there is no reference audio."
+                  },
                   "input_image_count": {
                     "type": "integer",
                     "description": "Number of images involved in this billing (first_frame + middle_frame + last_frame + reference_image all added together)."
