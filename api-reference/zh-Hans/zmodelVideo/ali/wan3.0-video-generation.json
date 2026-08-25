@@ -618,10 +618,6 @@
             "description": "输出视频是否包含音频。\n- `true`（默认值）：输出视频包含声音。\n- `false`：输出视频不包含音轨。\n\n开关声音价格相同。",
             "default": true
           },
-          "negative_prompt": {
-            "type": "string",
-            "description": "反向提示词，用来描述不希望在视频画面中出现的内容，可以对视频画面进行限制。\n\n支持中英文，长度不超过500个字符，超过部分会自动截断。\n\n示例值：低分辨率、错误、最差质量、低质量、残缺、多余的手指、比例不良等。"
-          },
           "prompt_extend": {
             "type": "boolean",
             "description": "是否开启 prompt 智能改写。开启后使用大模型对输入 prompt 进行智能改写。对于较短的 prompt 生成效果提升明显，但会增加耗时。\n- `true`：开启智能改写。\n- `false`（默认值）：不开启智能改写。",
