@@ -224,6 +224,7 @@
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation",
+                      "zh-Hans/zmodelVideo/ali/wan3.0-video-generation",
                       {
                         "group": "原生透传",
                         "pages": [
@@ -601,6 +602,7 @@
                       "en/zmodelVideo/ali/happyhorse-1.1-t2v",
                       "en/zmodelVideo/ali/happyhorse-1.1-i2v",
                       "en/zmodelVideo/ali/happyhorse-1.1-r2v",
+                      "en/zmodelVideo/ali/wan3.0-video-generation",
                       "en/zmodelVideo/ali/task-query",
                       {
                         "group": "Alibaba Native Passthrough",

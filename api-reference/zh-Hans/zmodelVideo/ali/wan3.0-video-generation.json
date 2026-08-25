@@ -1,0 +1,815 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "万相3.0 视频生成",
+    "version": "1.0.0",
+    "description": "阿里云万相3.0（wan3.0-video）是全能参考视频生成模型（All-in-One），统一支持文生视频、图生视频（首帧/首尾帧）和参考生视频等多种用法。最长可生成30秒视频，输出帧率为30fps。统一入口为 `/v1/videos`。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "baze平台 API 服务端点"
+    }
+  ],
+  "tags": [
+    {
+      "name": "万相3.0 视频",
+      "description": "阿里云万相3.0 wan3.0-video 视频生成能力"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "创建万相3.0视频生成任务",
+        "description": "提交一个异步的阿里云万相3.0视频生成任务。支持文生视频、图生视频（首帧/首尾帧）和参考生视频等多种用法。\n\n该能力使用顶层 `media` 数组作为多模态输入。通过不同的 `media.type` 组合实现不同能力：\n- **文生视频**：仅传入 `prompt`，不传 `media`。\n- **首帧生视频**：传入 `first_frame` 类型媒体。\n- **首尾帧生视频**：同时传入 `first_frame` 和 `last_frame` 类型媒体。\n- **参考生视频**：传入 `reference_image`、`reference_video` 或 `reference_audio` 类型媒体。\n\n注意：`reference_xx` / `file` / `link` 类型和 `first_frame` / `last_frame` 类型互斥，不能在同一请求中混用。\n\n提交任务后，请通过 `GET /v1/videos/{task_id}` 查询任务状态。",
+        "operationId": "aliWan30VideoGenerationCreate",
+        "x-capability": "video_generation",
+        "tags": [
+          "万相3.0 视频"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wan30VideoGenerationRequest"
+              },
+              "examples": {
+                "text_to_video": {
+                  "summary": "文生视频",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "第1个镜头 大远景开篇，镜头从接近地面的低机位开始向前移动，镜头沿草原方向推进，同时向上移动，将视角从贴地逐渐抬升至略高位置。",
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "first_frame_to_video": {
+                  "summary": "首帧生视频",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "图1中的人物缓缓转身，微笑着向镜头走来。",
+                    "media": [
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/opening-frame.png"
+                      }
+                    ],
+                    "size": "1080P",
+                    "seconds": "5"
+                  }
+                },
+                "first_last_frame_to_video": {
+                  "summary": "首尾帧生视频",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "从首帧场景平滑过渡到尾帧场景，中间加入自然的镜头运动。",
+                    "media": [
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/start-frame.png"
+                      },
+                      {
+                        "type": "last_frame",
+                        "url": "https://example.com/assets/end-frame.png"
+                      }
+                    ],
+                    "size": "720P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "reference_to_video": {
+                  "summary": "参考生视频",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "图1朝镜头走来，轻松挥手并微笑。背景是图2中的花园场景。",
+                    "media": [
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/character.png"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/garden.png"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "multimodal_reference": {
+                  "summary": "多模态参考（图像+视频+音频）",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "视频1坐在桌边开始说话。图1从画面左侧走入，首帧用于固定开场构图。",
+                    "media": [
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/character-a.png"
+                      },
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/assets/character-b.mp4"
+                      },
+                      {
+                        "type": "reference_audio",
+                        "url": "https://example.com/assets/voice.mp3"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/opening-frame.png"
+                      }
+                    ],
+                    "size": "1080P",
+                    "seconds": "8"
+                  }
+                },
+                "prime_speed": {
+                  "summary": "高速版（wan3.0-video-prime）",
+                  "value": {
+                    "model": "wan3.0-video-prime",
+                    "prompt": "一只黑色小猫好奇地看向天空，镜头从平视逐渐上升。",
+                    "size": "720P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回统一的视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "error": {
+                        "message": "请求体格式错误或字段取值非法",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "请求体过大。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "请求体过大",
+                    "value": {
+                      "error": {
+                        "message": "请求体过大，请缩小输入后重试",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游服务返回异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "查询万相3.0视频生成任务状态",
+        "description": "根据任务 ID 查询万相3.0视频生成任务的状态和结果。\n\n任务状态流转：PENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。\n\n视频生成过程约需数分钟，建议采用轮询机制，设置合理的查询间隔（如 15 秒）来获取结果。结果链接有效期为 24 小时，建议获取后立即下载。",
+        "operationId": "aliWan30VideoGenerationQuery",
+        "tags": [
+          "万相3.0 视频"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "视频生成任务 ID。"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "查询成功，返回任务状态。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskQueryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "message": "无效的令牌",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在或已过期。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "任务不存在",
+                    "value": {
+                      "error": {
+                        "message": "任务不存在或已过期",
+                        "type": "api_error",
+                        "code": "task_not_found",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足或速率受限",
+                    "value": {
+                      "error": {
+                        "message": "当前账户额度不足，请稍后重试",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端处理请求时发生内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "内部处理失败",
+                    "value": {
+                      "error": {
+                        "message": "服务内部处理失败，请稍后重试",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "上游服务返回异常响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "上游响应异常",
+                    "value": {
+                      "error": {
+                        "message": "上游服务返回了无效响应",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "上游服务暂不可用，或当前模型暂无可用渠道。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "服务暂不可用",
+                    "value": {
+                      "error": {
+                        "message": "当前模型暂时无可用渠道，请稍后重试",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "Wan30VideoGenerationRequest": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan3.0-video",
+              "wan3.0-video-prime"
+            ],
+            "description": "模型名称。可选值：\n- `wan3.0-video`：标准版。\n- `wan3.0-video-prime`：高速版，能力对齐标准版，端到端速度显著提升。",
+            "x-options": [
+              {
+                "label": "万相3.0 标准版",
+                "value": "wan3.0-video"
+              },
+              {
+                "label": "万相3.0 高速版",
+                "value": "wan3.0-video-prime"
+              }
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "description": "文本提示词，用来描述期望生成的视频内容。与 `media` 必填其一。\n\n支持中英文，每个汉字/字母占一个字符，不超过20000个字符，超过部分会自动截断。\n\n在全能参考模式下，prompt 中可以用 `图1`、`视频1` 等指代 media 数组中对应顺序的媒体素材。图和视频分别计数，即可同时存在图1、视频1。\n\n- 数组中的第 1 个 `reference_image` 对应 **图1**，第 2 个对应 **图2**，以此类推。\n- 数组中的第 1 个 `reference_video` 对应 **视频1**，第 2 个对应 **视频2**，以此类推。\n- 数组中的第 1 个 `reference_audio` 对应 **音频1**，第 2 个对应 **音频2**，以此类推。"
+          },
+          "media": {
+            "type": "array",
+            "description": "媒体素材数组，支持图像、视频、音频、文件和网页作为输入。与 `prompt` 必填其一。\n\n数组中每个元素为一个媒体对象，包含 `type` 与 `url` 字段。\n\n注意：`reference_xx` / `file` / `link` 类型和 `first_frame` / `last_frame` 类型互斥，不能在同一请求中混用。",
+            "items": {
+              "$ref": "#/components/schemas/Wan30MediaInput"
+            }
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "480P",
+              "720P",
+              "1080P"
+            ],
+            "description": "**重要**\n`size` 直接影响费用，请在调用前确认模型价格。\n\n生成视频的分辨率档位。默认值为 `1080P`。",
+            "default": "1080P",
+            "x-options": [
+              {
+                "label": "480P",
+                "value": "480P"
+              },
+              {
+                "label": "720P",
+                "value": "720P"
+              },
+              {
+                "label": "1080P",
+                "value": "1080P"
+              }
+            ]
+          },
+          "ratio": {
+            "type": "string",
+            "enum": [
+              "adaptive",
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16"
+            ],
+            "description": "生成视频的宽高比。默认值为 `adaptive`（自适应长宽比，根据输入媒体比例和意图自动推荐合适的长宽比）。\n\n可选值为：\n- `adaptive`（默认值）：自适应长宽比。\n- `16:9`\n- `4:3`\n- `1:1`\n- `3:4`\n- `9:16`",
+            "default": "adaptive",
+            "x-linkage": {
+              "rules": [
+                {
+                  "when": {
+                    "field": "media",
+                    "operator": "has_value",
+                    "value": true
+                  },
+                  "note": "传入首帧图像时，自动生成的宽高比将参考首帧图像的比例。"
+                }
+              ]
+            }
+          },
+          "seconds": {
+            "type": "string",
+            "description": "**重要**\n`seconds` 直接影响费用，请在调用前确认模型价格。\n\n生成视频的时长，单位为秒。默认值为 `5`。\n\n- 无视频输入时：取值范围为 [2, 30] 之间的整数。\n- 有视频输入时：输入视频总时长 + 输出视频时长不超过30秒。\n- 传 `-1` 时：智能时长模式，模型根据输入的 prompt、内容和富媒体自动推荐合适时长。",
+            "default": "5",
+            "x-linkage": {
+              "rules": [
+                {
+                  "when": {
+                    "field": "media",
+                    "operator": "has_value",
+                    "value": true
+                  },
+                  "note": "有视频输入时，输入视频总时长 + 输出视频时长不超过30秒。"
+                }
+              ]
+            }
+          },
+          "audio": {
+            "type": "boolean",
+            "description": "输出视频是否包含音频。\n- `true`（默认值）：输出视频包含声音。\n- `false`：输出视频不包含音轨。\n\n开关声音价格相同。",
+            "default": true
+          },
+          "negative_prompt": {
+            "type": "string",
+            "description": "反向提示词，用来描述不希望在视频画面中出现的内容，可以对视频画面进行限制。\n\n支持中英文，长度不超过500个字符，超过部分会自动截断。\n\n示例值：低分辨率、错误、最差质量、低质量、残缺、多余的手指、比例不良等。"
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "是否开启 prompt 智能改写。开启后使用大模型对输入 prompt 进行智能改写。对于较短的 prompt 生成效果提升明显，但会增加耗时。\n- `true`：开启智能改写。\n- `false`（默认值）：不开启智能改写。",
+            "default": false
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印标识，水印位于视频右下角，文案固定为 \"AI生成\"。\n- `false`（默认值）：不添加水印。\n- `true`：添加水印。",
+            "default": false
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "随机数种子，取值范围为 [0, 2147483647]。\n\n未指定时，系统自动生成随机种子。若需提升生成结果的可复现性，建议固定 seed 值。请注意，由于模型生成具有概率性，即使使用相同 seed，也不能保证每次生成结果完全一致。"
+          }
+        }
+      },
+      "Wan30MediaInput": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "first_frame",
+              "last_frame",
+              "reference_image",
+              "reference_video",
+              "reference_audio",
+              "file",
+              "link"
+            ],
+            "description": "媒体素材类型。可选值为：\n\n- `first_frame`：首帧图像。最多1张，严格作为视频第一帧。\n- `last_frame`：尾帧图像。最多1张，严格作为视频最后一帧。\n- `reference_image`：参考图像。最多10张。\n- `reference_video`：参考视频。最多5段，总时长不大于15秒。\n- `reference_audio`：参考音频。最多5段，总时长不大于15秒。\n- `file`：文件。最多1个，不可与 `link` 同时输入。\n- `link`：网页链接。最多1个，不可与 `file` 同时输入。\n\n**重要**：`reference_xx` / `file` / `link` 类型和 `first_frame` / `last_frame` 类型互斥，不能在同一请求中混用。"
+          },
+          "url": {
+            "type": "string",
+            "description": "媒体素材 URL 或 Base64 编码数据。\n\n**传入图像（type=first_frame / last_frame / reference_image）：**\n图像 URL 或 Base64 编码数据。格式支持 JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。分辨率单边 [240, 8000] 像素，长宽比不超过 8:1，文件大小不超过 20MB。\n\n**传入视频（type=reference_video）：**\n参考视频 URL。格式支持 mp4、mov。时长 [1, 15] 秒，分辨率单边 [240, 4096] 像素，长宽比不超过 8:1，单文件大小不超过 100MB。\n\n**传入音频（type=reference_audio）：**\n参考音频 URL。格式支持 wav、mp3。时长 [1, 15] 秒，文件大小不超过 15MB。\n\n**传入文件（type=file）：**\n文件 URL。格式支持 docx、doc、xlsx、xls、pptx、ppt、pdf、txt、key、pages、numbers、md。文件大小不超过 100MB，页数不超过 50 页。\n\n**传入网页链接（type=link）：**\n公开网页的 URL 地址。仅支持无需登录的公开网页。"
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "任务唯一标识。"
+          },
+          "task_id": {
+            "type": "string",
+            "description": "任务 ID（与 id 相同）。"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string",
+            "description": "使用的模型名称。"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ],
+            "description": "任务状态。"
+          },
+          "progress": {
+            "type": "integer",
+            "description": "任务进度（百分比）。"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "创建时间的 Unix 时间戳（秒）。"
+          }
+        }
+      },
+      "VideoTaskQueryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ],
+            "description": "任务状态。"
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "completed_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "完成时间的 Unix 时间戳（秒），仅在成功时返回。"
+          },
+          "video_url": {
+            "type": "string",
+            "description": "生成视频的下载链接。有效期 24 小时，请及时保存。仅在状态为 succeeded 时返回。"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "任务的详细元数据。",
+            "properties": {
+              "orig_prompt": {
+                "type": "string",
+                "description": "原始输入提示词。"
+              },
+              "actual_prompt": {
+                "type": "string",
+                "description": "优化后的提示词（开启 prompt_extend 时）。"
+              },
+              "video_duration": {
+                "type": "number",
+                "format": "float",
+                "description": "输出视频时长（秒）。"
+              },
+              "input_video_duration": {
+                "type": "number",
+                "format": "float",
+                "description": "输入视频时长（秒）。无视频输入时为 0.0。"
+              },
+              "fps": {
+                "type": "integer",
+                "description": "生成视频的帧率。默认值为 30。"
+              },
+              "SR": {
+                "type": "integer",
+                "description": "生成视频的分辨率。"
+              },
+              "ratio": {
+                "type": "string",
+                "description": "生成视频的宽高比。"
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`、`api_error` 或上游兼容错误类型。"
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
