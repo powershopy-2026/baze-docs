@@ -199,10 +199,6 @@
           "callback_url": {
             "type": "string",
             "description": "任务状态变更的回调通知地址。配置后 MiniMax 服务器会先发送含 challenge 字段的验证请求（需 3 秒内原样返回 challenge 完成验证），验证成功后每当任务状态变更即向该地址 POST 推送，推送体结构与查询任务接口的响应一致。\n\n回调 status 取值：queued（排队中）、running（运行中）、succeeded（成功）、failed（失败）、cancelled（已取消）。"
-          },
-          "aigc_watermark": {
-            "type": "boolean",
-            "description": "是否在生成视频中添加 AIGC 标识水印，默认 false。"
           }
         }
       },
