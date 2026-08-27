@@ -39,7 +39,7 @@
                 "$ref": "#/components/schemas/Wan30VideoGenerationRequest"
               },
               "examples": {
-                "file_reference_to_video": {
+                "参考文件生视频": {
                   "summary": "参考文件生视频",
                   "value": {
                     "model": "wan3.0-video",
@@ -55,7 +55,7 @@
                     "seconds": "5"
                   }
                 },
-                "reference_to_video": {
+                "参考生视频": {
                   "summary": "参考生视频",
                   "value": {
                     "model": "wan3.0-video",
@@ -75,7 +75,7 @@
                     "seconds": "5"
                   }
                 },
-                "text_to_video": {
+                "文生视频": {
                   "summary": "文生视频",
                   "value": {
                     "model": "wan3.0-video",
@@ -85,7 +85,7 @@
                     "seconds": "5"
                   }
                 },
-                "first_frame_to_video": {
+                "首帧生视频": {
                   "summary": "首帧生视频",
                   "value": {
                     "model": "wan3.0-video",
@@ -100,7 +100,7 @@
                     "seconds": "5"
                   }
                 },
-                "first_last_frame_to_video": {
+                "首尾帧生视频": {
                   "summary": "首尾帧生视频",
                   "value": {
                     "model": "wan3.0-video",
@@ -120,7 +120,7 @@
                     "seconds": "5"
                   }
                 },
-                "video_edit": {
+                "视频编辑": {
                   "summary": "视频编辑",
                   "value": {
                     "model": "wan3.0-video",
@@ -136,7 +136,7 @@
                     "seconds": "5"
                   }
                 },
-                "video_extension": {
+                "视频延长": {
                   "summary": "视频延长",
                   "value": {
                     "model": "wan3.0-video",
