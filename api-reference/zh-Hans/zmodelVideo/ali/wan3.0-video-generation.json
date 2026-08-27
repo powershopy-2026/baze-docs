@@ -39,6 +39,42 @@
                 "$ref": "#/components/schemas/Wan30VideoGenerationRequest"
               },
               "examples": {
+                "file_reference_to_video": {
+                  "summary": "参考文件生视频",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "根据文件内容生成一个展示视频，文件中的关键信息以动画形式呈现。",
+                    "media": [
+                      {
+                        "type": "file",
+                        "url": "https://example.com/assets/document.pdf"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "reference_to_video": {
+                  "summary": "参考生视频",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "图1朝镜头走来，轻松挥手并微笑。背景是图2中的花园场景。",
+                    "media": [
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/character.png"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/garden.png"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
                 "text_to_video": {
                   "summary": "文生视频",
                   "value": {
@@ -84,61 +120,36 @@
                     "seconds": "5"
                   }
                 },
-                "reference_to_video": {
-                  "summary": "参考生视频",
+                "video_edit": {
+                  "summary": "视频编辑",
                   "value": {
                     "model": "wan3.0-video",
-                    "prompt": "图1朝镜头走来，轻松挥手并微笑。背景是图2中的花园场景。",
+                    "prompt": "对视频进行色彩增强和画面稳定处理。",
                     "media": [
-                      {
-                        "type": "reference_image",
-                        "url": "https://example.com/assets/character.png"
-                      },
-                      {
-                        "type": "reference_image",
-                        "url": "https://example.com/assets/garden.png"
-                      }
-                    ],
-                    "size": "1080P",
-                    "ratio": "16:9",
-                    "seconds": "5"
-                  }
-                },
-                "multimodal_reference": {
-                  "summary": "多模态参考（图像+视频+音频）",
-                  "value": {
-                    "model": "wan3.0-video",
-                    "prompt": "视频1坐在桌边开始说话。图1从画面左侧走入，首帧用于固定开场构图。",
-                    "media": [
-                      {
-                        "type": "reference_image",
-                        "url": "https://example.com/assets/character-a.png"
-                      },
                       {
                         "type": "reference_video",
-                        "url": "https://example.com/assets/character-b.mp4"
-                      },
-                      {
-                        "type": "reference_audio",
-                        "url": "https://example.com/assets/voice.mp3"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/assets/opening-frame.png"
+                        "url": "https://example.com/assets/source-video.mp4"
                       }
                     ],
                     "size": "1080P",
-                    "seconds": "8"
-                  }
-                },
-                "prime_speed": {
-                  "summary": "高速版（wan3.0-video-prime）",
-                  "value": {
-                    "model": "wan3.0-video-prime",
-                    "prompt": "一只黑色小猫好奇地看向天空，镜头从平视逐渐上升。",
-                    "size": "720P",
                     "ratio": "16:9",
                     "seconds": "5"
+                  }
+                },
+                "video_extension": {
+                  "summary": "视频延长",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "继续展示相同的场景，保持风格一致。",
+                    "media": [
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/assets/video-to-extend.mp4"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "10"
                   }
                 }
               }
@@ -538,11 +549,11 @@
           },
           "prompt": {
             "type": "string",
-            "description": "文本提示词，用来描述期望生成的视频内容。与 `media` 必填其一。\n\n支持中英文，每个汉字/字母占一个字符，不超过20000个字符，超过部分会自动截断。\n\n在全能参考模式下，prompt 中可以用 `图1`、`视频1` 等指代 media 数组中对应顺序的媒体素材。图和视频分别计数，即可同时存在图1、视频1。\n\n- 数组中的第 1 个 `reference_image` 对应 **图1**，第 2 个对应 **图2**，以此类推。\n- 数组中的第 1 个 `reference_video` 对应 **视频1**，第 2 个对应 **视频2**，以此类推。\n- 数组中的第 1 个 `reference_audio` 对应 **音频1**，第 2 个对应 **音频2**，以此类推。"
+            "description": "文本提示词，用来描述期望生成的视频内容。与 `media` 必填其一。\n\n支持中英文，每个汉字/字母占一个字符，不超过20000个字符，超过部分会自动截断。\n\n在全能参考模式下，prompt 中可以用 `图1`、`视频1` 等指代 media 数组中对应顺序的媒体素材。"
           },
           "media": {
             "type": "array",
-            "description": "媒体素材数组，支持图像、视频、音频、文件和网页作为输入。与 `prompt` 必填其一。\n\n数组中每个元素为一个媒体对象，包含 `type` 与 `url` 字段。\n\n注意：`reference_xx` / `file` / `link` 类型和 `first_frame` / `last_frame` 类型互斥，不能在同一请求中混用。",
+            "description": "媒体素材数组，支持图像、视频、音频、文件和网页作为输入。与 `prompt` 必填其一。\n\n- 数组中每个元素为一个媒体对象，包含 `type` 与 `url` 字段。\n\n- 在参考生视频下，按照数组书序定义prompt中素材引用的书序。图和视频分别计数，即可同时存在图1、视频1。\n\n- 数组中的第 1 个 `reference_image` 对应 **图1**，第 2 个对应 **图2**，以此类推。\n- 数组中的第 1 个 `reference_video` 对应 **视频1**，第 2 个对应 **视频2**，以此类推。\n- 数组中的第 1 个 `reference_audio` 对应 **音频1**，第 2 个对应 **音频2**，以此类推。",
             "items": {
               "$ref": "#/components/schemas/Wan30MediaInput"
             }
@@ -620,8 +631,8 @@
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "是否开启 prompt 智能改写。开启后使用大模型对输入 prompt 进行智能改写。对于较短的 prompt 生成效果提升明显，但会增加耗时。\n- `true`：开启智能改写。\n- `false`（默认值）：不开启智能改写。",
-            "default": false
+            "description": "是否开启 prompt 智能改写。开启后使用大模型对输入 prompt 进行智能改写。对于较短的 prompt 生成效果提升明显，但会增加耗时。\n- `true`（默认值）：开启智能改写。\n- `false`：不开启智能改写。",
+            "default": true
           },
           "watermark": {
             "type": "boolean",
@@ -658,7 +669,7 @@
           },
           "url": {
             "type": "string",
-            "description": "媒体素材 URL 或 Base64 编码数据。\n\n**传入图像（type=first_frame / last_frame / reference_image）：**\n图像 URL 或 Base64 编码数据。格式支持 JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。分辨率单边 [240, 8000] 像素，长宽比不超过 8:1，文件大小不超过 20MB。\n\n**传入视频（type=reference_video）：**\n参考视频 URL。格式支持 mp4、mov。时长 [1, 15] 秒，分辨率单边 [240, 4096] 像素，长宽比不超过 8:1，单文件大小不超过 100MB。\n\n**传入音频（type=reference_audio）：**\n参考音频 URL。格式支持 wav、mp3。时长 [1, 15] 秒，文件大小不超过 15MB。\n\n**传入文件（type=file）：**\n文件 URL。格式支持 docx、doc、xlsx、xls、pptx、ppt、pdf、txt、key、pages、numbers、md。文件大小不超过 100MB，页数不超过 50 页。\n\n**传入网页链接（type=link）：**\n公开网页的 URL 地址。仅支持无需登录的公开网页。"
+            "description": "媒体素材 URL 或 Base64 编码数据。\n\n**传入图像（type=first_frame / last_frame / reference_image）：**\n图像 URL 或 Base64 编码数据。格式支持 JPEG、JPG、PNG（不支持透明通道）、BMP、WEBP。分辨率单边 [240, 8000] 像素，长宽比不超过 8:1，文件大小不超过 20MB。\n\n支持输入的格式：\n公网URL：\n支持HTTP或HTTPS协议。\n示例值：`https://xxx/xxx.png`。\n\n**传入视频（type=reference_video）：**\n参考视频 URL。格式支持 mp4、mov。时长 [1, 15] 秒，分辨率单边 [240, 4096] 像素，长宽比不超过 8:1，单文件大小不超过 100MB。\n\n支持输入的格式：\n公网URL：\n支持HTTP或HTTPS协议。\n示例值：`https://xxx/xxx.mp4`。\n\n**传入音频（type=reference_audio）：**\n参考音频 URL。格式支持 wav、mp3。时长 [1, 15] 秒，文件大小不超过 15MB。\n\n支持输入的格式：\n公网URL：\n支持HTTP或HTTPS协议。\n示例值：`https://xxx/xxx.mp3`。\n\n**传入文件（type=file）：**\n文件 URL。格式支持 docx、doc、xlsx、xls、pptx、ppt、pdf、txt、key、pages、numbers、md。文件大小不超过 100MB，页数不超过 50 页。\n\n支持输入的格式：\n公网URL：\n支持HTTP或HTTPS协议。\n示例值：`https://xxx/xxx.pdf`。\n\n**传入网页链接（type=link）：**\n公开网页的 URL 地址。仅支持无需登录的公开网页。"
           }
         }
       },
