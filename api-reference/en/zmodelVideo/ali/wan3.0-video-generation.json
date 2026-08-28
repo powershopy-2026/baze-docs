@@ -1,0 +1,806 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Wan 3.0 Video Generation",
+    "version": "1.0.0",
+    "description": "Alibaba Cloud Wan 3.0 (wan3.0-video) is an all-in-one reference video generation model that supports text-to-video, image-to-video (first frame / first-last frame), and reference-to-video in a unified interface. Maximum video length is 30 seconds at 30fps. The unified endpoint is `/v1/videos`.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "baze platform API endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Wan 3.0 Video",
+      "description": "Alibaba Cloud Wan 3.0 wan3.0-video video generation capability"
+    }
+  ],
+  "paths": {
+    "/v1/videos": {
+      "post": {
+        "summary": "Create Wan 3.0 video generation task",
+        "description": "Submit an asynchronous Alibaba Cloud Wan 3.0 video generation task. Supports text-to-video, image-to-video (first frame / first-last frame), and reference-to-video.\n\nThis capability uses the top-level `media` array as multimodal input. Different combinations of `media.type` enable different capabilities:\n- **Text-to-video**: Only pass `prompt`, no `media`.\n- **First frame to video**: Pass `first_frame` type media.\n- **First-last frame to video**: Pass both `first_frame` and `last_frame` type media.\n- **Reference to video**: Pass `reference_image`, `reference_video`, or `reference_audio` type media.\n\nNote: `reference_xx` / `file` / `link` types and `first_frame` / `last_frame` types are mutually exclusive and cannot be mixed in the same request.\n\nAfter submission, query the task status via `GET /v1/videos/{task_id}`.",
+        "operationId": "aliWan30VideoGenerationCreate",
+        "x-capability": "video_generation",
+        "tags": [
+          "Wan 3.0 Video"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Wan30VideoGenerationRequest"
+              },
+              "examples": {
+                "file_to_video": {
+                  "summary": "File to video",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "Generate a presentation video based on the file content, with key information presented in animated form.",
+                    "media": [
+                      {
+                        "type": "file",
+                        "url": "https://example.com/assets/document.pdf"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "reference_to_video": {
+                  "summary": "Reference to video",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "Image 1 walks towards the camera, waving and smiling. The background is the garden scene from image 2.",
+                    "media": [
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/character.png"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/garden.png"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "text_to_video": {
+                  "summary": "Text to video",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "Shot 1: Wide establishing shot, camera starts from a low angle near the ground moving forward, pushing along the grassland direction while tilting upward.",
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "first_frame_to_video": {
+                  "summary": "First frame to video",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "The person in image 1 slowly turns around and walks towards the camera with a smile.",
+                    "media": [
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/opening-frame.png"
+                      }
+                    ],
+                    "size": "1080P",
+                    "seconds": "5"
+                  }
+                },
+                "first_last_frame_to_video": {
+                  "summary": "First-last frame to video",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "Smoothly transition from the start frame scene to the end frame scene with natural camera movement.",
+                    "media": [
+                      {
+                        "type": "first_frame",
+                        "url": "https://example.com/assets/start-frame.png"
+                      },
+                      {
+                        "type": "last_frame",
+                        "url": "https://example.com/assets/end-frame.png"
+                      }
+                    ],
+                    "size": "720P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "video_editing": {
+                  "summary": "Video editing",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "Apply color enhancement and video stabilization to the video.",
+                    "media": [
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/assets/source-video.mp4"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "video_extension": {
+                  "summary": "Video extension",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "Continue showing the same scene while maintaining consistent style.",
+                    "media": [
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/assets/video-to-extend.mp4"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "10"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submission successful, returns a unified video task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Invalid parameters",
+                    "value": {
+                      "error": {
+                        "message": "Invalid request body or field values",
+                        "type": "invalid_request_error",
+                        "code": "bad_request_body",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g., missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request body too large.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "request_too_large": {
+                    "summary": "Request body too large",
+                    "value": {
+                      "error": {
+                        "message": "Request body too large, please reduce input size",
+                        "type": "api_error",
+                        "code": "read_request_body_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded or insufficient quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient account quota, please retry later",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal error",
+                    "value": {
+                      "error": {
+                        "message": "Internal server error, please retry later",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream service returned an invalid response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad gateway",
+                    "value": {
+                      "error": {
+                        "message": "Upstream service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream service unavailable or no available channels.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "Model temporarily has no available channels, please retry later",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/videos/{task_id}": {
+      "get": {
+        "summary": "Query Wan 3.0 video generation task status",
+        "description": "Query the status and results of a Wan 3.0 video generation task by task ID.\n\nTask status flow: PENDING (queuing) → RUNNING (processing) → SUCCEEDED (success) / FAILED (failure).\n\nVideo generation typically takes several minutes. Use a polling mechanism with a reasonable interval (e.g., 15 seconds). Result links are valid for 24 hours; download immediately after retrieval.",
+        "operationId": "aliWan30VideoGenerationQuery",
+        "tags": [
+          "Wan 3.0 Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Video generation task ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query successful, returns task status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VideoTaskQueryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g., missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "message": "Invalid token",
+                        "type": "api_error",
+                        "code": "access_denied",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found or expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "error": {
+                        "message": "Task not found or expired",
+                        "type": "api_error",
+                        "code": "task_not_found",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded or insufficient quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota or rate limited",
+                    "value": {
+                      "error": {
+                        "message": "Insufficient account quota, please retry later",
+                        "type": "api_error",
+                        "code": "insufficient_user_quota",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "internal_error": {
+                    "summary": "Internal error",
+                    "value": {
+                      "error": {
+                        "message": "Internal server error, please retry later",
+                        "type": "api_error",
+                        "code": "gen_relay_info_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Upstream service returned an invalid response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "bad_gateway": {
+                    "summary": "Bad gateway",
+                    "value": {
+                      "error": {
+                        "message": "Upstream service returned an invalid response",
+                        "type": "api_error",
+                        "code": "bad_response_status_code",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Upstream service unavailable or no available channels.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "service_unavailable": {
+                    "summary": "Service unavailable",
+                    "value": {
+                      "error": {
+                        "message": "Model temporarily has no available channels, please retry later",
+                        "type": "api_error",
+                        "code": "get_channel_failed",
+                        "param": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "Wan30VideoGenerationRequest": {
+        "type": "object",
+        "required": [
+          "model"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "wan3.0-video",
+              "wan3.0-video-prime"
+            ],
+            "description": "Model name. Options:\n- `wan3.0-video`: Standard version.\n- `wan3.0-video-prime`: Speed version with identical capabilities but significantly faster end-to-end speed."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt describing the desired video content. Required if `media` is not provided.\n\nSupports Chinese and English. Each character counts as one, up to 20000 characters (excess will be truncated).\n\nIn all-in-one reference mode, use `image 1`, `video 1`, etc. in the prompt to reference media items by their order in the media array."
+          },
+          "media": {
+            "type": "array",
+            "description": "Media asset array supporting images, videos, audio, files, and web links as input. Required if `prompt` is not provided.\n\n- Each element is a media object with `type` and `url` fields.\n\n- In reference-to-video mode, the order in the array defines the reference order in the prompt. Images and videos are counted separately, so image 1 and video 1 can coexist.\n\n- The 1st `reference_image` corresponds to **image 1**, the 2nd to **image 2**, etc.\n- The 1st `reference_video` corresponds to **video 1**, the 2nd to **video 2**, etc.\n- The 1st `reference_audio` corresponds to **audio 1**, the 2nd to **audio 2**, etc.",
+            "items": {
+              "$ref": "#/components/schemas/Wan30MediaInput"
+            }
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "480P",
+              "720P",
+              "1080P"
+            ],
+            "description": "**Important**: `size` directly affects cost. Please confirm model pricing before calling.\n\nVideo resolution tier. Default is `1080P`.",
+            "default": "1080P"
+          },
+          "ratio": {
+            "type": "string",
+            "enum": [
+              "adaptive",
+              "16:9",
+              "4:3",
+              "1:1",
+              "3:4",
+              "9:16"
+            ],
+            "description": "Video aspect ratio. Default is `adaptive` (automatically selects an appropriate ratio based on input media and intent).\n\nOptions:\n- `adaptive` (default): Adaptive aspect ratio.\n- `16:9`\n- `4:3`\n- `1:1`\n- `3:4`\n- `9:16`",
+            "default": "adaptive"
+          },
+          "seconds": {
+            "type": "string",
+            "description": "**Important**: `seconds` directly affects cost. Please confirm model pricing before calling.\n\nVideo duration in seconds. Default is `5`.\n\n- Without video input: Integer in range [2, 30].\n- With video input: Input video total duration + output video duration must not exceed 30 seconds.\n- Pass `-1`: Smart duration mode, where the model automatically recommends an appropriate duration based on the prompt, content, and rich media.",
+            "default": "5",
+            "enum": [
+              "-1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+              "17",
+              "18",
+              "19",
+              "20",
+              "21",
+              "22",
+              "23",
+              "24",
+              "25",
+              "26",
+              "27",
+              "28",
+              "29",
+              "30"
+            ]
+          },
+          "generate_audio": {
+            "type": "boolean",
+            "description": "Whether the output video includes audio.\n- `true` (default): Output video includes audio.\n- `false`: Output video has no audio track.\n\nPricing is the same with or without audio.",
+            "default": true
+          },
+          "prompt_extend": {
+            "type": "boolean",
+            "description": "Whether to enable prompt intelligent rewriting. When enabled, a large model rewrites the input prompt. Significantly improves results for short prompts, but increases processing time.\n- `true` (default): Enable intelligent rewriting.\n- `false`: Disable intelligent rewriting.",
+            "default": true
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether to add a watermark. The watermark is located in the bottom-right corner with the text \"AI Generated\".\n- `false` (default): No watermark.\n- `true`: Add watermark.",
+            "default": false
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Random seed for reproducibility. Range: [0, 2147483647].\n\nWhen not specified, a random seed is auto-generated. For better reproducibility, fix the seed value. Note that due to the probabilistic nature of generation, identical results are not guaranteed even with the same seed."
+          }
+        }
+      },
+      "Wan30MediaInput": {
+        "type": "object",
+        "required": [
+          "type",
+          "url"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "first_frame",
+              "last_frame",
+              "reference_image",
+              "reference_video",
+              "reference_audio",
+              "file",
+              "link"
+            ],
+            "description": "Media asset type. Options:\n\n- `first_frame`: First frame image. Max 1, strictly used as the video's first frame.\n- `last_frame`: Last frame image. Max 1, strictly used as the video's last frame.\n- `reference_image`: Reference image. Max 10.\n- `reference_video`: Reference video. Max 5 clips, total duration no more than 15 seconds.\n- `reference_audio`: Reference audio. Max 5 clips, total duration no more than 15 seconds.\n- `file`: File. Max 1, cannot be used with `link`.\n- `link`: Web link. Max 1, cannot be used with `file`.\n\n**Important**: `reference_xx` / `file` / `link` types and `first_frame` / `last_frame` types are mutually exclusive and cannot be mixed in the same request."
+          },
+          "url": {
+            "type": "string",
+            "description": "Media asset URL.\n\n**Image input (type=first_frame / last_frame / reference_image):**\nImage URL. Formats: JPEG, JPG, PNG (no transparency), BMP, WEBP. Resolution: [240, 8000]px per side, aspect ratio up to 8:1, max file size 20MB.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/xxx.png`.\n\n**Video input (type=reference_video):**\nReference video URL. Formats: mp4, mov. Duration: [1, 15]s, resolution: [240, 4096]px per side, aspect ratio up to 8:1, max file size 100MB.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/xxx.mp4`.\n\n**Audio input (type=reference_audio):**\nReference audio URL. Formats: wav, mp3. Duration: [1, 15]s, max file size 15MB.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/xxx.mp3`.\n\n**File input (type=file):**\nFile URL. Formats: docx, doc, xlsx, xls, pptx, ppt, pdf, txt, key, pages, numbers, md. Max file size 100MB, max 50 pages.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/xxx.pdf`.\n\n**Web link input (type=link):**\nPublic web page URL. Only supports pages that do not require login.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/article/xxx`."
+          }
+        }
+      },
+      "VideoTaskResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique task identifier."
+          },
+          "task_id": {
+            "type": "string",
+            "description": "Task ID (alias for id)."
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model name used."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ],
+            "description": "Task status."
+          },
+          "progress": {
+            "type": "integer",
+            "description": "Task progress percentage."
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Creation time as Unix timestamp in seconds."
+          }
+        }
+      },
+      "VideoTaskQueryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "task_id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string",
+            "example": "video"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "queued",
+              "running",
+              "succeeded",
+              "failed",
+              "cancelled"
+            ],
+            "description": "Task status."
+          },
+          "progress": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "completed_at": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Completion time as Unix timestamp in seconds. Only returned on success."
+          },
+          "video_url": {
+            "type": "string",
+            "description": "Download URL for the generated video. Valid for 24 hours, please save promptly. Only returned when status is succeeded."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Detailed task metadata.",
+            "properties": {
+              "orig_prompt": {
+                "type": "string",
+                "description": "Original input prompt."
+              },
+              "actual_prompt": {
+                "type": "string",
+                "description": "Rewritten prompt (when prompt_extend is enabled)."
+              },
+              "video_duration": {
+                "type": "number",
+                "format": "float",
+                "description": "Output video duration in seconds."
+              },
+              "input_video_duration": {
+                "type": "number",
+                "format": "float",
+                "description": "Input video duration in seconds. 0.0 when no video input."
+              },
+              "fps": {
+                "type": "integer",
+                "description": "Output video frame rate. Default is 30."
+              },
+              "SR": {
+                "type": "integer",
+                "description": "Output video resolution."
+              },
+              "ratio": {
+                "type": "string",
+                "description": "Output video aspect ratio."
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type, e.g., `invalid_request_error`, `api_error`, or upstream-compatible error type."
+              },
+              "code": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

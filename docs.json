@@ -224,10 +224,7 @@
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-image-to-video",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
                       "zh-Hans/zmodelVideo/ali/wan2.7-i2v-video-continuation",
-                      "zh-Hans/zmodelVideo/ali/happyhorse-1.1-t2v",
-                      "zh-Hans/zmodelVideo/ali/happyhorse-1.1-i2v",
-                      "zh-Hans/zmodelVideo/ali/happyhorse-1.1-r2v",
-                      "zh-Hans/zmodelVideo/ali/task-query",
+                      "zh-Hans/zmodelVideo/ali/wan3.0-video-generation",
                       {
                         "group": "原生透传",
                         "pages": [
@@ -235,7 +232,11 @@
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-t2v",
                           "zh-Hans/zmodelVideo/ali/api/wan2.7-r2v",
                           "zh-Hans/zmodelVideo/ali/api/legacy-i2v-first-last-frame",
-                          "zh-Hans/zmodelVideo/ali/api/task-query"
+                          "zh-Hans/zmodelVideo/ali/api/task-query",
+                          "zh-Hans/zmodelVideo/ali/happyhorse-1.1-t2v",
+                          "zh-Hans/zmodelVideo/ali/happyhorse-1.1-i2v",
+                          "zh-Hans/zmodelVideo/ali/happyhorse-1.1-r2v",
+                          "zh-Hans/zmodelVideo/ali/task-query"
                         ]
                       }
                     ]
@@ -601,6 +602,7 @@
                       "en/zmodelVideo/ali/happyhorse-1.1-t2v",
                       "en/zmodelVideo/ali/happyhorse-1.1-i2v",
                       "en/zmodelVideo/ali/happyhorse-1.1-r2v",
+                      "en/zmodelVideo/ali/wan3.0-video-generation",
                       "en/zmodelVideo/ali/task-query",
                       {
                         "group": "Alibaba Native Passthrough",

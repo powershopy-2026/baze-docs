@@ -241,10 +241,6 @@
           "callback_url": {
             "type": "string",
             "description": "Callback notification URL for task status changes. After configuration, the MiniMax server will first send a verification request containing a challenge field (must return the challenge value unchanged within 3 seconds to complete verification). Once verified, whenever the task status changes, a POST push will be sent to this URL, with the push body structure matching the query task API response.\n\nCallback status values: queued, running, succeeded, failed, cancelled."
-          },
-          "aigc_watermark": {
-            "type": "boolean",
-            "description": "Whether to add an AIGC watermark to the generated video. Default false."
           }
         }
       },
