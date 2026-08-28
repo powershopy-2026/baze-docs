@@ -203,3 +203,15 @@ body {
   background-color: transparent !important;
 }
 
+/* Render the standalone speech-2.8-hd pages without the shared site shell. */
+html[data-current-path="/zh-Hans/standalone/speech-2.8-hd"] #navbar,
+html[data-current-path="/zh-Hans/standalone/speech-2.8-hd"] #mobile-nav,
+html[data-current-path="/en/standalone/speech-2.8-hd"] #navbar,
+html[data-current-path="/en/standalone/speech-2.8-hd"] #mobile-nav {
+  display: none !important;
+}
+
+html[data-current-path="/zh-Hans/standalone/speech-2.8-hd"] #body-content,
+html[data-current-path="/en/standalone/speech-2.8-hd"] #body-content {
+  padding-top: 0 !important;
+}
