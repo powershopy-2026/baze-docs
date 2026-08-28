@@ -608,7 +608,7 @@
               "30"
             ]
           },
-          "audio": {
+          "generate_audio": {
             "type": "boolean",
             "description": "输出视频是否包含音频。\n- `true`（默认值）：输出视频包含声音。\n- `false`：输出视频不包含音轨。\n\n开关声音价格相同。",
             "default": true
