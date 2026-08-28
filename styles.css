@@ -158,51 +158,6 @@ body {
   }
 }
 
-/* ===================================================
-   内嵌纯净模式 (Embed / Clean Mode)
-   当处于 iframe 或带有 ?embed=true / #embed 时生效
-=================================================== */
-
-/* 1. 隐藏顶部导航栏、侧边栏导航、底部、面包屑导航与回到顶部 */
-.embed-mode header,
-.embed-mode nav[aria-label="Sidebar"],
-.embed-mode aside,
-.embed-mode footer,
-.embed-mode #sidebar,
-.embed-mode #navbar,
-.embed-mode #navigation,
-.embed-mode [aria-label="Breadcrumbs"],
-.embed-mode [aria-label="Breadcrumb"],
-.embed-mode div:has(> [aria-label="Breadcrumb"]),
-.embed-mode .sticky.top-0 {
-  display: none !important;
-}
-
-/* 2. 隐藏右侧大纲目录（保留代码测试面板） */
-.embed-mode #content-side-layout:not(:has(.code-group)) {
-  display: none !important;
-}
-
-/* 3. 容器全宽展示并移除多余外边距与内边距 */
-.embed-mode #content-container {
-  padding: 0.5rem 1rem !important;
-  margin: 0 !important;
-  max-width: 100% !important;
-  width: 100% !important;
-}
-
-.embed-mode #content-container > .max-w-5xl {
-  max-width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* 4. 优化内嵌背景 */
-.embed-mode body,
-.embed-mode html {
-  background-color: transparent !important;
-}
-
 /* Render the standalone speech-2.8-hd pages without the shared site shell. */
 html[data-current-path="/zh-Hans/standalone/speech-2.8-hd"] #navbar,
 html[data-current-path="/zh-Hans/standalone/speech-2.8-hd"] #mobile-nav,
