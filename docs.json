@@ -375,6 +375,12 @@
             ]
           },
           {
+            "tab": "speech-2.8-hd",
+            "pages": [
+              "zh-Hans/standalone/speech-2.8-hd"
+            ]
+          },
+          {
             "tab": "Agent工具",
             "pages": [
               "zh-Hans/ecosystem-tools/text-model-protocols",
@@ -747,6 +753,12 @@
                   "en/assetLibrary/get-authorize-url"
                 ]
               }
+            ]
+          },
+          {
+            "tab": "speech-2.8-hd",
+            "pages": [
+              "en/standalone/speech-2.8-hd"
             ]
           },
           {
