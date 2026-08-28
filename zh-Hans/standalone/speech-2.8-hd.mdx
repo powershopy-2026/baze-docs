@@ -1,11 +1,77 @@
 ---
 title: "speech-2.8-hd"
 description: "通过 baze平台统一接口使用 MiniMax speech-2.8-hd 进行语音合成。"
-openapi: "/api-reference/zh-Hans/zmodelAudio/minimax/speech-2.8-hd.json POST /v1/audio/speech"
-mode: custom
 hideFooterPagination: true
 ---
 
-你可以通过 baze平台的统一接口 `/v1/audio/speech` 调用 `speech-2.8-hd`，将文本合成为语音。
+通过 baze平台的统一接口 `POST /v1/audio/speech` 调用 `speech-2.8-hd`，将文本合成为语音。
 
-这是 `speech-2.8-hd` 的独立入口页面。它与模型接口菜单中的页面复用同一份公开接口定义，只描述平台接口当前支持的字段和返回方式，不代表 MiniMax 上游能力的完整范围。
+这是 `speech-2.8-hd` 的独立入口页面。它与模型接口菜单中的页面描述同一个公开平台接口，只说明平台接口当前支持的字段和返回方式，不代表 MiniMax 上游能力的完整范围。
+
+## 身份验证
+
+在请求头中提供 API Token：
+
+```http
+Authorization: Bearer <token>
+Content-Type: application/json
+```
+
+## 非流式调用
+
+```bash
+curl --request POST \
+  --url https://baze-api.powerbuyin.top/v1/audio/speech \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "speech-2.8-hd",
+    "input": "请用自然语气介绍今天的运行情况。",
+    "voice": "Chinese (Mandarin)_Lyrical_Voice",
+    "response_format": "mp3",
+    "metadata": {
+      "output_format": "url"
+    }
+  }'
+```
+
+调用成功后，平台接口返回 `302 Found`。生成音频的临时地址位于 `Location` 响应头中。
+
+## 流式调用
+
+为 `stream_format` 提供非空值即可启用流式输出：
+
+```bash
+curl --request POST \
+  --url https://baze-api.powerbuyin.top/v1/audio/speech \
+  --header 'Authorization: Bearer <token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "model": "speech-2.8-hd",
+    "input": "请用平静的语气朗读这段文字。",
+    "voice": "Chinese (Mandarin)_Lyrical_Voice",
+    "speed": 1,
+    "response_format": "wav",
+    "stream_format": "pcm"
+  }'
+```
+
+流式调用成功后，平台接口返回 `200 OK`，响应类型为 `text/event-stream`。
+
+## 请求字段
+
+| 字段 | 类型 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `model` | string | 是 | 固定为 `speech-2.8-hd`。 |
+| `input` | string | 是 | 要合成为语音的文本，最长 `10000` 个字符。文本超过 `3000` 个字符时建议使用流式输出。 |
+| `voice` | string | 是 | 平台接口支持的音色名称。 |
+| `speed` | number | 否 | 语速。 |
+| `response_format` | string | 否 | 音频编码格式，例如 `mp3`、`wav` 或 `pcm`。 |
+| `stream_format` | string | 否 | 提供非空值时启用流式输出。 |
+| `metadata.output_format` | string | 否 | 非流式调用当前仅支持 `url`。 |
+
+## 能力边界
+
+- 此页面只列出 baze平台当前公开支持的字段。
+- 非流式调用通过 `Location` 响应头返回临时音频地址，不直接返回音频 JSON。
+- 此页面是 MiniMax 上游能力的平台渠道视图，不代表其完整能力范围。
