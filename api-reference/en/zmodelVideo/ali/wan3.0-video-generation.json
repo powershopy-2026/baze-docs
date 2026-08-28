@@ -39,6 +39,42 @@
                 "$ref": "#/components/schemas/Wan30VideoGenerationRequest"
               },
               "examples": {
+                "file_to_video": {
+                  "summary": "File to video",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "Generate a presentation video based on the file content, with key information presented in animated form.",
+                    "media": [
+                      {
+                        "type": "file",
+                        "url": "https://example.com/assets/document.pdf"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
+                "reference_to_video": {
+                  "summary": "Reference to video",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "Image 1 walks towards the camera, waving and smiling. The background is the garden scene from image 2.",
+                    "media": [
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/character.png"
+                      },
+                      {
+                        "type": "reference_image",
+                        "url": "https://example.com/assets/garden.png"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "5"
+                  }
+                },
                 "text_to_video": {
                   "summary": "Text to video",
                   "value": {
@@ -84,61 +120,36 @@
                     "seconds": "5"
                   }
                 },
-                "reference_to_video": {
-                  "summary": "Reference to video",
+                "video_editing": {
+                  "summary": "Video editing",
                   "value": {
                     "model": "wan3.0-video",
-                    "prompt": "Image 1 walks towards the camera, waving and smiling. The background is the garden scene from image 2.",
+                    "prompt": "Apply color enhancement and video stabilization to the video.",
                     "media": [
-                      {
-                        "type": "reference_image",
-                        "url": "https://example.com/assets/character.png"
-                      },
-                      {
-                        "type": "reference_image",
-                        "url": "https://example.com/assets/garden.png"
-                      }
-                    ],
-                    "size": "1080P",
-                    "ratio": "16:9",
-                    "seconds": "5"
-                  }
-                },
-                "multimodal_reference": {
-                  "summary": "Multimodal reference (image + video + audio)",
-                  "value": {
-                    "model": "wan3.0-video",
-                    "prompt": "Video 1 sits at the table and starts talking. Image 1 enters from the left side of the frame, with the first frame fixing the opening composition.",
-                    "media": [
-                      {
-                        "type": "reference_image",
-                        "url": "https://example.com/assets/character-a.png"
-                      },
                       {
                         "type": "reference_video",
-                        "url": "https://example.com/assets/character-b.mp4"
-                      },
-                      {
-                        "type": "reference_audio",
-                        "url": "https://example.com/assets/voice.mp3"
-                      },
-                      {
-                        "type": "first_frame",
-                        "url": "https://example.com/assets/opening-frame.png"
+                        "url": "https://example.com/assets/source-video.mp4"
                       }
                     ],
                     "size": "1080P",
-                    "seconds": "8"
-                  }
-                },
-                "prime_speed": {
-                  "summary": "Speed version (wan3.0-video-prime)",
-                  "value": {
-                    "model": "wan3.0-video-prime",
-                    "prompt": "A black kitten curiously looks up at the sky, camera gradually rising from eye level.",
-                    "size": "720P",
                     "ratio": "16:9",
                     "seconds": "5"
+                  }
+                },
+                "video_extension": {
+                  "summary": "Video extension",
+                  "value": {
+                    "model": "wan3.0-video",
+                    "prompt": "Continue showing the same scene while maintaining consistent style.",
+                    "media": [
+                      {
+                        "type": "reference_video",
+                        "url": "https://example.com/assets/video-to-extend.mp4"
+                      }
+                    ],
+                    "size": "1080P",
+                    "ratio": "16:9",
+                    "seconds": "10"
                   }
                 }
               }
@@ -328,7 +339,7 @@
     "/v1/videos/{task_id}": {
       "get": {
         "summary": "Query Wan 3.0 video generation task status",
-        "description": "Query the status and results of a Wan 3.0 video generation task by task ID.\n\nTask status flow: PENDING → RUNNING → SUCCEEDED / FAILED.\n\nVideo generation typically takes several minutes. Use a polling mechanism with a reasonable interval (e.g., 15 seconds). Result links are valid for 24 hours; download immediately after retrieval.",
+        "description": "Query the status and results of a Wan 3.0 video generation task by task ID.\n\nTask status flow: PENDING (queuing) → RUNNING (processing) → SUCCEEDED (success) / FAILED (failure).\n\nVideo generation typically takes several minutes. Use a polling mechanism with a reasonable interval (e.g., 15 seconds). Result links are valid for 24 hours; download immediately after retrieval.",
         "operationId": "aliWan30VideoGenerationQuery",
         "tags": [
           "Wan 3.0 Video"
@@ -356,7 +367,7 @@
             }
           },
           "401": {
-            "description": "Authentication failed.",
+            "description": "Authentication failed, e.g., missing or invalid token.",
             "content": {
               "application/json": {
                 "schema": {
@@ -528,11 +539,11 @@
           },
           "prompt": {
             "type": "string",
-            "description": "Text prompt describing the desired video content. Required if `media` is not provided.\n\nSupports Chinese and English. Each character counts as one, up to 20000 characters (excess will be truncated).\n\nIn all-in-one reference mode, use `image 1`, `video 1`, etc. in the prompt to reference media items by their order in the media array. Images and videos are counted separately.\n\n- The 1st `reference_image` corresponds to **image 1**, the 2nd to **image 2**, etc.\n- The 1st `reference_video` corresponds to **video 1**, the 2nd to **video 2**, etc.\n- The 1st `reference_audio` corresponds to **audio 1**, the 2nd to **audio 2**, etc."
+            "description": "Text prompt describing the desired video content. Required if `media` is not provided.\n\nSupports Chinese and English. Each character counts as one, up to 20000 characters (excess will be truncated).\n\nIn all-in-one reference mode, use `image 1`, `video 1`, etc. in the prompt to reference media items by their order in the media array."
           },
           "media": {
             "type": "array",
-            "description": "Media asset array supporting images, videos, audio, files, and web links as input. Required if `prompt` is not provided.\n\nEach element is a media object with `type` and `url` fields.\n\nNote: `reference_xx` / `file` / `link` types and `first_frame` / `last_frame` types are mutually exclusive and cannot be mixed in the same request.",
+            "description": "Media asset array supporting images, videos, audio, files, and web links as input. Required if `prompt` is not provided.\n\n- Each element is a media object with `type` and `url` fields.\n\n- In reference-to-video mode, the order in the array defines the reference order in the prompt. Images and videos are counted separately, so image 1 and video 1 can coexist.\n\n- The 1st `reference_image` corresponds to **image 1**, the 2nd to **image 2**, etc.\n- The 1st `reference_video` corresponds to **video 1**, the 2nd to **video 2**, etc.\n- The 1st `reference_audio` corresponds to **audio 1**, the 2nd to **audio 2**, etc.",
             "items": {
               "$ref": "#/components/schemas/Wan30MediaInput"
             }
@@ -604,8 +615,8 @@
           },
           "prompt_extend": {
             "type": "boolean",
-            "description": "Whether to enable prompt intelligent rewriting. When enabled, a large model rewrites the input prompt. Significantly improves results for short prompts, but increases processing time.\n- `true`: Enable intelligent rewriting.\n- `false` (default): Disable.",
-            "default": false
+            "description": "Whether to enable prompt intelligent rewriting. When enabled, a large model rewrites the input prompt. Significantly improves results for short prompts, but increases processing time.\n- `true` (default): Enable intelligent rewriting.\n- `false`: Disable intelligent rewriting.",
+            "default": true
           },
           "watermark": {
             "type": "boolean",
@@ -642,7 +653,7 @@
           },
           "url": {
             "type": "string",
-            "description": "Media asset URL or Base64 encoded data.\n\n**Image input (type=first_frame / last_frame / reference_image):**\nImage URL or Base64 data. Formats: JPEG, JPG, PNG (no transparency), BMP, WEBP. Resolution: [240, 8000]px per side, aspect ratio up to 8:1, max file size 20MB.\n\n**Video input (type=reference_video):**\nReference video URL. Formats: mp4, mov. Duration: [1, 15]s, resolution: [240, 4096]px per side, aspect ratio up to 8:1, max file size 100MB.\n\n**Audio input (type=reference_audio):**\nReference audio URL. Formats: wav, mp3. Duration: [1, 15]s, max file size 15MB.\n\n**File input (type=file):**\nFile URL. Formats: docx, doc, xlsx, xls, pptx, ppt, pdf, txt, key, pages, numbers, md. Max file size 100MB, max 50 pages.\n\n**Web link input (type=link):**\nPublic web page URL. Only supports pages that do not require login."
+            "description": "Media asset URL or Base64 encoded data.\n\n**Image input (type=first_frame / last_frame / reference_image):**\nImage URL or Base64 data. Formats: JPEG, JPG, PNG (no transparency), BMP, WEBP. Resolution: [240, 8000]px per side, aspect ratio up to 8:1, max file size 20MB.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/xxx.png`.\n\n**Video input (type=reference_video):**\nReference video URL. Formats: mp4, mov. Duration: [1, 15]s, resolution: [240, 4096]px per side, aspect ratio up to 8:1, max file size 100MB.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/xxx.mp4`.\n\n**Audio input (type=reference_audio):**\nReference audio URL. Formats: wav, mp3. Duration: [1, 15]s, max file size 15MB.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/xxx.mp3`.\n\n**File input (type=file):**\nFile URL. Formats: docx, doc, xlsx, xls, pptx, ppt, pdf, txt, key, pages, numbers, md. Max file size 100MB, max 50 pages.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/xxx.pdf`.\n\n**Web link input (type=link):**\nPublic web page URL. Only supports pages that do not require login.\n\nSupported input formats:\n1. Public URL:\nSupports HTTP or HTTPS protocol.\nExample: `https://xxx/article/xxx`."
           }
         }
       },
