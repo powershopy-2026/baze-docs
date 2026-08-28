@@ -157,3 +157,30 @@ body {
     max-width: 88rem;
   }
 }
+
+/* Render standalone OpenAPI pages without the shared site shell. */
+html[data-current-path^="/zh-Hans/standalone/"] #navbar,
+html[data-current-path^="/zh-Hans/standalone/"] #mobile-nav,
+html[data-current-path^="/zh-Hans/standalone/"] #sidebar,
+html[data-current-path^="/zh-Hans/standalone/"] #sidebar-content,
+html[data-current-path^="/zh-Hans/standalone/"] #navigation,
+html[data-current-path^="/zh-Hans/standalone/"] #footer,
+html[data-current-path^="/zh-Hans/standalone/"] #pagination,
+html[data-current-path^="/en/standalone/"] #navbar,
+html[data-current-path^="/en/standalone/"] #mobile-nav,
+html[data-current-path^="/en/standalone/"] #sidebar,
+html[data-current-path^="/en/standalone/"] #sidebar-content,
+html[data-current-path^="/en/standalone/"] #navigation,
+html[data-current-path^="/en/standalone/"] #footer,
+html[data-current-path^="/en/standalone/"] #pagination {
+  display: none !important;
+}
+
+html[data-current-path^="/zh-Hans/standalone/"] #body-content,
+html[data-current-path^="/zh-Hans/standalone/"] #content-container,
+html[data-current-path^="/en/standalone/"] #body-content,
+html[data-current-path^="/en/standalone/"] #content-container {
+  padding-top: 0 !important;
+  margin-left: 0 !important;
+  width: 100% !important;
+}
