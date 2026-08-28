@@ -597,7 +597,7 @@
               "30"
             ]
           },
-          "audio": {
+          "generate_audio": {
             "type": "boolean",
             "description": "Whether the output video includes audio.\n- `true` (default): Output video includes audio.\n- `false`: Output video has no audio track.\n\nPricing is the same with or without audio.",
             "default": true
