@@ -93,6 +93,7 @@
                       "en/zmodelChat/zhipu/glm-5",
                       "en/zmodelChat/zhipu/glm-5.1",
                       "en/zmodelChat/zhipu/glm-5.2",
+                      "en/zmodelChat/zhipu/glm-5.3",
                       "en/zmodelChat/zhipu/glm-5-turbo"
                     ]
                   }
@@ -441,6 +442,7 @@
               "en/standalone/zmodelChat/zhipu/glm-5-turbo",
               "en/standalone/zmodelChat/zhipu/glm-5.1",
               "en/standalone/zmodelChat/zhipu/glm-5.2",
+              "en/standalone/zmodelChat/zhipu/glm-5.3",
               "en/standalone/zmodelImage/ali/api/qwen-image-3.0",
               "en/standalone/zmodelImage/ali/api/qwen-image-edit",
               "en/standalone/zmodelImage/ali/api/qwen-text-to-image",
@@ -663,6 +665,7 @@
                       "zh-Hans/zmodelChat/zhipu/glm-5",
                       "zh-Hans/zmodelChat/zhipu/glm-5.1",
                       "zh-Hans/zmodelChat/zhipu/glm-5.2",
+                      "zh-Hans/zmodelChat/zhipu/glm-5.3",
                       "zh-Hans/zmodelChat/zhipu/glm-5-turbo"
                     ]
                   }
@@ -1012,6 +1015,7 @@
               "zh-Hans/standalone/zmodelChat/zhipu/glm-5-turbo",
               "zh-Hans/standalone/zmodelChat/zhipu/glm-5.1",
               "zh-Hans/standalone/zmodelChat/zhipu/glm-5.2",
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-5.3",
               "zh-Hans/standalone/zmodelImage/ali/api/qwen-image-3.0",
               "zh-Hans/standalone/zmodelImage/ali/api/qwen-image-edit",
               "zh-Hans/standalone/zmodelImage/ali/api/qwen-text-to-image",
