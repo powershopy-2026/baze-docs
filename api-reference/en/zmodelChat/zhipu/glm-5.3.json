@@ -342,6 +342,20 @@
           "thinking": {
             "$ref": "#/components/schemas/ThinkingConfig"
           },
+          "reasoning_effort": {
+            "type": "string",
+            "enum": [
+              "max",
+              "xhigh",
+              "high",
+              "medium",
+              "low",
+              "minimal",
+              "none"
+            ],
+            "default": "max",
+            "description": "Controls the model's reasoning intensity. Takes effect when thinking is enabled. Defaults to max. Only supported by GLM-5.2 and above models. For GLM-5.3 / GLM-5.3-FLASH models, only low / high / max tiers are supported. For GLM-5.2 models, passing none or minimal causes the model to skip thinking; passing low / medium maps to high; passing xhigh maps to max."
+          },
           "temperature": {
             "type": "number",
             "description": "Sampling temperature, range `[0, 1]`.",
@@ -433,20 +447,6 @@
             "type": "boolean",
             "default": true,
             "description": "Whether to clear `reasoning_content` from previous turns in the history."
-          },
-          "reasoning_effort": {
-            "type": "string",
-            "enum": [
-              "max",
-              "xhigh",
-              "high",
-              "medium",
-              "low",
-              "minimal",
-              "none"
-            ],
-            "default": "max",
-            "description": "Controls the model's reasoning intensity. Takes effect when thinking is enabled. Defaults to max. Only supported by GLM-5.2 and above models. For GLM-5.3 / GLM-5.3-FLASH models, only low / high / max tiers are supported. For GLM-5.2 models, passing none or minimal causes the model to skip thinking; passing low / medium maps to high; passing xhigh maps to max."
           }
         }
       },
