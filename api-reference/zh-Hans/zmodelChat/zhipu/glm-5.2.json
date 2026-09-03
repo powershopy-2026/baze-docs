@@ -434,6 +434,20 @@
             "type": "boolean",
             "default": true,
             "description": "是否清理历史轮次中的 `reasoning_content`。"
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "enum": [
+              "max",
+              "xhigh",
+              "high",
+              "medium",
+              "low",
+              "minimal",
+              "none"
+            ],
+            "default": "max",
+            "description": "控制模型的推理程度，thinking 开启时生效，默认 max，仅 GLM-5.2 及其以上模型支持。对于 GLM-5.3 / GLM-5.3-FLASH 模型，仅支持 low / high / max 档位。对于 GLM-5.2 模型，传入 none 或 minimal 模型会放弃思考；传入 low / medium 将映射为 high；传入 xhigh 将映射为 max。"
           }
         }
       },
