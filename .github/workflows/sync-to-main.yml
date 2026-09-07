@@ -18,15 +18,23 @@ jobs:
 
       - name: Skip if only workflow files changed
         id: check
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
         run: |
-          if git diff --quiet HEAD~1..HEAD -- \
+          base_sha="$BEFORE_SHA"
+          if ! git cat-file -e "$base_sha^{commit}" 2>/dev/null; then
+            base_sha="$(git rev-parse HEAD~1)"
+          fi
+          echo "base_sha=$base_sha" >> "$GITHUB_OUTPUT"
+
+          if git diff --quiet "$base_sha"..HEAD -- \
             ':(exclude).github/'; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Replace test URLs with production URLs
+      - name: Replace test URLs and sync standalone pages
         if: steps.check.outputs.skip == 'false'
         run: |
           # 替换 OpenAPI JSON 中的 URL
@@ -52,6 +60,33 @@ jobs:
             sed -i 's|https://baze-api\.powerbuyin\.top|https://api.powertokens.ai|g' "$f" 2>/dev/null || true
           done
 
+          # 仅为本次新增或更新的 OpenAPI MDX 页面同步 standalone 页面
+          git diff --name-only --diff-filter=AM -z \
+            "${{ steps.check.outputs.base_sha }}"..HEAD -- en zh-Hans | \
+            while IFS= read -r -d '' source; do
+              case "$source" in
+                en/standalone/*|zh-Hans/standalone/*)
+                  continue
+                  ;;
+                en/*.mdx)
+                  lang="en"
+                  ;;
+                zh-Hans/*.mdx)
+                  lang="zh-Hans"
+                  ;;
+                *)
+                  continue
+                  ;;
+              esac
+
+              if grep -q '^openapi:' "$source"; then
+                relative_path="${source#"$lang/"}"
+                target="$lang/standalone/$relative_path"
+                mkdir -p "$(dirname "$target")"
+                cp "$source" "$target"
+              fi
+            done
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -59,6 +94,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "sync: replace test URLs with production URLs [skip ci]"
+            git commit -m "sync: update production URLs and standalone pages [skip ci]"
             git push origin main
           fi
