@@ -48,6 +48,8 @@
                   {
                     "group": "Alibaba",
                     "pages": [
+                      "en/zmodelChat/ali/deepseek-v4-pro-0813",
+                      "en/zmodelChat/ali/deepseek-v4-flash-0731",
                       "en/zmodelChat/ali/qwen3.5-flash",
                       "en/zmodelChat/ali/qwen3.6-plus",
                       "en/zmodelChat/ali/qwen3.7-plus",
@@ -625,6 +627,8 @@
                   {
                     "group": "阿里巴巴",
                     "pages": [
+                      "zh-Hans/zmodelChat/ali/deepseek-v4-pro-0813",
+                      "zh-Hans/zmodelChat/ali/deepseek-v4-flash-0731",
                       "zh-Hans/zmodelChat/ali/qwen3.5-flash",
                       "zh-Hans/zmodelChat/ali/qwen3.6-plus",
                       "zh-Hans/zmodelChat/ali/qwen3.7-plus",
