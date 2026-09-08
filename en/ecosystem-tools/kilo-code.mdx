@@ -16,9 +16,9 @@ If you need to choose the endpoint first, see [Text model protocols and endpoint
 
 | Goal | Kilo Code provider | Base URL | Model scope |
 | --- | --- | --- | --- |
-| Use OpenAI-compatible text models | OpenAI Compatible or OpenAI (Compatible) | `https://baze-api.powerbuyin.top/v1` | Text models that support `/v1/chat/completions` |
-| Use Anthropic-path models | Anthropic with custom base URL | `https://baze-api.powerbuyin.top/v1` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
-| Use OpenAI-compatible preferred models | OpenAI Compatible | `https://baze-api.powerbuyin.top/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
+| Use OpenAI-compatible text models | OpenAI Compatible or OpenAI (Compatible) | `https://api.powertokens.ai/v1` | Text models that support `/v1/chat/completions` |
+| Use Anthropic-path models | Anthropic with custom base URL | `https://api.powertokens.ai/v1` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
+| Use OpenAI-compatible preferred models | OpenAI Compatible | `https://api.powertokens.ai/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
 
 ## OpenAI Compatible setup
 
@@ -27,7 +27,7 @@ Create a provider profile in Kilo Code:
 | Field | Value |
 | --- | --- |
 | **API Provider** | **OpenAI Compatible** or **OpenAI (Compatible)** |
-| **Base URL** | `https://baze-api.powerbuyin.top/v1` |
+| **Base URL** | `https://api.powertokens.ai/v1` |
 | **API Key** | Your `powertokens platform` API key |
 | **Model** | For example `glm-5.2`, `MiniMax-M3`, or `seed-2-0-pro-260328` |
 | **Max output tokens** | Set for your task and selected model |
@@ -37,7 +37,7 @@ Create a provider profile in Kilo Code:
 Verify the same path with:
 
 ```bash
-curl -X POST "https://baze-api.powerbuyin.top/v1/chat/completions" \
+curl -X POST "https://api.powertokens.ai/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
   --data '{
@@ -57,11 +57,11 @@ Use Kilo Code's Anthropic provider when you want the Claude/Anthropic path:
 | --- | --- |
 | **API Provider** | **Anthropic** |
 | **Use custom base URL** | Enabled |
-| **Custom base URL** | `https://baze-api.powerbuyin.top/v1` |
+| **Custom base URL** | `https://api.powertokens.ai/v1` |
 | **Anthropic API Key** | Your `powertokens platform` API key |
 | **Model** | One of the recommended model IDs below |
 
-Kilo Code's Anthropic provider appends `/messages` to **Custom base URL**. Set the field to the version path `https://baze-api.powerbuyin.top/v1` so the final request reaches the platform's `/v1/messages` endpoint.
+Kilo Code's Anthropic provider appends `/messages` to **Custom base URL**. Set the field to the version path `https://api.powertokens.ai/v1` so the final request reaches the platform's `/v1/messages` endpoint.
 
 Recommended Anthropic tool-workflow models:
 
@@ -76,7 +76,7 @@ Recommended Anthropic tool-workflow models:
 When you verify the Anthropic path with curl, use the full endpoint path:
 
 ```bash
-curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+curl -X POST "https://api.powertokens.ai/v1/messages" \
   -H "Content-Type: application/json" \
   -H "x-api-key: YOUR_POWERTOKENS_API_KEY" \
   -H "anthropic-version: 2023-06-01" \

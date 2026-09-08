@@ -5,8 +5,8 @@ description: "Choose an OpenAI-compatible or Anthropic provider path for the pow
 
 OpenClaw manages models through providers. When you connect it to the `powertokens platform`, choose the protocol path first:
 
-- OpenAI-compatible path: use `openai-completions` with `https://baze-api.powerbuyin.top/v1`.
-- Anthropic path: use `anthropic-messages` with `https://baze-api.powerbuyin.top`.
+- OpenAI-compatible path: use `openai-completions` with `https://api.powertokens.ai/v1`.
+- Anthropic path: use `anthropic-messages` with `https://api.powertokens.ai`.
 
 Do not conflate OpenClaw's official OpenAI/Codex runtime, Claude CLI reuse, and a regular OpenAI-compatible proxy. This guide covers the `powertokens platform` as a custom provider.
 
@@ -16,9 +16,9 @@ If you need to choose the endpoint first, see [Text model protocols and endpoint
 
 | Goal | OpenClaw provider api | Base URL | Model scope |
 | --- | --- | --- | --- |
-| OpenAI-compatible text models | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | Text models that support `/v1/chat/completions` |
-| Anthropic-path models | `anthropic-messages` | `https://baze-api.powerbuyin.top` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
-| OpenAI-compatible preferred models | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
+| OpenAI-compatible text models | `openai-completions` | `https://api.powertokens.ai/v1` | Text models that support `/v1/chat/completions` |
+| Anthropic-path models | `anthropic-messages` | `https://api.powertokens.ai` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
+| OpenAI-compatible preferred models | `openai-completions` | `https://api.powertokens.ai/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
 
 ## OpenAI-compatible provider example
 
@@ -30,7 +30,7 @@ Add a provider like this to OpenClaw `models.providers`. The actual location can
     mode: "merge",
     providers: {
       powertokens: {
-        baseUrl: "https://baze-api.powerbuyin.top/v1",
+        baseUrl: "https://api.powertokens.ai/v1",
         apiKey: "YOUR_POWERTOKENS_API_KEY",
         api: "openai-completions",
         models: [
@@ -79,7 +79,7 @@ For the Claude/Anthropic path, set `api` to `anthropic-messages` and use the bas
     mode: "merge",
     providers: {
       "powertokens-anthropic": {
-        baseUrl: "https://baze-api.powerbuyin.top",
+        baseUrl: "https://api.powertokens.ai",
         apiKey: "YOUR_POWERTOKENS_API_KEY",
         api: "anthropic-messages",
         models: [

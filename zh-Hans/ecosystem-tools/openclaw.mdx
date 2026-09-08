@@ -5,8 +5,8 @@ description: "按 provider 选择 OpenAI-compatible 或 Anthropic 路径，把 O
 
 OpenClaw 通过 provider 管理模型。接入 `powertokens 平台` 时，请先选择协议路径，再写 provider 配置：
 
-- OpenAI-compatible 路径：使用 `openai-completions`，base URL 为 `https://baze-api.powerbuyin.top/v1`。
-- Anthropic 路径：使用 `anthropic-messages`，base URL 为 `https://baze-api.powerbuyin.top`。
+- OpenAI-compatible 路径：使用 `openai-completions`，base URL 为 `https://api.powertokens.ai/v1`。
+- Anthropic 路径：使用 `anthropic-messages`，base URL 为 `https://api.powertokens.ai`。
 
 不要把 OpenClaw 的官方 OpenAI/Codex runtime、Claude CLI 复用和普通 OpenAI-compatible proxy 混为一类。这里描述的是 `powertokens 平台` 作为自定义 provider 的接入方式。
 
@@ -16,9 +16,9 @@ OpenClaw 通过 provider 管理模型。接入 `powertokens 平台` 时，请先
 
 | 目标 | OpenClaw provider api | Base URL | 模型范围 |
 | --- | --- | --- | --- |
-| OpenAI-compatible 文本模型 | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | 支持 `/v1/chat/completions` 的文本模型 |
-| Claude/Anthropic 路径模型 | `anthropic-messages` | `https://baze-api.powerbuyin.top` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
-| OpenAI-compatible 优先模型 | `openai-completions` | `https://baze-api.powerbuyin.top/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
+| OpenAI-compatible 文本模型 | `openai-completions` | `https://api.powertokens.ai/v1` | 支持 `/v1/chat/completions` 的文本模型 |
+| Claude/Anthropic 路径模型 | `anthropic-messages` | `https://api.powertokens.ai` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
+| OpenAI-compatible 优先模型 | `openai-completions` | `https://api.powertokens.ai/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
 
 ## OpenAI-compatible provider 示例
 
@@ -30,7 +30,7 @@ OpenClaw 通过 provider 管理模型。接入 `powertokens 平台` 时，请先
     mode: "merge",
     providers: {
       powertokens: {
-        baseUrl: "https://baze-api.powerbuyin.top/v1",
+        baseUrl: "https://api.powertokens.ai/v1",
         apiKey: "YOUR_POWERTOKENS_API_KEY",
         api: "openai-completions",
         models: [
@@ -79,7 +79,7 @@ OpenClaw 通过 provider 管理模型。接入 `powertokens 平台` 时，请先
     mode: "merge",
     providers: {
       "powertokens-anthropic": {
-        baseUrl: "https://baze-api.powerbuyin.top",
+        baseUrl: "https://api.powertokens.ai",
         apiKey: "YOUR_POWERTOKENS_API_KEY",
         api: "anthropic-messages",
         models: [

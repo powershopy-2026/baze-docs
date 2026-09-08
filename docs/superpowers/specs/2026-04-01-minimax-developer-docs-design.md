@@ -4,7 +4,7 @@
 
 Build a platform-first MiniMax developer documentation set for the Mintlify site in this repository.
 
-The documentation will present MiniMax as a capability exposed by `baze平台`, not as a direct MiniMax integration guide. The documentation will use `https://baze-api.powerbuyin.top` as the base URL everywhere. It will include:
+The documentation will present MiniMax as a capability exposed by `baze平台`, not as a direct MiniMax integration guide. The documentation will use `https://api.powertokens.ai` as the base URL everywhere. It will include:
 
 - a Chinese MiniMax overview page
 - an English MiniMax overview page
@@ -180,7 +180,7 @@ Replace the current placeholder template with project-specific rules.
 
 - Use `baze平台` as the platform name in Chinese docs
 - Use `baze platform` in English docs where a platform noun is needed
-- Use `https://baze-api.powerbuyin.top` as the canonical base URL
+- Use `https://api.powertokens.ai` as the canonical base URL
 - Prefer `platform API`, `unified API`, and `upstream provider` wording
 - Describe MiniMax as an upstream capability exposed through the platform
 

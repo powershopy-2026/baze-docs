@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "https://baze-api.powerbuyin.top"
+      "url": "https://api.powertokens.ai"
     }
   ],
   "security": [

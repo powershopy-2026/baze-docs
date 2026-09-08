@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://baze-api.powerbuyin.top",
+      "url": "https://api.powertokens.ai",
       "description": "Current new-api gateway instance"
     }
   ],

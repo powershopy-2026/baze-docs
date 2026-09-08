@@ -3,7 +3,7 @@ title: "Claude Code 接入指南"
 description: "通过 Anthropic Messages 兼容路径，把 Claude Code 接入 powertokens 平台。"
 ---
 
-Claude Code 通过 Anthropic Messages 协议工作。接入 `powertokens 平台` 时，你需要把 Claude Code 指向平台接口 `https://baze-api.powerbuyin.top`，并选择可用于 Anthropic Messages 路径的文本模型。平台默认推荐 `glm-5.2`，MiniMax 代码代理路径推荐 `MiniMax-M3`。
+Claude Code 通过 Anthropic Messages 协议工作。接入 `powertokens 平台` 时，你需要把 Claude Code 指向平台接口 `https://api.powertokens.ai`，并选择可用于 Anthropic Messages 路径的文本模型。平台默认推荐 `glm-5.2`，MiniMax 代码代理路径推荐 `MiniMax-M3`。
 
 如果你需要先判断模型应走哪个端点，请先看 [文本模型协议与端点支持说明](/zh-Hans/ecosystem-tools/text-model-protocols)。
 
@@ -62,7 +62,7 @@ unset ANTHROPIC_MODEL
 ```json
 {
   "env": {
-    "ANTHROPIC_BASE_URL": "https://baze-api.powerbuyin.top",
+    "ANTHROPIC_BASE_URL": "https://api.powertokens.ai",
     "ANTHROPIC_AUTH_TOKEN": "YOUR_POWERTOKENS_API_KEY",
     "ANTHROPIC_MODEL": "glm-5.2",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-5-turbo",
@@ -111,7 +111,7 @@ rm compat.txt
 你也可以用平台接口直接验证同一个模型。
 
 ```bash
-curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+curl -X POST "https://api.powertokens.ai/v1/messages" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
