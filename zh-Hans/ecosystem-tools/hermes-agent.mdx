@@ -13,9 +13,9 @@ Hermes Agent 支持自定义 OpenAI-compatible endpoint。接入 `powertokens �
 
 | 目标 | Hermes 配置方向 | Base URL | 模型范围 |
 | --- | --- | --- | --- |
-| 快速接入文本模型 | Custom endpoint | `https://api.powertokens.ai/v1` | OpenAI-compatible 文本模型 |
-| 复核 Anthropic Messages 路径 | 仅在当前 Hermes 版本确认会请求 `/v1/messages` 后使用 `api_mode: anthropic_messages` | `https://api.powertokens.ai` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
-| 使用 OpenAI-compatible 优先模型 | Custom endpoint | `https://api.powertokens.ai/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
+| 快速接入文本模型 | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | OpenAI-compatible 文本模型 |
+| 复核 Anthropic Messages 路径 | 仅在当前 Hermes 版本确认会请求 `/v1/messages` 后使用 `api_mode: anthropic_messages` | `https://baze-api.powerbuyin.top` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
+| 使用 OpenAI-compatible 优先模型 | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
 
 ## OpenAI-compatible endpoint
 
@@ -30,14 +30,14 @@ hermes model
 | 字段 | 填写 |
 | --- | --- |
 | Endpoint type | Custom endpoint 或 OpenAI-compatible endpoint |
-| URL | `https://api.powertokens.ai/v1` |
+| URL | `https://baze-api.powerbuyin.top/v1` |
 | API key | 你的 `powertokens 平台` API Key |
 | Model | 例如 `glm-5.2`、`MiniMax-M3`、`seed-2-0-pro-260328` |
 
 如果你的 Hermes 版本要求完整 chat completions 地址，而不是 base URL，请使用：
 
 ```text
-https://api.powertokens.ai/v1/chat/completions
+https://baze-api.powerbuyin.top/v1/chat/completions
 ```
 
 ## anthropic_messages 版本复核
@@ -47,12 +47,12 @@ https://api.powertokens.ai/v1/chat/completions
 ```yaml
 provider: powertokens-anthropic
 api_mode: anthropic_messages
-base_url: https://api.powertokens.ai
+base_url: https://baze-api.powerbuyin.top
 api_key: ${POWERTOKENS_API_KEY}
 model: glm-5.2
 ```
 
-配置后先查看 Hermes 的请求 dump 或调试日志，确认最终请求 URL 是 `https://api.powertokens.ai/v1/messages`。如果实际请求仍然落到 `/chat/completions`，请不要把该路径作为 Hermes Agent 稳定配置使用。
+配置后先查看 Hermes 的请求 dump 或调试日志，确认最终请求 URL 是 `https://baze-api.powerbuyin.top/v1/messages`。如果实际请求仍然落到 `/chat/completions`，请不要把该路径作为 Hermes Agent 稳定配置使用。
 
 ## 推荐模型
 
@@ -93,7 +93,7 @@ seed-2-0-pro-260328
 ## 验证 OpenAI-compatible 路径
 
 ```bash
-curl -X POST "https://api.powertokens.ai/v1/chat/completions" \
+curl -X POST "https://baze-api.powerbuyin.top/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
   --data '{
@@ -108,7 +108,7 @@ curl -X POST "https://api.powertokens.ai/v1/chat/completions" \
 ## 验证 anthropic_messages 路径
 
 ```bash
-curl -X POST "https://api.powertokens.ai/v1/messages" \
+curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
   -H "Content-Type: application/json" \
   -H "x-api-key: YOUR_POWERTOKENS_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
