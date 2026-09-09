@@ -1,7 +1,6 @@
 {
-  "$schema": "https://powower.mintlify.app",
+  "$schema": "https://docs.powertokens.ai",
   "theme": "palm",
-  "name": "Mint Starter Kit",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
