@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.powertokens.ai",
   "theme": "palm",
-  "name": "PowerTokens Documentation",
+  "name": "PowerTokens",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
