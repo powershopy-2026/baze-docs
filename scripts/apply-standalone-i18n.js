@@ -83,34 +83,31 @@ function run() {
     throw new Error('Could not find en or zh-Hans in docs.json');
   }
 
-  // Update en tabs
-  let enStandaloneTab = enLang.tabs.find(t => t.tab === 'Standalone');
-  if (enStandaloneTab) {
-    enStandaloneTab.hidden = true;
-    enStandaloneTab.pages = enPages;
-  } else {
+  // Remove legacy monolithic 'Standalone' tab and any previous standalone tabs
+  enLang.tabs = enLang.tabs.filter(t => t.tab !== 'Standalone' && !t.tab.startsWith('standalone:'));
+  zhLang.tabs = zhLang.tabs.filter(t => t.tab !== 'Standalone' && !t.tab.startsWith('standalone:'));
+
+  // Register each standalone page as an isolated hidden tab to prevent cross-model prefetching
+  for (const page of enPages) {
+    const rel = page.replace(/^en\/standalone\//, '');
     enLang.tabs.push({
-      tab: 'Standalone',
+      tab: `standalone:${rel}`,
       hidden: true,
-      pages: enPages
+      pages: [page]
     });
   }
 
-  // Update zh-Hans tabs
-  let zhStandaloneTab = zhLang.tabs.find(t => t.tab === 'Standalone');
-  if (zhStandaloneTab) {
-    zhStandaloneTab.hidden = true;
-    zhStandaloneTab.pages = zhPages;
-  } else {
+  for (const page of zhPages) {
+    const rel = page.replace(/^zh-Hans\/standalone\//, '');
     zhLang.tabs.push({
-      tab: 'Standalone',
+      tab: `standalone:${rel}`,
       hidden: true,
-      pages: zhPages
+      pages: [page]
     });
   }
 
   fs.writeFileSync(DOCS_JSON_PATH, JSON.stringify(docsJson, null, 2) + '\n', 'utf8');
-  console.log('Successfully updated docs.json and all standalone MDX files.');
+  console.log(`Successfully updated docs.json with ${enPages.length} isolated en tabs and ${zhPages.length} isolated zh-Hans tabs.`);
 }
 
 run();
