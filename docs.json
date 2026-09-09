@@ -1,7 +1,7 @@
 {
-  "$schema": "https://powower.mintlify.app",
+  "$schema": "https://docs.powertokens.ai",
   "theme": "palm",
-  "name": "Mint Starter Kit",
+  "name": "PowerTokens",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -389,200 +389,1346 @@
             ]
           },
           {
-            "tab": "Standalone",
+            "tab": "standalone:assetLibrary/get-asset-id",
             "hidden": true,
             "pages": [
-              "en/standalone/assetLibrary/get-asset-id",
-              "en/standalone/assetLibrary/get-authorize-url",
-              "en/standalone/assetLibrary/group-asset-list",
-              "en/standalone/assetLibrary/group-create",
-              "en/standalone/assetLibrary/group-delete",
-              "en/standalone/assetLibrary/group-list",
-              "en/standalone/assetLibrary/group-rename",
-              "en/standalone/assetLibrary/upload-file",
-              "en/standalone/zmodelAudio/ali/api/qwen-tts",
-              "en/standalone/zmodelAudio/ali/qwen3-tts-instruct-flash",
-              "en/standalone/zmodelAudio/minimax/audio-generation/t2a-v2",
-              "en/standalone/zmodelAudio/minimax/speech-02-hd",
-              "en/standalone/zmodelAudio/minimax/speech-02-turbo",
-              "en/standalone/zmodelAudio/minimax/speech-2.6-hd",
-              "en/standalone/zmodelAudio/minimax/speech-2.6-turbo",
-              "en/standalone/zmodelAudio/minimax/speech-2.8-hd",
-              "en/standalone/zmodelAudio/minimax/speech-2.8-turbo",
-              "en/standalone/zmodelAudio/vidu/vidu-query-task-status",
-              "en/standalone/zmodelAudio/vidu/vidu-text-to-audio",
-              "en/standalone/zmodelAudio/vidu/vidu-timing-to-audio",
-              "en/standalone/zmodelChat/ali/deepseek-v3.2",
-              "en/standalone/zmodelChat/ali/deepseek-v4-pro-0813",
-              "en/standalone/zmodelChat/ali/deepseek-v4-flash-0731",
-              "en/standalone/zmodelChat/ali/qwen3-coder-plus",
-              "en/standalone/zmodelChat/ali/qwen3-max",
-              "en/standalone/zmodelChat/ali/qwen3.5-flash",
-              "en/standalone/zmodelChat/ali/qwen3.6-plus",
-              "en/standalone/zmodelChat/ali/qwen3.7-max",
-              "en/standalone/zmodelChat/ali/qwen3.7-plus",
-              "en/standalone/zmodelChat/ali/qwen3.8-max",
-              "en/standalone/zmodelChat/ali/qwen3.8-flash",
-              "en/standalone/zmodelChat/byteplus/deepseek-v3-2-251201",
-              "en/standalone/zmodelChat/byteplus/dola-seed-2-1-turbo-260628",
-              "en/standalone/zmodelChat/byteplus/seed-1-6-250915",
-              "en/standalone/zmodelChat/byteplus/seed-1-6-flash-250715",
-              "en/standalone/zmodelChat/byteplus/seed-1-8-251228",
-              "en/standalone/zmodelChat/byteplus/seed-2-0-lite-260228",
-              "en/standalone/zmodelChat/byteplus/seed-2-0-mini-260215",
-              "en/standalone/zmodelChat/byteplus/seed-2-0-pro-260328",
-              "en/standalone/zmodelChat/claude",
-              "en/standalone/zmodelChat/deepseek/deepseek-v4-flash",
-              "en/standalone/zmodelChat/deepseek/deepseek-v4-pro",
-              "en/standalone/zmodelChat/mimo/mimo-v2.5",
-              "en/standalone/zmodelChat/mimo/mimo-v2.5-pro",
-              "en/standalone/zmodelChat/minimax/miniMax-M2.5",
-              "en/standalone/zmodelChat/minimax/miniMax-M2.5-highspeed",
-              "en/standalone/zmodelChat/minimax/miniMax-M2.7",
-              "en/standalone/zmodelChat/minimax/miniMax-M2.7-highspeed",
-              "en/standalone/zmodelChat/minimax/miniMax-M3",
-              "en/standalone/zmodelChat/responses",
-              "en/standalone/zmodelChat/zhipu/glm-4.5-air",
-              "en/standalone/zmodelChat/zhipu/glm-4.7",
-              "en/standalone/zmodelChat/zhipu/glm-4.7-flash",
-              "en/standalone/zmodelChat/zhipu/glm-5",
-              "en/standalone/zmodelChat/zhipu/glm-5-turbo",
-              "en/standalone/zmodelChat/zhipu/glm-5.1",
-              "en/standalone/zmodelChat/zhipu/glm-5.2",
-              "en/standalone/zmodelChat/zhipu/glm-5.3",
-              "en/standalone/zmodelChat/zhipu/glm-5.3-flash",
-              "en/standalone/zmodelImage/ali/api/qwen-image-3.0",
-              "en/standalone/zmodelImage/ali/api/qwen-image-edit",
-              "en/standalone/zmodelImage/ali/api/qwen-text-to-image",
-              "en/standalone/zmodelImage/ali/api/wan2.7-image-generation",
-              "en/standalone/zmodelImage/ali/qwen-edit",
-              "en/standalone/zmodelImage/ali/qwen-text-to-image",
-              "en/standalone/zmodelImage/ali/wan-edit",
-              "en/standalone/zmodelImage/ali/wan-text-to-image",
-              "en/standalone/zmodelImage/byteplus/seedream-4-0",
-              "en/standalone/zmodelImage/byteplus/seedream-4-0-image-to-image",
-              "en/standalone/zmodelImage/byteplus/seedream-4-0-text-to-image",
-              "en/standalone/zmodelImage/byteplus/seedream-4-5",
-              "en/standalone/zmodelImage/byteplus/seedream-4-5-image-to-image",
-              "en/standalone/zmodelImage/byteplus/seedream-4-5-text-to-image",
-              "en/standalone/zmodelImage/byteplus/seedream-5-0",
-              "en/standalone/zmodelImage/byteplus/seedream-5-0-image-to-image",
-              "en/standalone/zmodelImage/byteplus/seedream-5-0-pro-image-to-image",
-              "en/standalone/zmodelImage/byteplus/seedream-5-0-pro-text-to-image",
-              "en/standalone/zmodelImage/byteplus/seedream-5-0-text-to-image",
-              "en/standalone/zmodelImage/byteplus/seedream/seedream-image-create",
-              "en/standalone/zmodelImage/byteplus/seedream/seedream-streaming",
-              "en/standalone/zmodelImage/kling/image-generations-status",
-              "en/standalone/zmodelImage/kling/kling-image-o1-image-omni",
-              "en/standalone/zmodelImage/kling/kling-v2-image-generations",
-              "en/standalone/zmodelImage/kling/kling-v2-new-image-generations",
-              "en/standalone/zmodelImage/kling/kling-v3-image-generations",
-              "en/standalone/zmodelImage/kling/kling-v3-omni-image-omni",
-              "en/standalone/zmodelImage/kling/multi-image2image",
-              "en/standalone/zmodelImage/kling/multi-image2image-status",
-              "en/standalone/zmodelImage/kling/omni-image-status",
-              "en/standalone/zmodelImage/minimax/image-generation/image-to-image",
-              "en/standalone/zmodelImage/minimax/image-generation/text-to-image",
-              "en/standalone/zmodelImage/minimax/image01-image-to-image",
-              "en/standalone/zmodelImage/minimax/image01-text-to-image",
-              "en/standalone/zmodelImage/vidu/vidu-query-task-status",
-              "en/standalone/zmodelImage/vidu/vidu-reference-to-image",
-              "en/standalone/zmodelVideo/ali/api/legacy-i2v-first-last-frame",
-              "en/standalone/zmodelVideo/ali/api/task-query",
-              "en/standalone/zmodelVideo/ali/api/wan2.7-i2v",
-              "en/standalone/zmodelVideo/ali/api/wan2.7-r2v",
-              "en/standalone/zmodelVideo/ali/api/wan2.7-t2v",
-              "en/standalone/zmodelVideo/ali/happyhorse-1.1-i2v",
-              "en/standalone/zmodelVideo/ali/happyhorse-1.1-r2v",
-              "en/standalone/zmodelVideo/ali/happyhorse-1.1-t2v",
-              "en/standalone/zmodelVideo/ali/reference-to-video",
-              "en/standalone/zmodelVideo/ali/task-query",
-              "en/standalone/zmodelVideo/ali/text-to-video",
-              "en/standalone/zmodelVideo/ali/video-first-last-frame",
-              "en/standalone/zmodelVideo/ali/video-first-last-frame2",
-              "en/standalone/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
-              "en/standalone/zmodelVideo/ali/wan2.7-i2v-image-to-video",
-              "en/standalone/zmodelVideo/ali/wan2.7-i2v-video-continuation",
-              "en/standalone/zmodelVideo/ali/wan3.0-video-generation",
-              "en/standalone/zmodelVideo/byteplus/cancel-delete-video-task",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-first-last-frame-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-image-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-multimodal-reference-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-text-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-first-last-frame-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-image-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-multimodal-reference-to-video",
-              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-text-to-video",
-              "en/standalone/zmodelVideo/byteplus/list-video-generation-tasks",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
-              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
-              "en/standalone/zmodelVideo/byteplus/seedance-tasks-query",
-              "en/standalone/zmodelVideo/byteplus/seedance-video",
-              "en/standalone/zmodelVideo/byteplus/seedance/cancel-delete-video-task",
-              "en/standalone/zmodelVideo/byteplus/seedance/list-video-generation-tasks",
-              "en/standalone/zmodelVideo/byteplus/seedance/seedance-tasks-query",
-              "en/standalone/zmodelVideo/byteplus/seedance/seedance-video",
-              "en/standalone/zmodelVideo/kling/image2video-status",
-              "en/standalone/zmodelVideo/kling/kling-v2-1-master-image2video",
-              "en/standalone/zmodelVideo/kling/kling-v2-1-master-text2video",
-              "en/standalone/zmodelVideo/kling/kling-v2-5-turbo-image2video",
-              "en/standalone/zmodelVideo/kling/kling-v2-5-turbo-text2video",
-              "en/standalone/zmodelVideo/kling/kling-v3-image2video",
-              "en/standalone/zmodelVideo/kling/kling-v3-motion-control",
-              "en/standalone/zmodelVideo/kling/kling-v3-omni-video-omni",
-              "en/standalone/zmodelVideo/kling/kling-v3-text2video",
-              "en/standalone/zmodelVideo/kling/kling-video-o1-video-omni",
-              "en/standalone/zmodelVideo/kling/motion-control-status",
-              "en/standalone/zmodelVideo/kling/text2video-status",
-              "en/standalone/zmodelVideo/kling/video-omni-status",
-              "en/standalone/zmodelVideo/minimax/download-video-file",
-              "en/standalone/zmodelVideo/minimax/minimax-h3/delete-video",
-              "en/standalone/zmodelVideo/minimax/minimax-h3/first-frame-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-h3/first-last-frame-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-h3/last-frame-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-h3/query-video",
-              "en/standalone/zmodelVideo/minimax/minimax-h3/reference-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-h3/text-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
-              "en/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
-              "en/standalone/zmodelVideo/minimax/query-video-status",
-              "en/standalone/zmodelVideo/minimax/video-generation/download-video-file",
-              "en/standalone/zmodelVideo/minimax/video-generation/first-last-frame-to-video",
-              "en/standalone/zmodelVideo/minimax/video-generation/image-to-video",
-              "en/standalone/zmodelVideo/minimax/video-generation/query-video-task",
-              "en/standalone/zmodelVideo/minimax/video-generation/text-to-video",
-              "en/standalone/zmodelVideo/vidu/vidu-query-task-status",
-              "en/standalone/zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
-              "en/standalone/zmodelVideo/vidu/viduq3-pro-image-to-video",
-              "en/standalone/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
-              "en/standalone/zmodelVideo/vidu/viduq3-pro-text-to-video",
-              "en/standalone/zmodelVideo/vidu/viduq3-reference-to-video",
-              "en/standalone/zmodelVideo/vidu/viduq3-turbo-image-to-video",
-              "en/standalone/zmodelVideo/vidu/viduq3-turbo-reference-to-video",
-              "en/standalone/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
+              "en/standalone/assetLibrary/get-asset-id"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/get-authorize-url",
+            "hidden": true,
+            "pages": [
+              "en/standalone/assetLibrary/get-authorize-url"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-asset-list",
+            "hidden": true,
+            "pages": [
+              "en/standalone/assetLibrary/group-asset-list"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-create",
+            "hidden": true,
+            "pages": [
+              "en/standalone/assetLibrary/group-create"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-delete",
+            "hidden": true,
+            "pages": [
+              "en/standalone/assetLibrary/group-delete"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-list",
+            "hidden": true,
+            "pages": [
+              "en/standalone/assetLibrary/group-list"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-rename",
+            "hidden": true,
+            "pages": [
+              "en/standalone/assetLibrary/group-rename"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/upload-file",
+            "hidden": true,
+            "pages": [
+              "en/standalone/assetLibrary/upload-file"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/ali/api/qwen-tts",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/ali/api/qwen-tts"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/ali/qwen3-tts-instruct-flash",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/ali/qwen3-tts-instruct-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/audio-generation/t2a-v2",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/minimax/audio-generation/t2a-v2"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-02-hd",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/minimax/speech-02-hd"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-02-turbo",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/minimax/speech-02-turbo"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-2.6-hd",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/minimax/speech-2.6-hd"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-2.6-turbo",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/minimax/speech-2.6-turbo"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-2.8-hd",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/minimax/speech-2.8-hd"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-2.8-turbo",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/minimax/speech-2.8-turbo"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/vidu/vidu-query-task-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/vidu/vidu-query-task-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/vidu/vidu-text-to-audio",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/vidu/vidu-text-to-audio"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/vidu/vidu-timing-to-audio",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelAudio/vidu/vidu-timing-to-audio"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/deepseek-v3.2",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/deepseek-v3.2"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/deepseek-v4-flash-0731",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/deepseek-v4-flash-0731"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/deepseek-v4-pro-0813",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/deepseek-v4-pro-0813"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3-coder-plus",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/qwen3-coder-plus"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3-max",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/qwen3-max"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.5-flash",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/qwen3.5-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.6-plus",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/qwen3.6-plus"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.7-max",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/qwen3.7-max"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.7-plus",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/qwen3.7-plus"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.8-flash",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/qwen3.8-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.8-max",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/qwen3.8-max"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/deepseek-v3-2-251201",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/byteplus/deepseek-v3-2-251201"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/dola-seed-2-1-turbo-260628",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/byteplus/dola-seed-2-1-turbo-260628"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-1-6-250915",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/byteplus/seed-1-6-250915"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-1-6-flash-250715",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/byteplus/seed-1-6-flash-250715"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-1-8-251228",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/byteplus/seed-1-8-251228"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-2-0-lite-260228",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/byteplus/seed-2-0-lite-260228"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-2-0-mini-260215",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/byteplus/seed-2-0-mini-260215"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-2-0-pro-260328",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/byteplus/seed-2-0-pro-260328"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/claude",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/claude"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/deepseek/deepseek-v4-flash",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/deepseek/deepseek-v4-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/deepseek/deepseek-v4-pro",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/deepseek/deepseek-v4-pro"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.5",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/mimo/mimo-v2.5"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.5-pro",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/mimo/mimo-v2.5-pro"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M2.5",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/minimax/miniMax-M2.5"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M2.5-highspeed",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/minimax/miniMax-M2.5-highspeed"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M2.7",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/minimax/miniMax-M2.7"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M2.7-highspeed",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/minimax/miniMax-M2.7-highspeed"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M3",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/minimax/miniMax-M3"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/responses",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/responses"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-4.5-air",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/zhipu/glm-4.5-air"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-4.7",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/zhipu/glm-4.7"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-4.7-flash",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/zhipu/glm-4.7-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/zhipu/glm-5"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5-turbo",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/zhipu/glm-5-turbo"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5.1",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/zhipu/glm-5.1"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5.2",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/zhipu/glm-5.2"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5.3",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/zhipu/glm-5.3"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5.3-flash",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/zhipu/glm-5.3-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/api/qwen-image-3.0",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/ali/api/qwen-image-3.0"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/api/qwen-image-edit",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/ali/api/qwen-image-edit"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/api/qwen-text-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/ali/api/qwen-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/api/wan2.7-image-generation",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/ali/api/wan2.7-image-generation"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/qwen-edit",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/ali/qwen-edit"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/qwen-text-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/ali/qwen-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/wan-edit",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/ali/wan-edit"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/wan-text-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/ali/wan-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-0",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-4-0"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-0-image-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-4-0-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-0-text-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-4-0-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-5",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-4-5"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-5-image-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-4-5-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-5-text-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-4-5-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-5-0",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-5-0"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-5-0-image-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-5-0-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-5-0-pro-image-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-5-0-pro-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-5-0-pro-text-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-5-0-pro-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-5-0-text-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream-5-0-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream/seedream-image-create",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream/seedream-image-create"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream/seedream-streaming",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/byteplus/seedream/seedream-streaming"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/image-generations-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/image-generations-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-image-o1-image-omni",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/kling-image-o1-image-omni"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-v2-image-generations",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/kling-v2-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-v2-new-image-generations",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/kling-v2-new-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-v3-image-generations",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/kling-v3-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-v3-omni-image-omni",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/kling-v3-omni-image-omni"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/multi-image2image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/multi-image2image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/multi-image2image-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/multi-image2image-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/omni-image-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/omni-image-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/minimax/image-generation/image-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/minimax/image-generation/image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/minimax/image-generation/text-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/minimax/image-generation/text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/minimax/image01-image-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/minimax/image01-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/minimax/image01-text-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/minimax/image01-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/vidu/vidu-query-task-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/vidu/vidu-query-task-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/vidu/vidu-reference-to-image",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/vidu/vidu-reference-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/legacy-i2v-first-last-frame",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/api/legacy-i2v-first-last-frame"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/task-query",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/api/task-query"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/wan2.7-i2v",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/api/wan2.7-i2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/wan2.7-r2v",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/api/wan2.7-r2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/wan2.7-t2v",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/api/wan2.7-t2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/happyhorse-1.1-i2v",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/happyhorse-1.1-i2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/happyhorse-1.1-r2v",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/happyhorse-1.1-r2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/happyhorse-1.1-t2v",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/happyhorse-1.1-t2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/reference-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/task-query",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/task-query"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/video-first-last-frame",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/video-first-last-frame"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/video-first-last-frame2",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/video-first-last-frame2"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/wan2.7-i2v-first-last-frame",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/wan2.7-i2v-first-last-frame"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/wan2.7-i2v-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/wan2.7-i2v-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/wan2.7-i2v-video-continuation",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/wan2.7-i2v-video-continuation"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/wan3.0-video-generation",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/ali/wan3.0-video-generation"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/cancel-delete-video-task",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/cancel-delete-video-task"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-fast",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-mini-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-mini-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-mini-multimodal-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-multimodal-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-mini-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-5-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-5-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-5-multimodal-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-multimodal-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-5-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/list-video-generation-tasks",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/list-video-generation-tasks"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-fast",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-tasks-query",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-tasks-query"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance/cancel-delete-video-task",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance/cancel-delete-video-task"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance/list-video-generation-tasks",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance/list-video-generation-tasks"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance/seedance-tasks-query",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance/seedance-tasks-query"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance/seedance-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/byteplus/seedance/seedance-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/image2video-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/image2video-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v2-1-master-image2video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-v2-1-master-image2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v2-1-master-text2video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-v2-1-master-text2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v2-5-turbo-image2video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-v2-5-turbo-image2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v2-5-turbo-text2video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-v2-5-turbo-text2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v3-image2video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-v3-image2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v3-motion-control",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-v3-motion-control"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v3-omni-video-omni",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-v3-omni-video-omni"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v3-text2video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-v3-text2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-video-o1-video-omni",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-video-o1-video-omni"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/motion-control-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/motion-control-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/text2video-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/text2video-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/video-omni-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/video-omni-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/download-video-file",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/download-video-file"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/delete-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-h3/delete-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/first-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-h3/first-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-h3/first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-h3/last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/query-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-h3/query-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/reference-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-h3/reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-h3/text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-hailuo-02-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-hailuo-02-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/query-video-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/query-video-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/video-generation/download-video-file",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/video-generation/download-video-file"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/video-generation/first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/video-generation/first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/video-generation/image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/video-generation/image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/video-generation/query-video-task",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/video-generation/query-video-task"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/video-generation/text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/video-generation/text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/vidu-query-task-status",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/vidu-query-task-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq3-pro-fast-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-pro-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq3-pro-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-pro-start-end-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq3-pro-start-end-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-pro-text-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq3-pro-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq3-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-turbo-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq3-turbo-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-turbo-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq3-turbo-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq3-turbo-start-end-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-turbo-text-to-video",
+            "hidden": true,
+            "pages": [
               "en/standalone/zmodelVideo/vidu/viduq3-turbo-text-to-video"
             ]
           }
@@ -968,193 +2114,1297 @@
             ]
           },
           {
-            "tab": "Standalone",
+            "tab": "standalone:Google",
             "hidden": true,
             "pages": [
-              "zh-Hans/standalone/Google",
-              "zh-Hans/standalone/assetLibrary/get-asset-id",
-              "zh-Hans/standalone/assetLibrary/get-authorize-url",
-              "zh-Hans/standalone/assetLibrary/group-asset-list",
-              "zh-Hans/standalone/assetLibrary/group-create",
-              "zh-Hans/standalone/assetLibrary/group-delete",
-              "zh-Hans/standalone/assetLibrary/group-list",
-              "zh-Hans/standalone/assetLibrary/group-rename",
-              "zh-Hans/standalone/assetLibrary/upload-file",
-              "zh-Hans/standalone/zmodelAudio/ali/api/qwen-tts",
-              "zh-Hans/standalone/zmodelAudio/ali/qwen3-tts-instruct-flash",
-              "zh-Hans/standalone/zmodelAudio/minimax/minimax/t2a-v2",
-              "zh-Hans/standalone/zmodelAudio/minimax/speech-02-hd",
-              "zh-Hans/standalone/zmodelAudio/minimax/speech-02-turbo",
-              "zh-Hans/standalone/zmodelAudio/minimax/speech-2.6-hd",
-              "zh-Hans/standalone/zmodelAudio/minimax/speech-2.6-turbo",
-              "zh-Hans/standalone/zmodelAudio/minimax/speech-2.8-hd",
-              "zh-Hans/standalone/zmodelAudio/minimax/speech-2.8-turbo",
-              "zh-Hans/standalone/zmodelAudio/vidu/vidu-query-task-status",
-              "zh-Hans/standalone/zmodelAudio/vidu/vidu-text-to-audio",
-              "zh-Hans/standalone/zmodelAudio/vidu/vidu-timing-to-audio",
-              "zh-Hans/standalone/zmodelChat/ali/deepseek-v3.2",
-              "zh-Hans/standalone/zmodelChat/ali/deepseek-v4-pro-0813",
-              "zh-Hans/standalone/zmodelChat/ali/deepseek-v4-flash-0731",
-              "zh-Hans/standalone/zmodelChat/ali/qwen3-coder-plus",
-              "zh-Hans/standalone/zmodelChat/ali/qwen3-max",
-              "zh-Hans/standalone/zmodelChat/ali/qwen3.5-flash",
-              "zh-Hans/standalone/zmodelChat/ali/qwen3.6-plus",
-              "zh-Hans/standalone/zmodelChat/ali/qwen3.7-max",
-              "zh-Hans/standalone/zmodelChat/ali/qwen3.7-plus",
-              "zh-Hans/standalone/zmodelChat/ali/qwen3.8-max",
-              "zh-Hans/standalone/zmodelChat/ali/qwen3.8-flash",
-              "zh-Hans/standalone/zmodelChat/byteplus/deepseek-v3-2-251201",
-              "zh-Hans/standalone/zmodelChat/byteplus/dola-seed-2-1-turbo-260628",
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-1-6-250915",
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-1-6-flash-250715",
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-1-8-251228",
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-2-0-lite-260228",
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-2-0-mini-260215",
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-2-0-pro-260328",
-              "zh-Hans/standalone/zmodelChat/claude",
-              "zh-Hans/standalone/zmodelChat/deepseek/deepseek-v4-flash",
-              "zh-Hans/standalone/zmodelChat/deepseek/deepseek-v4-pro",
-              "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.5",
-              "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.5-pro",
-              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M2.5",
-              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M2.5-highspeed",
-              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M2.7",
-              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M2.7-highspeed",
-              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M3",
-              "zh-Hans/standalone/zmodelChat/responses",
-              "zh-Hans/standalone/zmodelChat/zhipu/glm-4.5-air",
-              "zh-Hans/standalone/zmodelChat/zhipu/glm-4.7",
-              "zh-Hans/standalone/zmodelChat/zhipu/glm-4.7-flash",
-              "zh-Hans/standalone/zmodelChat/zhipu/glm-5",
-              "zh-Hans/standalone/zmodelChat/zhipu/glm-5-turbo",
-              "zh-Hans/standalone/zmodelChat/zhipu/glm-5.1",
-              "zh-Hans/standalone/zmodelChat/zhipu/glm-5.2",
-              "zh-Hans/standalone/zmodelChat/zhipu/glm-5.3",
-              "zh-Hans/standalone/zmodelChat/zhipu/glm-5.3-flash",
-              "zh-Hans/standalone/zmodelImage/ali/api/qwen-image-3.0",
-              "zh-Hans/standalone/zmodelImage/ali/api/qwen-image-edit",
-              "zh-Hans/standalone/zmodelImage/ali/api/qwen-text-to-image",
-              "zh-Hans/standalone/zmodelImage/ali/api/wan2.7-image-generation",
-              "zh-Hans/standalone/zmodelImage/ali/qwen-edit",
-              "zh-Hans/standalone/zmodelImage/ali/qwen-text-to-image",
-              "zh-Hans/standalone/zmodelImage/ali/wan-edit",
-              "zh-Hans/standalone/zmodelImage/ali/wan-text-to-image",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream-4-0-image-to-image",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream-4-0-text-to-image",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream-4-5-image-to-image",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream-4-5-text-to-image",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream-5-0-image-to-image",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream-5-0-pro-image-to-image",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream-5-0-pro-text-to-image",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream-5-0-text-to-image",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream/seedream-image-create",
-              "zh-Hans/standalone/zmodelImage/byteplus/seedream/seedream-streaming",
-              "zh-Hans/standalone/zmodelImage/kling/image-generations-status",
-              "zh-Hans/standalone/zmodelImage/kling/kling-image-o1-image-omni",
-              "zh-Hans/standalone/zmodelImage/kling/kling-v2-image-generations",
-              "zh-Hans/standalone/zmodelImage/kling/kling-v2-new-image-generations",
-              "zh-Hans/standalone/zmodelImage/kling/kling-v3-image-generations",
-              "zh-Hans/standalone/zmodelImage/kling/kling-v3-omni-image-omni",
-              "zh-Hans/standalone/zmodelImage/kling/multi-image2image",
-              "zh-Hans/standalone/zmodelImage/kling/multi-image2image-status",
-              "zh-Hans/standalone/zmodelImage/kling/omni-image-status",
-              "zh-Hans/standalone/zmodelImage/minimax/image01-image-to-image",
-              "zh-Hans/standalone/zmodelImage/minimax/image01-text-to-image",
-              "zh-Hans/standalone/zmodelImage/minimax/minimax/image-to-image",
-              "zh-Hans/standalone/zmodelImage/minimax/minimax/text-to-image",
-              "zh-Hans/standalone/zmodelImage/vidu/vidu-query-task-status",
-              "zh-Hans/standalone/zmodelImage/vidu/vidu-reference-to-image",
-              "zh-Hans/standalone/zmodelVideo/ali/api/legacy-i2v-first-last-frame",
-              "zh-Hans/standalone/zmodelVideo/ali/api/task-query",
-              "zh-Hans/standalone/zmodelVideo/ali/api/wan2.7-i2v",
-              "zh-Hans/standalone/zmodelVideo/ali/api/wan2.7-r2v",
-              "zh-Hans/standalone/zmodelVideo/ali/api/wan2.7-t2v",
-              "zh-Hans/standalone/zmodelVideo/ali/happyhorse-1.1-i2v",
-              "zh-Hans/standalone/zmodelVideo/ali/happyhorse-1.1-r2v",
-              "zh-Hans/standalone/zmodelVideo/ali/happyhorse-1.1-t2v",
-              "zh-Hans/standalone/zmodelVideo/ali/reference-to-video",
-              "zh-Hans/standalone/zmodelVideo/ali/task-query",
-              "zh-Hans/standalone/zmodelVideo/ali/text-to-video",
-              "zh-Hans/standalone/zmodelVideo/ali/video-first-last-frame",
-              "zh-Hans/standalone/zmodelVideo/ali/video-first-last-frame2",
-              "zh-Hans/standalone/zmodelVideo/ali/wan2.7-i2v-first-last-frame",
-              "zh-Hans/standalone/zmodelVideo/ali/wan2.7-i2v-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/ali/wan2.7-i2v-video-continuation",
-              "zh-Hans/standalone/zmodelVideo/ali/wan3.0-video-generation",
-              "zh-Hans/standalone/zmodelVideo/byteplus/cancel-delete-video-task",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-first-last-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-multimodal-reference-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-first-last-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-multimodal-reference-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/list-video-generation-tasks",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-tasks-query",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-video",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance/cancel-delete-video-task",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance/list-video-generation-tasks",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance/seedance-tasks-query",
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance/seedance-video",
-              "zh-Hans/standalone/zmodelVideo/kling/image2video-status",
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-1-master-image2video",
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-1-master-text2video",
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-5-turbo-image2video",
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-5-turbo-text2video",
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v3-image2video",
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v3-motion-control",
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v3-omni-video-omni",
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v3-text2video",
-              "zh-Hans/standalone/zmodelVideo/kling/kling-video-o1-video-omni",
-              "zh-Hans/standalone/zmodelVideo/kling/motion-control-status",
-              "zh-Hans/standalone/zmodelVideo/kling/text2video-status",
-              "zh-Hans/standalone/zmodelVideo/kling/video-omni-status",
-              "zh-Hans/standalone/zmodelVideo/minimax/download-video-file",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/delete-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/first-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/first-last-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/last-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/query-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/reference-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/text-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax/download-video-file",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax/first-last-frame-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax/image-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax/query-video-task",
-              "zh-Hans/standalone/zmodelVideo/minimax/minimax/text-to-video",
-              "zh-Hans/standalone/zmodelVideo/minimax/query-video-status",
-              "zh-Hans/standalone/zmodelVideo/vidu/vidu-query-task-status",
-              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-pro-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
-              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-pro-text-to-video",
-              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-reference-to-video",
-              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-turbo-image-to-video",
-              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-turbo-reference-to-video",
-              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
+              "zh-Hans/standalone/Google"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/get-asset-id",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/assetLibrary/get-asset-id"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/get-authorize-url",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/assetLibrary/get-authorize-url"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-asset-list",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/assetLibrary/group-asset-list"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-create",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/assetLibrary/group-create"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-delete",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/assetLibrary/group-delete"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-list",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/assetLibrary/group-list"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/group-rename",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/assetLibrary/group-rename"
+            ]
+          },
+          {
+            "tab": "standalone:assetLibrary/upload-file",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/assetLibrary/upload-file"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/ali/api/qwen-tts",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/ali/api/qwen-tts"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/ali/qwen3-tts-instruct-flash",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/ali/qwen3-tts-instruct-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/minimax/t2a-v2",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/minimax/minimax/t2a-v2"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-02-hd",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/minimax/speech-02-hd"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-02-turbo",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/minimax/speech-02-turbo"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-2.6-hd",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/minimax/speech-2.6-hd"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-2.6-turbo",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/minimax/speech-2.6-turbo"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-2.8-hd",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/minimax/speech-2.8-hd"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/minimax/speech-2.8-turbo",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/minimax/speech-2.8-turbo"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/vidu/vidu-query-task-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/vidu/vidu-query-task-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/vidu/vidu-text-to-audio",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/vidu/vidu-text-to-audio"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelAudio/vidu/vidu-timing-to-audio",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelAudio/vidu/vidu-timing-to-audio"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/deepseek-v3.2",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/deepseek-v3.2"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/deepseek-v4-flash-0731",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/deepseek-v4-flash-0731"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/deepseek-v4-pro-0813",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/deepseek-v4-pro-0813"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3-coder-plus",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/qwen3-coder-plus"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3-max",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/qwen3-max"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.5-flash",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/qwen3.5-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.6-plus",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/qwen3.6-plus"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.7-max",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/qwen3.7-max"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.7-plus",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/qwen3.7-plus"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.8-flash",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/qwen3.8-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen3.8-max",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/qwen3.8-max"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/deepseek-v3-2-251201",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/byteplus/deepseek-v3-2-251201"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/dola-seed-2-1-turbo-260628",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/byteplus/dola-seed-2-1-turbo-260628"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-1-6-250915",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/byteplus/seed-1-6-250915"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-1-6-flash-250715",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/byteplus/seed-1-6-flash-250715"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-1-8-251228",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/byteplus/seed-1-8-251228"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-2-0-lite-260228",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/byteplus/seed-2-0-lite-260228"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-2-0-mini-260215",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/byteplus/seed-2-0-mini-260215"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/seed-2-0-pro-260328",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/byteplus/seed-2-0-pro-260328"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/claude",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/claude"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/deepseek/deepseek-v4-flash",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/deepseek/deepseek-v4-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/deepseek/deepseek-v4-pro",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/deepseek/deepseek-v4-pro"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.5",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.5"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.5-pro",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.5-pro"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M2.5",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M2.5"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M2.5-highspeed",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M2.5-highspeed"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M2.7",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M2.7"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M2.7-highspeed",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M2.7-highspeed"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M3",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M3"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/responses",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/responses"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-4.5-air",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-4.5-air"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-4.7",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-4.7"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-4.7-flash",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-4.7-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-5"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5-turbo",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-5-turbo"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5.1",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-5.1"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5.2",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-5.2"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5.3",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-5.3"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/zhipu/glm-5.3-flash",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/zhipu/glm-5.3-flash"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/api/qwen-image-3.0",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/ali/api/qwen-image-3.0"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/api/qwen-image-edit",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/ali/api/qwen-image-edit"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/api/qwen-text-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/ali/api/qwen-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/api/wan2.7-image-generation",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/ali/api/wan2.7-image-generation"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/qwen-edit",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/ali/qwen-edit"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/qwen-text-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/ali/qwen-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/wan-edit",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/ali/wan-edit"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/ali/wan-text-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/ali/wan-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-0-image-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream-4-0-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-0-text-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream-4-0-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-5-image-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream-4-5-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-4-5-text-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream-4-5-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-5-0-image-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream-5-0-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-5-0-pro-image-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream-5-0-pro-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-5-0-pro-text-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream-5-0-pro-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream-5-0-text-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream-5-0-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream/seedream-image-create",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream/seedream-image-create"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/byteplus/seedream/seedream-streaming",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/byteplus/seedream/seedream-streaming"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/image-generations-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/image-generations-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-image-o1-image-omni",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/kling-image-o1-image-omni"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-v2-image-generations",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/kling-v2-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-v2-new-image-generations",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/kling-v2-new-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-v3-image-generations",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/kling-v3-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-v3-omni-image-omni",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/kling-v3-omni-image-omni"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/multi-image2image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/multi-image2image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/multi-image2image-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/multi-image2image-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/omni-image-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/omni-image-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/minimax/image01-image-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/minimax/image01-image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/minimax/image01-text-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/minimax/image01-text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/minimax/minimax/image-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/minimax/minimax/image-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/minimax/minimax/text-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/minimax/minimax/text-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/vidu/vidu-query-task-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/vidu/vidu-query-task-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/vidu/vidu-reference-to-image",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/vidu/vidu-reference-to-image"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/legacy-i2v-first-last-frame",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/api/legacy-i2v-first-last-frame"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/task-query",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/api/task-query"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/wan2.7-i2v",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/api/wan2.7-i2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/wan2.7-r2v",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/api/wan2.7-r2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/api/wan2.7-t2v",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/api/wan2.7-t2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/happyhorse-1.1-i2v",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/happyhorse-1.1-i2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/happyhorse-1.1-r2v",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/happyhorse-1.1-r2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/happyhorse-1.1-t2v",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/happyhorse-1.1-t2v"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/reference-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/task-query",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/task-query"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/video-first-last-frame",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/video-first-last-frame"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/video-first-last-frame2",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/video-first-last-frame2"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/wan2.7-i2v-first-last-frame",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/wan2.7-i2v-first-last-frame"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/wan2.7-i2v-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/wan2.7-i2v-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/wan2.7-i2v-video-continuation",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/wan2.7-i2v-video-continuation"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/ali/wan3.0-video-generation",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/ali/wan3.0-video-generation"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/cancel-delete-video-task",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/cancel-delete-video-task"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-multimodal-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-fast-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-mini-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-mini-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-mini-multimodal-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-multimodal-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-mini-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-mini-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-multimodal-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-5-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-5-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-5-multimodal-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-multimodal-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/dreamina-seedance-2-5-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/dreamina-seedance-2-5-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/list-video-generation-tasks",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/list-video-generation-tasks"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-0-pro-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-tasks-query",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-tasks-query"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance/cancel-delete-video-task",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance/cancel-delete-video-task"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance/list-video-generation-tasks",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance/list-video-generation-tasks"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance/seedance-tasks-query",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance/seedance-tasks-query"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/byteplus/seedance/seedance-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/byteplus/seedance/seedance-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/image2video-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/image2video-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v2-1-master-image2video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-1-master-image2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v2-1-master-text2video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-1-master-text2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v2-5-turbo-image2video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-5-turbo-image2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v2-5-turbo-text2video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-5-turbo-text2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v3-image2video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-v3-image2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v3-motion-control",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-v3-motion-control"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v3-omni-video-omni",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-v3-omni-video-omni"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-v3-text2video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-v3-text2video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-video-o1-video-omni",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-video-o1-video-omni"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/motion-control-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/motion-control-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/text2video-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/text2video-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/video-omni-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/video-omni-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/download-video-file",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/download-video-file"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/delete-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/delete-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/first-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/first-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/query-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/query-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/reference-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-h3/text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-h3/text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-02-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-02-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-02-start-end-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-02-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-02-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-fast-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax-hailuo-2.3-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax/download-video-file",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax/download-video-file"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax/first-last-frame-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax/first-last-frame-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax/image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax/image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax/query-video-task",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax/query-video-task"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/minimax/text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/minimax/text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/query-video-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/query-video-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/vidu-query-task-status",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/vidu-query-task-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-pro-fast-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-pro-fast-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-pro-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-pro-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-pro-start-end-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-pro-start-end-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-pro-text-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-pro-text-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-turbo-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-turbo-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-turbo-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-turbo-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq3-turbo-start-end-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq3-turbo-text-to-video",
+            "hidden": true,
+            "pages": [
               "zh-Hans/standalone/zmodelVideo/vidu/viduq3-turbo-text-to-video"
             ]
           }
