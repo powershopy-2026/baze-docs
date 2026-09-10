@@ -142,7 +142,8 @@
               "480P",
               "768P",
               "2K"
-            ]
+            ],
+            "default": "768P"
           },
           "duration": {
             "type": "integer",
@@ -160,7 +161,8 @@
               13,
               14,
               15
-            ]
+            ],
+            "default": 5
           },
           "ratio": {
             "type": "string",
