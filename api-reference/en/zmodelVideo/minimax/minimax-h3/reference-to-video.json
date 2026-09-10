@@ -170,7 +170,7 @@
                   "properties": {
                     "url": {
                       "type": "string",
-                      "description": "Video address. Supports: public URL; mm_file://{file_id} (reference platform existing file_id); data:video/mp4;base64,<Base64> data URI. Note: total request body size ≤ 64 MB, Base64 expands by ~33%, use public URL or mm_file:// for large videos."
+                      "description": "Video address. Supports: public URL; mm_file://{file_id} (reference platform existing file_id); data:video/mp4;base64,<Base64> data URI. Note: total request body size ≤ 64 MB, Base64 expands by  ~ 33%, use public URL or mm_file:// for large videos."
                     }
                   }
                 },
@@ -209,7 +209,7 @@
           },
           "duration": {
             "type": "integer",
-            "description": "Video duration in seconds. Required, integer. Available: 4~15.",
+            "description": "Video duration in seconds. Required, integer. Available: 4 ~ 15.",
             "enum": [
               4,
               5,

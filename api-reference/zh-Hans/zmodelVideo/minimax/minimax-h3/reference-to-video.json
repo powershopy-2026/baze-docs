@@ -209,7 +209,7 @@
           },
           "duration": {
             "type": "integer",
-            "description": "生成视频时长（秒），必选，整数。可用值：4~15。",
+            "description": "生成视频时长（秒），必选，整数。可用值：4 ~ 15。",
             "enum": [
               4,
               5,
