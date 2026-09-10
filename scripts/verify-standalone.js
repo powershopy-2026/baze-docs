@@ -16,18 +16,29 @@ function verify() {
     throw new Error('Default language is not en');
   }
 
-  const enStandaloneTab = enLang.tabs.find(t => t.tab === 'Standalone');
-  const zhStandaloneTab = zhLang.tabs.find(t => t.tab === 'Standalone');
-
-  if (!enStandaloneTab || !enStandaloneTab.hidden) {
-    throw new Error('en Standalone tab is missing or not marked hidden: true');
-  }
-  if (!zhStandaloneTab || !zhStandaloneTab.hidden) {
-    throw new Error('zh-Hans Standalone tab is missing or not marked hidden: true');
+  const legacyEnStandalone = enLang.tabs.find(t => t.tab === 'Standalone');
+  const legacyZhStandalone = zhLang.tabs.find(t => t.tab === 'Standalone');
+  if (legacyEnStandalone || legacyZhStandalone) {
+    throw new Error('Legacy monolithic Standalone tab still exists; should be isolated tabs');
   }
 
-  console.log(`en Standalone tab pages: ${enStandaloneTab.pages.length}`);
-  console.log(`zh-Hans Standalone tab pages: ${zhStandaloneTab.pages.length}`);
+  const enStandaloneTabs = enLang.tabs.filter(t => t.tab.startsWith('standalone:'));
+  const zhStandaloneTabs = zhLang.tabs.filter(t => t.tab.startsWith('standalone:'));
+
+  if (enStandaloneTabs.length === 0) {
+    throw new Error('en standalone tabs are missing');
+  }
+  if (zhStandaloneTabs.length === 0) {
+    throw new Error('zh-Hans standalone tabs are missing');
+  }
+
+  for (const t of [...enStandaloneTabs, ...zhStandaloneTabs]) {
+    if (!t.hidden) throw new Error(`Tab ${t.tab} is missing hidden: true`);
+    if (!t.pages || t.pages.length !== 1) throw new Error(`Tab ${t.tab} must contain exactly 1 page`);
+  }
+
+  console.log(`en isolated standalone tabs: ${enStandaloneTabs.length}`);
+  console.log(`zh-Hans isolated standalone tabs: ${zhStandaloneTabs.length}`);
 
   function checkPages(pages) {
     let missing = [];
