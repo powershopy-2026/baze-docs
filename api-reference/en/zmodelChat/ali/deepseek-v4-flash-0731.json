@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "Qwen Chat",
-      "description": "Qwen series chat and multimodal capability"
+      "description": "Qwen series chat capabilities"
     }
   ],
   "paths": {
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-flash-0731 Chat Completions",
-        "description": "Applicable to the publicly available chat model in the Ali channel's final whitelist: `deepseek-v4-flash-0731`.\n\nSupported fields: `model`, `messages`, `stream`, `temperature`, `top_p`, `max_completion_tokens`, `stop`, `seed`, `tools`, `tool_choice`, `enable_search`, `response_format`.",
+        "description": "Applicable to the publicly available chat model in the Ali channel's final whitelist: `deepseek-v4-flash-0731`.\n\nSupported fields: `model`, `messages`, `stream`, `temperature`, `top_p`, `max_completion_tokens`, `stop`, `seed`, `tools`, `tool_choice`, `enable_search`, `response_format`.\n\nThis model accepts text input only; multimodal content such as images and videos is not supported.",
         "operationId": "aliChatCompletions",
         "x-capability": "chat",
         "tags": [
@@ -68,52 +68,6 @@
                       }
                     ],
                     "stream": true
-                  }
-                },
-                "vision_chat": {
-                  "summary": "Image understanding (multimodal)",
-                  "value": {
-                    "model": "deepseek-v4-flash-0731",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "image_url",
-                            "image_url": {
-                              "url": "https://example.com/image.jpg"
-                            }
-                          },
-                          {
-                            "type": "text",
-                            "text": "What is in this image?"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                },
-                "video_chat": {
-                  "summary": "Video understanding (multimodal)",
-                  "value": {
-                    "model": "deepseek-v4-flash-0731",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "video_url",
-                            "video_url": {
-                              "url": "https://example.com/video.mp4"
-                            }
-                          },
-                          {
-                            "type": "text",
-                            "text": "Describe this video."
-                          }
-                        ]
-                      }
-                    ]
                   }
                 }
               }
@@ -305,7 +259,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "List of conversation messages. Supports text content and multimodal content (image/video + text).",
+            "description": "List of conversation messages. Only text content is supported; multimodal content such as images and videos is not supported.",
             "items": {
               "$ref": "#/components/schemas/Message"
             }
@@ -391,19 +345,8 @@
             "description": "Role of the message sender."
           },
           "content": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "Text content."
-              },
-              {
-                "type": "array",
-                "description": "Multimodal content list (for image/video understanding).",
-                "items": {
-                  "$ref": "#/components/schemas/ContentItem"
-                }
-              }
-            ]
+            "type": "string",
+            "description": "Text content. Multimodal content such as images and videos is not supported."
           },
           "tool_calls": {
             "type": "array",
@@ -437,47 +380,6 @@
               "parameters": {
                 "type": "object",
                 "description": "Function parameter definitions (JSON Schema)."
-              }
-            }
-          }
-        }
-      },
-      "ContentItem": {
-        "type": "object",
-        "required": [
-          "type"
-        ],
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "text",
-              "image_url",
-              "video_url"
-            ],
-            "description": "Content type."
-          },
-          "text": {
-            "type": "string",
-            "description": "Text content. Required when type=text."
-          },
-          "image_url": {
-            "type": "object",
-            "description": "Image information. Required when type=image_url.",
-            "properties": {
-              "url": {
-                "type": "string",
-                "description": "Image URL or Base64-encoded image data."
-              }
-            }
-          },
-          "video_url": {
-            "type": "object",
-            "description": "Video information. Required when type=video_url.",
-            "properties": {
-              "url": {
-                "type": "string",
-                "description": "Video URL or Base64-encoded video data."
               }
             }
           }

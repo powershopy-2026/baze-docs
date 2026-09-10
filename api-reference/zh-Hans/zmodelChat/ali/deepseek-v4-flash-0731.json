@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "Qwen Chat",
-      "description": "千问系列对话与多模态能力"
+      "description": "千问系列对话能力"
     }
   ],
   "paths": {
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-flash-0731 对话补全",
-        "description": "适用于阿里渠道最终白名单中的公开对话模型：`deepseek-v4-flash-0731`。\n\n公开字段：`model`、`messages`、`stream`、`temperature`、`top_p`、`max_completion_tokens`、`stop`、`seed`、`tools`、`tool_choice`、`enable_search`、`response_format`。",
+        "description": "适用于阿里渠道最终白名单中的公开对话模型：`deepseek-v4-flash-0731`。\n\n公开字段：`model`、`messages`、`stream`、`temperature`、`top_p`、`max_completion_tokens`、`stop`、`seed`、`tools`、`tool_choice`、`enable_search`、`response_format`。\n\n该模型仅接受文本输入，不支持图像、视频等多模态内容。",
         "operationId": "aliChatCompletions",
         "x-capability": "chat",
         "tags": [
@@ -55,52 +55,6 @@
                     ],
                     "temperature": 0.7,
                     "max_completion_tokens": 2000
-                  }
-                },
-                "vision_chat": {
-                  "summary": "图像理解（多模态）",
-                  "value": {
-                    "model": "deepseek-v4-flash-0731",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "image_url",
-                            "image_url": {
-                              "url": "https://example.com/image.jpg"
-                            }
-                          },
-                          {
-                            "type": "text",
-                            "text": "这张图片里有什么？"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                },
-                "video_chat": {
-                  "summary": "视频理解（多模态）",
-                  "value": {
-                    "model": "deepseek-v4-flash-0731",
-                    "messages": [
-                      {
-                        "role": "user",
-                        "content": [
-                          {
-                            "type": "video_url",
-                            "video_url": {
-                              "url": "https://example.com/video.mp4"
-                            }
-                          },
-                          {
-                            "type": "text",
-                            "text": "描述这个视频。"
-                          }
-                        ]
-                      }
-                    ]
                   }
                 },
                 "streaming_chat": {
@@ -305,7 +259,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "对话消息列表。支持文本内容和多模态内容（图像/视频+文本）。",
+            "description": "对话消息列表。仅支持文本内容，不支持图像、视频等多模态内容。",
             "items": {
               "$ref": "#/components/schemas/Message"
             }
@@ -391,19 +345,8 @@
             "description": "消息发送者角色。"
           },
           "content": {
-            "anyOf": [
-              {
-                "type": "string",
-                "description": "文本内容。"
-              },
-              {
-                "type": "array",
-                "description": "多模态内容列表（用于图像理解）。",
-                "items": {
-                  "$ref": "#/components/schemas/ContentItem"
-                }
-              }
-            ]
+            "type": "string",
+            "description": "文本内容。不支持图像、视频等多模态内容。"
           },
           "tool_calls": {
             "type": "array",
@@ -437,47 +380,6 @@
               "parameters": {
                 "type": "object",
                 "description": "函数参数定义（JSON Schema）。"
-              }
-            }
-          }
-        }
-      },
-      "ContentItem": {
-        "type": "object",
-        "required": [
-          "type"
-        ],
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "text",
-              "image_url",
-              "video_url"
-            ],
-            "description": "内容类型。"
-          },
-          "text": {
-            "type": "string",
-            "description": "文本内容。当 type=text 时必填。"
-          },
-          "image_url": {
-            "type": "object",
-            "description": "图像信息。当 type=image_url 时必填。",
-            "properties": {
-              "url": {
-                "type": "string",
-                "description": "图像 URL 或 Base64 编码的图像数据。"
-              }
-            }
-          },
-          "video_url": {
-            "type": "object",
-            "description": "视频信息。当 type=video_url 时必填。",
-            "properties": {
-              "url": {
-                "type": "string",
-                "description": "视频 URL 或 Base64 编码的视频数据。"
               }
             }
           }
