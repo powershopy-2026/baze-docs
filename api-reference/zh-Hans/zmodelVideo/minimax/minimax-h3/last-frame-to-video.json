@@ -113,9 +113,10 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称。当前可用值：`MiniMax-H3`。",
+            "description": "模型名称。当前可用值：`MiniMax-H3`、`MiniMax-H3-Max`。\n\nMiniMax-H3：支持文生视频、图生视频（首帧 / 尾帧）与多模态参考生视频；分辨率 768P / 2K，时长 4~15 秒。\nMiniMax-H3-Max：极速生成版本。仅支持文生视频与图生视频（首帧 / 尾帧），不支持多模态参考（参考图 / 参考视频 / 参考音频）；分辨率 480P / 768P，不支持 2K；时长 5~15 秒。",
             "enum": [
-              "MiniMax-H3"
+              "MiniMax-H3",
+              "MiniMax-H3-Max"
             ]
           },
           "content": {
@@ -165,15 +166,16 @@
           },
           "resolution": {
             "type": "string",
-            "description": "视频分辨率。当前可用值：768P、2K。",
+            "description": "视频分辨率。可用值：480P、768P、2K。\n\nMiniMax-H3：支持 768P、2K。\nMiniMax-H3-Max：支持 480P、768P（默认 768P，不支持 2K）。",
             "enum": [
+              "480P",
               "768P",
               "2K"
             ]
           },
           "duration": {
             "type": "integer",
-            "description": "生成视频时长（秒），必选，整数。可用值：4~15。",
+            "description": "生成视频时长（秒），必选，整数。\n\nMiniMax-H3：4~15 秒。\nMiniMax-H3-Max：5~15 秒（不支持 4 秒）。",
             "enum": [
               4,
               5,
