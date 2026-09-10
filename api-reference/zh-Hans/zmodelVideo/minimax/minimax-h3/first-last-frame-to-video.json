@@ -113,14 +113,15 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称。当前可用值：`MiniMax-H3`。",
+            "description": "模型名称。当前可用值：`MiniMax-H3`、`MiniMax-H3-Max`。\n\n- MiniMax-H3：支持文生视频、图生视频（首帧 / 尾帧）与多模态参考生视频；分辨率 768P / 2K，时长 4 ~ 15 秒。\n- MiniMax-H3-Max：极速生成版本。仅支持文生视频与图生视频（首帧 / 尾帧），不支持多模态参考（参考图 / 参考视频 / 参考音频）；分辨率 480P / 768P，不支持 2K；时长 5 ~ 15 秒。",
             "enum": [
-              "MiniMax-H3"
+              "MiniMax-H3",
+              "MiniMax-H3-Max"
             ]
           },
           "content": {
             "type": "array",
-            "description": "多模态输入内容数组，描述用于生成视频的信息。每个元素通过 type 区分类型（text / image_url / video_url / audio_url），并可通过 role 标注用途。\n\n每次请求必须包含一个非空 text 项（prompt 必填）；缺失会返回参数错误。\n支持的输入组合（对应不同生成场景）：\n\n- 图生视频-首帧：text + 1 张 image_url（role=first_frame 或不填）。\n- 图生视频-尾帧：text + 1 张 image_url（role=last_frame）。\n- 图生视频-首尾帧：text + 2 张 image_url（role 分别为 first_frame、last_frame）。\n- 图生视频与多模态参考生视频互斥：content 中出现 reference_image / reference_video / reference_audio 任一 role，就不能再出现 first_frame / last_frame（反之亦然），二者不可混用。\n\n输入媒体限制（请求体总大小 ≤ 64 MB，大文件请用公网 URL，勿用 Base64）\n\n图片 image_url：\n\n| 项 | 限制 |\n| :--- | :--- |\n| 格式 | JPG、JPEG、PNG、WEBP、HEIC、HEIF |\n| 单文件大小 | ≤ 30 MB |\n| 宽高范围 | 256 ~ 5760 px |\n| 长宽比（宽/高） | 0.4 ~ 2.5 |\n| 数量 | 首帧 ≤ 1、尾帧 ≤ 1、参考图 ≤ 9 |\n",
+            "description": "多模态输入内容数组，描述用于生成视频的信息。每个元素通过 type 区分类型（text / image_url / video_url / audio_url），并可通过 role 标注用途。\n\n每次请求必须包含一个非空 text 项（prompt 必填）；缺失会返回参数错误。\n支持的输入组合（对应不同生成场景）：\n\n- 图生视频-首帧：text + 1 张 image_url（role=first_frame 或不填）。\n- 图生视频-尾帧：text + 1 张 image_url（role=last_frame）。\n- 图生视频-首尾帧：text + 2 张 image_url（role 分别为 first_frame、last_frame）。\n- 图生视频与多模态参考生视频互斥：content 中出现 reference_image / reference_video / reference_audio 任一 role，就不能再出现 first_frame / last_frame（反之亦然），二者不可混用。\n\n输入媒体限制（请求体总大小 ≤ 64 MB，大文件请用公网 URL，勿用 Base64）\n\n图片 image_url：\n\n| 项 | 限制 |\n| :--- | :--- |\n| 格式 | JPG、JPEG、PNG、WEBP、HEIC、HEIF |\n| 单文件大小 | ≤ 30 MB |\n| 宽高范围 | 256  ~  5760 px |\n| 长宽比（宽/高） | 0.4  ~  2.5 |\n| 数量 | 首帧 ≤ 1、尾帧 ≤ 1、参考图 ≤ 9 |\n",
             "items": {
               "type": "object",
               "required": [
@@ -165,15 +166,17 @@
           },
           "resolution": {
             "type": "string",
-            "description": "视频分辨率。当前可用值：768P、2K。",
+            "description": "视频分辨率。可用值：480P、768P、2K。\n\n- MiniMax-H3：支持 768P、2K。\n- MiniMax-H3-Max：支持 480P、768P（默认 768P，不支持 2K）。",
             "enum": [
+              "480P",
               "768P",
               "2K"
-            ]
+            ],
+            "default": "768P"
           },
           "duration": {
             "type": "integer",
-            "description": "生成视频时长（秒），必选，整数。可用值：4~15。",
+            "description": "生成视频时长（秒），必选，整数。\n\n- MiniMax-H3：4 ~ 15 秒。\n- MiniMax-H3-Max：5 ~ 15 秒（不支持 4 秒）。",
             "enum": [
               4,
               5,
@@ -187,7 +190,8 @@
               13,
               14,
               15
-            ]
+            ],
+            "default": 5
           },
           "ratio": {
             "type": "string",
