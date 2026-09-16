@@ -235,15 +235,31 @@
           },
           "size": {
             "type": "string",
-            "description": "Specifies the dimensions of the generated image. Configuration methods and options vary by scenario:\n\n**Image generation scenario**\nTwo methods are available, but they cannot be used at the same time:\n\n* **Method 1 (Recommended)**: Specify the resolution level of the generated image, and describe its aspect ratio, shape, or purpose in the prompt using natural language. The model determines the final image size.\n  * Default: `auto`\n  * Available values: `1K`, `1.5K`, `2K`\n  * *Pricing note*: `1.5K` has the same price as `1K` while providing better image generation quality.\n\n* **Method 2**: Specify the width and height of the generated image in pixels (`widthxheight`):\n  * Total pixels range: [`1280x720` (921,600), `2048x2048x1.1025` (4,624,220)]\n  * Aspect ratio range: [1/16, 16]\n  * *Note*: When using Method 2, both the total pixel range and aspect ratio range must be satisfied. The total pixel limit applies to the product of width and height.\n    * Valid example: `2048x1024` (Total pixels 2048x1024=2,097,152; aspect ratio 2)\n    * Invalid example: `512x512` (Total pixels 512x512=262,144, below 921,600 minimum)\n\n**Resolution to Pixel Reference Values (Method 1)**:\n\n| Resolution | Aspect Ratio | Width and Height Pixel Values |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 1.5K | 1:1 | 1536x1536 |\n| | 4:3 | 1792x1344 |\n| | 3:4 | 1344x1792 |\n| | 16:9 | 2048x1152 |\n| | 9:16 | 1152x2048 |\n| | 3:2 | 1872x1248 |\n| | 2:3 | 1248x1872 |\n| | 21:9 | 2352x1008 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n\n**Layer decomposition scenario**\nOnly resolution levels are supported:\n* **Base image**: Output resolution is consistent with the resolution specified by `size`, keeping the original aspect ratio.\n* **Layers**: Each output layer resolution is close to the resolution specified by `size`, keeping the aspect ratio of its region.\n* Default: `auto`\n* Supported values: `1K`, `1.5K`, `2K`, `auto`\n* **`auto` adaptation rules**:\n  * If original dimensions of base image and each layer are between [`1280x720` (921,600), `2048x2048x1.1025` (4,624,220)], output at original dimensions.\n  * If smaller than 1K, output at 1K.\n  * If larger than 2K, output at 2K.",
-            "default": "auto",
-            "example": "auto",
+            "description": "Specifies the dimensions of the generated image. Configuration methods and options vary by scenario:\n\n**Image generation scenario (Default, `layer_decomposition` is `false`)**\nTwo methods are available, but they cannot be used at the same time:\n\n* **Method 1 (Recommended)**: Specify the resolution level of the generated image, and describe its aspect ratio, shape, or purpose in the prompt using natural language. The model determines the final image size.\n  * Default: `2K`\n  * Available values: `1K`, `1.5K`, `2K`\n  * *Pricing note*: `1.5K` has the same price as `1K` while providing better image generation quality.\n\n* **Method 2**: Specify the width and height of the generated image in pixels (`widthxheight`):\n  * Total pixels range: [`1280x720` (921,600), `2048x2048x1.1025` (4,624,220)]\n  * Aspect ratio range: [1/16, 16]\n  * *Note*: When using Method 2, both the total pixel range and aspect ratio range must be satisfied. The total pixel limit applies to the product of width and height.\n    * Valid example: `2048x1024` (Total pixels 2048x1024=2,097,152; aspect ratio 2)\n    * Invalid example: `512x512` (Total pixels 512x512=262,144, below 921,600 minimum)\n\n**Resolution to Pixel Reference Values (Method 1)**:\n\n| Resolution | Aspect Ratio | Width and Height Pixel Values |\n|---|---|---|\n| 1K | 1:1 | 1024x1024 |\n| | 4:3 | 1152x864 |\n| | 3:4 | 864x1152 |\n| | 16:9 | 1424x800 |\n| | 9:16 | 800x1424 |\n| | 3:2 | 1248x832 |\n| | 2:3 | 832x1248 |\n| | 21:9 | 1568x672 |\n| 1.5K | 1:1 | 1536x1536 |\n| | 4:3 | 1792x1344 |\n| | 3:4 | 1344x1792 |\n| | 16:9 | 2048x1152 |\n| | 9:16 | 1152x2048 |\n| | 3:2 | 1872x1248 |\n| | 2:3 | 1248x1872 |\n| | 21:9 | 2352x1008 |\n| 2K | 1:1 | 2048x2048 |\n| | 4:3 | 2368x1776 |\n| | 3:4 | 1776x2368 |\n| | 16:9 | 2816x1584 |\n| | 9:16 | 1584x2816 |\n| | 3:2 | 2496x1664 |\n| | 2:3 | 1664x2496 |\n| | 21:9 | 3136x1344 |\n\n**Layer decomposition scenario (`layer_decomposition` is `true`)**\nOnly resolution levels are supported (`auto` is added dynamically as an option):\n* **Base image**: Output resolution is consistent with the resolution specified by `size`, keeping the original aspect ratio.\n* **Layers**: Each output layer resolution is close to the resolution specified by `size`, keeping the aspect ratio of its region.\n* Default: `auto`\n* Supported values: `1K`, `1.5K`, `2K`, `auto`\n* **`auto` adaptation rules**:\n  * If original dimensions of base image and each layer are between [`1280x720` (921,600), `2048x2048x1.1025` (4,624,220)], output at original dimensions.\n  * If smaller than 1K, output at 1K.\n  * If larger than 2K, output at 2K.",
+            "default": "2K",
+            "example": "2K",
             "x-enum": [
               "1K",
               "1.5K",
-              "2K",
-              "auto"
-            ]
+              "2K"
+            ],
+            "x-linkage": {
+              "rules": [
+                {
+                  "when": {
+                    "field": "layer_decomposition",
+                    "operator": "eq",
+                    "value": true
+                  },
+                  "set_options": [
+                    "1K",
+                    "1.5K",
+                    "2K",
+                    "auto"
+                  ]
+                }
+              ]
+            }
           },
           "background": {
             "type": "string",
