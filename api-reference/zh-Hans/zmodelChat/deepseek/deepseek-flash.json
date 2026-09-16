@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "deepseek-v4-flash",
+    "title": "deepseek-flash",
     "version": "1.0.0",
-    "description": "DeepSeek Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `deepseek-v4-flash`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`.",
+    "description": "DeepSeek 对话补全文档。公开统一入口为 `/v1/chat/completions`，兼容 OpenAI Chat Completions 请求格式。\n\n支持模型：`deepseek-flash`。\n\n本文档覆盖的请求字段包括：`model`、`messages`、`messages[].content`、`messages[].tool_calls`、`messages[].reasoning_content`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`stop`、`reasoning_effort`、`response_format`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`tool_choice`、`user_id`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -12,21 +12,21 @@
   "servers": [
     {
       "url": "https://baze-api.powerbuyin.top",
-      "description": "Baze API server endpoint"
+      "description": "Baze API 服务地址"
     }
   ],
   "tags": [
     {
       "name": "DeepSeek Chat",
-      "description": "DeepSeek text chat and tool calling capabilities"
+      "description": "DeepSeek 文本对话与工具调用能力"
     }
   ],
   "paths": {
     "/v1/chat/completions": {
       "post": {
-        "summary": "deepseek-v4-flash",
-        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-flash`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`. `messages[].content` supports text content (string); `assistant` messages support `reasoning_content` and `tool_calls`.",
-        "operationId": "deepseekChatCompletions_deepseek_v4_flash",
+        "summary": "deepseek-flash",
+        "description": "调用 DeepSeek chat completions 能力。\n\n支持模型包括 `deepseek-flash`。\n\n本文档公开字段：`model`、`messages`、`thinking`、`stream`、`stream_options.include_usage`、`max_tokens`、`stop`、`reasoning_effort`、`response_format`、`temperature`、`top_p`、`logprobs`、`top_logprobs`、`tools`、`tool_choice`、`user_id`。`messages[].content` 支持文本内容（string）；`assistant` 消息支持 `reasoning_content` 与 `tool_calls`。",
+        "operationId": "deepseekChatCompletions_deepseek_flash",
         "x-capability": "chat",
         "tags": [
           "DeepSeek Chat"
@@ -40,9 +40,9 @@
               },
               "examples": {
                 "default": {
-                  "summary": "Basic text chat",
+                  "summary": "基础文本对话",
                   "value": {
-                    "model": "deepseek-v4-flash",
+                    "model": "deepseek-flash",
                     "messages": [
                       {
                         "content": "You are a helpful assistant",
@@ -78,7 +78,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success. Returns JSON in non-streaming mode; returns an SSE event stream in streaming mode.",
+            "description": "调用成功。非流式模式返回 JSON；流式模式返回 SSE 事件流。",
             "content": {
               "application/json": {
                 "schema": {
@@ -86,12 +86,12 @@
                 },
                 "examples": {
                   "success": {
-                    "summary": "Non-streaming success response",
+                    "summary": "非流式成功响应",
                     "value": {
                       "id": "26231-33ea-4464-af18-c8c49d256",
                       "object": "chat.completion",
                       "created": 1782805310,
-                      "model": "deepseek-v4-flash",
+                      "model": "deepseek-flash",
                       "choices": [
                         {
                           "index": 0,
@@ -125,19 +125,19 @@
               "text/event-stream": {
                 "schema": {
                   "type": "string",
-                  "description": "SSE data stream. Each `data:` event can be parsed as a DeepSeek/OpenAI-compatible Chat Completions Chunk; the stream typically ends with `data: [DONE]`. When `stream_options.include_usage=true` is set, an additional chunk with `usage` is returned before the end."
+                  "description": "SSE 数据流。每个 `data:` 事件都可按 DeepSeek/OpenAI 兼容的 Chat Completions Chunk 解析；结束时通常返回 `data: [DONE]`。当请求设置 `stream_options.include_usage=true` 时，结束前会额外返回带 `usage` 的 chunk。"
                 },
                 "examples": {
                   "stream": {
-                    "summary": "Streaming response chunk",
-                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-flash\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-flash\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                    "summary": "流式响应片段",
+                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-flash\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"正在调用天气工具\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-flash\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid request parameters.",
+            "description": "请求参数不合法。",
             "content": {
               "application/json": {
                 "schema": {
@@ -145,7 +145,7 @@
                 },
                 "examples": {
                   "invalid_request": {
-                    "summary": "Parameter error",
+                    "summary": "参数错误",
                     "value": {
                       "error": {
                         "message": "messages is required",
@@ -160,7 +160,7 @@
             }
           },
           "401": {
-            "description": "Authentication failed, e.g. missing or invalid token.",
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
             "content": {
               "application/json": {
                 "schema": {
@@ -168,10 +168,10 @@
                 },
                 "examples": {
                   "unauthorized": {
-                    "summary": "Unauthorized",
+                    "summary": "未授权",
                     "value": {
                       "error": {
-                        "message": "Invalid token",
+                        "message": "无效的令牌",
                         "type": "api_error",
                         "code": "access_denied",
                         "param": ""
@@ -183,7 +183,7 @@
             }
           },
           "429": {
-            "description": "Rate limit triggered or insufficient account quota.",
+            "description": "触发速率限制或账户额度不足。",
             "content": {
               "application/json": {
                 "schema": {
@@ -191,10 +191,10 @@
                 },
                 "examples": {
                   "quota_exceeded": {
-                    "summary": "Insufficient quota or rate limited",
+                    "summary": "额度不足或速率受限",
                     "value": {
                       "error": {
-                        "message": "Insufficient account quota, please retry later",
+                        "message": "当前账户额度不足，请稍后重试",
                         "type": "api_error",
                         "code": "insufficient_user_quota",
                         "param": ""
@@ -206,7 +206,7 @@
             }
           },
           "500": {
-            "description": "Internal server error while processing the request.",
+            "description": "服务端处理请求时发生内部错误。",
             "content": {
               "application/json": {
                 "schema": {
@@ -214,10 +214,10 @@
                 },
                 "examples": {
                   "internal_error": {
-                    "summary": "Internal processing failure",
+                    "summary": "内部处理失败",
                     "value": {
                       "error": {
-                        "message": "Internal processing failed, please retry later",
+                        "message": "服务内部处理失败，请稍后重试",
                         "type": "api_error",
                         "code": "gen_relay_info_failed",
                         "param": ""
@@ -243,7 +243,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "API Token",
-        "description": "Pass `Authorization: Bearer <token>` in the request header."
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
       }
     },
     "schemas": {
@@ -253,19 +253,19 @@
           "model",
           "messages"
         ],
-        "description": "DeepSeek chat completions request body.",
+        "description": "DeepSeek chat completions 请求体。",
         "properties": {
           "model": {
             "type": "string",
-            "description": "The ID of the model to use. Supports `deepseek-v4-flash`.",
+            "description": "使用的模型的 ID。支持 `deepseek-flash`。",
             "enum": [
-              "deepseek-v4-flash"
+              "deepseek-flash"
             ],
-            "example": "deepseek-v4-flash"
+            "example": "deepseek-flash"
           },
           "messages": {
             "type": "array",
-            "description": "A list of messages comprising the conversation so far.",
+            "description": "对话的消息列表。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -277,17 +277,17 @@
           "stream": {
             "type": "boolean",
             "default": false,
-            "description": "If set to true, the model will send message deltas as SSE (server-sent events). The message stream ends with `data: [DONE]`."
+            "description": "如果设置为 true，将会以 SSE（server-sent events）的形式以流式发送消息增量。消息流以 `data: [DONE]` 结尾。"
           },
           "stream_options": {
             "$ref": "#/components/schemas/StreamOptions"
           },
           "max_tokens": {
             "type": "integer",
-            "description": "The maximum number of tokens the model can generate for the completion in a single request. The total length of input and output tokens is limited by the model's context length."
+            "description": "限制一次请求中模型生成 completion 的最大 token 数。输入 token 和输出 token 的总长度受模型的上下文长度的限制。"
           },
           "stop": {
-            "description": "A string or a list of up to 16 strings. The API will stop generating further tokens when it encounters any of these strings.",
+            "description": "一个 string 或最多包含 16 个 string 的 list，在遇到这些词时，API 将停止生成更多的 token。",
             "oneOf": [
               {
                 "type": "string"
@@ -306,7 +306,7 @@
               "high",
               "max"
             ],
-            "description": "Controls the reasoning effort of the model. For normal requests, the default is high. For some complex agent-style requests (e.g. Claude Code, OpenCode), it is automatically set to max. For compatibility, low and medium are mapped to high, and xhigh is mapped to max."
+            "description": "控制模型的推理强度。对普通请求，默认为 high。对一些复杂 Agent 类请求（如 Claude Code、OpenCode），自动设置为 max。出于兼容考虑 low、medium 会映射为 high，xhigh 会映射为 max。"
           },
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
@@ -316,24 +316,24 @@
             "minimum": 0,
             "maximum": 2,
             "default": 1,
-            "description": "Sampling temperature between 0 and 2. Higher values like 0.8 make the output more random, while lower values like 0.2 make it more focused and deterministic. We generally recommend altering this or top_p but not both."
+            "description": "采样温度，介于 0 和 2 之间。更高的值，如 0.8，会使输出更随机，而更低的值，如 0.2，会使其更加集中和确定。我们通常建议可以更改这个值或者更改 top_p，但不建议同时对两者进行修改。"
           },
           "top_p": {
             "type": "number",
             "minimum": 0,
             "maximum": 1,
             "default": 1,
-            "description": "An alternative to sampling with temperature, the model considers the results of the tokens with top_p probability. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both."
+            "description": "作为调节采样温度的替代方案，模型会考虑前 top_p 概率的 token 的结果。所以 0.1 就意味着只有包括在最高 10% 概率中的 token 会被考虑。我们通常建议修改这个值或者更改 temperature，但不建议同时对两者进行修改。"
           },
           "logprobs": {
             "type": "boolean",
-            "description": "Whether to return the log probabilities of the output tokens. If true, the log probabilities of each output token are returned in the content of the message."
+            "description": "是否返回所输出 token 的对数概率。如果为 true，则在 message 的 content 中返回每个输出 token 的对数概率。"
           },
           "top_logprobs": {
             "type": "integer",
             "minimum": 0,
             "maximum": 20,
-            "description": "An integer N between 0 and 20 that specifies the top N tokens by probability to return at each output position, along with their log probabilities. When this parameter is specified, logprobs must be true.",
+            "description": "一个介于 0 到 20 之间的整数 N，指定每个输出位置返回输出概率 top N 的 token，且返回这些 token 的对数概率。指定此参数时，logprobs 必须为 true。",
             "x-valid-when": {
               "logprobs": [
                 true
@@ -342,7 +342,7 @@
           },
           "tools": {
             "type": "array",
-            "description": "A list of tools the model may call. Currently, only function is supported as a tool. Use this parameter to provide a list of functions that take JSON as input. Up to 128 functions are supported.",
+            "description": "模型可能会调用的 tool 的列表。目前，仅支持 function 作为工具。使用此参数来提供以 JSON 作为输入参数的 function 列表。最多支持 128 个 function。",
             "items": {
               "$ref": "#/components/schemas/ToolDefinition"
             }
@@ -352,12 +352,12 @@
           },
           "user_id": {
             "type": "string",
-            "description": "Your custom user_id, with the character set [a-zA-Z0-9\\-_] and a maximum length of 512. Do not include private user information in user_id. user_id can be used to distinguish user identities on your side to help us with content safety review.\nuser_id can be used for KVCache isolation for privacy management.\nuser_id can be used for scheduling isolation of users on your business side."
+            "description": "您自定义的 user_id，可选字符集为 [a-zA-Z0-9\\-_]，最大长度为 512。请不要在 user_id 中包含用户隐私信息。user_id 可用于区分您业务侧的用户身份，以帮助我们进行内容安全处理。\nuser_id 可用于 KVCache 缓存隔离，以进行隐私管理。\nuser_id 可用于我们对您业务侧用户进行调度隔离。"
           }
         }
       },
       "Message": {
-        "description": "A single message in the conversation. Depending on the role, it is divided into four message types: system, user, assistant, and tool.",
+        "description": "对话的消息列表中的单条消息。根据 role 的不同，分为 system、user、assistant、tool 四种消息类型。",
         "oneOf": [
           {
             "$ref": "#/components/schemas/SystemMessage"
@@ -380,22 +380,22 @@
           "role",
           "content"
         ],
-        "description": "System message. The role of this message is system.",
+        "description": "System message。该消息的发起角色为 system。",
         "properties": {
           "content": {
             "type": "string",
-            "description": "The content of the system message."
+            "description": "system 消息的内容。"
           },
           "role": {
             "type": "string",
             "enum": [
               "system"
             ],
-            "description": "The role of the message author, which is system."
+            "description": "该消息的发起角色，其值为 system。"
           },
           "name": {
             "type": "string",
-            "description": "An optional name for the participant, provided to the model to distinguish between participants of the same role."
+            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
           }
         }
       },
@@ -406,22 +406,22 @@
           "role",
           "content"
         ],
-        "description": "User message. The role of this message is user.",
+        "description": "User message。该消息的发起角色为 user。",
         "properties": {
           "content": {
             "type": "string",
-            "description": "The content of the user message."
+            "description": "user 消息的内容。"
           },
           "role": {
             "type": "string",
             "enum": [
               "user"
             ],
-            "description": "The role of the message author, which is user."
+            "description": "该消息的发起角色，其值为 user。"
           },
           "name": {
             "type": "string",
-            "description": "An optional name for the participant, provided to the model to distinguish between participants of the same role."
+            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
           }
         }
       },
@@ -431,32 +431,32 @@
         "required": [
           "role"
         ],
-        "description": "Assistant message. The role of this message is assistant.",
+        "description": "Assistant message。该消息的发起角色为 assistant。",
         "properties": {
           "content": {
             "type": "string",
             "nullable": true,
-            "description": "The content of the assistant message."
+            "description": "assistant 消息的内容。"
           },
           "role": {
             "type": "string",
             "enum": [
               "assistant"
             ],
-            "description": "The role of the message author, which is assistant."
+            "description": "该消息的发起角色，其值为 assistant。"
           },
           "name": {
             "type": "string",
-            "description": "An optional name for the participant, provided to the model to distinguish between participants of the same role."
+            "description": "可以选填的参与者的名称，为模型提供信息以区分相同角色的参与者。"
           },
           "prefix": {
             "type": "boolean",
-            "description": "(Beta) Set this to true to force the model to start its response with the prefix content provided in this assistant message. "
+            "description": "(Beta) 设置此参数为 true，来强制模型在其回答中以此 assistant 消息中提供的前缀内容开始。"
           },
           "reasoning_content": {
             "type": "string",
             "nullable": true,
-            "description": "(Beta) Used in thinking mode under conversation prefix continuation, as input for the last assistant chain-of-thought content. When using this feature, the prefix parameter must be set to true."
+            "description": "(Beta) 用于思考模式下在对话前缀续写功能下，作为最后一条 assistant 思维链内容的输入。使用此功能时，prefix 参数必须设置为 true。"
           }
         }
       },
@@ -468,28 +468,28 @@
           "content",
           "tool_call_id"
         ],
-        "description": "Tool message. The role of this message is tool.",
+        "description": "Tool message。该消息的发起角色为 tool。",
         "properties": {
           "role": {
             "type": "string",
             "enum": [
               "tool"
             ],
-            "description": "The role of the message author, which is tool."
+            "description": "该消息的发起角色，其值为 tool。"
           },
           "content": {
             "type": "string",
-            "description": "The content of the tool message."
+            "description": "tool 消息的内容。"
           },
           "tool_call_id": {
             "type": "string",
-            "description": "The ID of the tool call that this message is responding to."
+            "description": "此消息所响应的 tool call 的 ID。"
           }
         }
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "Controls the switch between thinking mode and non-thinking mode.",
+        "description": "控制思考模式与非思考模式的转换。",
         "properties": {
           "type": {
             "type": "string",
@@ -498,17 +498,17 @@
               "disabled"
             ],
             "default": "enabled",
-            "description": "If set to enabled, thinking mode is used. If set to disabled, non-thinking mode is used."
+            "description": "如果设为 enabled，则使用思考模式。如果设为 disabled，则使用非思考模式。"
           }
         }
       },
       "StreamOptions": {
         "type": "object",
-        "description": "Options for streaming output. This parameter can only be set when the stream parameter is true.",
+        "description": "流式输出相关选项。只有在 stream 参数为 true 时，才可设置此参数。",
         "properties": {
           "include_usage": {
             "type": "boolean",
-            "description": "If set to true, an additional chunk will be transmitted just before the final `data: [DONE]` in the stream. The usage field on this chunk shows the token usage statistics for the entire request, while the choices field will always be an empty array. All other chunks will also include a usage field, but its value will be null."
+            "description": "如果设置为 true，在流式消息最后的 `data: [DONE]` 之前将会传输一个额外的块。此块上的 usage 字段显示整个请求的 token 使用统计信息，而 choices 字段将始终是一个空数组。所有其他块也将包含一个 usage 字段，但其值为 null。"
           }
         }
       },
@@ -518,14 +518,14 @@
           "type",
           "function"
         ],
-        "description": "Function tool definition.",
+        "description": "函数工具定义。",
         "properties": {
           "type": {
             "type": "string",
             "enum": [
               "function"
             ],
-            "description": "The type of the tool. Currently only function is supported."
+            "description": "tool 的类型。目前仅支持 function。"
           },
           "function": {
             "type": "object",
@@ -535,28 +535,28 @@
             "properties": {
               "name": {
                 "type": "string",
-                "description": "The name of the function to call. Must consist of a-z, A-Z, 0-9 characters, or include underscores and hyphens, with a maximum length of 64 characters."
+                "description": "要调用的 function 名称。必须由 a-z、A-Z、0-9 字符组成，或包含下划线和连字符，最大长度为 64 个字符。"
               },
               "description": {
                 "type": "string",
-                "description": "A description of what the function does, used by the model to understand when and how to call it."
+                "description": "function 的功能描述，供模型理解何时以及如何调用该 function。"
               },
               "parameters": {
                 "type": "object",
-                "description": "The input parameters of the function, described as a JSON Schema object. Omitting parameters defines a function with an empty parameter list.",
+                "description": "function 的输入参数，以 JSON Schema 对象描述。省略 parameters 会定义一个参数列表为空的 function。",
                 "additionalProperties": true
               },
               "strict": {
                 "type": "boolean",
                 "default": false,
-                "description": "If set to true, the API will use strict mode in function calls to ensure the output always conforms to the function's JSON schema definition. This is a Beta feature."
+                "description": "如果设置为 true，API 将在函数调用中使用 strict 模式，以确保输出始终符合函数的 JSON schema 定义。该功能为 Beta 功能。"
               }
             }
           }
         }
       },
       "ToolChoice": {
-        "description": "Controls the model's tool calling behavior. none means the model will not call any tool and instead generates a message. auto means the model can choose to generate a message or call one or more tools. required means the model must call one or more tools. Specifying a particular tool via {\"type\": \"function\", \"function\": {\"name\": \"my_function\"}} forces the model to call that tool.",
+        "description": "控制模型调用 tool 的行为。none 意味着模型不会调用任何 tool，而是生成一条消息。auto 意味着模型可以选择生成一条消息或调用一个或多个 tool。required 意味着模型必须调用一个或多个 tool。通过 {\"type\": \"function\", \"function\": {\"name\": \"my_function\"}} 指定特定 tool，会强制模型调用该 tool。",
         "oneOf": [
           {
             "type": "string",
@@ -587,7 +587,7 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "description": "The name of the function to call."
+                    "description": "要调用的函数名称。"
                   }
                 }
               }
@@ -597,7 +597,7 @@
       },
       "ResponseFormat": {
         "type": "object",
-        "description": "An object specifying the format that the model must output. Setting to { \"type\": \"json_object\" } enables JSON Output, which guarantees the message the model generates is valid JSON.\n\nImportant: When using JSON Output, you must also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly \"stuck\" request. Also note that the message content may be partially cut off if finish_reason=\"length\", which indicates the generation exceeded max_tokens or the conversation exceeded the max context length.",
+        "description": "一个 object，指定模型必须输出的格式。\n\n设置为 { \"type\": \"json_object\" } 以启用 JSON 模式，该模式保证模型生成的消息是有效的 JSON。\n\n注意: 使用 JSON 模式时，你还必须通过系统或用户消息指示模型生成 JSON。否则，模型可能会生成不断的空白字符，直到生成达到令牌限制，从而导致请求长时间运行并显得“卡住”。此外，如果 finish_reason=\"length\"，这表示生成超过了 max_tokens 或对话超过了最大上下文长度，消息内容可能会被部分截断。",
         "properties": {
           "type": {
             "type": "string",
@@ -616,23 +616,23 @@
           "name",
           "schema"
         ],
-        "description": "JSON Schema definition used when `response_format.type=json_schema`.",
+        "description": "当 `response_format.type=json_schema` 时使用的 JSON Schema 定义。",
         "properties": {
           "name": {
             "type": "string",
-            "description": "JSON structure name."
+            "description": "JSON 结构名称。"
           },
           "description": {
             "type": "string",
-            "description": "Description of the response purpose."
+            "description": "回复用途描述。"
           },
           "schema": {
             "type": "object",
-            "description": "JSON Schema object."
+            "description": "JSON Schema 对象。"
           },
           "strict": {
             "type": "boolean",
-            "description": "Whether to strictly follow the schema."
+            "description": "是否严格遵循 schema。"
           }
         }
       },
@@ -643,22 +643,22 @@
           "type",
           "function"
         ],
-        "description": "Tool call object within a message.",
+        "description": "消息中的工具调用对象。",
         "properties": {
           "id": {
             "type": "string",
-            "description": "The ID of the tool call."
+            "description": "tool 调用的 ID。"
           },
           "type": {
             "type": "string",
             "enum": [
               "function"
             ],
-            "description": "The type of the tool. Currently only function is supported."
+            "description": "tool 的类型。目前仅支持 function。"
           },
           "function": {
             "type": "object",
-            "description": "The function the model called.",
+            "description": "模型调用的 function。",
             "required": [
               "name",
               "arguments"
@@ -666,11 +666,11 @@
             "properties": {
               "name": {
                 "type": "string",
-                "description": "The name of the function the model called."
+                "description": "模型调用的 function 名。"
               },
               "arguments": {
                 "type": "string",
-                "description": "The arguments to call the function with, generated by the model as a JSON string. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined in your function schema. Validate these arguments in your code before calling the function."
+                "description": "要调用的 function 的参数，由模型生成，格式为 JSON。请注意，模型并不总是生成有效的 JSON，并且可能会臆造出你函数模式中未定义的参数。在调用函数之前，请在代码中验证这些参数。"
               }
             }
           }
@@ -678,31 +678,31 @@
       },
       "ChatCompletionResponse": {
         "type": "object",
-        "description": "DeepSeek chat completions success response.",
+        "description": "DeepSeek chat completions 成功响应。",
         "properties": {
           "id": {
             "type": "string",
-            "description": "A unique identifier for the chat."
+            "description": "该对话的唯一标识符。"
           },
           "object": {
             "type": "string",
-            "description": "The type of the object, which is chat.completion."
+            "description": "对象的类型，其值为 chat.completion。"
           },
           "created": {
             "type": "integer",
-            "description": "The Unix timestamp (in seconds) when the chat completion was created."
+            "description": "创建聊天完成时的 Unix 时间戳（以秒为单位）。"
           },
           "model": {
             "type": "string",
-            "description": "The name of the model that generated the completion."
+            "description": "生成该 completion 的模型名。"
           },
           "system_fingerprint": {
             "type": "string",
-            "description": "This fingerprint represents the backend configuration that the model runs with."
+            "description": "该指纹代表模型运行的后端配置。"
           },
           "choices": {
             "type": "array",
-            "description": "A list of completions generated by the model.",
+            "description": "模型生成的 completion 的选择列表。",
             "items": {
               "$ref": "#/components/schemas/ChatCompletionChoice"
             }
@@ -717,14 +717,14 @@
         "properties": {
           "index": {
             "type": "integer",
-            "description": "The index of this completion in the list of completions generated by the model."
+            "description": "该 completion 在模型生成的 completion 的选择列表中的索引。"
           },
           "message": {
             "$ref": "#/components/schemas/AssistantMessage"
           },
           "finish_reason": {
             "type": "string",
-            "description": "The reason the model stopped generating tokens. `stop` means the model finished generating naturally or hit a stop sequence; `length` means the output length reached the model's context length limit or the max_tokens limit; `content_filter` means the output was filtered due to a filtering policy; `tool_calls` means the model called a tool; `insufficient_system_resource` means generation was interrupted due to insufficient system inference resources."
+            "description": "模型停止生成 token 的原因。`stop` 表示模型自然停止生成或遇到 stop 序列；`length` 表示输出长度达到了模型上下文长度限制或 max_tokens 的限制；`content_filter` 表示输出内容因触发过滤策略而被过滤；`tool_calls` 表示模型调用了工具；`insufficient_system_resource` 表示系统推理资源不足，生成被打断。"
           },
           "logprobs": {
             "$ref": "#/components/schemas/ChoiceLogprobs"
@@ -733,12 +733,12 @@
       },
       "ChoiceLogprobs": {
         "type": "object",
-        "description": "The log probabilities information for this choice.",
+        "description": "该 choice 的对数概率信息。",
         "properties": {
           "content": {
             "type": "array",
             "nullable": true,
-            "description": "A list of objects containing the log probabilities of output tokens.",
+            "description": "一个包含输出 token 对数概率信息的列表。",
             "items": {
               "$ref": "#/components/schemas/LogprobToken"
             }
@@ -746,7 +746,7 @@
           "reasoning_content": {
             "type": "array",
             "nullable": true,
-            "description": "A list of objects containing the log probabilities of output tokens.",
+            "description": "一个包含输出 token 对数概率信息的列表。",
             "items": {
               "$ref": "#/components/schemas/LogprobToken"
             }
@@ -755,15 +755,15 @@
       },
       "LogprobToken": {
         "type": "object",
-        "description": "Log probability information for an output token.",
+        "description": "输出 token 的对数概率信息。",
         "properties": {
           "token": {
             "type": "string",
-            "description": "The output token."
+            "description": "输出的 token。"
           },
           "logprob": {
             "type": "number",
-            "description": "The log probability of this token. -9999.0 means the token has a very small output probability and is not among the top 20 most likely output tokens."
+            "description": "该 token 的对数概率。-9999.0 代表该 token 的输出概率极小，不在 top 20 最可能输出的 token 中。"
           },
           "bytes": {
             "type": "array",
@@ -771,11 +771,11 @@
             "items": {
               "type": "integer"
             },
-            "description": "A list of integers representing the UTF-8 bytes representation of the token. Useful when a UTF-8 character is split into multiple tokens. If the token has no byte representation, this value is null."
+            "description": "一个包含该 token UTF-8 字节表示的整数列表。一般在一个 UTF-8 字符被拆分成多个 token 来表示时有用。如果 token 没有对应的字节表示，则该值为 null。"
           },
           "top_logprobs": {
             "type": "array",
-            "description": "A list of the top N tokens by output probability at this position, along with their log probabilities. In rare cases, the number of tokens returned may be fewer than the top_logprobs value specified in the request.",
+            "description": "一个包含在该输出位置上，输出概率 top N 的 token 的列表，以及它们的对数概率。在罕见情况下，返回的 token 数量可能少于请求参数中指定的 top_logprobs 值。",
             "items": {
               "$ref": "#/components/schemas/TopLogprobItem"
             }
@@ -790,19 +790,19 @@
             "enum": [
               "assistant"
             ],
-            "description": "The role that generated this message."
+            "description": "生成这条消息的角色。"
           },
           "content": {
             "type": "string",
-            "description": "The content of this completion."
+            "description": "该 completion 的内容。"
           },
           "reasoning_content": {
             "type": "string",
-            "description": "Only applicable in thinking mode. The reasoning content in the assistant message, preceding the final answer."
+            "description": "仅适用于思考模式。内容为 assistant 消息中在最终答案之前的推理内容。"
           },
           "tool_calls": {
             "type": "array",
-            "description": "Tool calls generated by the model, e.g. function calls.",
+            "description": "模型生成的 tool 调用，例如 function 调用。",
             "items": {
               "$ref": "#/components/schemas/ToolCallMessage"
             }
@@ -811,35 +811,35 @@
       },
       "Usage": {
         "type": "object",
-        "description": "Usage information for this chat completion request.",
+        "description": "该对话补全请求的用量信息。",
         "properties": {
           "prompt_tokens": {
             "type": "integer",
-            "description": "The number of tokens contained in the user prompt. This value equals prompt_cache_hit_tokens + prompt_cache_miss_tokens."
+            "description": "用户 prompt 所包含的 token 数。该值等于 prompt_cache_hit_tokens + prompt_cache_miss_tokens。"
           },
           "completion_tokens": {
             "type": "integer",
-            "description": "The number of tokens generated by the model for the completion."
+            "description": "模型 completion 产生的 token 数。"
           },
           "total_tokens": {
             "type": "integer",
-            "description": "The total number of tokens in this request (prompt + completion)."
+            "description": "该请求中，所有 token 的数量（prompt + completion）。"
           },
           "prompt_cache_hit_tokens": {
             "type": "integer",
-            "description": "The number of tokens in the user prompt that hit the context cache."
+            "description": "用户 prompt 中，命中上下文缓存的 token 数。"
           },
           "prompt_cache_miss_tokens": {
             "type": "integer",
-            "description": "The number of tokens in the user prompt that missed the context cache."
+            "description": "用户 prompt 中，未命中上下文缓存的 token 数。"
           },
           "completion_tokens_details": {
             "type": "object",
-            "description": "Details about the completion tokens.",
+            "description": "completion tokens 的详细信息。",
             "properties": {
               "reasoning_tokens": {
                 "type": "integer",
-                "description": "The number of chain-of-thought tokens generated by the reasoning model."
+                "description": "推理模型所产生的思维链 token 数量。"
               }
             }
           }
@@ -858,25 +858,25 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "Error description."
+            "description": "错误描述。"
           },
           "type": {
             "type": "string",
-            "description": "Error type."
+            "description": "错误类型。"
           },
           "param": {
             "type": "string",
-            "description": "Associated field name."
+            "description": "关联字段名。"
           },
           "code": {
             "type": "string",
-            "description": "Error code."
+            "description": "错误码。"
           }
         }
       },
       "TopLogprobItem": {
         "type": "object",
-        "description": "A top log probability token for the reasoning content, containing the token, its log probability, and its UTF-8 byte representation.",
+        "description": "推理内容的 top 对数概率 token，包含该 token、其对数概率以及 UTF-8 字节表示。",
         "required": [
           "token",
           "logprob",
@@ -885,11 +885,11 @@
         "properties": {
           "token": {
             "type": "string",
-            "description": "The output token."
+            "description": "输出的 token。"
           },
           "logprob": {
             "type": "number",
-            "description": "The log probability of this token. -9999.0 means the token has a very small output probability and is not among the top 20 most likely output tokens."
+            "description": "该 token 的对数概率。-9999.0 代表该 token 的输出概率极小，不在 top 20 最可能输出的 token 中。"
           },
           "bytes": {
             "type": "array",
@@ -897,7 +897,7 @@
             "items": {
               "type": "integer"
             },
-            "description": "A list of integers representing the UTF-8 bytes representation of the token. Useful when a UTF-8 character is split into multiple tokens. If the token has no byte representation, this value is null."
+            "description": "一个包含该 token UTF-8 字节表示的整数列表。一般在一个 UTF-8 字符被拆分成多个 token 来表示时有用。如果 token 没有对应的字节表示，则该值为 null。"
           }
         }
       }

@@ -153,7 +153,7 @@
               "qwen3.8-max",
               "qwen3.8-flash",
               "deepseek-v3-2-251201",
-              "deepseek-v4-flash",
+              "deepseek-flash",
               "deepseek-v4-flash-0731",
               "deepseek-v4-pro",
               "deepseek-v4-pro-0813",
@@ -238,7 +238,7 @@
               "high",
               "max"
             ],
-            "description": "控制模型的推理强度。默认为 max。支持的模型：deepseek-v4-pro、deepseek-v4-flash。设为 low 或 medium 时会映射为 high，设为 xhigh 时会映射为 max。"
+            "description": "控制模型的推理强度。默认为 max。支持的模型：deepseek-v4-pro、deepseek-flash。设为 low 或 medium 时会映射为 high，设为 xhigh 时会映射为 max。"
           },
           "tools": {
             "type": "array",
