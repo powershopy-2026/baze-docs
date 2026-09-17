@@ -521,7 +521,7 @@
         "required": [
           "type"
         ],
-        "description": "多模态消息中的文件内容块。需提供 `file_id` 或 `file_data` 其中之一。",
+        "description": "多模态消息中的文件内容块。",
         "properties": {
           "type": {
             "type": "string",
@@ -530,13 +530,9 @@
             ],
             "description": "内容块的类型，此场景下为 `file`。"
           },
-          "file_id": {
-            "type": "string",
-            "description": "通过 Files API 上传的文件 ID，形如 `file-api-...`。与 `file_data` 互斥。"
-          },
           "file_data": {
             "type": "string",
-            "description": "文件的 base64 编码 data URL（如 data:image/jpeg;base64,...）。与 `file_id` 互斥。"
+            "description": "文件的 base64 编码 data URL（如 data:image/jpeg;base64,...）。"
           },
           "filename": {
             "type": "string",

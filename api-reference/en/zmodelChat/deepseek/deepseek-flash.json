@@ -521,7 +521,7 @@
         "required": [
           "type"
         ],
-        "description": "A file content part in a multimodal message. Provide either `file_id` or `file_data`.",
+        "description": "A file content part in a multimodal message.",
         "properties": {
           "type": {
             "type": "string",
@@ -530,13 +530,9 @@
             ],
             "description": "The type of the content part. Always `file` for this part type."
           },
-          "file_id": {
-            "type": "string",
-            "description": "The file ID uploaded via the Files API, in the format `file-api-...`. Mutually exclusive with `file_data`."
-          },
           "file_data": {
             "type": "string",
-            "description": "Base64-encoded data URL of the file (e.g., `data:image/jpeg;base64,...`). Mutually exclusive with `file_id`."
+            "description": "Base64-encoded data URL of the file (e.g., `data:image/jpeg;base64,...`)."
           },
           "filename": {
             "type": "string",
