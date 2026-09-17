@@ -320,8 +320,10 @@
           },
           "top_p": {
             "type": "number",
+            "minimum": 0.1,
+            "maximum": 1,
             "default": 1,
-            "description": "An alternative to sampling with temperature, the model considers the results of the tokens with top_p probability. The value range is 0 < top_p ≤ 1. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both."
+            "description": "An alternative to sampling with temperature, the model considers the results of the tokens with top_p probability. The value range is 0.1 ≤ top_p ≤ 1. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both."
           },
           "logprobs": {
             "type": "boolean",
