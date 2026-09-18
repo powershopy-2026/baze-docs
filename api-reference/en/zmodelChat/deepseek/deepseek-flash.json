@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "deepseek-v4-flash",
+    "title": "deepseek-flash",
     "version": "1.0.0",
-    "description": "DeepSeek Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `deepseek-v4-flash`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`.",
+    "description": "DeepSeek Chat Completions documentation. The unified API endpoint is `/v1/chat/completions`, compatible with the OpenAI Chat Completions request format.\n\nSupported model: `deepseek-flash`.\n\nThis document covers the following request fields: `model`, `messages`, `messages[].content`, `messages[].tool_calls`, `messages[].reasoning_content`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`.\n\nUser message `content` supports both plain text (string) and multimodal content arrays containing `text`, `image_url`, and `file` content parts.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -24,9 +24,9 @@
   "paths": {
     "/v1/chat/completions": {
       "post": {
-        "summary": "deepseek-v4-flash",
-        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-v4-flash`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`. `messages[].content` supports text content (string); `assistant` messages support `reasoning_content` and `tool_calls`.",
-        "operationId": "deepseekChatCompletions_deepseek_v4_flash",
+        "summary": "deepseek-flash",
+        "description": "Invoke DeepSeek chat completions capability.\n\nSupported models include `deepseek-flash`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `max_tokens`, `stop`, `reasoning_effort`, `response_format`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `tool_choice`, `user_id`. User message `content` supports plain text (string) or multimodal content arrays (text, `image_url`, `file` content parts); `assistant` messages support `reasoning_content` and `tool_calls`.",
+        "operationId": "deepseekChatCompletions_deepseek_flash",
         "x-capability": "chat",
         "tags": [
           "DeepSeek Chat"
@@ -42,7 +42,7 @@
                 "default": {
                   "summary": "Basic text chat",
                   "value": {
-                    "model": "deepseek-v4-flash",
+                    "model": "deepseek-flash",
                     "messages": [
                       {
                         "content": "You are a helpful assistant",
@@ -91,7 +91,7 @@
                       "id": "26231-33ea-4464-af18-c8c49d256",
                       "object": "chat.completion",
                       "created": 1782805310,
-                      "model": "deepseek-v4-flash",
+                      "model": "deepseek-flash",
                       "choices": [
                         {
                           "index": 0,
@@ -130,7 +130,7 @@
                 "examples": {
                   "stream": {
                     "summary": "Streaming response chunk",
-                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-flash\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-flash\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                    "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-flash\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-flash\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
                   }
                 }
               }
@@ -257,11 +257,11 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "The ID of the model to use. Supports `deepseek-v4-flash`.",
+            "description": "The ID of the model to use. Supports `deepseek-flash`.",
             "enum": [
-              "deepseek-v4-flash"
+              "deepseek-flash"
             ],
-            "example": "deepseek-v4-flash"
+            "example": "deepseek-flash"
           },
           "messages": {
             "type": "array",
@@ -320,10 +320,10 @@
           },
           "top_p": {
             "type": "number",
-            "minimum": 0,
+            "minimum": 0.1,
             "maximum": 1,
             "default": 1,
-            "description": "An alternative to sampling with temperature, the model considers the results of the tokens with top_p probability. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both."
+            "description": "An alternative to sampling with temperature, the model considers the results of the tokens with top_p probability. The value range is 0.1 ≤ top_p ≤ 1. So 0.1 means only the tokens comprising the top 10% probability mass are considered. We generally recommend altering this or temperature but not both."
           },
           "logprobs": {
             "type": "boolean",
@@ -409,8 +409,20 @@
         "description": "User message. The role of this message is user.",
         "properties": {
           "content": {
-            "type": "string",
-            "description": "The content of the user message."
+            "description": "The content of the user message. Supports plain text (string) or an array of content parts for multimodal input.",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Plain text content."
+              },
+              {
+                "type": "array",
+                "description": "Multimodal content parts array.",
+                "items": {
+                  "$ref": "#/components/schemas/ContentPart"
+                }
+              }
+            ]
           },
           "role": {
             "type": "string",
@@ -422,6 +434,111 @@
           "name": {
             "type": "string",
             "description": "An optional name for the participant, provided to the model to distinguish between participants of the same role."
+          }
+        }
+      },
+      "ContentPart": {
+        "description": "A content part in a multimodal user message. Can be text, image, or file.",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TextContentPart"
+          },
+          {
+            "$ref": "#/components/schemas/ImageContentPart"
+          },
+          {
+            "$ref": "#/components/schemas/FileContentPart"
+          }
+        ]
+      },
+      "TextContentPart": {
+        "title": "Text content part",
+        "type": "object",
+        "required": [
+          "type",
+          "text"
+        ],
+        "description": "A text content part in a multimodal message.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "text"
+            ],
+            "description": "The type of the content part. Always `text` for this part type."
+          },
+          "text": {
+            "type": "string",
+            "description": "The text content."
+          }
+        }
+      },
+      "ImageContentPart": {
+        "title": "Image content part",
+        "type": "object",
+        "required": [
+          "type",
+          "image_url"
+        ],
+        "description": "An image content part in a multimodal message.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image_url"
+            ],
+            "description": "The type of the content part. Always `image_url` for this part type."
+          },
+          "image_url": {
+            "$ref": "#/components/schemas/ImageUrl"
+          }
+        }
+      },
+      "ImageUrl": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "description": "Image URL object for image content parts.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The http(s) URL of the image (max 8192 characters) or base64-encoded data URL (data:image/jpeg;base64,...). Supported formats: JPEG, PNG, GIF, WebP."
+          },
+          "detail": {
+            "type": "string",
+            "enum": [
+              "low",
+              "high",
+              "original",
+              "auto"
+            ],
+            "description": "Controls how the image is processed. `low` resizes the image to 512x512 (faster, fewer tokens); `high`, `original`, and `auto` preserve the original image."
+          }
+        }
+      },
+      "FileContentPart": {
+        "title": "File content part",
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "description": "A file content part in a multimodal message.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "file"
+            ],
+            "description": "The type of the content part. Always `file` for this part type."
+          },
+          "file_data": {
+            "type": "string",
+            "description": "Base64-encoded data URL of the file (e.g., `data:image/jpeg;base64,...`)."
+          },
+          "filename": {
+            "type": "string",
+            "description": "Optional filename. Only effective when used with `file_data`."
           }
         }
       },

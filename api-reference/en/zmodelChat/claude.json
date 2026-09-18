@@ -153,7 +153,7 @@
               "qwen3.8-max",
               "qwen3.8-flash",
               "deepseek-v3-2-251201",
-              "deepseek-v4-flash",
+              "deepseek-flash",
               "deepseek-v4-flash-0731",
               "deepseek-v4-pro",
               "deepseek-v4-pro-0813",
@@ -238,7 +238,7 @@
               "high",
               "max"
             ],
-            "description": "Controls the model reasoning effort. The default is `max`. Supported models: `deepseek-v4-pro` and `deepseek-v4-flash`. `low` or `medium` maps to `high`; `xhigh` maps to `max`."
+            "description": "Controls the model reasoning effort. The default is `max`. Supported models: `deepseek-v4-pro` and `deepseek-flash`. `low` or `medium` maps to `high`; `xhigh` maps to `max`."
           },
           "tools": {
             "type": "array",
