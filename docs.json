@@ -76,7 +76,7 @@
                   {
                     "group": "DeepSeek",
                     "pages": [
-                      "en/zmodelChat/deepseek/deepseek-v4-flash",
+                      "en/zmodelChat/deepseek/deepseek-flash",
                       "en/zmodelChat/deepseek/deepseek-v4-pro"
                     ]
                   },
@@ -669,10 +669,10 @@
             ]
           },
           {
-            "tab": "standalone:zmodelChat/deepseek/deepseek-v4-flash",
+            "tab": "standalone:zmodelChat/deepseek/deepseek-flash",
             "hidden": true,
             "pages": [
-              "en/standalone/zmodelChat/deepseek/deepseek-v4-flash"
+              "en/standalone/zmodelChat/deepseek/deepseek-flash"
             ]
           },
           {
@@ -1801,7 +1801,7 @@
                   {
                     "group": "DeepSeek",
                     "pages": [
-                      "zh-Hans/zmodelChat/deepseek/deepseek-v4-flash",
+                      "zh-Hans/zmodelChat/deepseek/deepseek-flash",
                       "zh-Hans/zmodelChat/deepseek/deepseek-v4-pro"
                     ]
                   },
@@ -2401,10 +2401,10 @@
             ]
           },
           {
-            "tab": "standalone:zmodelChat/deepseek/deepseek-v4-flash",
+            "tab": "standalone:zmodelChat/deepseek/deepseek-flash",
             "hidden": true,
             "pages": [
-              "zh-Hans/standalone/zmodelChat/deepseek/deepseek-v4-flash"
+              "zh-Hans/standalone/zmodelChat/deepseek/deepseek-flash"
             ]
           },
           {
