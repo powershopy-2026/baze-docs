@@ -72,7 +72,7 @@ curl --request POST \
   }'
 ```
 
-# OpenAI SDK集成示例（Python）
+OpenAI SDK集成示例（Python）<br />
 使用官方 OpenAI SDK,需配置 base_url 为 https://api.powertokens.ai/v1 并使用你的 API Key。
 
 ```bash
@@ -89,6 +89,7 @@ resp = client.chat.completions.create(
 )
 print(resp.choices[0].message.content)
 ```
+
 
 在发起正式接入前，请根据目标模型页面确认可用参数、请求字段和返回格式。
 

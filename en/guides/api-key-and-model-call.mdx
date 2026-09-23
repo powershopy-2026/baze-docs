@@ -72,6 +72,24 @@ curl --request POST \
   }'
 ```
 
+OpenAI SDK Integration Example (Python)<br />
+To use the official OpenAI SDK, configure the base_url as https://api.powertokens.ai/v1 and use your API Key.
+
+```bash
+from openai import OpenAI
+
+client = OpenAI(
+    api_key="YOUR_KEY",
+    base_url="https://api.powertokens.ai/v1",
+)
+
+resp = client.chat.completions.create(
+    model="MiniMax-M3",
+    messages=[{"role": "user", "content": "Describe Paris in one sentence."}],
+)
+print(resp.choices[0].message.content)
+```
+
 Before production integration, check the target model page for supported parameters, request fields, and response format.
 
 ## Debug models in the Playground
