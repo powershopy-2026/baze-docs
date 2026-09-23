@@ -120,7 +120,7 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Model name. Currently available: `MiniMax-H3`, `MiniMax-H3-Max`.",
+            "description": "Model name. Currently available: `MiniMax-H3`, `MiniMax-H3-Max`.\n\n- `MiniMax-H3`: Supports text-to-video, image-to-video (first/last frame), and multimodal reference-to-video; resolution 768P / 2K; duration 4 ~ 15 seconds.\n- `MiniMax-H3-Max`: Ultra-fast generation version. Only supports text-to-video and image-to-video (first/last frame); does not support multimodal reference (reference image / reference video / reference audio); resolution 480P / 768P, does not support 2K; duration 5 ~ 15 seconds.",
             "enum": [
               "MiniMax-H3",
               "MiniMax-H3-Max"
@@ -202,15 +202,16 @@
           },
           "resolution": {
             "type": "string",
-            "description": "Video resolution. Currently available: 768P, 2K.",
+            "description": "Video resolution. Default: `768P`. Available: 480P, 768P, 2K.\n\n- `MiniMax-H3`: Supports 768P, 2K.\n- `MiniMax-H3-Max`: Supports 480P, 768P (default 768P, does not support 2K).",
             "enum": [
+              "480P",
               "768P",
               "2K"
             ]
           },
           "duration": {
             "type": "integer",
-            "description": "Video duration in seconds. Required, integer. Available: 4 ~ 15.",
+            "description": "Video duration in seconds. Required, integer. Default: `5`.\n\n- `MiniMax-H3`: 4 ~ 15 seconds.\n- `MiniMax-H3-Max`: 5 ~ 15 seconds (does not support 4 seconds).",
             "enum": [
               4,
               5,
