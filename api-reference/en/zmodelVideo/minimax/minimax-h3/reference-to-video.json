@@ -120,9 +120,10 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Model name. Currently available: `MiniMax-H3`.",
+            "description": "Model name. Currently available: `MiniMax-H3`, `MiniMax-H3-Max`.",
             "enum": [
-              "MiniMax-H3"
+              "MiniMax-H3",
+              "MiniMax-H3-Max"
             ]
           },
           "content": {
