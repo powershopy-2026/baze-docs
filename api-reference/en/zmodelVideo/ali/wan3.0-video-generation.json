@@ -339,7 +339,7 @@
     "/v1/videos/{task_id}": {
       "get": {
         "summary": "Query Wan 3.0 video generation task status",
-        "description": "Query the status and results of a Wan 3.0 video generation task by task ID.\n\nTask status flow: PENDING (queuing) → RUNNING (processing) → SUCCEEDED (success) / FAILED (failure).\n\nVideo generation typically takes several minutes. Use a polling mechanism with a reasonable interval (e.g., 15 seconds). Result links are valid for 24 hours; download immediately after retrieval.",
+        "description": "Query the status and results of a Wan 3.0 video generation task by task ID.\n\nTask status flow: queued (queuing) → in_progress (processing) → completed (success) / failed (failure).\n\nVideo generation typically takes several minutes. Use a polling mechanism with a reasonable interval (e.g., 15 seconds). Result links are valid for 24 hours; download immediately after retrieval.",
         "operationId": "aliWan30VideoGenerationQuery",
         "tags": [
           "Wan 3.0 Video"
@@ -679,12 +679,11 @@
           "status": {
             "type": "string",
             "enum": [
-              "pending",
               "queued",
-              "running",
-              "succeeded",
+              "in_progress",
+              "completed",
               "failed",
-              "cancelled"
+              "unknown"
             ],
             "description": "Task status."
           },
@@ -718,12 +717,11 @@
           "status": {
             "type": "string",
             "enum": [
-              "pending",
               "queued",
-              "running",
-              "succeeded",
+              "in_progress",
+              "completed",
               "failed",
-              "cancelled"
+              "unknown"
             ],
             "description": "Task status."
           },
@@ -741,7 +739,7 @@
           },
           "video_url": {
             "type": "string",
-            "description": "Download URL for the generated video. Valid for 24 hours, please save promptly. Only returned when status is succeeded."
+            "description": "Download URL for the generated video. Valid for 24 hours, please save promptly. Only returned when status is completed."
           },
           "metadata": {
             "type": "object",

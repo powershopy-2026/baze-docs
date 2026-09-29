@@ -339,7 +339,7 @@
     "/v1/videos/{task_id}": {
       "get": {
         "summary": "查询万相3.0视频生成任务状态",
-        "description": "根据任务 ID 查询万相3.0视频生成任务的状态和结果。\n\n任务状态流转：PENDING（排队中）→ RUNNING（处理中）→ SUCCEEDED（成功）/ FAILED（失败）。\n\n视频生成过程约需数分钟，建议采用轮询机制，设置合理的查询间隔（如 15 秒）来获取结果。结果链接有效期为 24 小时，建议获取后立即下载。",
+        "description": "根据任务 ID 查询万相3.0视频生成任务的状态和结果。\n\n任务状态流转：queued（排队中）→ in_progress（处理中）→ completed（成功）/ failed（失败）。\n\n视频生成过程约需数分钟，建议采用轮询机制，设置合理的查询间隔（如 15 秒）来获取结果。结果链接有效期为 24 小时，建议获取后立即下载。",
         "operationId": "aliWan30VideoGenerationQuery",
         "tags": [
           "万相3.0 视频"
@@ -679,12 +679,11 @@
           "status": {
             "type": "string",
             "enum": [
-              "pending",
               "queued",
-              "running",
-              "succeeded",
+              "in_progress",
+              "completed",
               "failed",
-              "cancelled"
+              "unknown"
             ],
             "description": "任务状态。"
           },
@@ -718,12 +717,11 @@
           "status": {
             "type": "string",
             "enum": [
-              "pending",
               "queued",
-              "running",
-              "succeeded",
+              "in_progress",
+              "completed",
               "failed",
-              "cancelled"
+              "unknown"
             ],
             "description": "任务状态。"
           },
@@ -741,7 +739,7 @@
           },
           "video_url": {
             "type": "string",
-            "description": "生成视频的下载链接。有效期 24 小时，请及时保存。仅在状态为 succeeded 时返回。"
+            "description": "生成视频的下载链接。有效期 24 小时，请及时保存。仅在状态为 completed 时返回。"
           },
           "metadata": {
             "type": "object",
