@@ -441,12 +441,11 @@
           "status": {
             "type": "string",
             "enum": [
-              "pending",
               "queued",
-              "running",
-              "succeeded",
+              "in_progress",
+              "completed",
               "failed",
-              "cancelled"
+              "unknown"
             ],
             "description": "任务状态。"
           },
@@ -480,12 +479,11 @@
           "status": {
             "type": "string",
             "enum": [
-              "pending",
               "queued",
-              "running",
-              "succeeded",
+              "in_progress",
+              "completed",
               "failed",
-              "cancelled"
+              "unknown"
             ],
             "description": "任务状态。"
           },
