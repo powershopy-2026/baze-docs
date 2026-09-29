@@ -523,12 +523,11 @@
           "status": {
             "type": "string",
             "enum": [
-              "pending",
               "queued",
-              "running",
-              "succeeded",
+              "in_progress",
+              "completed",
               "failed",
-              "cancelled"
+              "unknown"
             ]
           },
           "progress": {
@@ -559,12 +558,11 @@
           "status": {
             "type": "string",
             "enum": [
-              "pending",
               "queued",
-              "running",
-              "succeeded",
+              "in_progress",
+              "completed",
               "failed",
-              "cancelled"
+              "unknown"
             ]
           },
           "progress": {
