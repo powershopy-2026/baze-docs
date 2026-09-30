@@ -115,7 +115,7 @@
                       "id": "chatcmpl_zhipu_123",
                       "object": "chat.completion",
                       "created": 1775174400,
-                      "model": "glm-5",
+                      "model": "glm-4.7-flash",
                       "choices": [
                         {
                           "index": 0,
@@ -147,7 +147,7 @@
                 "examples": {
                   "stream": {
                     "summary": "Streaming response fragment",
-                    "value": "data: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-5\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Today's weather\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-5\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" is sunny, great for going outside.\"},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n"
+                    "value": "data: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Today's weather\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\" is sunny, great for going outside.\"},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n"
                   }
                 }
               }
@@ -321,7 +321,7 @@
           "model": {
             "type": "string",
             "description": "Model name. Supported model: `glm-4.7-flash`.",
-            "example": "glm-5-turbo",
+            "example": "glm-4.7-flash",
             "enum": [
               "glm-4.7-flash"
             ]

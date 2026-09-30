@@ -147,7 +147,7 @@
                 "examples": {
                   "stream": {
                     "summary": "流式响应片段",
-                    "value": "data: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-5\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"今天天气\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-5\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"晴，适合外出。\"},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n"
+                    "value": "data: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"今天天气\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-4.7-flash\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"晴，适合外出。\"},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n"
                   }
                 }
               }
@@ -321,7 +321,7 @@
           "model": {
             "type": "string",
             "description": "模型名称。支持的模型 `glm-4.7-flash` ",
-            "example": "glm-5-turbo",
+            "example": "glm-4.7-flash",
             "enum": [
               "glm-4.7-flash"
             ]

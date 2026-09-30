@@ -321,7 +321,7 @@
           "model": {
             "type": "string",
             "description": "模型名称。支持的模型包括 `glm-5`",
-            "example": "glm-5-turbo",
+            "example": "glm-5",
             "enum": [
               "glm-5"
             ]
