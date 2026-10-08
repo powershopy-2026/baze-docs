@@ -1,0 +1,42 @@
+---
+title: Vercel AI SDK
+---
+
+# Vercel AI SDK
+
+Use PowerTokens models in the [Vercel AI SDK](https://ai-sdk.dev) through the OpenAI Compatible provider.
+
+## Install
+
+```bash
+npm i ai @ai-sdk/openai-compatible
+```
+
+## Configure
+
+```bash
+export POWERTOKENS_API_KEY=your-api-key
+```
+
+Create a key on the [API keys page](https://www.powertokens.ai/en/api-keys?utm_source=docs&utm_medium=docs&utm_campaign=vercel-ai-sdk).
+
+```ts
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { generateText } from 'ai';
+
+const powertokens = createOpenAICompatible({
+  name: 'powertokens',
+  apiKey: process.env.POWERTOKENS_API_KEY,
+  baseURL: 'https://api.powertokens.ai/v1',
+  includeUsage: true,
+});
+
+const { text } = await generateText({
+  model: powertokens('glm-5.2'),
+  prompt: 'Explain what an API gateway does in one sentence.',
+});
+```
+
+- Base URL: `https://api.powertokens.ai/v1`
+- Auth: `Authorization: Bearer <key>`
+- Model IDs: see the [models page](https://powertokens.ai/models?utm_source=docs&utm_medium=docs&utm_campaign=vercel-ai-sdk) or `GET https://api.powertokens.ai/v1/models` (requires a key).

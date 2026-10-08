@@ -1,0 +1,42 @@
+---
+title: Vercel AI SDK
+---
+
+# Vercel AI SDK
+
+通过 OpenAI 兼容接口，在 [Vercel AI SDK](https://ai-sdk.dev) 里使用 PowerTokens 的模型。
+
+## 安装
+
+```bash
+npm i ai @ai-sdk/openai-compatible
+```
+
+## 配置
+
+```bash
+export POWERTOKENS_API_KEY=your-api-key
+```
+
+在 [API Key 页面](https://www.powertokens.ai/zh-Hans/api-keys?utm_source=docs&utm_medium=docs&utm_campaign=vercel-ai-sdk) 创建密钥。
+
+```ts
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
+import { generateText } from 'ai';
+
+const powertokens = createOpenAICompatible({
+  name: 'powertokens',
+  apiKey: process.env.POWERTOKENS_API_KEY,
+  baseURL: 'https://api.powertokens.ai/v1',
+  includeUsage: true,
+});
+
+const { text } = await generateText({
+  model: powertokens('glm-5.2'),
+  prompt: '用一句话说明 API 网关是做什么的。',
+});
+```
+
+- 接口地址：`https://api.powertokens.ai/v1`
+- 鉴权：`Authorization: Bearer <key>`
+- 模型 ID：见 [模型页](https://powertokens.ai/zh-Hans/models?utm_source=docs&utm_medium=docs&utm_campaign=vercel-ai-sdk)，或调用 `GET https://api.powertokens.ai/v1/models`（需要 key）。
