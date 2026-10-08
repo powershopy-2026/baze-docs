@@ -312,6 +312,8 @@
                       "en/zmodelVideo/vidu/viduq3-reference-to-video",
                       "en/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
                       "en/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
+                      "en/zmodelVideo/vidu/viduq4-preview-image-to-video",
+                      "en/zmodelVideo/vidu/viduq4-preview-reference-to-video",
                       "en/zmodelVideo/vidu/vidu-query-task-status"
                     ]
                   },
@@ -1705,6 +1707,20 @@
             ]
           },
           {
+            "tab": "standalone:zmodelVideo/vidu/viduq4-preview-image-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq4-preview-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq4-preview-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/vidu/viduq4-preview-reference-to-video"
+            ]
+          },
+          {
             "tab": "standalone:zmodelVideo/vidu/viduq3-turbo-image-to-video",
             "hidden": true,
             "pages": [
@@ -2037,6 +2053,8 @@
                       "zh-Hans/zmodelVideo/vidu/viduq3-reference-to-video",
                       "zh-Hans/zmodelVideo/vidu/viduq3-turbo-start-end-to-video",
                       "zh-Hans/zmodelVideo/vidu/viduq3-pro-start-end-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq4-preview-image-to-video",
+                      "zh-Hans/zmodelVideo/vidu/viduq4-preview-reference-to-video",
                       "zh-Hans/zmodelVideo/vidu/vidu-query-task-status"
                     ]
                   },
@@ -3378,6 +3396,20 @@
             "hidden": true,
             "pages": [
               "zh-Hans/standalone/zmodelVideo/vidu/viduq3-reference-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq4-preview-image-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq4-preview-image-to-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/vidu/viduq4-preview-reference-to-video",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/vidu/viduq4-preview-reference-to-video"
             ]
           },
           {

@@ -1,0 +1,491 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu 参考生视频 (viduq4-preview)",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai"
+    }
+  ],
+  "paths": {
+    "/vidu/ent/v2/reference2video": {
+      "post": {
+        "summary": "Vidu 参考生视频 (viduq4-preview)",
+        "operationId": "viduReferenceToVideoViduq4Preview",
+        "x-capability": "reference_to_video",
+        "description": "使用 Vidu 新一代旗舰预览模型 viduq4-preview 基于参考主体生成视频。该模型针对人物演绎、镜头语言、复杂视效进行能力优化，支持通过图片、文本定义角色/物体，并在提示词中引用。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}` 查询状态。 使用模型 viduq4-preview。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferenceToVideoRequest"
+              },
+              "examples": {
+                "basic_reference_video": {
+                  "summary": "参考生视频示例",
+                  "value": {
+                    "model": "viduq4-preview",
+                    "subjects": [
+                      {
+                        "name": "your_subject1_name",
+                        "images": [
+                          "your_image_url1",
+                          "your_image_url2",
+                          "your_image_url3"
+                        ],
+                        "voice_id": ""
+                      },
+                      {
+                        "name": "your_subject2_name",
+                        "images": [
+                          "your_image_url4",
+                          "your_image_url5",
+                          "your_image_url6"
+                        ],
+                        "voice_id": ""
+                      }
+                    ],
+                    "prompt": "@your_subject1_name 和 @your_subject2_name 在一起吃火锅，并且旁白音说火锅大家都爱吃。",
+                    "duration": 8,
+                    "audio": true
+                  }
+                },
+                "with_4k_resolution": {
+                  "summary": "4K 分辨率示例",
+                  "value": {
+                    "model": "viduq4-preview",
+                    "subjects": [
+                      {
+                        "name": "your_subject_name",
+                        "images": [
+                          "your_image_url1"
+                        ],
+                        "voice_id": ""
+                      }
+                    ],
+                    "prompt": "电影级镜头：@your_subject_name 在城市夜景中漫步，镜头跟随并逐渐拉远。",
+                    "duration": 8,
+                    "audio": true,
+                    "resolution": "4K"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "提交成功，返回视频任务对象。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferenceToVideoResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "提交成功",
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "viduq4-preview",
+                      "images": [
+                        "your_image_url1",
+                        "your_image_url2"
+                      ],
+                      "prompt": "@1 和 @2 在一起吃火锅，并且旁白音说火锅大家都爱吃。",
+                      "duration": 8,
+                      "seed": "random_number",
+                      "aspect_ratio": "3:4",
+                      "resolution": "1080p",
+                      "payload": "",
+                      "off_peak": false,
+                      "credits": "credits_number",
+                      "created_at": "2025-01-01T15:41:31.968916Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数不合法。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "参数错误",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "请求体格式错误或字段取值非法",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "无效的令牌",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "触发速率限制或账户额度不足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "额度不足",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "当前账户额度不足，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务器内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "server_error": {
+                    "summary": "服务器错误",
+                    "value": {
+                      "code": "internal_server_error",
+                      "message": "服务器内部错误，请稍后重试",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ReferenceToVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "subjects",
+          "prompt"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "viduq4-preview"
+            ],
+            "description": "模型名称可选值：viduq4-preview\n- viduq4-preview：Vidu 新一代旗舰预览模型，针对人物演绎、镜头语言、复杂视效进行能力优化，支持智能切镜，支持音画同出，多机位的一致性更出色，支持 2K、4K 规格视频输出"
+          },
+          "auto_subjects": {
+            "type": "boolean",
+            "default": false,
+            "description": "是否使用智能主体库能力，默认false，可选值 true、false\n- true：使用智能主体库能力。\n- false：不使用智能主体库能力。"
+          },
+          "subjects": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 7,
+            "items": {
+              "$ref": "#/components/schemas/Subject"
+            },
+            "description": "使用 viduq4-preview 模型时，只能使用图片主体和文字主体\n- 图片或文字主体最多不超过7个\n- 最多可使用15张参考图（每个主体最多3张）\n- 最多可使用3段参考音频作为输入\n注：viduq3-mix暂不支持使用主体"
+          },
+          "server_id": {
+            "type": "string",
+            "description": "通过创建主体API获取的 主体id，使用已有主体时必传该参数\n- 创建主体参考[创建和使用主体库"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "文本提示词生成视频的文本描述。\n注1：字符长度不能超过 5000 个字符\n注2：使用sujects主体参数时，可以通过@主体name 来表示主体内容，例如：\"@1 和 @2 在一起吃火锅，并且旁白音说火锅大家都爱吃。\""
+          },
+          "audio": {
+            "type": "boolean",
+            "default": true,
+            "description": "是否使用音视频直出能力，默认true，可选值 true、false\n- true：使用音视频直出能力。\n- false：不使用音视频直出能力。\nviduq4-preview 模型默认audio为true"
+          },
+          "audio_type": {
+            "type": "string",
+            "enum": [
+              "all",
+              "speech_only",
+              "sound_effect_only"
+            ],
+            "default": "all",
+            "description": "音频类型，audio为true时必填，默认为all\n- all：音效+人声\n- speech_only：仅人声\n- sound_effect_only：仅音效"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "视频时长参数，默认值依据模型而定：\nviduq4-preview：默认5秒，可选：3 - 16",
+            "minimum": 3,
+            "maximum": 16,
+            "default": 5
+          },
+          "seed": {
+            "type": "integer",
+            "description": "随机种子当默认不传或者传0时，会使用随机数替代手动设置则使用设置的种子"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1"
+            ],
+            "default": "16:9",
+            "description": "比例默认 16:9，可选值如下：16:9、9:16、1:1"
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "540p",
+              "720p",
+              "1080p",
+              "2K",
+              "4K"
+            ],
+            "description": "分辨率参数，默认值依据模型和视频时长而定：\nviduq4-preview（3-16秒）：默认 720p, 可选：540p、720p、1080p、2K、4K\n注：viduq4-preview 支持 2K、4K 规格视频输出"
+          },
+          "payload": {
+            "type": "string",
+            "maxLength": 1048576,
+            "description": "透传参数不做任何处理，仅数据传输注：最多 1048576个字符"
+          },
+          "off_peak": {
+            "type": "boolean",
+            "default": false,
+            "description": "错峰模式，默认为：false，可选值：\n- true：错峰生成视频；\n- false：即时生成视频；\n注1：错峰模式消耗的积分更低，具体请查看产品定价\n注2：错峰模式下提交的任务，会在48小时内生成，未能完成的任务会被自动取消，并返还该任务的积分；\n注3：您也可以手动取消错峰任务\n注4：viduq4-preview 模型在audio参数为true时，支持错峰任务"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "是否添加水印\n- true：添加水印；\n- false：不添加水印；\n注1：目前水印内容为固定，内容由AI生成，默认不加\n注2：您可以通过watermarked_url参数查询获取带水印的视频内容，详情见查询任务接口",
+            "default": false
+          },
+          "wm_position": {
+            "type": "integer",
+            "description": "水印位置，表示水印出现在图片的位置，默认为：3，可选项为：\n1：左上角\n2：右上角\n3：右下角\n4：左下角",
+            "default": 3,
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "minimum": 1,
+            "maximum": 4,
+            "x-options": [
+              {
+                "label": "左上角",
+                "value": 1
+              },
+              {
+                "label": "右上角",
+                "value": 2
+              },
+              {
+                "label": "右下角",
+                "value": 3
+              },
+              {
+                "label": "左下角",
+                "value": 4
+              }
+            ]
+          },
+          "wm_url": {
+            "type": "string",
+            "description": "水印内容，此处为图片URL不传时，使用默认水印：内容由AI生成"
+          },
+          "meta_data": {
+            "type": "string",
+            "description": "元数据标识，json格式字符串，透传字段，您可以 自定义格式 或使用 示例格式 ，示例如下：\n{\n\"Label\": \"your_label\",\"ContentProducer\": \"yourcontentproducer\",\"ContentPropagator\": \"your_content_propagator\",\"ProduceID\": \"yourproductid\", \"PropagateID\": \"your_propagate_id\",\"ReservedCode1\": \"yourreservedcode1\", \"ReservedCode2\": \"your_reserved_code2\"\n}\n该参数为空时，默认使用vidu生成的元数据标识"
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback 协议\n需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致\n回调返回的\"status\"包括以下状态：\n- processing 任务处理中\n- success 任务完成（如发送失败，回调三次）\n- failed 任务失败（如发送失败，回调三次）\nVidu采用回调签名算法进行认证，详情见：回调签名算法"
+          }
+        }
+      },
+      "ReferenceToVideoResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Vidu 生成的任务ID"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "处理状态\n可选值：\ncreated 创建成功\nqueueing 任务排队中\nprocessing 任务处理中\nsuccess 任务成功\nfailed 任务失败"
+          },
+          "model": {
+            "type": "string",
+            "description": "本次调用的模型名称"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "本次调用的提示词参数"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "本次调用的图像参数"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "本次调用的视频时长参数"
+          },
+          "seed": {
+            "type": "integer",
+            "description": "本次调用的随机种子参数"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "description": "本次调用的 比例 参数"
+          },
+          "resolution": {
+            "type": "string",
+            "description": "本次调用的分辨率参数"
+          },
+          "bgm": {
+            "type": "boolean",
+            "description": "本次调用的背景音乐参数"
+          },
+          "audio": {
+            "type": "boolean",
+            "description": "本次调用是否开启音视频直出"
+          },
+          "audio_type": {
+            "type": "string",
+            "description": "本次调用输出的音频类型"
+          },
+          "payload": {
+            "type": "string",
+            "description": "本次调用时传入的透传参数"
+          },
+          "off_peak": {
+            "type": "boolean",
+            "description": "本次调用时是否使用错峰模式"
+          },
+          "credits": {
+            "type": "integer",
+            "description": "本次调用使用的积分数"
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "本次提交任务是否使用水印"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "任务创建时间"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "错误代码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误描述信息。"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "附加的错误数据（可选）。"
+          }
+        }
+      },
+      "Subject": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "主体id，后续生成时可以通过@主体id的方式使用"
+          },
+          "images": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string"
+            },
+            "description": "主体图片，该主体对应的图片url，与videos必填一个\n注1：支持传入图片 Base64 编码或图片URL（确保可访问）；\n注2：最多支持输入 3 张图；\n注3：图片支持 png、jpeg、jpg、webp格式；\n注4：图片比例需要小于 1:4 或者 4:1 ；\n注5：请注意，base64 decode之后的字节长度需要小于20M，且编码必须包含适当的内容类型字符串，例如：\ndata:image/png;base64,{base64_encode}"
+          },
+          "videos": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "description": "主体视频，该主体对应的视频url，与images必填一个\n注1： 仅viduq2-pro模型支持使用视频主体\n注2：每个主体中的图片和视频，共享3个槽位\n注3：支持1个5秒视频\n注4：支持传入视频 Base64 编码或URL（确保可访问）\n注5：视频支持 mp4、avi、mov格式\n注6：视频像素不能小于 128*128，且比例需要小于1:4或者4:1\n注7：请注意，base64 decode之后的字节长度需要小于20M，且编码必须包含适当的内容类型字符串，例如：\ndata:video/mp4;base64,{base64_encode}"
+          }
+        }
+      }
+    }
+  }
+}
