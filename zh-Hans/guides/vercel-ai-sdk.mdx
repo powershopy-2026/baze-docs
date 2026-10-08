@@ -27,7 +27,7 @@ import { generateText } from 'ai';
 const powertokens = createOpenAICompatible({
   name: 'powertokens',
   apiKey: process.env.POWERTOKENS_API_KEY,
-  baseURL: 'https://api.powertokens.ai/v1',
+  baseURL: 'https://baze-api.powerbuyin.top/v1',
   includeUsage: true,
 });
 
@@ -37,6 +37,6 @@ const { text } = await generateText({
 });
 ```
 
-- 接口地址：`https://api.powertokens.ai/v1`
+- 接口地址：`https://baze-api.powerbuyin.top/v1`
 - 鉴权：`Authorization: Bearer <key>`
-- 模型 ID：见 [模型页](https://powertokens.ai/zh-Hans/models?utm_source=docs&utm_medium=docs&utm_campaign=vercel-ai-sdk)，或调用 `GET https://api.powertokens.ai/v1/models`（需要 key）。
+- 模型 ID：见 [模型页](https://powertokens.ai/zh-Hans/models?utm_source=docs&utm_medium=docs&utm_campaign=vercel-ai-sdk)，或调用 `GET https://baze-api.powerbuyin.top/v1/models`（需要 key）。

