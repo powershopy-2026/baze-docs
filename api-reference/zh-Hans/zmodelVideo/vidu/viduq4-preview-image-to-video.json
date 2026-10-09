@@ -15,7 +15,7 @@
         "summary": "Vidu 图生视频 (viduq4-preview)",
         "operationId": "viduImageToVideoViduq4Preview",
         "x-capability": "image_to_video",
-        "description": "使用 Vidu 新一代旗舰预览模型 viduq4-preview 将图片转换为视频。该模型针对人物演绎、镜头语言、复杂视效进行能力优化，支持 2K、4K 规格视频输出。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}` 查询状态。 使用模型 viduq4-preview。",
+        "description": "使用 Vidu 最新旗舰模型（预览版）viduq4-preview 将图片转换为视频。该模型支持音画同出，支持自动切镜。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}` 查询状态。 使用模型 viduq4-preview。",
         "requestBody": {
           "required": true,
           "content": {
@@ -32,11 +32,9 @@
                       "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"
                     ],
                     "prompt": "The astronaut waved and the camera moved up.",
-                    "audio": true,
                     "duration": 5,
                     "seed": 0,
-                    "resolution": "1080p",
-                    "off_peak": false
+                    "resolution": "1080p"
                   }
                 },
                 "with_4k_resolution": {
@@ -49,8 +47,7 @@
                     "prompt": "电影级镜头：宇航员在月球表面缓慢行走，镜头从特写拉远至全景。",
                     "audio": true,
                     "duration": 8,
-                    "resolution": "4K",
-                    "off_peak": false
+                    "resolution": "4K"
                   }
                 }
               }
@@ -80,7 +77,6 @@
                       "seed": 123456789,
                       "resolution": "1080p",
                       "payload": "",
-                      "off_peak": false,
                       "credits": 10,
                       "created_at": "2025-01-01T15:41:31.968916Z"
                     }
@@ -200,7 +196,7 @@
             "enum": [
               "viduq4-preview"
             ],
-            "description": "模型名称\n可选值：viduq4-preview\n- viduq4-preview：Vidu 新一代旗舰预览模型，针对人物演绎、镜头语言、复杂视效进行能力优化，支持 2K、4K 规格视频输出，效果更好"
+            "description": "模型名称可选值：viduq4-preview\n- viduq4-preview：Vidu最新旗舰模型（预览版），支持音画同出，支持自动切镜"
           },
           "images": {
             "type": "array",
@@ -209,37 +205,27 @@
             "items": {
               "type": "string"
             },
-            "description": "首帧图像\n模型将以此参数中传入的图片为首帧画面来生成视频。\n注1：支持传入图片 Base64 编码或图片URL（确保可访问）；\n注2：只支持输入 1 张图；\n注3：图片支持 png、jpeg、jpg、webp格式；\n注4：图片比例需要小于 1:4 或者 4:1 ；\n注5：图片大小不超过 50 MB；\n注6：请注意，http请求的post body不超过20MB，且编码必须包含适当的内容类型字符串，例如：\ndata:image/png;base64,{base64_encode}"
+            "description": "首帧图像\n模型将以此参数中传入的图片为首帧画面来生成视频。\n注1：支持传入图片 Base64 编码或图片URL（确保可访问）；\n注2：只支持输入 1 张图；\n注3：图片支持 png、jpeg、jpg、webp格式；\n注4：图片大小不超过 50 MB；\n注5：请注意，http body 需要小于20M，且编码必须包含适当的内容类型字符串，例如：\ndata:image/png;base64,{base64_encode}"
           },
           "prompt": {
             "type": "string",
-            "maxLength": 5000,
-            "description": "文本提示词\n生成视频的文本描述。\n注1：字符长度不能超过 5000 个字符\n注2：若使用is_rec推荐提示词参数，模型将不考虑此参数所输入的提示词"
+            "maxLength": 20000,
+            "description": "文本提示词\n生成视频的文本描述。\n注：字符长度不能超过 20000 个字符"
           },
           "audio": {
             "type": "boolean",
             "default": true,
-            "description": "是否使用音视频直出能力，默认为true，枚举值为：\n- false：不需要音视频直出，输出静音视频\n- true：需要音视频直出，输出带台词以及背景音的视频\n注1：该参数为true时，voice_id参数才生效\n注2：该参数为true时，支持错峰\n注3：viduq4-preview 模型默认值为true"
-          },
-          "audio_type": {
-            "type": "string",
-            "enum": [
-              "all",
-              "speech_only",
-              "sound_effect_only"
-            ],
-            "default": "all",
-            "description": "音频类型，audio为true时必填，默认为all\n- all：音效+人声\n- speech_only：仅人声\n- sound_effect_only：仅音效\n注：该参数目前仅支持q2、q1、2.0系列模型的音频拆分"
+            "description": "是否使用音视频直出能力\n- false：不需要音视频直出，输出静音视频\n- true：需要音画同步，输出有声视频（包括台词和音效）\n注：viduq4-preview 模型默认值为true"
           },
           "is_rec": {
             "type": "boolean",
-            "default": false,
-            "description": "是否使用推荐提示词\n- true：是，由系统自动推荐提示词，并使用提示词内容生成视频，推荐提示词数量=1\n- false：否，根据输入的prompt生成视频\n注意：启用推荐提示词后，每个任务多消耗10积分"
+            "default": true,
+            "description": "是否启用AI改写提示词功能\n- true：启用\n- false：不启用（默认值）"
           },
           "duration": {
             "type": "integer",
-            "description": "视频时长\nviduq4-preview 默认为 5，可选：1 - 16",
-            "minimum": 1,
+            "description": "视频时长参数\n默认值: 5\n枚举值: 3 - 16",
+            "minimum": 3,
             "maximum": 16,
             "default": 5
           },
@@ -256,26 +242,21 @@
               "2K",
               "4K"
             ],
-            "description": "分辨率参数，默认值依据模型和视频时长而定：\n- viduq4-preview 1-16秒：默认 720p，可选：540p、720p、1080p、2K、4K\n注：viduq4-preview 支持 2K、4K 规格视频输出"
+            "description": "分辨率参数\n默认值: 720p\n枚举值: 540p / 720p / 1080p / 2K / 4K\n注：viduq4-preview 支持 2K、4K 规格视频输出"
           },
           "payload": {
             "type": "string",
             "maxLength": 1048576,
             "description": "透传参数\n不做任何处理，仅数据传输\n注：最多 1048576个字符"
           },
-          "off_peak": {
-            "type": "boolean",
-            "default": false,
-            "description": "错峰模式，默认为：false，可选值：\n- true：错峰生成视频；\n- false：即时生成视频；\n\n注1：错峰模式消耗的积分更低，具体请查看产品定价\n\n注2：错峰模式下提交的任务，会在48小时内生成，未能完成的任务会被自动取消，并返还该任务的积分；\n\n注3：您也可以手动取消错峰任务\n\n注4：viduq4-preview 在 audio 参数为 true 时，支持错峰模式"
-          },
           "watermark": {
             "type": "boolean",
-            "description": "是否添加水印\n- true：添加水印；\n- false：不添加水印；\n\n注1：目前水印内容为固定，内容由AI生成，默认不加\n\n注2：您可以通过watermarked_url参数查询获取带水印的视频内容，详情见查询任务接口",
-            "default": false
+            "default": true,
+            "description": "是否添加水印\n- true：添加水印\n- false：不添加水印\n注：目前水印内容为固定，内容由AI生成，默认不加"
           },
           "wm_position": {
             "type": "integer",
-            "description": "水印位置，表示水印出现在图片的位置，可选项为：\n1：左上角\n2：右上角\n3：右下角\n4：左下角\n默认为：3",
+            "description": "水印位置，表示水印出现在图片的位置，可选项为：\n1：左上角\n2：右上角\n3：右下角\n4：左下角\n默认值: 3",
             "default": 3,
             "enum": [
               1,
@@ -314,7 +295,7 @@
           },
           "callback_url": {
             "type": "string",
-            "description": "Callback 协议\n需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致\n回调返回的\"status\"包括以下状态：\n- processing 任务处理中\n- success 任务完成（如发送失败，回调三次）\n- failed 任务失败（如发送失败，回调三次）\nVidu采用回调签名算法进行认证，详情见：回调签名算法"
+            "description": "Callback 协议\n需要您在创建任务时主动设置 callback_url，请求方法为 POST，当视频生成任务有状态变化时，Vidu 将向此地址发送包含任务最新状态的回调请求。回调请求内容结构与查询任务API的返回体一致\n回调返回的\"status\"包括以下状态：\n- processing 任务处理中\n- success 任务完成（如发送失败，回调三次）\n- failed 任务失败（如发送失败，回调三次）\nVidu采用回调签名算法进行认证，详情见：https://platform.vidu.cn/docs/callback-signature"
           }
         }
       },
@@ -351,17 +332,13 @@
             },
             "description": "本次调用的图像参数"
           },
+          "sounds": {
+            "type": "string",
+            "description": "本次调用的声音参数"
+          },
           "duration": {
             "type": "integer",
             "description": "本次调用的视频时长参数"
-          },
-          "audio": {
-            "type": "boolean",
-            "description": "本次调用是否使用音画同出"
-          },
-          "audio_type": {
-            "type": "string",
-            "description": "本次调用输出的音频类型"
           },
           "seed": {
             "type": "integer",
@@ -374,10 +351,6 @@
           "payload": {
             "type": "string",
             "description": "本次调用时传入的透传参数"
-          },
-          "off_peak": {
-            "type": "boolean",
-            "description": "本次调用时是否使用错峰模式"
           },
           "credits": {
             "type": "integer",
