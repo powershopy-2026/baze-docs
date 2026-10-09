@@ -1,0 +1,45 @@
+
+用一份可下载的自定义服务商 JSON，在 [Goose](https://github.com/aaif-goose/goose) 里使用 PowerTokens 模型。
+
+Goose 维护者更希望用户自己安装 JSON，而不是合进仓库。下载下面的文件，放到 Goose 的 `custom_providers` 目录，填好 API Key，再选模型即可。
+
+## 下载
+
+[powertokens.json](https://raw.githubusercontent.com/PowerTokens/typescript-examples/main/integrations/goose/powertokens.json)
+
+## 安装
+
+1. 在 [API Key 页面](https://www.powertokens.ai/zh-Hans/api-keys?utm_source=docs&utm_medium=docs&utm_campaign=goose) 创建密钥。
+2. 下载 `powertokens.json`，放到：
+   - macOS / Linux：`~/.config/goose/custom_providers/powertokens.json`
+   - Windows：`%APPDATA%\Block\goose\config\custom_providers\powertokens.json`
+
+   目录不存在就先建一个。
+
+3. 设置密钥：
+
+```bash
+export POWERTOKENS_API_KEY=your-api-key
+```
+
+也可以在 Goose 桌面版里选中 PowerTokens 后粘贴密钥（可写入钥匙串）。
+
+4. 重启 Goose（或刷新服务商列表），选择 **PowerTokens**，开始会话。
+
+命令行示例：
+
+```bash
+mkdir -p ~/.config/goose/custom_providers
+# 把下载的 powertokens.json 放进该目录
+export POWERTOKENS_API_KEY=your-api-key
+goose session start --provider powertokens
+```
+
+## 说明
+
+- 接口地址（已写在 JSON 里）：`https://baze-api.powerbuyin.top/v1`
+- 环境变量：`POWERTOKENS_API_KEY`
+- 文件中的模型：`glm-5.2`、`MiniMax-M3`、`glm-5.3`、`glm-5-turbo`、`glm-4.7`、`MiniMax-M2.7`、`qwen3-coder-plus`、`deepseek-v3-2-251201`
+- 完整模型列表见 [模型页](https://powertokens.ai/zh-Hans/models?utm_source=docs&utm_medium=docs&utm_campaign=goose)，或调用 `GET https://baze-api.powerbuyin.top/v1/models`（需要 key）
+
+PowerTokens 是 OpenAI 兼容网关：一个 key 可用 GLM、MiniMax、Qwen、DeepSeek。

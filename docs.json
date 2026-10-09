@@ -22,7 +22,9 @@
                   "en/guides/powertokens-quickstart",
                   "en/guides/api-key-and-model-call",
                   "en/guides/logs-and-usage",
-                  "en/guides/seedance2-quick-start"
+                  "en/guides/seedance2-quick-start",
+                  "en/guides/vercel-ai-sdk",
+                  "en/guides/goose"
                 ]
               }
             ]
@@ -1762,7 +1764,9 @@
                   "zh-Hans/guides/powertokens-quickstart",
                   "zh-Hans/guides/api-key-and-model-call",
                   "zh-Hans/guides/logs-and-usage",
-                  "zh-Hans/guides/seedance2-quick-start"
+                  "zh-Hans/guides/seedance2-quick-start",
+                  "zh-Hans/guides/vercel-ai-sdk",
+                  "zh-Hans/guides/goose"
                 ]
               }
             ]
