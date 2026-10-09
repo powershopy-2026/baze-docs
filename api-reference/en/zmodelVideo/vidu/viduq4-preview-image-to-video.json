@@ -25,49 +25,29 @@
               },
               "examples": {
                 "basic_image_to_video": {
-                  "summary": "Basic image-to-video",
+                  "summary": "Image-to-video example",
                   "value": {
                     "model": "viduq4-preview",
                     "images": [
-                      "https://example.com/image.png"
+                      "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"
                     ],
-                    "prompt": "Animate the scene in the image"
-                  }
-                },
-                "with_audio": {
-                  "summary": "Image-to-video with audio",
-                  "value": {
-                    "model": "viduq4-preview",
-                    "images": [
-                      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAE..."
-                    ],
-                    "audio": true,
-                    "audio_type": "all",
-                    "duration": 5
+                    "prompt": "The astronaut waved and the camera moved up.",
+                    "duration": 5,
+                    "seed": 0,
+                    "resolution": "1080p"
                   }
                 },
                 "with_4k_resolution": {
-                  "summary": "Image-to-video with 4K resolution",
+                  "summary": "4K resolution example",
                   "value": {
                     "model": "viduq4-preview",
                     "images": [
-                      "https://example.com/cinematic-frame.jpg"
+                      "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"
                     ],
                     "prompt": "Cinematic shot: an astronaut walks slowly on the lunar surface, camera pulls back from close-up to wide shot.",
                     "audio": true,
                     "duration": 8,
                     "resolution": "4K"
-                  }
-                },
-                "with_recommended_prompt": {
-                  "summary": "With recommended prompt",
-                  "value": {
-                    "model": "viduq4-preview",
-                    "images": [
-                      "https://example.com/character.jpg"
-                    ],
-                    "is_rec": true,
-                    "resolution": "720p"
                   }
                 }
               }
@@ -97,7 +77,6 @@
                       "seed": 123456789,
                       "resolution": "1080p",
                       "payload": "",
-                      "off_peak": false,
                       "credits": 10,
                       "created_at": "2025-01-01T15:41:31.968916Z"
                     }
@@ -217,7 +196,7 @@
             "enum": [
               "viduq4-preview"
             ],
-            "description": "Video generation model name.\n- **viduq4-preview**: Vidu next-generation flagship preview model, optimized for character performance, camera language, and complex visual effects. Supports 2K and 4K video output and audio-video synchronization."
+            "description": "Model name. Available value: viduq4-preview\n- viduq4-preview: Vidu's latest flagship model (preview), supports audio-visual sync and automatic shot switching"
           },
           "images": {
             "type": "array",
@@ -226,43 +205,33 @@
             "items": {
               "type": "string"
             },
-            "description": "An image to be used as the start frame of the generated video.\n- Only accepts 1 image\n- Accepts public URL or Base64 format\n- Supported formats: png, jpeg, jpg, webp\n- The aspect ratio of the images must be between 1:4 and 4:1\n- Single image limited to 50MB\n- HTTP request body should not exceed 20MB\n- Base64 format example: `data:image/png;base64,{base64_encode}`"
+            "description": "Start frame image.\nThe model uses the image provided as the first frame to generate the video.\nNote 1: Supports image Base64 encoding or image URL (ensure accessibility);\nNote 2: Only 1 image is supported;\nNote 3: Supports png, jpeg, jpg, webp formats;\nNote 4: Image size must not exceed 50 MB;\nNote 5: Note that the http body must be less than 20M, and the encoding must include an appropriate content-type string, e.g.:\ndata:image/png;base64,{base64_encode}"
           },
           "prompt": {
             "type": "string",
-            "maxLength": 5000,
-            "description": "Text prompt for describing video generation content.\nNote: If the recommended prompt feature is enabled (is_rec=true), the model will ignore the manually entered prompt parameter."
-          },
-          "is_rec": {
-            "type": "boolean",
-            "default": false,
-            "description": "Whether to use the recommended prompt.\n- **true**: Yes, the system will automatically generate and apply a recommended prompt. Number of recommended prompts = 1\n- **false**: No, the video will be generated based on the user-provided prompt\nNote: When the recommended prompt feature is enabled, each task will consume an additional 10 credits."
+            "maxLength": 20000,
+            "description": "Text prompt.\nText description for video generation.\nNote: Character length must not exceed 20000 characters"
           },
           "audio": {
             "type": "boolean",
             "default": true,
-            "description": "Whether to use direct audio-video generation capability.\n- **false**: No direct audio-video generation, outputs silent video\n- **true**: Direct audio-video generation required, outputs video with sound (including dialogue and sound effects)\nNote 1: The voice_id parameter takes effect only when this parameter is true\nNote 2: When this parameter is true, staggered mode is supported\nNote 3: For the viduq4-preview model, the default value for this parameter is true"
+            "description": "Whether to use audio-visual direct output\n- false: no audio-visual direct output, outputs a silent video\n- true: requires audio-visual sync, outputs a video with sound (including dialogue and sound effects)\nNote: viduq4-preview model default is true"
           },
-          "audio_type": {
-            "type": "string",
-            "enum": [
-              "all",
-              "speech_only",
-              "sound_effect_only"
-            ],
-            "default": "all",
-            "description": "Audio type, required when audio is true.\n- **all**: Sound effects + vocals\n- **speech_only**: Vocal only\n- **sound-effect_only**: Sound effects only\nNote: Currently, this parameter only supports audio splitting for q2, q1, and 2.0 series models."
+          "is_rec": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable AI prompt rewriting\n- true: enabled\n- false: disabled (default value)"
           },
           "duration": {
             "type": "integer",
-            "description": "Video duration in seconds. Default values vary by model:\n- **viduq4-preview**: default 5, available: 1-16",
-            "minimum": 1,
+            "description": "Video duration parameter\nDefault: 5\nEnum: 3 - 16",
+            "minimum": 3,
             "maximum": 16,
             "default": 5
           },
           "seed": {
             "type": "integer",
-            "description": "Random seed.\n- Defaults to a random seed number\n- Manually set values will override the default random seed"
+            "description": "Random seed.\nWhen not provided or set to 0, a random number is used; when manually set, the configured seed is used."
           },
           "resolution": {
             "type": "string",
@@ -273,30 +242,21 @@
               "2K",
               "4K"
             ],
-            "description": "Resolution (based on model & duration):\n- **viduq4-preview (1-16s)**: default 720p, options: 540p, 720p, 1080p, 2K, 4K\nNote: The viduq4-preview model supports 2K and 4K video output."
+            "description": "Resolution parameter\nDefault: 720p\nEnum: 540p / 720p / 1080p / 2K / 4K\nNote: viduq4-preview supports 2K and 4K video output"
           },
           "payload": {
             "type": "string",
             "maxLength": 1048576,
-            "description": "Transparent transmission parameters.\nNo processing, only data transmission, with a maximum length of 1048576 characters."
-          },
-          "off_peak": {
-            "type": "boolean",
-            "default": false,
-            "description": "Off peak mode.\n- **true**: Off peak generate mode\n- **false**: Normal generate mode\nThe off_peak mode consumes lower points (see Pricing for details). Tasks submitted in off peak mode will be generated within 48 hours. Tasks that are not completed will be automatically cancelled and their points will be refunded. We also support cancel off_peak tasks.\nNote: The viduq4-preview model supports off-peak mode when the audio parameter is true."
-          },
-          "callback_url": {
-            "type": "string",
-            "description": "Callback. When creating a task, you need to actively set the callback_url with a POST request. When the video generation task changes its status, Vidu will send a callback request to this URL, containing the latest status of the task. The structure of the callback request content will be the same as the return body of the Get Generation API.\n\nThe \"status\" in the callback response includes the following states:\n- **processing**: Task is being processed.\n- **success**: Task is completed (if sending fails, it will retry the callback three times).\n- **failed**: Task failed (if sending fails, it will retry the callback three times)."
+            "description": "Passthrough parameter.\nNo processing, only data transmission.\nNote: maximum 1048576 characters"
           },
           "watermark": {
             "type": "boolean",
-            "description": "Whether to add a watermark.\n- **true**: Add watermark\n- **false**: Do not add watermark\n\nNote 1: Currently the watermark content is fixed, default is no watermark\nNote 2: You can retrieve watermarked video content through the watermarked_url parameter in the query task API",
-            "default": false
+            "default": true,
+            "description": "Whether to add watermark\n- true: add watermark\n- false: no watermark\nNote: Currently watermark content is fixed, AI-generated, not added by default"
           },
           "wm_position": {
             "type": "integer",
-            "description": "Watermark position on the image. Options:\n- **1**: Top left\n- **2**: Top right\n- **3**: Bottom right\n- **4**: Bottom left\n\nDefault: 3",
+            "description": "Watermark position, indicating where the watermark appears on the image. Options:\n1: top-left\n2: top-right\n3: bottom-right\n4: bottom-left\nDefault: 3",
             "default": 3,
             "enum": [
               1,
@@ -327,11 +287,15 @@
           },
           "wm_url": {
             "type": "string",
-            "description": "Watermark image URL. When not specified, the default watermark is used."
+            "description": "Watermark content. This is an image URL; when not provided, the default watermark (AI-generated content) is used."
           },
           "meta_data": {
             "type": "string",
-            "description": "Metadata identifier, a JSON format string used as a passthrough field. You can customize the format or use the example format below:\n\n```json\n{\n  \"Label\": \"your_label\",\n  \"ContentProducer\": \"your_content_producer\",\n  \"ContentPropagator\": \"your_content_propagator\",\n  \"ProduceID\": \"your_product_id\",\n  \"PropagateID\": \"your_propagate_id\",\n  \"ReservedCode1\": \"your_reserved_code1\",\n  \"ReservedCode2\": \"your_reserved_code2\"\n}\n```\n\nWhen this parameter is empty, the Vidu-generated metadata identifier is used by default."
+            "description": "Metadata identifier, a JSON format string passthrough field. You can customize the format or use the example format below:\n{\n\"Label\": \"your_label\",\n\"ContentProducer\": \"your_content_producer\",\n\"ContentPropagator\": \"your_content_propagator\",\n\"ProduceID\": \"your_product_id\",\n\"PropagateID\": \"your_propagate_id\",\n\"ReservedCode1\": \"your_reserved_code1\",\n\"ReservedCode2\": \"your_reserved_code2\"\n}\nWhen this parameter is empty, the Vidu-generated metadata identifier is used by default."
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback protocol.\nYou need to actively set callback_url when creating a task. The request method is POST. When the video generation task changes status, Vidu will send a callback request containing the latest task status to this address. The callback request body structure is consistent with the query task API response body.\nThe \"status\" returned by the callback includes the following states:\n- processing: task is being processed\n- success: task completed (if sending fails, callback retries three times)\n- failed: task failed (if sending fails, callback retries three times)\nVidu uses a callback signature algorithm for authentication, see: https://platform.vidu.cn/docs/callback-signature"
           }
         }
       },
@@ -340,7 +304,7 @@
         "properties": {
           "task_id": {
             "type": "string",
-            "description": "Task ID."
+            "description": "Task ID generated by Vidu."
           },
           "state": {
             "type": "string",
@@ -351,34 +315,30 @@
               "success",
               "failed"
             ],
-            "description": "Task processing state:\n- **created**: Task created successfully\n- **queueing**: Task in queue\n- **processing**: Task processing\n- **success**: Generation successful\n- **failed**: Task failed"
+            "description": "Processing state\nAvailable values:\ncreated: task created successfully\nqueueing: task in queue\nprocessing: task being processed\nsuccess: task succeeded\nfailed: task failed"
           },
           "model": {
             "type": "string",
-            "description": "Model parameter used for this call."
+            "description": "Model name used for this call."
           },
           "prompt": {
             "type": "string",
-            "description": "Text prompt used for this call."
+            "description": "Prompt parameter used for this call."
           },
           "images": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "Images used for this call."
+            "description": "Images parameter used for this call."
+          },
+          "sounds": {
+            "type": "string",
+            "description": "Sounds parameter used for this call."
           },
           "duration": {
             "type": "integer",
             "description": "Video duration parameter used for this call."
-          },
-          "audio": {
-            "type": "boolean",
-            "description": "Whether to use audio for this call."
-          },
-          "audio_type": {
-            "type": "string",
-            "description": "Audio type parameter used for this call."
           },
           "seed": {
             "type": "integer",
@@ -390,24 +350,20 @@
           },
           "payload": {
             "type": "string",
-            "description": "Payload parameter used for this call."
-          },
-          "off_peak": {
-            "type": "boolean",
-            "description": "Off-peak mode parameter used for this call."
+            "description": "Passthrough parameter passed in for this call."
           },
           "credits": {
             "type": "integer",
             "description": "Credits consumed for this call."
           },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether a watermark was used for this task submission."
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
             "description": "Task creation time."
-          },
-          "watermark": {
-            "type": "boolean",
-            "description": "Whether a watermark was used for this task submission."
           }
         }
       },
