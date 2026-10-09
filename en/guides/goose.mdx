@@ -1,0 +1,46 @@
+# Goose
+
+Use PowerTokens models in [Goose](https://github.com/aaif-goose/goose) with a downloadable custom provider file.
+
+Goose maintainers prefer a user-installable JSON over an in-tree provider. Download the file below, drop it into Goose’s `custom_providers` directory, set your API key, and pick a model.
+
+## Download
+
+[powertokens.json](https://raw.githubusercontent.com/PowerTokens/typescript-examples/main/integrations/goose/powertokens.json)
+
+## Install
+
+1. Create a key on the [API keys page](https://www.powertokens.ai/en/api-keys?utm_source=docs&utm_medium=docs&utm_campaign=goose).
+2. Download `powertokens.json` and place it here:
+   - macOS / Linux: `~/.config/goose/custom_providers/powertokens.json`
+   - Windows: `%APPDATA%\Block\goose\config\custom_providers\powertokens.json`
+
+   Create the folder if it does not exist.
+
+3. Set the key:
+
+```bash
+export POWERTOKENS_API_KEY=your-api-key
+```
+
+Or paste the key in Goose Desktop when you select PowerTokens (Goose can store it in the keychain).
+
+4. Restart Goose (or refresh providers), choose **PowerTokens**, and start a session.
+
+Example (CLI):
+
+```bash
+mkdir -p ~/.config/goose/custom_providers
+# copy the downloaded powertokens.json into that folder
+export POWERTOKENS_API_KEY=your-api-key
+goose session start --provider powertokens
+```
+
+## Details
+
+- Base URL (already in the JSON): `https://api.powertokens.ai/v1`
+- Auth env: `POWERTOKENS_API_KEY`
+- Models in the file: `glm-5.2`, `MiniMax-M3`, `glm-5.3`, `glm-5-turbo`, `glm-4.7`, `MiniMax-M2.7`, `qwen3-coder-plus`, `deepseek-v3-2-251201`
+- Full model list: [models page](https://powertokens.ai/models?utm_source=docs&utm_medium=docs&utm_campaign=goose) or `GET https://api.powertokens.ai/v1/models` (requires a key)
+
+PowerTokens is an OpenAI-compatible gateway: one key for GLM, MiniMax, Qwen, and DeepSeek.
