@@ -251,7 +251,7 @@
           },
           "watermark": {
             "type": "boolean",
-            "default": true,
+            "default": false,
             "description": "Whether to add watermark\n- true: add watermark\n- false: no watermark\nNote: Currently watermark content is fixed, AI-generated, not added by default"
           },
           "wm_position": {

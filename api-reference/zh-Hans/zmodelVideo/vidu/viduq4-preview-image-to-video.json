@@ -251,7 +251,7 @@
           },
           "watermark": {
             "type": "boolean",
-            "default": true,
+            "default": false,
             "description": "是否添加水印\n- true：添加水印\n- false：不添加水印\n注：目前水印内容为固定，内容由AI生成，默认不加"
           },
           "wm_position": {
