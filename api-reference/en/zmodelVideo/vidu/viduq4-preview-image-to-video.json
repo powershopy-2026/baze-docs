@@ -15,7 +15,7 @@
         "summary": "Vidu Image-to-Video (viduq4-preview)",
         "operationId": "viduImageToVideoEnViduq4Preview",
         "x-capability": "image_to_video",
-        "description": "Use Vidu's latest flagship model (preview) viduq4-preview to convert an image to video. This model supports audio-visual sync and automatic shot switching. After submitting a task, query its status via `GET /vidu/ent/v2/tasks/{task_id}`. Uses model viduq4-preview.",
+        "description": "Use Vidu's latest flagship model (preview) viduq4-preview to convert an image to video. This model supports audio-visual sync and automatic shot switching. After submitting a task, query its status via `GET /vidu/ent/v2/tasks/{task_id}/creations`. Uses model viduq4-preview.",
         "requestBody": {
           "required": true,
           "content": {

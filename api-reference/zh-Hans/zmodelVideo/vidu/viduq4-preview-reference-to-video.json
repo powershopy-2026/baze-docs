@@ -15,7 +15,7 @@
         "summary": "Vidu 参考生视频 (viduq4-preview)",
         "operationId": "viduReferenceToVideoViduq4Preview",
         "x-capability": "reference_to_video",
-        "description": "使用 Vidu 最新旗舰模型（预览版）viduq4-preview 基于参考图片和参考音频生成视频。该模型支持参考 1-15 张图片，支持参考 0-3 个音频。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}` 查询状态。 使用模型 viduq4-preview。",
+        "description": "使用 Vidu 最新旗舰模型（预览版）viduq4-preview 基于参考图片和参考音频生成视频。该模型支持参考 1-15 张图片，支持参考 0-3 个音频。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}/creations` 查询状态。 使用模型 viduq4-preview。",
         "requestBody": {
           "required": true,
           "content": {

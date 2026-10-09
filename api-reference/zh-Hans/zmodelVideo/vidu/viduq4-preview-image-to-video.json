@@ -15,7 +15,7 @@
         "summary": "Vidu 图生视频 (viduq4-preview)",
         "operationId": "viduImageToVideoViduq4Preview",
         "x-capability": "image_to_video",
-        "description": "使用 Vidu 最新旗舰模型（预览版）viduq4-preview 将图片转换为视频。该模型支持音画同出，支持自动切镜。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}` 查询状态。 使用模型 viduq4-preview。",
+        "description": "使用 Vidu 最新旗舰模型（预览版）viduq4-preview 将图片转换为视频。该模型支持音画同出，支持自动切镜。提交任务后，请通过 `GET /vidu/ent/v2/tasks/{task_id}/creations` 查询状态。 使用模型 viduq4-preview。",
         "requestBody": {
           "required": true,
           "content": {

@@ -15,7 +15,7 @@
         "summary": "Vidu Reference-to-Video (viduq4-preview)",
         "operationId": "viduReferenceToVideoEnViduq4Preview",
         "x-capability": "reference_to_video",
-        "description": "Use Vidu's latest flagship model (preview) viduq4-preview to generate a video based on reference images and reference audio. This model supports referencing 1-15 images and 0-3 audio files. After submitting a task, query its status via `GET /vidu/ent/v2/tasks/{task_id}`. Uses model viduq4-preview.",
+        "description": "Use Vidu's latest flagship model (preview) viduq4-preview to generate a video based on reference images and reference audio. This model supports referencing 1-15 images and 0-3 audio files. After submitting a task, query its status via `GET /vidu/ent/v2/tasks/{task_id}/creations`. Uses model viduq4-preview.",
         "requestBody": {
           "required": true,
           "content": {
