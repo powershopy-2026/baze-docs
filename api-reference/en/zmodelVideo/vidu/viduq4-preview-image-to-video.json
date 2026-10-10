@@ -1,0 +1,390 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Vidu Image-to-Video (viduq4-preview)",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top"
+    }
+  ],
+  "paths": {
+    "/vidu/ent/v2/img2video": {
+      "post": {
+        "summary": "Vidu Image-to-Video (viduq4-preview)",
+        "operationId": "viduImageToVideoEnViduq4Preview",
+        "x-capability": "image_to_video",
+        "description": "Use Vidu's latest flagship model (preview) viduq4-preview to convert an image to video. This model supports audio-visual sync and automatic shot switching. After submitting a task, query its status via `GET /vidu/ent/v2/tasks/{task_id}/creations`. Uses model viduq4-preview.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageToVideoRequest"
+              },
+              "examples": {
+                "basic_image_to_video": {
+                  "summary": "Image-to-video example",
+                  "value": {
+                    "model": "viduq4-preview",
+                    "images": [
+                      "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"
+                    ],
+                    "prompt": "The astronaut waved and the camera moved up.",
+                    "duration": 5,
+                    "seed": 0,
+                    "resolution": "1080p"
+                  }
+                },
+                "with_4k_resolution": {
+                  "summary": "4K resolution example",
+                  "value": {
+                    "model": "viduq4-preview",
+                    "images": [
+                      "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"
+                    ],
+                    "prompt": "Cinematic shot: an astronaut walks slowly on the lunar surface, camera pulls back from close-up to wide shot.",
+                    "audio": true,
+                    "duration": 8,
+                    "resolution": "4K"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Submission successful, returns a video task object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageToVideoResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Submission successful",
+                    "value": {
+                      "task_id": "your_task_id_here",
+                      "state": "created",
+                      "model": "viduq4-preview",
+                      "images": [
+                        "https://prod-ss-images.s3.cn-northwest-1.amazonaws.com.cn/vidu-maas/template/image2video.png"
+                      ],
+                      "prompt": "The astronaut waved and the camera moved up.",
+                      "duration": 5,
+                      "seed": 123456789,
+                      "resolution": "1080p",
+                      "payload": "",
+                      "credits": 10,
+                      "created_at": "2025-01-01T15:41:31.968916Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "invalid_request": {
+                    "summary": "Invalid parameters",
+                    "value": {
+                      "code": "bad_request_body",
+                      "message": "Request body format error or invalid field values",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "code": "access_denied",
+                      "message": "Invalid token",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded or insufficient quota.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "quota_exceeded": {
+                    "summary": "Insufficient quota",
+                    "value": {
+                      "code": "insufficient_user_quota",
+                      "message": "Insufficient account quota, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "server_error": {
+                    "summary": "Server error",
+                    "value": {
+                      "code": "internal_server_error",
+                      "message": "Internal server error, please try again later",
+                      "data": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ImageToVideoRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "images"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "viduq4-preview"
+            ],
+            "description": "Model name. Available value: viduq4-preview\n- viduq4-preview: Vidu's latest flagship model (preview), supports audio-visual sync and automatic shot switching"
+          },
+          "images": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "description": "Start frame image.\nThe model uses the image provided as the first frame to generate the video.\nNote 1: Supports image Base64 encoding or image URL (ensure accessibility);\nNote 2: Only 1 image is supported;\nNote 3: Supports png, jpeg, jpg, webp formats;\nNote 4: Image size must not exceed 50 MB;\nNote 5: Note that the http body must be less than 20M, and the encoding must include an appropriate content-type string, e.g.:\ndata:image/png;base64,{base64_encode}"
+          },
+          "prompt": {
+            "type": "string",
+            "maxLength": 20000,
+            "description": "Text prompt.\nText description for video generation.\nNote: Character length must not exceed 20000 characters"
+          },
+          "audio": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to use audio-visual direct output\n- false: no audio-visual direct output, outputs a silent video\n- true: requires audio-visual sync, outputs a video with sound (including dialogue and sound effects)\nNote: viduq4-preview model default is true"
+          },
+          "is_rec": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable AI prompt rewriting\n- true: enabled\n- false: disabled (default value)"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration parameter\nDefault: 5\nEnum: 3 - 16",
+            "minimum": 3,
+            "maximum": 16,
+            "default": 5
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed.\nWhen not provided or set to 0, a random number is used; when manually set, the configured seed is used."
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "540p",
+              "720p",
+              "1080p",
+              "2K",
+              "4K"
+            ],
+            "description": "Resolution parameter\nDefault: 720p\nEnum: 540p / 720p / 1080p / 2K / 4K\nNote: viduq4-preview supports 2K and 4K video output"
+          },
+          "payload": {
+            "type": "string",
+            "maxLength": 1048576,
+            "description": "Passthrough parameter.\nNo processing, only data transmission.\nNote: maximum 1048576 characters"
+          },
+          "watermark": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to add watermark\n- true: add watermark\n- false: no watermark\nNote: Currently watermark content is fixed, AI-generated, not added by default"
+          },
+          "wm_position": {
+            "type": "integer",
+            "description": "Watermark position, indicating where the watermark appears on the image. Options:\n1: top-left\n2: top-right\n3: bottom-right\n4: bottom-left\nDefault: 3",
+            "default": 3,
+            "enum": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "minimum": 1,
+            "maximum": 4,
+            "x-options": [
+              {
+                "label": "Top Left",
+                "value": 1
+              },
+              {
+                "label": "Top Right",
+                "value": 2
+              },
+              {
+                "label": "Bottom Right",
+                "value": 3
+              },
+              {
+                "label": "Bottom Left",
+                "value": 4
+              }
+            ]
+          },
+          "wm_url": {
+            "type": "string",
+            "description": "Watermark content. This is an image URL; when not provided, the default watermark (AI-generated content) is used."
+          },
+          "meta_data": {
+            "type": "string",
+            "description": "Metadata identifier, a JSON format string passthrough field. You can customize the format or use the example format below:\n{\n\"Label\": \"your_label\",\n\"ContentProducer\": \"your_content_producer\",\n\"ContentPropagator\": \"your_content_propagator\",\n\"ProduceID\": \"your_product_id\",\n\"PropagateID\": \"your_propagate_id\",\n\"ReservedCode1\": \"your_reserved_code1\",\n\"ReservedCode2\": \"your_reserved_code2\"\n}\nWhen this parameter is empty, the Vidu-generated metadata identifier is used by default."
+          },
+          "callback_url": {
+            "type": "string",
+            "description": "Callback protocol.\nYou need to actively set callback_url when creating a task. The request method is POST. When the video generation task changes status, Vidu will send a callback request containing the latest task status to this address. The callback request body structure is consistent with the query task API response body.\nThe \"status\" returned by the callback includes the following states:\n- processing: task is being processed\n- success: task completed (if sending fails, callback retries three times)\n- failed: task failed (if sending fails, callback retries three times)\nVidu uses a callback signature algorithm for authentication, see: https://platform.vidu.cn/docs/callback-signature"
+          }
+        }
+      },
+      "ImageToVideoResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Task ID generated by Vidu."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "created",
+              "queueing",
+              "processing",
+              "success",
+              "failed"
+            ],
+            "description": "Processing state\nAvailable values:\ncreated: task created successfully\nqueueing: task in queue\nprocessing: task being processed\nsuccess: task succeeded\nfailed: task failed"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model name used for this call."
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Prompt parameter used for this call."
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Images parameter used for this call."
+          },
+          "sounds": {
+            "type": "string",
+            "description": "Sounds parameter used for this call."
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Video duration parameter used for this call."
+          },
+          "seed": {
+            "type": "integer",
+            "description": "Random seed parameter used for this call."
+          },
+          "resolution": {
+            "type": "string",
+            "description": "Resolution parameter used for this call."
+          },
+          "payload": {
+            "type": "string",
+            "description": "Passthrough parameter passed in for this call."
+          },
+          "credits": {
+            "type": "integer",
+            "description": "Credits consumed for this call."
+          },
+          "watermark": {
+            "type": "boolean",
+            "description": "Whether a watermark was used for this task submission."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Task creation time."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error description message."
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "Additional error data (optional)."
+          }
+        }
+      }
+    }
+  }
+}

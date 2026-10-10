@@ -1,3 +1,4 @@
+
 用一份可下载的自定义服务商 JSON，在 [Goose](https://github.com/aaif-goose/goose) 里使用 PowerTokens 模型。
 
 Goose 维护者更希望用户自己安装 JSON，而不是合进仓库。下载下面的文件，放到 Goose 的 `custom_providers` 目录，填好 API Key，再选模型即可。
@@ -36,9 +37,9 @@ goose session start --provider powertokens
 
 ## 说明
 
-- 接口地址（已写在 JSON 里）：`https://api.powertokens.ai/v1`
+- 接口地址（已写在 JSON 里）：`https://baze-api.powerbuyin.top/v1`
 - 环境变量：`POWERTOKENS_API_KEY`
 - 文件中的模型：`glm-5.2`、`MiniMax-M3`、`glm-5.3`、`glm-5-turbo`、`glm-4.7`、`MiniMax-M2.7`、`qwen3-coder-plus`、`deepseek-v3-2-251201`
-- 完整模型列表见 [模型页](https://powertokens.ai/zh-Hans/models?utm_source=docs&utm_medium=docs&utm_campaign=goose)，或调用 `GET https://api.powertokens.ai/v1/models`（需要 key）
+- 完整模型列表见 [模型页](https://powertokens.ai/zh-Hans/models?utm_source=docs&utm_medium=docs&utm_campaign=goose)，或调用 `GET https://baze-api.powerbuyin.top/v1/models`（需要 key）
 
 PowerTokens 是 OpenAI 兼容网关：一个 key 可用 GLM、MiniMax、Qwen、DeepSeek。
