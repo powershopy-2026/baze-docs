@@ -389,7 +389,8 @@
               "en/ecosystem-tools/claude-code",
               "en/ecosystem-tools/kilo-code",
               "en/ecosystem-tools/hermes-agent",
-              "en/ecosystem-tools/openclaw"
+              "en/ecosystem-tools/openclaw",
+              "en/ecosystem-tools/workbuddy"
             ]
           },
           {
@@ -2132,7 +2133,8 @@
               "zh-Hans/ecosystem-tools/claude-code",
               "zh-Hans/ecosystem-tools/kilo-code",
               "zh-Hans/ecosystem-tools/hermes-agent",
-              "zh-Hans/ecosystem-tools/openclaw"
+              "zh-Hans/ecosystem-tools/openclaw",
+              "zh-Hans/ecosystem-tools/workbuddy"
             ]
           },
           {
