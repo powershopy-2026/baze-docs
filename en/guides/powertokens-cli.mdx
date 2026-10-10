@@ -1,5 +1,6 @@
 ---
 title: PowerTokens CLI
+nav_title: PowerTokens CLI
 description: Call chat, image, video, and speech models on the PowerTokens platform from the terminal, covering install, login, generation, configuration, and troubleshooting.
 ---
 
@@ -260,7 +261,7 @@ Common video parameters:
 | `-d, --duration <seconds>` | Determined by the model | Video duration in seconds |
 | `--ratio <ratio>` | Determined by the model | Seedance aspect ratio; available values: `16:9`, `4:3`, `1:1`, `adaptive` |
 | `--aspect-ratio <ratio>` | Determined by the model | Aspect ratio for models such as Kling and Vidu |
-| `--sound [on|off]` | Determined by the model | Kling video sound control |
+| `--sound [on\|off]` | Determined by the model | Kling video sound control |
 | `--generate-audio` | Off | Video audio generation option supported by Seedance, Vidu, and others |
 | `--watermark` | Off | Whether to enable the watermark |
 | `--seed <n>` | Determined by the model | May be supported by Wan, Vidu, Seedream, and others |
@@ -384,18 +385,18 @@ pt generate \
 | `-s, --size <size>` | Image size |
 | `-r, --resolution <res>` | Video resolution or quality tier; default `720p` |
 | `-d, --duration <seconds>` | Video duration |
-| `--ref <path|url|base64|asset>` | Reference image or first frame |
-| `--last-frame <path|url|base64|asset>` | Last frame |
-| `--ref-video <path|url|base64>` | Reference video or action video |
-| `--ref-audio <path|url|base64>` | Reference audio |
-| `--character-orientation <image|video>` | Source of character orientation in Kling camera motion control |
+| `--ref <path\|url\|base64\|asset>` | Reference image or first frame |
+| `--last-frame <path\|url\|base64\|asset>` | Last frame |
+| `--ref-video <path\|url\|base64>` | Reference video or action video |
+| `--ref-audio <path\|url\|base64>` | Reference audio |
+| `--character-orientation <image\|video>` | Source of character orientation in Kling camera motion control |
 | `--asset-group-id <id>` | Asset group ID used for Seedance asset uploads |
 | `--negative-prompt <text>` | Negative prompt |
 | `--aspect-ratio <ratio>` | Aspect ratio for models such as Kling and Vidu |
 | `--seed <n>` | Random seed |
 | `--num <n>` | Number of images |
 | `--watermark` | Enable watermark |
-| `--sound [on|off]` | Kling video sound |
+| `--sound [on\|off]` | Kling video sound |
 | `--generate-audio` | Generate video with audio |
 | `--ratio <ratio>` | Seedance video ratio |
 | `--voice <voice>` | MiniMax TTS voice name |
@@ -480,7 +481,7 @@ Provider fields not listed here should be passed through with `--params`. The ta
 pt config
 
 # Set the API Base URL
-pt config -b https://api.powertokens.ai
+pt config -b https://baze-api.powerbuyin.top
 
 # Set the asset library Base URL
 pt config -a https://powertokens.ai/api
@@ -489,7 +490,7 @@ pt config -a https://powertokens.ai/api
 pt config --reset
 ```
 
-By default, the asset library address is derived automatically from the API Base URL. For example, when the API address is `https://api.powertokens.ai`, the asset library address is typically derived as `https://powertokens.ai/api`. Override it manually with `-a` only when you use a standalone asset service.
+By default, the asset library address is derived automatically from the API Base URL. For example, when the API address is `https://baze-api.powerbuyin.top`, the asset library address is typically derived as `https://powertokens.ai/api`. Override it manually with `-a` only when you use a standalone asset service.
 
 ### Local configuration file
 
@@ -504,7 +505,7 @@ File permissions default to `0600`. Example structure:
 ```json
 {
   "apiKey": "sk-...",
-  "baseUrl": "https://api.powertokens.ai",
+  "baseUrl": "https://baze-api.powerbuyin.top",
   "assetBaseUrl": "https://powertokens.ai/api"
 }
 ```
