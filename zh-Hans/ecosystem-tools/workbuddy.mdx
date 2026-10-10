@@ -1,13 +1,13 @@
 ---
 title: "WorkBuddy 接入指南"
-description: "在 WorkBuddy 中配置自定义模型，通过 OpenAI-compatible 接口接入 baze平台。"
+description: "在 WorkBuddy 中配置自定义模型，通过 OpenAI-compatible 接口接入 powertokens平台。"
 ---
 
-WorkBuddy 是一款 AI 办公助手客户端，支持通过自定义模型接入第三方 OpenAI-compatible 接口。接入 `baze平台` 时，只需在 WorkBuddy 的模型配置中填入平台接口地址、API Key 和模型 ID，测试连接通过后即可使用。
+WorkBuddy 是一款 AI 办公助手客户端，支持通过自定义模型接入第三方 OpenAI-compatible 接口。接入 `powertokens平台` 时，只需在 WorkBuddy 的模型配置中填入平台接口地址、API Key 和模型 ID，测试连接通过后即可使用。
 
 ## 前置准备
 
-- 已注册 `baze平台` 账户并获取 API Key。
+- 已注册 `powertokens平台` 账户并获取 API Key。
 - 已安装 WorkBuddy 客户端（本指南基于 WorkBuddy 5.6.2）。
 - 确认你要使用的模型 ID（如 `glm-5.3`、`MiniMax-M3` 等），可在平台模型列表中查看。
 
@@ -34,7 +34,7 @@ WorkBuddy 是一款 AI 办公助手客户端，支持通过自定义模型接入
 | 字段 | 值 |
 | --- | --- |
 | **接口地址** | `https://baze-api.powerbuyin.top/v1/chat/completions` |
-| **API Key** | 你的 `baze平台` API Key |
+| **API Key** | 你的 `powertokens平台` API Key |
 | **模型名称** | 平台支持的模型 ID，如 `glm-5.3` |
 
 填写完成后，点击 **测试连接**。连接成功后顶部会显示 **连接成功** 提示，然后点击 **保存**。
@@ -43,7 +43,7 @@ WorkBuddy 是一款 AI 办公助手客户端，支持通过自定义模型接入
 
 ### 4. 开始使用
 
-保存后，在模型选择菜单中选择你刚添加的自定义模型，即可在 WorkBuddy 中通过 `baze平台` 调用该模型。
+保存后，在模型选择菜单中选择你刚添加的自定义模型，即可在 WorkBuddy 中通过 `powertokens平台` 调用该模型。
 
 ## 推荐模型
 
