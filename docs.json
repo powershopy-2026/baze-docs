@@ -24,7 +24,8 @@
                   "en/guides/logs-and-usage",
                   "en/guides/seedance2-quick-start",
                   "en/guides/vercel-ai-sdk",
-                  "en/guides/goose"
+                  "en/guides/goose",
+                  "en/guides/powertokens-cli"
                 ]
               }
             ]
@@ -1767,7 +1768,8 @@
                   "zh-Hans/guides/logs-and-usage",
                   "zh-Hans/guides/seedance2-quick-start",
                   "zh-Hans/guides/vercel-ai-sdk",
-                  "zh-Hans/guides/goose"
+                  "zh-Hans/guides/goose",
+                  "zh-Hans/guides/powertokens-cli"
                 ]
               }
             ]

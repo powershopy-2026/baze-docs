@@ -1,0 +1,689 @@
+---
+title: PowerTokens CLI
+description: 通过命令行调用 PowerTokens 平台的对话、图像、视频和语音模型，涵盖安装、登录、生成任务、配置与排错。
+---
+
+PowerTokens CLI（命令名为 `pt`，也支持 `powertokens`）用于在终端调用 PowerTokens 平台上的中文大语言模型、图像模型、视频模型和语音模型。它适合本地创作、批量生成、脚本自动化以及供编码代理调用。
+
+本文按照“安装 → 登录 → 选择模型 → 执行任务 → 获取文件 → 配置与排错”的顺序介绍当前功能。模型目录和供应商参数会随平台动态更新，因此实际使用时应以 `pt models` 返回结果为准。
+
+## 1. 快速开始
+
+```bash
+# 安装
+npm install -g powertokens-cli
+
+# 配置 API Key。未提供参数时进入交互式输入
+pt login
+
+# 对话
+pt chat "用一句话解释量子计算"
+
+# 生成图片
+pt generate \
+  -m seedream-5-0-260128 \
+  -p "一只穿着宇航服的猫" \
+  -o cat.png
+
+# 查看可用模型
+pt models
+```
+
+`pt generate` 会根据模型 ID 自动选择对应的供应商路由。用户不需要手动指定供应商端点。
+
+## 2. 安装
+
+### 系统要求
+
+PowerTokens CLI 通过 npm 分发。建议使用 Node.js 18 或更高版本，并确保 `npm` 和全局 npm 可执行目录已经加入系统 PATH。
+
+```bash
+node --version
+npm --version
+npm install -g powertokens-cli
+```
+
+安装后可以直接使用以下两个命令名：
+
+```bash
+pt --version
+powertokens --version
+```
+
+通常推荐使用较短的 `pt` 命令。
+
+## 3. 登录与凭据管理
+
+### 登录
+
+```bash
+# 交互式输入 API Key
+pt login
+
+# 直接传入 API Key
+pt login sk-your-api-key-here
+```
+
+API Key 会保存到当前用户的本地配置文件中。不要把 API Key 写入 Git 仓库、README、前端代码或共享日志。
+
+### 查看当前身份和使用信息
+
+```bash
+pt whoami
+```
+
+该命令用于查看当前登录状态、API Key 前缀、API Base URL 以及可用模型数量等信息。命令不会完整打印 API Key。
+
+### 退出登录
+
+```bash
+pt logout
+```
+
+该命令会删除本机保存的 PowerTokens API Key。
+
+## 4. 推荐工作流
+
+针对不熟悉的模型，建议采用以下流程：
+
+```text
+models → 选择模型 → chat 或 generate → 检查本地输出
+```
+
+对于自动化脚本，推荐使用以下流程：
+
+```text
+读取环境变量 → 检查模型 → 执行任务 → 检查退出状态和输出文件
+```
+
+模型参数通过 `generate` 的通用选项和 `--params` 传入；生成结果在任务完成后由 CLI 下载到 `-o` 指定的路径。
+
+## 5. 查看可用模型
+
+```bash
+# 查看全部模型
+pt models
+
+# 仅查看对话模型
+pt models -t chat
+
+# 仅查看图片模型
+pt models -t image
+
+# 仅查看视频模型
+pt models -t video
+
+# 仅查看音频模型
+pt models -t audio
+```
+
+模型列表通过 PowerTokens API 的 `GET /v1/models` 动态获取。客户端会缓存模型列表；当 API 暂时不可用时，CLI 可以使用内置回退列表。
+
+当前模型按能力大致分为以下类别：
+
+| 类型 | 示例模型 | 说明 |
+| --- | --- | --- |
+| Chat | `glm-5.3`、`glm-4.7-flash`、`glm-5`、`deepseek-v4-pro`、`qwen3-max`、`MiniMax-M3` | 文本对话和文本生成 |
+| Image | `dola-seedream-5-0-pro-260628`、`seedream-5-0-260128`、`seedream-4-5-251128`、`qwen-image-3.0-pro`、`kling-v3` | 文生图和部分图生图能力 |
+| Video | `dreamina-seedance-2-5-260628`、`dreamina-seedance-2-0-260128`、`kling-video-o1`、`wan3.0-video`、`MiniMax-H3`、`viduq3-turbo` | 文生视频、图生视频及参考素材生成 |
+| Audio | `speech-2.6-hd`、`speech-02-hd` | 文本转语音 |
+
+`kling-v3` 和 `kling-v3-omni` 等多模态模型可能同时出现在图片和视频分类中。
+
+## 6. 文本对话：`pt chat`
+
+### 基本用法
+
+```bash
+# 使用默认模型
+pt chat "什么是 TypeScript？"
+
+# 指定模型
+pt chat -m glm-5.3 "写一首关于春天的短诗"
+
+# 指定系统提示词
+pt chat \
+  -s "你是一名严谨的技术写作者" \
+  "解释 REST API 和 GraphQL 的区别"
+
+# 指定最大输出 Token 数
+pt chat -t 2048 "写一篇较长的产品介绍"
+```
+
+### 从标准输入读取提示词
+
+不提供位置参数时，`pt chat` 会从标准输入读取内容。因此可以与其他命令组合：
+
+```bash
+echo "解释递归，并给出一个 JavaScript 示例" | pt chat
+
+cat prompt.txt | pt chat -m glm-5
+```
+
+### 参数说明
+
+| 参数 | 默认值 | 说明 |
+| --- | --- | --- |
+| `-m, --model <model>` | `glm-4.7-flash` | 模型 ID |
+| `-s, --system <prompt>` | 无 | 系统提示词 |
+| `-t, --max-tokens <n>` | `1024` | 最大输出 Token 数 |
+| `[prompt]` | 无 | 用户提示词；省略时从 stdin 读取 |
+
+## 7. 多媒体生成：`pt generate`
+
+`generate` 是图片、视频和音频生成的统一入口。至少应提供模型 ID、提示词和输出路径：
+
+```bash
+pt generate \
+  -m <model_id> \
+  -p "<prompt>" \
+  -o <output_path>
+```
+
+### 7.1 图片生成
+
+```bash
+# 文生图
+pt generate \
+  -m dola-seedream-5-0-pro-260628 \
+  -p "赛博朋克城市夜景，电影级光影" \
+  -o city.png
+
+# 使用 Kling 图片模型
+pt generate \
+  -m kling-v3 \
+  -p "一只橘猫坐在窗台上" \
+  -o cat.png
+
+# 使用 Qwen 图片模型
+pt generate \
+  -m qwen-image-3.0-pro \
+  -p "科幻城市夜景" \
+  -o city.png
+
+# 图生图
+pt generate \
+  -m kling-v3 \
+  -p "保持人物形象不变，替换为冬季背景" \
+  --ref start_frame.jpg \
+  -o out.png
+```
+
+常用图片参数：
+
+| 参数 | 说明 |
+| --- | --- |
+| `-m, --model <model>` | 图片模型 ID；默认 `seedream-5-0-260128` |
+| `-p, --prompt <prompt>` | 图片生成提示词 |
+| `-o, --output <path>` | 输出文件路径 |
+| `-s, --size <size>` | 图片尺寸；不同供应商的可用值不同 |
+| `--negative-prompt <text>` | 负向提示词；由具体模型支持情况决定 |
+| `--aspect-ratio <ratio>` | 图片比例，例如 `1:1`；由具体模型支持情况决定 |
+| `--seed <n>` | 随机种子；由具体模型支持情况决定 |
+| `--num <n>` | 生成图片数量 |
+| `--watermark` | 启用水印；由具体模型支持情况决定 |
+| `--params <json>` | 以 JSON 形式透传供应商参数 |
+
+图片尺寸不是所有供应商共用一套格式。例如 Seedream 常用 `2048x2048`，Kling 使用 `1k`、`2k` 或 `4k`，Qwen/Wan 可能使用 `2048*2048` 或 `2K`。应以目标模型的官方参数为准。
+
+Kling 的 `std`、`pro` 和 `4k` 表示画质档位，而不一定等同于固定像素尺寸。CLI 会将相应值映射为上游接口需要的参数。
+
+### 7.2 文生视频
+
+```bash
+# Seedance
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "一只狗在海滩上奔跑，镜头平稳跟随" \
+  -o dog.mp4
+
+# Wan
+pt generate \
+  -m wan3.0-video \
+  -p "一只可爱的小兔子在草地上跳跃" \
+  -o wan3.mp4
+
+# MiniMax Hailuo
+pt generate \
+  -m MiniMax-H3 \
+  -p "女孩微笑并看向镜头" \
+  -r 768p \
+  --ratio 21:9 \
+  -o hailuo.mp4
+```
+
+视频常用参数如下：
+
+| 参数 | 默认值 | 说明 |
+| --- | --- | --- |
+| `-r, --resolution <res>` | `720p` | 视频分辨率或供应商画质档位 |
+| `-d, --duration <seconds>` | 由模型决定 | 视频时长，单位为秒 |
+| `--ratio <ratio>` | 由模型决定 | Seedance 比例，可用 `16:9`、`4:3`、`1:1`、`adaptive` |
+| `--aspect-ratio <ratio>` | 由模型决定 | Kling、Vidu 等模型的画面比例 |
+| `--sound [on|off]` | 由模型决定 | Kling 视频声音控制 |
+| `--generate-audio` | 关闭 | Seedance、Vidu 等支持的视频音频生成选项 |
+| `--watermark` | 关闭 | 是否启用水印 |
+| `--seed <n>` | 由模型决定 | Wan、Vidu、Seedream 等模型可能支持 |
+
+不同供应商的分辨率值并不完全相同。Seedance/Wan 常见 `480p`、`720p`、`1080p`；Kling 常见 `std`、`pro`、`4k`；Vidu 常见 `540p`、`720p`、`1080p`；Hailuo 常见 `768P`、`1080P`。
+
+### 7.3 图生视频
+
+```bash
+# 以本地图片作为首帧
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "镜头缓慢推进，人物自然眨眼" \
+  --ref start_frame.jpg \
+  -o out.mp4
+```
+
+`--ref` 支持本地文件路径、公网 URL、Base64 或 `asset://` 资源标识。CLI 会根据供应商自动处理素材格式。
+
+### 7.4 首尾帧视频
+
+```bash
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "平滑地从第一帧过渡到最后一帧" \
+  --ref first.jpg \
+  --last-frame last.jpg \
+  -o out.mp4
+```
+
+当前支持首尾帧模式的主要模型或模型系列包括 Seedance、MiniMax Hailuo、MiniMax H3、Kling、Wan 和 Vidu。首帧和尾帧应使用 `--ref` 与 `--last-frame` 成对提供。
+
+### 7.5 参考视频和参考音频
+
+```bash
+# 使用参考视频
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "保持参考视频的动作节奏和风格" \
+  --ref-video ref.mp4 \
+  -o out.mp4
+
+# 使用参考音频
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "根据参考音频生成口型同步视频" \
+  --ref-audio voice.mp3 \
+  -o out.mp4
+```
+
+Seedance 和 MiniMax H3 支持多模态参考生视频：
+
+```bash
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "参考图片、视频和音频生成一段新视频" \
+  --ref ref-img.jpg \
+  --ref-video ref.mp4 \
+  --ref-audio voice.mp3 \
+  -o out.mp4
+```
+
+首帧、首尾帧和多模态参考是不同的输入场景。使用多模态参考时，不应把它当作普通首帧模式处理。
+
+### 7.6 Kling 运镜控制
+
+```bash
+# 使用便捷参数
+pt generate \
+  -m kling-v3 \
+  -p "保持人物动作不变" \
+  --ref char.jpg \
+  --ref-video https://example.com/dance.mp4 \
+  --character-orientation image \
+  -o out.mp4
+```
+
+也可以通过 `--params` 传入更多运镜控制参数：
+
+```bash
+pt generate \
+  -m kling-v3 \
+  -p "保持人物动作不变" \
+  --ref char.jpg \
+  --params '{
+    "video_url": "https://example.com/dance.mp4",
+    "character_orientation": "image",
+    "keep_original_sound": "yes"
+  }' \
+  -o out.mp4
+```
+
+当 `--params` 中出现 `video_url` 或 `character_orientation` 时，CLI 会自动选择 Kling 运镜控制端点。`--character-orientation` 可设置为 `image` 或 `video`。
+
+### 7.7 文本转语音
+
+```bash
+pt generate \
+  -m speech-2.6-hd \
+  -p "Hello, welcome to PowerTokens" \
+  -o hello.mp3
+```
+
+MiniMax 语音模型可以通过 `--voice` 指定声音名称：
+
+```bash
+pt generate \
+  -m speech-02-hd \
+  -p "欢迎使用 PowerTokens CLI" \
+  --voice <voice_name> \
+  -o welcome.mp3
+```
+
+## 8. `generate` 完整参数
+
+| 参数 | 说明 |
+| --- | --- |
+| `-m, --model <model>` | 模型 ID；默认 `seedream-5-0-260128` |
+| `-p, --prompt <prompt>` | 生成提示词 |
+| `-o, --output <path>` | 输出文件路径 |
+| `-s, --size <size>` | 图片尺寸 |
+| `-r, --resolution <res>` | 视频分辨率或画质档位；默认 `720p` |
+| `-d, --duration <seconds>` | 视频时长 |
+| `--ref <path|url|base64|asset>` | 参考图片或首帧 |
+| `--last-frame <path|url|base64|asset>` | 尾帧 |
+| `--ref-video <path|url|base64>` | 参考视频或动作视频 |
+| `--ref-audio <path|url|base64>` | 参考音频 |
+| `--character-orientation <image|video>` | Kling 运镜控制中的人物朝向来源 |
+| `--asset-group-id <id>` | Seedance 资产上传使用的资产组 ID |
+| `--negative-prompt <text>` | 负向提示词 |
+| `--aspect-ratio <ratio>` | Kling、Vidu 等模型的画面比例 |
+| `--seed <n>` | 随机种子 |
+| `--num <n>` | 图片数量 |
+| `--watermark` | 启用水印 |
+| `--sound [on|off]` | Kling 视频声音 |
+| `--generate-audio` | 生成带音频的视频 |
+| `--ratio <ratio>` | Seedance 视频比例 |
+| `--voice <voice>` | MiniMax TTS 声音名称 |
+| `--params <json>` | 额外供应商参数，使用 JSON 传入 |
+
+参数是否生效取决于目标模型和上游供应商。CLI 会将通用参数映射到相应端点，无法由通用参数表达的字段应通过 `--params` 传递。
+
+## 9. 使用 `--params` 透传模型参数
+
+### 合并模式
+
+当 `--params` 中没有 `content` 或 `media` 数组时，CLI 会将 JSON 字段合并进请求体：
+
+```bash
+pt generate \
+  -m kling-v3 \
+  -p "cat" \
+  --params '{"image_reference":"face","aspect_ratio":"1:1"}' \
+  -o cat.png
+```
+
+```bash
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "dog running on the beach" \
+  --params '{"generate_audio":true,"watermark":false}' \
+  -o dog.mp4
+```
+
+### 完整请求体模式
+
+当 `--params` 直接包含 `content` 或 `media` 数组时，CLI 会将其视为完整请求体，并额外补充 `model` 字段。此时可以省略 `-p`：
+
+```bash
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  --params '{
+    "content": [
+      {"type":"text","text":"生成一段平滑的产品展示视频"},
+      {"type":"image_url","image_url":{"url":"asset://xxx"},"role":"first_frame"}
+    ],
+    "duration": 4,
+    "resolution": "480p"
+  }' \
+  -o out.mp4
+```
+
+JSON 参数应使用单引号包裹整个对象，以避免 Bash 将双引号解释为 shell 语法。Windows PowerShell 下请根据 shell 规则调整引号。
+
+## 10. 素材处理和供应商差异
+
+### 本地素材
+
+`--ref`、`--last-frame`、`--ref-video` 和 `--ref-audio` 都可以接受本地文件。CLI 会根据供应商自动转换：
+
+- BytePlus Seedance 会先将素材上传到资产库，再使用 `asset://<id>` 传入模型。直接提供的 `asset://` 路径会原样透传。
+- MiniMax、Kling、Wan、Vidu 和 HappyHorse 通常会将本地文件转换为 Base64 或 data URL，具体编码方式由供应商适配器决定。
+
+BytePlus Seedance 的资产上传对文件名长度有要求。CLI 会自动截断过长文件名并保留扩展名，但仍建议使用简短、无特殊字符的文件名。
+
+### 主要视频参数支持情况
+
+| 参数 | Seedance | MiniMax Hailuo | MiniMax H3 | Kling | Wan | Vidu |
+| --- | --- | --- | --- | --- | --- | --- |
+| `--last-frame` | 支持 | 支持 | 支持 | 支持 | 支持 | 支持 |
+| `--ref-video` | 支持 | 不支持 | 支持 | 支持运镜 | 支持部分 r2v | 不支持 |
+| `--ref-audio` | 支持 | 不支持 | 支持 | 不支持 | 支持 | 不支持 |
+| `--negative-prompt` | 不支持 | 不支持 | 不支持 | 支持 | 支持 | 不支持 |
+| `--watermark` | 支持 | 支持 | 支持 | 支持 | 支持 | 支持 |
+| `--generate-audio` / `--sound` | 部分版本支持 | 不支持 | 不支持 | 支持 `--sound` | 不支持 | 支持 |
+| `--seed` | 支持 | 不支持 | 不支持 | 不支持 | 支持 | 支持 |
+| `--aspect-ratio` / `--ratio` | 支持 | 不支持 | 支持 | 支持 | 支持 | 支持 |
+
+未列出的供应商字段应使用 `--params` 透传。表格表示 CLI 当前适配情况，不代表上游模型的全部能力。
+
+## 11. 配置
+
+### 查看和修改配置
+
+```bash
+# 查看当前配置
+pt config
+
+# 设置 API Base URL
+pt config -b https://api.powertokens.ai
+
+# 设置资产库 Base URL
+pt config -a https://powertokens.ai/api
+
+# 重置 API Base URL 和资产库 Base URL
+pt config --reset
+```
+
+默认情况下，资产库地址会根据 API Base URL 自动推导。例如，API 地址为 `https://api.powertokens.ai` 时，资产库地址通常推导为 `https://powertokens.ai/api`。只有在使用独立资产服务时，才需要通过 `-a` 手动覆盖。
+
+### 本地配置文件
+
+配置文件位于：
+
+```text
+~/.powertokens/config.json
+```
+
+文件权限默认为 `0600`，示例结构如下：
+
+```json
+{
+  "apiKey": "sk-...",
+  "baseUrl": "https://api.powertokens.ai",
+  "assetBaseUrl": "https://powertokens.ai/api"
+}
+```
+
+不要把该文件提交到版本控制系统或复制到公共环境。
+
+### 环境变量
+
+环境变量优先级高于配置文件，适合 CI/CD、容器和临时任务：
+
+| 环境变量 | 说明 |
+| --- | --- |
+| `POWERTOKENS_API_KEY` | API Key，覆盖配置文件中的 Key |
+| `POWERTOKENS_BASE_URL` | API Base URL，覆盖配置文件中的地址 |
+| `POWERTOKENS_ASSET_BASE_URL` | 资产库 Base URL，覆盖自动推导的地址 |
+| `PT_DEBUG` | 设置为 `1` 后，将原始请求体和任务结果输出到 stderr |
+
+示例：
+
+```bash
+POWERTOKENS_API_KEY="sk-..." \
+pt chat "生成一个产品发布会标题"
+```
+
+调试示例：
+
+```bash
+PT_DEBUG=1 pt generate \
+  -m seedream-5-0-260128 \
+  -p "minimal product photo" \
+  -o product.png
+```
+
+调试输出可能包含请求参数和资源地址。不要在共享日志中保留调试输出。
+
+## 12. 脚本自动化
+
+### Bash
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${POWERTOKENS_API_KEY:?请先设置 POWERTOKENS_API_KEY}"
+
+pt generate \
+  -m seedream-5-0-260128 \
+  -p "白色背景上的玻璃茶壶产品摄影" \
+  -s 2048x2048 \
+  -o ./outputs/teapot.png
+```
+
+### Node.js
+
+```js
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
+
+const { stdout } = await execFileAsync("pt", [
+  "generate",
+  "-m", "seedream-5-0-260128",
+  "-p", "a clean product photo of a glass teapot",
+  "-o", "./outputs/teapot.png",
+]);
+
+console.log(stdout);
+```
+
+### Python
+
+```python
+import os
+import subprocess
+
+if not os.environ.get("POWERTOKENS_API_KEY"):
+    raise RuntimeError("请先设置 POWERTOKENS_API_KEY")
+
+subprocess.run(
+    [
+        "pt", "generate",
+        "-m", "seedream-5-0-260128",
+        "-p", "a clean product photo of a glass teapot",
+        "-o", "./outputs/teapot.png",
+    ],
+    check=True,
+)
+```
+
+在脚本中应显式检查进程退出码和目标文件是否存在。不要依赖终端日志来判断任务是否成功。
+
+## 13. 常见问题
+
+### 13.1 提示未配置 API Key
+
+先执行以下命令之一：
+
+```bash
+pt login
+```
+
+或：
+
+```bash
+export POWERTOKENS_API_KEY="sk-..."
+```
+
+然后使用 `pt whoami` 验证登录状态。
+
+### 13.2 模型不存在或参数不生效
+
+先查看当前模型目录：
+
+```bash
+pt models
+pt models -t image
+pt models -t video
+```
+
+模型 ID 必须与返回结果完全一致，包括大小写。不同模型对尺寸、比例、声音、种子和参考素材的支持不同；无法确认时，应查阅对应供应商的模型参数，并使用 `--params` 传入。
+
+### 13.3 本地文件无法作为参考素材
+
+确认文件路径正确，并检查文件类型和大小。建议先使用绝对路径或当前目录下的相对路径：
+
+```bash
+pt generate \
+  -m kling-v3 \
+  -p "保留主体并改变背景" \
+  --ref "$(pwd)/input.png" \
+  -o output.png
+```
+
+如果目标是 Seedance，还应确保文件名较短，并确认 API Key 有权使用资产库。
+
+### 13.4 `--params` JSON 解析失败
+
+检查引号和 JSON 格式。Bash 示例：
+
+```bash
+pt generate \
+  -m kling-v3 \
+  -p "cat" \
+  --params '{"aspect_ratio":"1:1","watermark":false}' \
+  -o cat.png
+```
+
+复杂请求建议先写入 JSON 文件，再通过 shell 变量读取，避免多层引号造成错误。
+
+### 13.5 如何查看底层请求
+
+设置 `PT_DEBUG=1`：
+
+```bash
+PT_DEBUG=1 pt generate -m kling-v3 -p "cat" -o cat.png
+```
+
+请求体和任务结果会输出到 stderr，适合定位参数映射、素材上传和供应商路由问题。
+
+### 13.6 输出文件没有生成
+
+确认：
+
+1. `-o` 指定的目录已经存在，或先创建目录。
+2. 当前模型和输入组合确实支持该任务类型。
+3. 任务没有被上游模型拒绝。
+4. API Key、API Base URL 和资产库地址配置正确。
+5. 使用 `PT_DEBUG=1` 查看任务状态和原始响应。
+
+## 14. 命令速查
+
+| 命令 | 用途 |
+| --- | --- |
+| `pt login [key]` | 登录并保存 API Key |
+| `pt logout` | 删除本地 API Key |
+| `pt whoami` | 查看当前用户和使用信息 |
+| `pt chat [prompt]` | 调用大语言模型对话 |
+| `pt generate` | 生成图片、视频或音频 |
+| `pt models` | 查看可用模型 |
+| `pt config` | 查看或设置 API、资产库地址 |
+| `pt --version` | 查看 CLI 版本 |
