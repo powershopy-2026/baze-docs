@@ -1,0 +1,689 @@
+---
+title: PowerTokens CLI
+description: Call chat, image, video, and speech models on the PowerTokens platform from the terminal, covering install, login, generation, configuration, and troubleshooting.
+---
+
+PowerTokens CLI (command name `pt`, also supports `powertokens`) is used from the terminal to call the Chinese large language models, image models, video models, and speech models on the PowerTokens platform. It is suitable for local creation, bulk generation, script automation, and for invocation by coding agents.
+
+This document introduces the current features in the order “Install → Login → Select Model → Execute Tasks → Retrieve Files → Configuration and Troubleshooting”. The model catalog and vendor parameters are dynamically updated by the platform, so actual usage should rely on the results returned by `pt models`.
+
+## 1. Quick start
+
+```bash
+# Install
+npm install -g powertokens-cli
+
+# Configure API key. If no argument is provided, an interactive prompt will be used
+pt login
+
+# Chat
+pt chat "Explain quantum computing in one sentence"
+
+# Generate image
+pt generate \
+  -m seedream-5-0-260128 \
+  -p "A cat wearing a spacesuit" \
+  -o cat.png
+
+# View available models
+pt models
+```
+
+`pt generate` will automatically select the appropriate vendor route based on the model ID. You do not need to manually specify a vendor endpoint.
+
+## 2. Installation
+
+### System requirements
+
+PowerTokens CLI is distributed via npm. We recommend Node.js 18 or later. Make sure `npm` and the global npm executables directory are added to your system PATH.
+
+```bash
+node --version
+npm --version
+npm install -g powertokens-cli
+```
+
+After installation, you can use either of the following command names:
+
+```bash
+pt --version
+powertokens --version
+```
+
+We generally recommend the shorter `pt` command.
+
+## 3. Login and credential management
+
+### Login
+
+```bash
+# Interactively enter your API key
+pt login
+
+# Pass the API key directly
+pt login sk-your-api-key-here
+```
+
+The API key is saved to the current user's local configuration file. Do not put the API key in Git repositories, README files, frontend code, or shared logs.
+
+### View current identity and usage information
+
+```bash
+pt whoami
+```
+
+This command shows the current login status, API key prefix, API Base URL, and the number of available models, among other information. It never prints the full API key.
+
+### Logout
+
+```bash
+pt logout
+```
+
+This command removes the PowerTokens API key stored on the local machine.
+
+## 4. Recommended workflow
+
+For unfamiliar models, we recommend the following process:
+
+```text
+models → choose a model → chat or generate → check local output
+```
+
+For automated scripts, we recommend the following process:
+
+```text
+read environment variables → check model → execute task → check exit status and output files
+```
+
+Model parameters are passed through `generate`'s general options and `--params`. After a task completes, the CLI downloads the generated result to the path specified by `-o`.
+
+## 5. View available models
+
+```bash
+# View all models
+pt models
+
+# View only chat models
+pt models -t chat
+
+# View only image models
+pt models -t image
+
+# View only video models
+pt models -t video
+
+# View only audio models
+pt models -t audio
+```
+
+The model list is fetched dynamically from the PowerTokens API's `GET /v1/models`. The client caches the model list; when the API is temporarily unavailable, the CLI falls back to a built-in list.
+
+Models are roughly categorized by capability as follows:
+
+| Type | Example models | Description |
+| --- | --- | --- |
+| Chat | `glm-5.3`, `glm-4.7-flash`, `glm-5`, `deepseek-v4-pro`, `qwen3-max`, `MiniMax-M3` | Text chat and text generation |
+| Image | `dola-seedream-5-0-pro-260628`, `seedream-5-0-260128`, `seedream-4-5-251128`, `qwen-image-3.0-pro`, `kling-v3` | Text-to-image and some image-to-image capabilities |
+| Video | `dreamina-seedance-2-5-260628`, `dreamina-seedance-2-0-260128`, `kling-video-o1`, `wan3.0-video`, `MiniMax-H3`, `viduq3-turbo` | Text-to-video, image-to-video, and reference material generation |
+| Audio | `speech-2.6-hd`, `speech-02-hd` | Text-to-speech |
+
+Multimodal models such as `kling-v3` and `kling-v3-omni` may appear in both the image and video categories.
+
+## 6. Text chat: `pt chat`
+
+### Basic usage
+
+```bash
+# Use the default model
+pt chat "What is TypeScript?"
+
+# Specify a model
+pt chat -m glm-5.3 "Write a short poem about spring"
+
+# Specify a system prompt
+pt chat \
+  -s "You are a rigorous technical writer" \
+  "Explain the difference between REST API and GraphQL"
+
+# Specify the maximum output tokens
+pt chat -t 2048 "Write a longer product introduction"
+```
+
+### Read the prompt from standard input
+
+When no positional argument is provided, `pt chat` reads content from standard input, so you can combine it with other commands:
+
+```bash
+echo "Explain recursion and give a JavaScript example" | pt chat
+
+cat prompt.txt | pt chat -m glm-5
+```
+
+### Parameters
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `-m, --model <model>` | `glm-4.7-flash` | Model ID |
+| `-s, --system <prompt>` | None | System prompt |
+| `-t, --max-tokens <n>` | `1024` | Maximum output tokens |
+| `[prompt]` | None | User prompt; if omitted, reads from stdin |
+
+## 7. Multimedia generation: `pt generate`
+
+`generate` is the unified entry point for image, video, and audio generation. At minimum, provide a model ID, a prompt, and an output path:
+
+```bash
+pt generate \
+  -m <model_id> \
+  -p "<prompt>" \
+  -o <output_path>
+```
+
+### 7.1 Image generation
+
+```bash
+# Text-to-image
+pt generate \
+  -m dola-seedream-5-0-pro-260628 \
+  -p "Cyberpunk city nightscape, cinematic lighting" \
+  -o city.png
+
+# Using the Kling image model
+pt generate \
+  -m kling-v3 \
+  -p "An orange cat sitting on a windowsill" \
+  -o cat.png
+
+# Using the Qwen image model
+pt generate \
+  -m qwen-image-3.0-pro \
+  -p "Sci-fi city nightscape" \
+  -o city.png
+
+# Image-to-image
+pt generate \
+  -m kling-v3 \
+  -p "Keep the character's appearance unchanged and replace the background with winter" \
+  --ref start_frame.jpg \
+  -o out.png
+```
+
+Common image parameters:
+
+| Parameter | Description |
+| --- | --- |
+| `-m, --model <model>` | Image model ID; default `seedream-5-0-260128` |
+| `-p, --prompt <prompt>` | Image generation prompt |
+| `-o, --output <path>` | Output file path |
+| `-s, --size <size>` | Image size; available values vary by provider |
+| `--negative-prompt <text>` | Negative prompt; support depends on the model |
+| `--aspect-ratio <ratio>` | Image aspect ratio, e.g. `1:1`; support depends on the model |
+| `--seed <n>` | Random seed; support depends on the model |
+| `--num <n>` | Number of images to generate |
+| `--watermark` | Enable watermark; support depends on the model |
+| `--params <json>` | Pass provider parameters as JSON |
+
+Image size formats are not shared across providers. For example, Seedream commonly uses `2048x2048`, Kling uses `1k`, `2k`, or `4k`, and Qwen/Wan may use `2048*2048` or `2K`. Use the official parameters of the target model as the source of truth.
+
+Kling's `std`, `pro`, and `4k` indicate quality tiers and do not necessarily correspond to fixed pixel dimensions. The CLI maps these values to the parameters required by the upstream API.
+
+### 7.2 Text-to-video
+
+```bash
+# Seedance
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "A dog running on a beach, camera tracking smoothly" \
+  -o dog.mp4
+
+# Wan
+pt generate \
+  -m wan3.0-video \
+  -p "A cute little rabbit hopping on the grass" \
+  -o wan3.mp4
+
+# MiniMax Hailuo
+pt generate \
+  -m MiniMax-H3 \
+  -p "A girl smiling and looking at the camera" \
+  -r 768p \
+  --ratio 21:9 \
+  -o hailuo.mp4
+```
+
+Common video parameters:
+
+| Parameter | Default | Description |
+| --- | --- | --- |
+| `-r, --resolution <res>` | `720p` | Video resolution or provider quality tier |
+| `-d, --duration <seconds>` | Determined by the model | Video duration in seconds |
+| `--ratio <ratio>` | Determined by the model | Seedance aspect ratio; available values: `16:9`, `4:3`, `1:1`, `adaptive` |
+| `--aspect-ratio <ratio>` | Determined by the model | Aspect ratio for models such as Kling and Vidu |
+| `--sound [on|off]` | Determined by the model | Kling video sound control |
+| `--generate-audio` | Off | Video audio generation option supported by Seedance, Vidu, and others |
+| `--watermark` | Off | Whether to enable the watermark |
+| `--seed <n>` | Determined by the model | May be supported by Wan, Vidu, Seedream, and others |
+
+Resolution values differ across providers. Seedance/Wan commonly use `480p`, `720p`, and `1080p`; Kling commonly uses `std`, `pro`, and `4k`; Vidu commonly uses `540p`, `720p`, and `1080p`; Hailuo commonly uses `768P` and `1080P`.
+
+### 7.3 Image-to-video
+
+```bash
+# Use a local image as the first frame
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "The camera slowly pushes in and the subject blinks naturally" \
+  --ref start_frame.jpg \
+  -o out.mp4
+```
+
+`--ref` accepts a local file path, public URL, Base64 string, or `asset://` resource identifier. The CLI handles asset formats automatically based on the provider.
+
+### 7.4 First-and-last-frame video
+
+```bash
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "Smoothly transition from the first frame to the last frame" \
+  --ref first.jpg \
+  --last-frame last.jpg \
+  -o out.mp4
+```
+
+Models or model series that currently support first-and-last-frame mode include Seedance, MiniMax Hailuo, MiniMax H3, Kling, Wan, and Vidu. Provide the first and last frames as a pair with `--ref` and `--last-frame`.
+
+### 7.5 Reference video and reference audio
+
+```bash
+# Use a reference video
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "Keep the action rhythm and style of the reference video" \
+  --ref-video ref.mp4 \
+  -o out.mp4
+
+# Use reference audio
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "Generate a lip-synced video based on the reference audio" \
+  --ref-audio voice.mp3 \
+  -o out.mp4
+```
+
+Seedance and MiniMax H3 support multimodal reference video generation:
+
+```bash
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "Generate a new video referencing an image, video, and audio" \
+  --ref ref-img.jpg \
+  --ref-video ref.mp4 \
+  --ref-audio voice.mp3 \
+  -o out.mp4
+```
+
+First frame, first-and-last frame, and multimodal reference are distinct input scenarios. Do not treat multimodal references as ordinary first-frame mode.
+
+### 7.6 Kling camera motion control
+
+```bash
+# Using convenience parameters
+pt generate \
+  -m kling-v3 \
+  -p "Keep the character's actions unchanged" \
+  --ref char.jpg \
+  --ref-video https://example.com/dance.mp4 \
+  --character-orientation image \
+  -o out.mp4
+```
+
+You can also pass additional camera control parameters through `--params`:
+
+```bash
+pt generate \
+  -m kling-v3 \
+  -p "Keep the character's actions unchanged" \
+  --ref char.jpg \
+  --params '{
+    "video_url": "https://example.com/dance.mp4",
+    "character_orientation": "image",
+    "keep_original_sound": "yes"
+  }' \
+  -o out.mp4
+```
+
+When `video_url` or `character_orientation` appears in `--params`, the CLI automatically selects Kling's camera motion control endpoint. `--character-orientation` can be set to `image` or `video`.
+
+### 7.7 Text-to-speech
+
+```bash
+pt generate \
+  -m speech-2.6-hd \
+  -p "Hello, welcome to PowerTokens" \
+  -o hello.mp3
+```
+
+For MiniMax speech models, you can specify a voice name with `--voice`:
+
+```bash
+pt generate \
+  -m speech-02-hd \
+  -p "Welcome to PowerTokens CLI" \
+  --voice <voice_name> \
+  -o welcome.mp3
+```
+
+## 8. `generate` complete parameters
+
+| Option | Description |
+| --- | --- |
+| `-m, --model <model>` | Model ID; default `seedream-5-0-260128` |
+| `-p, --prompt <prompt>` | Generation prompt |
+| `-o, --output <path>` | Output file path |
+| `-s, --size <size>` | Image size |
+| `-r, --resolution <res>` | Video resolution or quality tier; default `720p` |
+| `-d, --duration <seconds>` | Video duration |
+| `--ref <path|url|base64|asset>` | Reference image or first frame |
+| `--last-frame <path|url|base64|asset>` | Last frame |
+| `--ref-video <path|url|base64>` | Reference video or action video |
+| `--ref-audio <path|url|base64>` | Reference audio |
+| `--character-orientation <image|video>` | Source of character orientation in Kling camera motion control |
+| `--asset-group-id <id>` | Asset group ID used for Seedance asset uploads |
+| `--negative-prompt <text>` | Negative prompt |
+| `--aspect-ratio <ratio>` | Aspect ratio for models such as Kling and Vidu |
+| `--seed <n>` | Random seed |
+| `--num <n>` | Number of images |
+| `--watermark` | Enable watermark |
+| `--sound [on|off]` | Kling video sound |
+| `--generate-audio` | Generate video with audio |
+| `--ratio <ratio>` | Seedance video ratio |
+| `--voice <voice>` | MiniMax TTS voice name |
+| `--params <json>` | Additional provider parameters, passed as JSON |
+
+Whether a parameter takes effect depends on the target model and upstream provider. The CLI maps general parameters to the corresponding endpoints; fields that cannot be expressed with general parameters should be passed through `--params`.
+
+## 9. Pass model parameters with `--params`
+
+### Merge mode
+
+When the JSON passed in `--params` contains no `content` or `media` array, the CLI merges the JSON fields into the request body:
+
+```bash
+pt generate \
+  -m kling-v3 \
+  -p "cat" \
+  --params '{"image_reference":"face","aspect_ratio":"1:1"}' \
+  -o cat.png
+```
+
+```bash
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  -p "dog running on the beach" \
+  --params '{"generate_audio":true,"watermark":false}' \
+  -o dog.mp4
+```
+
+### Full request body mode
+
+When `--params` directly contains a `content` or `media` array, the CLI treats it as the complete request body and adds the `model` field. You can omit `-p` in this case:
+
+```bash
+pt generate \
+  -m dreamina-seedance-2-5-260628 \
+  --params '{
+    "content": [
+      {"type":"text","text":"Generate a smooth product showcase video"},
+      {"type":"image_url","image_url":{"url":"asset://xxx"},"role":"first_frame"}
+    ],
+    "duration": 4,
+    "resolution": "480p"
+  }' \
+  -o out.mp4
+```
+
+Wrap the entire JSON parameter in single quotes so Bash does not interpret the double quotes as shell syntax. On Windows PowerShell, adjust the quoting according to the shell's rules.
+
+## 10. Asset handling and provider differences
+
+### Local assets
+
+`--ref`, `--last-frame`, `--ref-video`, and `--ref-audio` all accept local files. The CLI converts them automatically depending on the provider:
+
+- BytePlus Seedance first uploads assets to the asset library, then passes them to the model as `asset://<id>`. An `asset://` path you provide directly is passed through unchanged.
+- MiniMax, Kling, Wan, Vidu, and HappyHorse typically convert local files to Base64 or a data URL; the exact encoding is determined by the provider adapter.
+
+BytePlus Seedance asset uploads impose filename-length limits. The CLI automatically truncates filenames that are too long while preserving the extension, but we still recommend short filenames without special characters.
+
+### Main video parameter support
+
+| Parameter | Seedance | MiniMax Hailuo | MiniMax H3 | Kling | Wan | Vidu |
+| --- | --- | --- | --- | --- | --- | --- |
+| `--last-frame` | Supported | Supported | Supported | Supported | Supported | Supported |
+| `--ref-video` | Supported | Not supported | Supported | Camera motion | Partial r2v support | Not supported |
+| `--ref-audio` | Supported | Not supported | Supported | Not supported | Supported | Not supported |
+| `--negative-prompt` | Not supported | Not supported | Not supported | Supported | Supported | Not supported |
+| `--watermark` | Supported | Supported | Supported | Supported | Supported | Supported |
+| `--generate-audio` / `--sound` | Supported in some versions | Not supported | Not supported | Supports `--sound` | Not supported | Supported |
+| `--seed` | Supported | Not supported | Not supported | Not supported | Supported | Supported |
+| `--aspect-ratio` / `--ratio` | Supported | Not supported | Supported | Supported | Supported | Supported |
+
+Provider fields not listed here should be passed through with `--params`. The table reflects the CLI's current adapter support and does not represent the full capabilities of the upstream models.
+
+## 11. Configuration
+
+### View and modify configuration
+
+```bash
+# View the current configuration
+pt config
+
+# Set the API Base URL
+pt config -b https://api.powertokens.ai
+
+# Set the asset library Base URL
+pt config -a https://powertokens.ai/api
+
+# Reset the API Base URL and asset library Base URL
+pt config --reset
+```
+
+By default, the asset library address is derived automatically from the API Base URL. For example, when the API address is `https://api.powertokens.ai`, the asset library address is typically derived as `https://powertokens.ai/api`. Override it manually with `-a` only when you use a standalone asset service.
+
+### Local configuration file
+
+The configuration file is located at:
+
+```text
+~/.powertokens/config.json
+```
+
+File permissions default to `0600`. Example structure:
+
+```json
+{
+  "apiKey": "sk-...",
+  "baseUrl": "https://api.powertokens.ai",
+  "assetBaseUrl": "https://powertokens.ai/api"
+}
+```
+
+Do not commit this file to version control or copy it to public environments.
+
+### Environment variables
+
+Environment variables take precedence over the configuration file and are well suited to CI/CD, containers, and temporary tasks:
+
+| Environment variable | Description |
+| --- | --- |
+| `POWERTOKENS_API_KEY` | API key; overrides the key in the configuration file |
+| `POWERTOKENS_BASE_URL` | API Base URL; overrides the address in the configuration file |
+| `POWERTOKENS_ASSET_BASE_URL` | Asset library Base URL; overrides the automatically derived address |
+| `PT_DEBUG` | When set to `1`, outputs the raw request body and task results to stderr |
+
+Example:
+
+```bash
+POWERTOKENS_API_KEY="sk-..." \
+pt chat "Generate a product launch title"
+```
+
+Debug example:
+
+```bash
+PT_DEBUG=1 pt generate \
+  -m seedream-5-0-260128 \
+  -p "minimal product photo" \
+  -o product.png
+```
+
+Debug output may include request parameters and resource URLs. Do not keep debug output in shared logs.
+
+## 12. Script automation
+
+### Bash
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+: "${POWERTOKENS_API_KEY:?Please set POWERTOKENS_API_KEY first}"
+
+pt generate \
+  -m seedream-5-0-260128 \
+  -p "product photo of a glass teapot on a white background" \
+  -s 2048x2048 \
+  -o ./outputs/teapot.png
+```
+
+### Node.js
+
+```js
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
+
+const { stdout } = await execFileAsync("pt", [
+  "generate",
+  "-m", "seedream-5-0-260128",
+  "-p", "a clean product photo of a glass teapot",
+  "-o", "./outputs/teapot.png",
+]);
+
+console.log(stdout);
+```
+
+### Python
+
+```python
+import os
+import subprocess
+
+if not os.environ.get("POWERTOKENS_API_KEY"):
+    raise RuntimeError("Please set POWERTOKENS_API_KEY first")
+
+subprocess.run(
+    [
+        "pt", "generate",
+        "-m", "seedream-5-0-260128",
+        "-p", "a clean product photo of a glass teapot",
+        "-o", "./outputs/teapot.png",
+    ],
+    check=True,
+)
+```
+
+In scripts, explicitly check the process exit code and whether the target file exists. Do not rely on terminal logs to determine whether a task succeeded.
+
+## 13. Frequently asked questions
+
+### 13.1 "API key not configured" prompt
+
+Run one of the following commands first:
+
+```bash
+pt login
+```
+
+or:
+
+```bash
+export POWERTOKENS_API_KEY="sk-..."
+```
+
+Then verify your login status with `pt whoami`.
+
+### 13.2 Model not found or parameters not applied
+
+Check the current model catalog first:
+
+```bash
+pt models
+pt models -t image
+pt models -t video
+```
+
+The model ID must match the returned result exactly, including case. Models differ in their support for sizes, aspect ratios, audio, seeds, and reference assets. When in doubt, check the corresponding provider's model parameters and pass them with `--params`.
+
+### 13.3 A local file cannot be used as a reference asset
+
+Verify the file path and check the file type and size. We recommend an absolute path or a path relative to the current directory:
+
+```bash
+pt generate \
+  -m kling-v3 \
+  -p "Keep the subject and change the background" \
+  --ref "$(pwd)/input.png" \
+  -o output.png
+```
+
+If the target is Seedance, also keep the filename short and confirm that the API key has permission to use the asset library.
+
+### 13.4 `--params` JSON parsing failed
+
+Check the quoting and JSON format. Bash example:
+
+```bash
+pt generate \
+  -m kling-v3 \
+  -p "cat" \
+  --params '{"aspect_ratio":"1:1","watermark":false}' \
+  -o cat.png
+```
+
+For complex requests, write the JSON to a file first and then read it into a shell variable to avoid nested-quote errors.
+
+### 13.5 How to view the underlying request
+
+Set `PT_DEBUG=1`:
+
+```bash
+PT_DEBUG=1 pt generate -m kling-v3 -p "cat" -o cat.png
+```
+
+The request body and task results are output to stderr, which helps diagnose parameter mapping, asset upload, and provider routing issues.
+
+### 13.6 No output file was generated
+
+Check that:
+
+1. The directory specified by `-o` exists, or create it first.
+2. The current model and input combination actually supports that task type.
+3. The task was not rejected by an upstream model.
+4. Your API key, API Base URL, and asset library address are configured correctly.
+5. Use `PT_DEBUG=1` to view the task status and raw responses.
+
+## 14. Command quick reference
+
+| Command | Purpose |
+| --- | --- |
+| `pt login [key]` | Log in and save the API key |
+| `pt logout` | Remove the local API key |
+| `pt whoami` | View current user and usage information |
+| `pt chat [prompt]` | Call a large language model for conversation |
+| `pt generate` | Generate images, videos, or audio |
+| `pt models` | View available models |
+| `pt config` | View or set the API and asset library addresses |
+| `pt --version` | View the CLI version |
