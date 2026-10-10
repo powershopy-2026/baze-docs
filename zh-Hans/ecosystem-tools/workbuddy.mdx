@@ -1,0 +1,60 @@
+---
+title: "WorkBuddy 接入指南"
+description: "在 WorkBuddy 中配置自定义模型，通过 OpenAI-compatible 接口接入 baze平台。"
+---
+
+WorkBuddy 是一款 AI 办公助手客户端，支持通过自定义模型接入第三方 OpenAI-compatible 接口。接入 `baze平台` 时，只需在 WorkBuddy 的模型配置中填入平台接口地址、API Key 和模型 ID，测试连接通过后即可使用。
+
+## 前置准备
+
+- 已注册 `baze平台` 账户并获取 API Key。
+- 已安装 WorkBuddy 客户端（本指南基于 WorkBuddy 5.6.2）。
+- 确认你要使用的模型 ID（如 `glm-5.3`、`MiniMax-M3` 等），可在平台模型列表中查看。
+
+## 配置步骤
+
+### 1. 打开模型选择菜单
+
+在 WorkBuddy 主界面底部，点击 **⚡️快速** 模型选择器，打开模型下拉菜单。
+
+在下拉菜单底部，点击 **配置自定义模型**。
+
+![WorkBuddy 模型下拉菜单](/images/ecosystem-tools/workbuddy/step1-model-dropdown.png)
+
+### 2. 选择自定义供应商
+
+在弹出的 **添加模型** 窗口中，从供应商列表中选择 **自定义**。
+
+![选择自定义供应商](/images/ecosystem-tools/workbuddy/step2-select-custom-provider.png)
+
+### 3. 填写接口信息并测试连接
+
+选择自定义后，按以下信息填写表单：
+
+| 字段 | 值 |
+| --- | --- |
+| **接口地址** | `https://baze-api.powerbuyin.top/v1/chat/completions` |
+| **API Key** | 你的 `baze平台` API Key |
+| **模型名称** | 平台支持的模型 ID，如 `glm-5.3` |
+
+填写完成后，点击 **测试连接**。连接成功后顶部会显示 **连接成功** 提示，然后点击 **保存**。
+
+![填写接口信息并测试连接](/images/ecosystem-tools/workbuddy/step3-configure-and-test.png)
+
+### 4. 开始使用
+
+保存后，在模型选择菜单中选择你刚添加的自定义模型，即可在 WorkBuddy 中通过 `baze平台` 调用该模型。
+
+## 推荐模型
+
+| 上游渠道 | 模型 ID |
+| --- | --- |
+| 智谱 | `glm-5.3`、`glm-5.2`、`glm-5-turbo` |
+| MiniMax | `MiniMax-M3` |
+| DeepSeek | `deepseek-v3-2-251201` |
+
+## 能力边界
+
+- WorkBuddy 自定义模型仅支持 OpenAI-compatible Chat Completions 接口，不支持图片生成、视频生成、语音等任务模型。
+- 高级配置中的 **工具调用** 选项取决于模型能力，请按实际任务验证。
+- 不要在文档或截图中暴露真实 API Key。
