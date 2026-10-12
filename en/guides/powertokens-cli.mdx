@@ -21,10 +21,7 @@ pt login
 pt chat "Explain quantum computing in one sentence"
 
 # Generate image
-pt generate \
-  -m seedream-5-0-260128 \
-  -p "A cat wearing a spacesuit" \
-  -o cat.png
+pt generate -m seedream-5-0-260128 -p "A cat wearing a spacesuit" -o cat.png
 
 # View available models
 pt models
@@ -143,9 +140,7 @@ pt chat "What is TypeScript?"
 pt chat -m glm-5.3 "Write a short poem about spring"
 
 # Specify a system prompt
-pt chat \
-  -s "You are a rigorous technical writer" \
-  "Explain the difference between REST API and GraphQL"
+pt chat -s "You are a rigorous technical writer" "Explain the difference between REST API and GraphQL"
 
 # Specify the maximum output tokens
 pt chat -t 2048 "Write a longer product introduction"
@@ -175,39 +170,23 @@ cat prompt.txt | pt chat -m glm-5
 `generate` is the unified entry point for image, video, and audio generation. At minimum, provide a model ID, a prompt, and an output path:
 
 ```bash
-pt generate \
-  -m <model_id> \
-  -p "<prompt>" \
-  -o <output_path>
+pt generate -m <model_id> -p "<prompt>" -o <output_path>
 ```
 
 ### 7.1 Image generation
 
 ```bash
 # Text-to-image
-pt generate \
-  -m dola-seedream-5-0-pro-260628 \
-  -p "Cyberpunk city nightscape, cinematic lighting" \
-  -o city.png
+pt generate -m dola-seedream-5-0-pro-260628 -p "Cyberpunk city nightscape, cinematic lighting" -o city.png
 
 # Using the Kling image model
-pt generate \
-  -m kling-v3 \
-  -p "An orange cat sitting on a windowsill" \
-  -o cat.png
+pt generate -m kling-v3 -p "An orange cat sitting on a windowsill" -o cat.png
 
 # Using the Qwen image model
-pt generate \
-  -m qwen-image-3.0-pro \
-  -p "Sci-fi city nightscape" \
-  -o city.png
+pt generate -m qwen-image-3.0-pro -p "Sci-fi city nightscape" -o city.png
 
 # Image-to-image
-pt generate \
-  -m kling-v3 \
-  -p "Keep the character's appearance unchanged and replace the background with winter" \
-  --ref start_frame.jpg \
-  -o out.png
+pt generate -m kling-v3 -p "Keep the character's appearance unchanged and replace the background with winter" --ref start_frame.jpg -o out.png
 ```
 
 Common image parameters:
@@ -233,24 +212,13 @@ Kling's `std`, `pro`, and `4k` indicate quality tiers and do not necessarily cor
 
 ```bash
 # Seedance
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "A dog running on a beach, camera tracking smoothly" \
-  -o dog.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "A dog running on a beach, camera tracking smoothly" -o dog.mp4
 
 # Wan
-pt generate \
-  -m wan3.0-video \
-  -p "A cute little rabbit hopping on the grass" \
-  -o wan3.mp4
+pt generate -m wan3.0-video -p "A cute little rabbit hopping on the grass" -o wan3.mp4
 
 # MiniMax Hailuo
-pt generate \
-  -m MiniMax-H3 \
-  -p "A girl smiling and looking at the camera" \
-  -r 768p \
-  --ratio 21:9 \
-  -o hailuo.mp4
+pt generate -m MiniMax-H3 -p "A girl smiling and looking at the camera" -r 768p --ratio 21:9 -o hailuo.mp4
 ```
 
 Common video parameters:
@@ -272,11 +240,7 @@ Resolution values differ across providers. Seedance/Wan commonly use `480p`, `72
 
 ```bash
 # Use a local image as the first frame
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "The camera slowly pushes in and the subject blinks naturally" \
-  --ref start_frame.jpg \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "The camera slowly pushes in and the subject blinks naturally" --ref start_frame.jpg -o out.mp4
 ```
 
 `--ref` accepts a local file path, public URL, Base64 string, or `asset://` resource identifier. The CLI handles asset formats automatically based on the provider.
@@ -284,12 +248,7 @@ pt generate \
 ### 7.4 First-and-last-frame video
 
 ```bash
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "Smoothly transition from the first frame to the last frame" \
-  --ref first.jpg \
-  --last-frame last.jpg \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "Smoothly transition from the first frame to the last frame" --ref first.jpg --last-frame last.jpg -o out.mp4
 ```
 
 Models or model series that currently support first-and-last-frame mode include Seedance, MiniMax Hailuo, MiniMax H3, Kling, Wan, and Vidu. Provide the first and last frames as a pair with `--ref` and `--last-frame`.
@@ -298,30 +257,16 @@ Models or model series that currently support first-and-last-frame mode include 
 
 ```bash
 # Use a reference video
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "Keep the action rhythm and style of the reference video" \
-  --ref-video ref.mp4 \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "Keep the action rhythm and style of the reference video" --ref-video ref.mp4 -o out.mp4
 
 # Use reference audio
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "Generate a lip-synced video based on the reference audio" \
-  --ref-audio voice.mp3 \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "Generate a lip-synced video based on the reference audio" --ref-audio voice.mp3 -o out.mp4
 ```
 
 Seedance and MiniMax H3 support multimodal reference video generation:
 
 ```bash
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "Generate a new video referencing an image, video, and audio" \
-  --ref ref-img.jpg \
-  --ref-video ref.mp4 \
-  --ref-audio voice.mp3 \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "Generate a new video referencing an image, video, and audio" --ref ref-img.jpg --ref-video ref.mp4 --ref-audio voice.mp3 -o out.mp4
 ```
 
 First frame, first-and-last frame, and multimodal reference are distinct input scenarios. Do not treat multimodal references as ordinary first-frame mode.
@@ -330,28 +275,17 @@ First frame, first-and-last frame, and multimodal reference are distinct input s
 
 ```bash
 # Using convenience parameters
-pt generate \
-  -m kling-v3 \
-  -p "Keep the character's actions unchanged" \
-  --ref char.jpg \
-  --ref-video https://example.com/dance.mp4 \
-  --character-orientation image \
-  -o out.mp4
+pt generate -m kling-v3 -p "Keep the character's actions unchanged" --ref char.jpg --ref-video https://example.com/dance.mp4 --character-orientation image -o out.mp4
 ```
 
 You can also pass additional camera control parameters through `--params`:
 
 ```bash
-pt generate \
-  -m kling-v3 \
-  -p "Keep the character's actions unchanged" \
-  --ref char.jpg \
-  --params '{
+pt generate -m kling-v3 -p "Keep the character's actions unchanged" --ref char.jpg --params '{
     "video_url": "https://example.com/dance.mp4",
     "character_orientation": "image",
     "keep_original_sound": "yes"
-  }' \
-  -o out.mp4
+  }' -o out.mp4
 ```
 
 When `video_url` or `character_orientation` appears in `--params`, the CLI automatically selects Kling's camera motion control endpoint. `--character-orientation` can be set to `image` or `video`.
@@ -359,20 +293,13 @@ When `video_url` or `character_orientation` appears in `--params`, the CLI autom
 ### 7.7 Text-to-speech
 
 ```bash
-pt generate \
-  -m speech-2.6-hd \
-  -p "Hello, welcome to PowerTokens" \
-  -o hello.mp3
+pt generate -m speech-2.6-hd -p "Hello, welcome to PowerTokens" -o hello.mp3
 ```
 
 For MiniMax speech models, you can specify a voice name with `--voice`:
 
 ```bash
-pt generate \
-  -m speech-02-hd \
-  -p "Welcome to PowerTokens CLI" \
-  --voice <voice_name> \
-  -o welcome.mp3
+pt generate -m speech-02-hd -p "Welcome to PowerTokens CLI" --voice <voice_name> -o welcome.mp3
 ```
 
 ## 8. `generate` complete parameters
@@ -411,19 +338,11 @@ Whether a parameter takes effect depends on the target model and upstream provid
 When the JSON passed in `--params` contains no `content` or `media` array, the CLI merges the JSON fields into the request body:
 
 ```bash
-pt generate \
-  -m kling-v3 \
-  -p "cat" \
-  --params '{"image_reference":"face","aspect_ratio":"1:1"}' \
-  -o cat.png
+pt generate -m kling-v3 -p "cat" --params '{"image_reference":"face","aspect_ratio":"1:1"}' -o cat.png
 ```
 
 ```bash
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "dog running on the beach" \
-  --params '{"generate_audio":true,"watermark":false}' \
-  -o dog.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "dog running on the beach" --params '{"generate_audio":true,"watermark":false}' -o dog.mp4
 ```
 
 ### Full request body mode
@@ -431,17 +350,14 @@ pt generate \
 When `--params` directly contains a `content` or `media` array, the CLI treats it as the complete request body and adds the `model` field. You can omit `-p` in this case:
 
 ```bash
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  --params '{
+pt generate -m dreamina-seedance-2-5-260628 --params '{
     "content": [
       {"type":"text","text":"Generate a smooth product showcase video"},
       {"type":"image_url","image_url":{"url":"asset://xxx"},"role":"first_frame"}
     ],
     "duration": 4,
     "resolution": "480p"
-  }' \
-  -o out.mp4
+  }' -o out.mp4
 ```
 
 Wrap the entire JSON parameter in single quotes so Bash does not interpret the double quotes as shell syntax. On Windows PowerShell, adjust the quoting according to the shell's rules.
@@ -526,17 +442,13 @@ Environment variables take precedence over the configuration file and are well s
 Example:
 
 ```bash
-POWERTOKENS_API_KEY="sk-..." \
-pt chat "Generate a product launch title"
+POWERTOKENS_API_KEY="sk-..." pt chat "Generate a product launch title"
 ```
 
 Debug example:
 
 ```bash
-PT_DEBUG=1 pt generate \
-  -m seedream-5-0-260128 \
-  -p "minimal product photo" \
-  -o product.png
+PT_DEBUG=1 pt generate -m seedream-5-0-260128 -p "minimal product photo" -o product.png
 ```
 
 Debug output may include request parameters and resource URLs. Do not keep debug output in shared logs.
@@ -551,11 +463,7 @@ set -euo pipefail
 
 : "${POWERTOKENS_API_KEY:?Please set POWERTOKENS_API_KEY first}"
 
-pt generate \
-  -m seedream-5-0-260128 \
-  -p "product photo of a glass teapot on a white background" \
-  -s 2048x2048 \
-  -o ./outputs/teapot.png
+pt generate -m seedream-5-0-260128 -p "product photo of a glass teapot on a white background" -s 2048x2048 -o ./outputs/teapot.png
 ```
 
 ### Node.js
@@ -633,11 +541,7 @@ The model ID must match the returned result exactly, including case. Models diff
 Verify the file path and check the file type and size. We recommend an absolute path or a path relative to the current directory:
 
 ```bash
-pt generate \
-  -m kling-v3 \
-  -p "Keep the subject and change the background" \
-  --ref "$(pwd)/input.png" \
-  -o output.png
+pt generate -m kling-v3 -p "Keep the subject and change the background" --ref "$(pwd)/input.png" -o output.png
 ```
 
 If the target is Seedance, also keep the filename short and confirm that the API key has permission to use the asset library.
@@ -647,11 +551,7 @@ If the target is Seedance, also keep the filename short and confirm that the API
 Check the quoting and JSON format. Bash example:
 
 ```bash
-pt generate \
-  -m kling-v3 \
-  -p "cat" \
-  --params '{"aspect_ratio":"1:1","watermark":false}' \
-  -o cat.png
+pt generate -m kling-v3 -p "cat" --params '{"aspect_ratio":"1:1","watermark":false}' -o cat.png
 ```
 
 For complex requests, write the JSON to a file first and then read it into a shell variable to avoid nested-quote errors.

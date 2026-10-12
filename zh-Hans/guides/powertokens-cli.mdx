@@ -21,10 +21,7 @@ pt login
 pt chat "用一句话解释量子计算"
 
 # 生成图片
-pt generate \
-  -m seedream-5-0-260128 \
-  -p "一只穿着宇航服的猫" \
-  -o cat.png
+pt generate -m seedream-5-0-260128 -p "一只穿着宇航服的猫" -o cat.png
 
 # 查看可用模型
 pt models
@@ -143,9 +140,7 @@ pt chat "什么是 TypeScript？"
 pt chat -m glm-5.3 "写一首关于春天的短诗"
 
 # 指定系统提示词
-pt chat \
-  -s "你是一名严谨的技术写作者" \
-  "解释 REST API 和 GraphQL 的区别"
+pt chat -s "你是一名严谨的技术写作者" "解释 REST API 和 GraphQL 的区别"
 
 # 指定最大输出 Token 数
 pt chat -t 2048 "写一篇较长的产品介绍"
@@ -175,39 +170,23 @@ cat prompt.txt | pt chat -m glm-5
 `generate` 是图片、视频和音频生成的统一入口。至少应提供模型 ID、提示词和输出路径：
 
 ```bash
-pt generate \
-  -m <model_id> \
-  -p "<prompt>" \
-  -o <output_path>
+pt generate -m <model_id> -p "<prompt>" -o <output_path>
 ```
 
 ### 7.1 图片生成
 
 ```bash
 # 文生图
-pt generate \
-  -m dola-seedream-5-0-pro-260628 \
-  -p "赛博朋克城市夜景，电影级光影" \
-  -o city.png
+pt generate -m dola-seedream-5-0-pro-260628 -p "赛博朋克城市夜景，电影级光影" -o city.png
 
 # 使用 Kling 图片模型
-pt generate \
-  -m kling-v3 \
-  -p "一只橘猫坐在窗台上" \
-  -o cat.png
+pt generate -m kling-v3 -p "一只橘猫坐在窗台上" -o cat.png
 
 # 使用 Qwen 图片模型
-pt generate \
-  -m qwen-image-3.0-pro \
-  -p "科幻城市夜景" \
-  -o city.png
+pt generate -m qwen-image-3.0-pro -p "科幻城市夜景" -o city.png
 
 # 图生图
-pt generate \
-  -m kling-v3 \
-  -p "保持人物形象不变，替换为冬季背景" \
-  --ref start_frame.jpg \
-  -o out.png
+pt generate -m kling-v3 -p "保持人物形象不变，替换为冬季背景" --ref start_frame.jpg -o out.png
 ```
 
 常用图片参数：
@@ -233,24 +212,13 @@ Kling 的 `std`、`pro` 和 `4k` 表示画质档位，而不一定等同于固�
 
 ```bash
 # Seedance
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "一只狗在海滩上奔跑，镜头平稳跟随" \
-  -o dog.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "一只狗在海滩上奔跑，镜头平稳跟随" -o dog.mp4
 
 # Wan
-pt generate \
-  -m wan3.0-video \
-  -p "一只可爱的小兔子在草地上跳跃" \
-  -o wan3.mp4
+pt generate -m wan3.0-video -p "一只可爱的小兔子在草地上跳跃" -o wan3.mp4
 
 # MiniMax Hailuo
-pt generate \
-  -m MiniMax-H3 \
-  -p "女孩微笑并看向镜头" \
-  -r 768p \
-  --ratio 21:9 \
-  -o hailuo.mp4
+pt generate -m MiniMax-H3 -p "女孩微笑并看向镜头" -r 768p --ratio 21:9 -o hailuo.mp4
 ```
 
 视频常用参数如下：
@@ -272,11 +240,7 @@ pt generate \
 
 ```bash
 # 以本地图片作为首帧
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "镜头缓慢推进，人物自然眨眼" \
-  --ref start_frame.jpg \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "镜头缓慢推进，人物自然眨眼" --ref start_frame.jpg -o out.mp4
 ```
 
 `--ref` 支持本地文件路径、公网 URL、Base64 或 `asset://` 资源标识。CLI 会根据供应商自动处理素材格式。
@@ -284,12 +248,7 @@ pt generate \
 ### 7.4 首尾帧视频
 
 ```bash
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "平滑地从第一帧过渡到最后一帧" \
-  --ref first.jpg \
-  --last-frame last.jpg \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "平滑地从第一帧过渡到最后一帧" --ref first.jpg --last-frame last.jpg -o out.mp4
 ```
 
 当前支持首尾帧模式的主要模型或模型系列包括 Seedance、MiniMax Hailuo、MiniMax H3、Kling、Wan 和 Vidu。首帧和尾帧应使用 `--ref` 与 `--last-frame` 成对提供。
@@ -298,30 +257,16 @@ pt generate \
 
 ```bash
 # 使用参考视频
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "保持参考视频的动作节奏和风格" \
-  --ref-video ref.mp4 \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "保持参考视频的动作节奏和风格" --ref-video ref.mp4 -o out.mp4
 
 # 使用参考音频
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "根据参考音频生成口型同步视频" \
-  --ref-audio voice.mp3 \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "根据参考音频生成口型同步视频" --ref-audio voice.mp3 -o out.mp4
 ```
 
 Seedance 和 MiniMax H3 支持多模态参考生视频：
 
 ```bash
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "参考图片、视频和音频生成一段新视频" \
-  --ref ref-img.jpg \
-  --ref-video ref.mp4 \
-  --ref-audio voice.mp3 \
-  -o out.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "参考图片、视频和音频生成一段新视频" --ref ref-img.jpg --ref-video ref.mp4 --ref-audio voice.mp3 -o out.mp4
 ```
 
 首帧、首尾帧和多模态参考是不同的输入场景。使用多模态参考时，不应把它当作普通首帧模式处理。
@@ -330,28 +275,17 @@ pt generate \
 
 ```bash
 # 使用便捷参数
-pt generate \
-  -m kling-v3 \
-  -p "保持人物动作不变" \
-  --ref char.jpg \
-  --ref-video https://example.com/dance.mp4 \
-  --character-orientation image \
-  -o out.mp4
+pt generate -m kling-v3 -p "保持人物动作不变" --ref char.jpg --ref-video https://example.com/dance.mp4 --character-orientation image -o out.mp4
 ```
 
 也可以通过 `--params` 传入更多运镜控制参数：
 
 ```bash
-pt generate \
-  -m kling-v3 \
-  -p "保持人物动作不变" \
-  --ref char.jpg \
-  --params '{
+pt generate -m kling-v3 -p "保持人物动作不变" --ref char.jpg --params '{
     "video_url": "https://example.com/dance.mp4",
     "character_orientation": "image",
     "keep_original_sound": "yes"
-  }' \
-  -o out.mp4
+  }' -o out.mp4
 ```
 
 当 `--params` 中出现 `video_url` 或 `character_orientation` 时，CLI 会自动选择 Kling 运镜控制端点。`--character-orientation` 可设置为 `image` 或 `video`。
@@ -359,20 +293,13 @@ pt generate \
 ### 7.7 文本转语音
 
 ```bash
-pt generate \
-  -m speech-2.6-hd \
-  -p "Hello, welcome to PowerTokens" \
-  -o hello.mp3
+pt generate -m speech-2.6-hd -p "Hello, welcome to PowerTokens" -o hello.mp3
 ```
 
 MiniMax 语音模型可以通过 `--voice` 指定声音名称：
 
 ```bash
-pt generate \
-  -m speech-02-hd \
-  -p "欢迎使用 PowerTokens CLI" \
-  --voice <voice_name> \
-  -o welcome.mp3
+pt generate -m speech-02-hd -p "欢迎使用 PowerTokens CLI" --voice <voice_name> -o welcome.mp3
 ```
 
 ## 8. `generate` 完整参数
@@ -411,19 +338,11 @@ pt generate \
 当 `--params` 中没有 `content` 或 `media` 数组时，CLI 会将 JSON 字段合并进请求体：
 
 ```bash
-pt generate \
-  -m kling-v3 \
-  -p "cat" \
-  --params '{"image_reference":"face","aspect_ratio":"1:1"}' \
-  -o cat.png
+pt generate -m kling-v3 -p "cat" --params '{"image_reference":"face","aspect_ratio":"1:1"}' -o cat.png
 ```
 
 ```bash
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  -p "dog running on the beach" \
-  --params '{"generate_audio":true,"watermark":false}' \
-  -o dog.mp4
+pt generate -m dreamina-seedance-2-5-260628 -p "dog running on the beach" --params '{"generate_audio":true,"watermark":false}' -o dog.mp4
 ```
 
 ### 完整请求体模式
@@ -431,17 +350,14 @@ pt generate \
 当 `--params` 直接包含 `content` 或 `media` 数组时，CLI 会将其视为完整请求体，并额外补充 `model` 字段。此时可以省略 `-p`：
 
 ```bash
-pt generate \
-  -m dreamina-seedance-2-5-260628 \
-  --params '{
+pt generate -m dreamina-seedance-2-5-260628 --params '{
     "content": [
       {"type":"text","text":"生成一段平滑的产品展示视频"},
       {"type":"image_url","image_url":{"url":"asset://xxx"},"role":"first_frame"}
     ],
     "duration": 4,
     "resolution": "480p"
-  }' \
-  -o out.mp4
+  }' -o out.mp4
 ```
 
 JSON 参数应使用单引号包裹整个对象，以避免 Bash 将双引号解释为 shell 语法。Windows PowerShell 下请根据 shell 规则调整引号。
@@ -526,17 +442,13 @@ pt config --reset
 示例：
 
 ```bash
-POWERTOKENS_API_KEY="sk-..." \
-pt chat "生成一个产品发布会标题"
+POWERTOKENS_API_KEY="sk-..." pt chat "生成一个产品发布会标题"
 ```
 
 调试示例：
 
 ```bash
-PT_DEBUG=1 pt generate \
-  -m seedream-5-0-260128 \
-  -p "minimal product photo" \
-  -o product.png
+PT_DEBUG=1 pt generate -m seedream-5-0-260128 -p "minimal product photo" -o product.png
 ```
 
 调试输出可能包含请求参数和资源地址。不要在共享日志中保留调试输出。
@@ -551,11 +463,7 @@ set -euo pipefail
 
 : "${POWERTOKENS_API_KEY:?请先设置 POWERTOKENS_API_KEY}"
 
-pt generate \
-  -m seedream-5-0-260128 \
-  -p "白色背景上的玻璃茶壶产品摄影" \
-  -s 2048x2048 \
-  -o ./outputs/teapot.png
+pt generate -m seedream-5-0-260128 -p "白色背景上的玻璃茶壶产品摄影" -s 2048x2048 -o ./outputs/teapot.png
 ```
 
 ### Node.js
@@ -633,11 +541,7 @@ pt models -t video
 确认文件路径正确，并检查文件类型和大小。建议先使用绝对路径或当前目录下的相对路径：
 
 ```bash
-pt generate \
-  -m kling-v3 \
-  -p "保留主体并改变背景" \
-  --ref "$(pwd)/input.png" \
-  -o output.png
+pt generate -m kling-v3 -p "保留主体并改变背景" --ref "$(pwd)/input.png" -o output.png
 ```
 
 如果目标是 Seedance，还应确保文件名较短，并确认 API Key 有权使用资产库。
@@ -647,11 +551,7 @@ pt generate \
 检查引号和 JSON 格式。Bash 示例：
 
 ```bash
-pt generate \
-  -m kling-v3 \
-  -p "cat" \
-  --params '{"aspect_ratio":"1:1","watermark":false}' \
-  -o cat.png
+pt generate -m kling-v3 -p "cat" --params '{"aspect_ratio":"1:1","watermark":false}' -o cat.png
 ```
 
 复杂请求建议先写入 JSON 文件，再通过 shell 变量读取，避免多层引号造成错误。
