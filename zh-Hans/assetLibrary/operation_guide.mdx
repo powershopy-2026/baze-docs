@@ -17,9 +17,9 @@ title: 资产库 — 快速上手
 
 在调用任何资产库接口之前，请完成以下步骤：
 
-1. **注册登录**：注册并登录 [powertokens.ai](https://powertokens.ai)
-2. **获取 API Key**：进入 [API Keys 管理页面](https://powertokens.ai/api-keys)，点击创建新的 Key，复制并妥善保存（页面关闭后将无法再次查看）
-3. **开通资产库**：进入 [资产库页面](https://powertokens.ai/zh-Hans/assets-library?tab=1)，阅读并同意《素材库用户协议》后方可使用
+1. **注册登录**：注册并登录 [powertokens.ai](https://baze.powerbuyin.top)
+2. **获取 API Key**：进入 [API Keys 管理页面](https://baze.powerbuyin.top/api-keys)，点击创建新的 Key，复制并妥善保存（页面关闭后将无法再次查看）
+3. **开通资产库**：进入 [资产库页面](https://baze.powerbuyin.top/zh-Hans/assets-library?tab=1)，阅读并同意《素材库用户协议》后方可使用
 
 > **注意：** 使用资产库**不需要充值**，开通即可免费使用。但如果需要调用 Seedance 2.0 等生成模型，则需要先充值。
 
@@ -60,7 +60,7 @@ Authorization: <YOUR_API_KEY>
 **接口：** [`POST /v1/asset/groups/list`](https://docs.powertokens.ai/en/assetLibrary/group-list)
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -79,7 +79,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
 **接口：** [`POST /v1/asset/groups/assets`](https://docs.powertokens.ai/en/assetLibrary/group-asset-list)
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/assets \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/assets \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -117,7 +117,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/assets \
 **接口：** [`POST /v1/asset/groups/create`](https://docs.powertokens.ai/en/assetLibrary/group-create)
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/create \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/create \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -143,7 +143,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/create \
 **Content-Type：** `multipart/form-data`
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/upload \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/upload \
   -H "Authorization: YOUR_API_KEY" \
   -F "file=@/path/to/your-image.jpg" \
   -F "group_id=XXXX"
@@ -172,7 +172,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/upload \
 > **注意：** 此接口**不需要鉴权**，无需携带 `Authorization` Header。
 
 ```bash
-curl "https://powertokens.ai/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
+curl "https://baze.powerbuyin.top/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
 ```
 
 **响应：**
@@ -194,7 +194,7 @@ curl "https://powertokens.ai/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
 **查看虚拟资产组列表：**
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -207,7 +207,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
 **重命名资产组：** [`POST /v1/asset/groups/rename`](https://docs.powertokens.ai/en/assetLibrary/group-rename)
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/rename \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/rename \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -219,7 +219,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/rename \
 **删除资产组：** [`POST /v1/asset/groups/delete`](https://docs.powertokens.ai/en/assetLibrary/group-delete)
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/delete \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/delete \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -244,7 +244,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/delete \
 **接口：** [`POST /v1/asset/get-authorize-url`](https://docs.powertokens.ai/en/assetLibrary/get-authorize-url)
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/get-authorize-url \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/get-authorize-url \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -268,7 +268,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/get-authorize-url \
 认证成功后，通过资产组列表接口（与「一、官方素材库」中获取资产组使用的是同一个接口）查询你的真人资产组，获取 `group_id`：
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -295,7 +295,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
 拿到真人资产组的 `group_id` 后，上传该真人的素材：
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/upload \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/upload \
   -H "Authorization: YOUR_API_KEY" \
   -F "file=@/path/to/real-person-video.mp4" \
   -F "group_id=XXXX"
@@ -310,7 +310,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/upload \
 拿到 `asset_id` 后（无论来自哪类素材），可以在任何支持媒体输入的生成请求中引用：
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/videos \
+curl -X POST https://baze.powerbuyin.top/api/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -338,7 +338,7 @@ import requests
 import time
 
 API_KEY = "YOUR_API_KEY"
-BASE_URL = "https://powertokens.ai/api"
+BASE_URL = "https://baze.powerbuyin.top/api"
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 
@@ -430,14 +430,14 @@ print(f"生成任务已提交 → task_id: {result['data']['task_id']}")
 
 ## 接口速查表
 
-> **Base URL：** `https://powertokens.ai/api`，请确保所有请求都包含 `/api` 前缀，不要直接拼 `powertokens.ai/v1/...`。
+> **Base URL：** `https://baze.powerbuyin.top/api`，请确保所有请求都包含 `/api` 前缀，不要直接拼 `powertokens.ai/v1/...`。
 
 ### 资产操作
 
 #### 上传文件 — `POST /v1/asset/upload`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/upload-file)）
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/upload \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/upload \
   -H "Authorization: YOUR_API_KEY" \
   -F "file=@/path/to/file.jpg" \
   -F "group_id=XXXX"
@@ -448,13 +448,13 @@ curl -X POST https://powertokens.ai/api/v1/asset/upload \
 > 此接口**不需要鉴权**。
 
 ```bash
-curl "https://powertokens.ai/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
+curl "https://baze.powerbuyin.top/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
 ```
 
 #### 获取真人认证链接 — `POST /v1/asset/get-authorize-url`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/get-authorize-url)）
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/get-authorize-url \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/get-authorize-url \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -464,7 +464,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/get-authorize-url \
 #### 创建虚拟资产组 — `POST /v1/asset/groups/create`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-create)）
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/create \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/create \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"group_name": "我的项目素材"}'
@@ -473,7 +473,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/create \
 #### 资产组列表 — `POST /v1/asset/groups/list`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-list)）
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"page": 1, "page_size": 20, "group_type": 0}'
@@ -482,7 +482,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
 #### 资产组内素材列表 — `POST /v1/asset/groups/assets`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-asset-list)）
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/assets \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/assets \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"page": 1, "page_size": 12, "group_id": "XXXX"}'
@@ -491,7 +491,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/assets \
 #### 重命名资产组 — `POST /v1/asset/groups/rename`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-rename)）
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/rename \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/rename \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"group_id": "XXXX", "group_name": "新名称"}'
@@ -500,7 +500,7 @@ curl -X POST https://powertokens.ai/api/v1/asset/groups/rename \
 #### 删除资产组 — `POST /v1/asset/groups/delete`（[API 文档](https://docs.powertokens.ai/en/assetLibrary/group-delete)）
 
 ```bash
-curl -X POST https://powertokens.ai/api/v1/asset/groups/delete \
+curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/delete \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"group_id": "XXXX"}'

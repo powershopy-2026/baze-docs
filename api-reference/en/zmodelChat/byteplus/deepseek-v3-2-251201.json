@@ -354,7 +354,7 @@
             "type": "number",
             "minimum": 0,
             "maximum": 2,
-            "default": 0.7,
+            "default": 1,
             "description": "Sampling temperature. Lower values produce more deterministic output; higher values produce more diverse output."
           },
           "top_p": {

@@ -52,12 +52,14 @@ jobs:
           # 替换所有文档目录中的 URL（md / mdx）（反向）
           for dir in docs zh-Hans en; do
             find "$dir" -type f \( -name '*.md' -o -name '*.mdx' \) -exec \
-              sed -i 's|https://api\.powertokens\.ai|https://baze-api.powerbuyin.top|g' {} + 2>/dev/null || true
+              sed -i -e 's|https://api\.powertokens\.ai|https://baze-api.powerbuyin.top|g' \
+                     -e 's|https://powertokens\.ai|https://baze.powerbuyin.top|g' {} + 2>/dev/null || true
           done
 
           # 替换根目录配置文件中的 URL（反向）
           for f in AGENTS.md docs.json .mintignore; do
-            sed -i 's|https://api\.powertokens\.ai|https://baze-api.powerbuyin.top|g' "$f" 2>/dev/null || true
+            sed -i -e 's|https://api\.powertokens\.ai|https://baze-api.powerbuyin.top|g' \
+                   -e 's|https://powertokens\.ai|https://baze.powerbuyin.top|g' "$f" 2>/dev/null || true
           done
 
           # 仅为本次新增或更新的 OpenAPI MDX 页面同步 standalone 页面

@@ -67,6 +67,7 @@
                     "group": "BytePlus",
                     "pages": [
                       "en/zmodelChat/byteplus/deepseek-v3-2-251201",
+                      "en/zmodelChat/byteplus/deepseek-v4-1-flash-260910",
                       "en/zmodelChat/byteplus/seed-1-6-250915",
                       "en/zmodelChat/byteplus/seed-1-6-flash-250715",
                       "en/zmodelChat/byteplus/seed-1-8-251228",
@@ -616,6 +617,13 @@
             "hidden": true,
             "pages": [
               "en/standalone/zmodelChat/byteplus/deepseek-v3-2-251201"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/deepseek-v4-1-flash-260910",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/byteplus/deepseek-v4-1-flash-260910"
             ]
           },
           {
@@ -1812,6 +1820,7 @@
                     "group": "字节",
                     "pages": [
                       "zh-Hans/zmodelChat/byteplus/deepseek-v3-2-251201",
+                      "zh-Hans/zmodelChat/byteplus/deepseek-v4-1-flash-260910",
                       "zh-Hans/zmodelChat/byteplus/seed-1-6-250915",
                       "zh-Hans/zmodelChat/byteplus/seed-1-6-flash-250715",
                       "zh-Hans/zmodelChat/byteplus/seed-1-8-251228",
@@ -2368,6 +2377,13 @@
             "hidden": true,
             "pages": [
               "zh-Hans/standalone/zmodelChat/byteplus/deepseek-v3-2-251201"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/byteplus/deepseek-v4-1-flash-260910",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/byteplus/deepseek-v4-1-flash-260910"
             ]
           },
           {
