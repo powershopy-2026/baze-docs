@@ -25,7 +25,7 @@
     "/v1/chat/completions": {
       "post": {
         "summary": "deepseek-v4-1-flash-260910",
-        "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `deepseek-v4-1-flash-260910`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`. `assistant` messages support `reasoning_content` and `tool_calls`.",
+        "description": "Invoke BytePlus chat completions capability.\n\nSupported models include `deepseek-v4-1-flash-260910`.\n\nDocumented fields: `model`, `messages`, `thinking`, `stream`, `stream_options.include_usage`, `stream_options.chunk_include_usage`, `max_tokens`, `max_completion_tokens`, `stop`, `reasoning_effort`, `response_format`, `frequency_penalty`, `presence_penalty`, `temperature`, `top_p`, `logprobs`, `top_logprobs`, `tools`, `parallel_tool_calls`, `tool_choice`.`messages[].content` supports `text`, `image_url`, and `video_url` multimodal parts; `assistant` messages support `reasoning_content` and `tool_calls`.",
         "operationId": "byteplusChatCompletions",
         "x-capability": "chat",
         "tags": [
@@ -59,6 +59,38 @@
                     "reasoning_effort": "medium",
                     "temperature": 0.3,
                     "max_completion_tokens": 1024,
+                    "stream": false
+                  }
+                },
+                "multimodal_understanding": {
+                  "summary": "Multimodal understanding",
+                  "value": {
+                    "model": "deepseek-v4-1-flash-260910",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "First identify the product in the image, then use the video to determine the scene it is placed in."
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example.com/product.jpg",
+                              "detail": "high"
+                            }
+                          },
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example.com/store.mp4"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "max_tokens": 512,
                     "stream": false
                   }
                 },
@@ -284,7 +316,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "Message list. This document covers four roles: `system`, `user`, `assistant`, and `tool`.",
+            "description": "Message list. This document covers four roles: `system`, `user`, `assistant`, and `tool`.`messages[].content` supports plain text or multimodal parts composed of `text`, `image_url`, and `video_url`.",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -413,8 +445,18 @@
             "description": "Message role."
           },
           "content": {
-            "type": "string",
-            "description": "Message content. Must be a plain text string."
+            "description": "Message content. Can be a plain text string or an array of multimodal content parts.",
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MessageContentPart"
+                }
+              }
+            ]
           },
           "reasoning_content": {
             "type": "string",
@@ -430,6 +472,106 @@
           "tool_call_id": {
             "type": "string",
             "description": "ID linking a tool-role message to the preceding tool call."
+          }
+        }
+      },
+      "MessageContentPart": {
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "text",
+            "required": [
+              "type",
+              "text"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "text"
+                ],
+                "description": "Text part."
+              },
+              "text": {
+                "type": "string",
+                "description": "Text content."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "image",
+            "required": [
+              "type",
+              "image_url"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "image_url"
+                ],
+                "description": "Image part."
+              },
+              "image_url": {
+                "$ref": "#/components/schemas/ImageURL"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "video",
+            "required": [
+              "type",
+              "video_url"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "video_url"
+                ],
+                "description": "Video part."
+              },
+              "video_url": {
+                "$ref": "#/components/schemas/VideoURL"
+              }
+            }
+          }
+        ]
+      },
+      "ImageURL": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "description": "Image content. Supports image URLs or Base64-encoded data.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Image URL or Base64-encoded data."
+          },
+          "detail": {
+            "type": "string",
+            "enum": [
+              "low",
+              "high",
+              "xhigh"
+            ],
+            "description": "Image understanding detail level."
+          }
+        }
+      },
+      "VideoURL": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "description": "Video content. Supports video URLs or Base64-encoded data.",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Video URL or Base64-encoded data."
           }
         }
       },
