@@ -400,13 +400,13 @@ pt config
 pt config -b https://baze-api.powerbuyin.top
 
 # Set the asset library Base URL
-pt config -a https://powertokens.ai/api
+pt config -a https://baze.powerbuyin.top/api
 
 # Reset the API Base URL and asset library Base URL
 pt config --reset
 ```
 
-By default, the asset library address is derived automatically from the API Base URL. For example, when the API address is `https://baze-api.powerbuyin.top`, the asset library address is typically derived as `https://powertokens.ai/api`. Override it manually with `-a` only when you use a standalone asset service.
+By default, the asset library address is derived automatically from the API Base URL. For example, when the API address is `https://baze-api.powerbuyin.top`, the asset library address is typically derived as `https://baze.powerbuyin.top/api`. Override it manually with `-a` only when you use a standalone asset service.
 
 ### Local configuration file
 
@@ -422,7 +422,7 @@ File permissions default to `0600`. Example structure:
 {
   "apiKey": "sk-...",
   "baseUrl": "https://baze-api.powerbuyin.top",
-  "assetBaseUrl": "https://powertokens.ai/api"
+  "assetBaseUrl": "https://baze.powerbuyin.top/api"
 }
 ```
 
