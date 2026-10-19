@@ -45,7 +45,8 @@
                       "en/zmodelChat/minimax/miniMax-M2.5-highspeed",
                       "en/zmodelChat/minimax/miniMax-M2.7",
                       "en/zmodelChat/minimax/miniMax-M2.7-highspeed",
-                      "en/zmodelChat/minimax/miniMax-M3"
+                      "en/zmodelChat/minimax/miniMax-M3",
+                      "en/zmodelChat/minimax/miniMax-M3.1-Flash"
                     ]
                   },
                   {
@@ -743,6 +744,13 @@
             "hidden": true,
             "pages": [
               "en/standalone/zmodelChat/minimax/miniMax-M3"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M3.1-Flash",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/minimax/miniMax-M3.1-Flash"
             ]
           },
           {
@@ -1798,7 +1806,8 @@
                       "zh-Hans/zmodelChat/minimax/miniMax-M2.5-highspeed",
                       "zh-Hans/zmodelChat/minimax/miniMax-M2.7",
                       "zh-Hans/zmodelChat/minimax/miniMax-M2.7-highspeed",
-                      "zh-Hans/zmodelChat/minimax/miniMax-M3"
+                      "zh-Hans/zmodelChat/minimax/miniMax-M3",
+                      "zh-Hans/zmodelChat/minimax/miniMax-M3.1-Flash"
                     ]
                   },
                   {
@@ -2503,6 +2512,13 @@
             "hidden": true,
             "pages": [
               "zh-Hans/standalone/zmodelChat/minimax/miniMax-M3"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/minimax/miniMax-M3.1-Flash",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/minimax/miniMax-M3.1-Flash"
             ]
           },
           {

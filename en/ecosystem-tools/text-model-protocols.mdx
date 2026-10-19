@@ -28,6 +28,7 @@ description: "A concise guide for platform developers choosing Chat Completions,
 | `MiniMax-M2.7` | Available | Recommended | Available | Increase `max_output_tokens` for Responses |
 | `MiniMax-M2.7-highspeed` | Available | Recommended | Available | Increase `max_output_tokens` for Responses |
 | `MiniMax-M3` | Available | Recommended | Available | Recommended MiniMax tool model |
+| `MiniMax-M3.1-Flash` | Available | Recommended | Available | 1M context, always-on thinking; control depth with `reasoning.effort` on Responses |
 | `qwen3-coder-plus` | Available | Recommended | Available | Good for coding and tool workflows |
 | `qwen3-max` | Available | Recommended | Available | Good for general reasoning and review |
 | `qwen3.5-flash` | Available | Recommended | Available | Responses may include reasoning summary |
@@ -57,3 +58,4 @@ description: "A concise guide for platform developers choosing Chat Completions,
 - `seed-1-6-flash-250715` is not supported by its upstream provider on `/v1/messages`; other Seed models passed opencode Anthropic-provider validation.
 - `deepseek-v3-2-251201` passed opencode Anthropic-provider tool-workflow validation.
 - In Responses, some MiniMax, Qwen, and Seed models return reasoning or reasoning summary. Extract user-visible text from `output[]`.
+- `MiniMax-M3.1-Flash` always thinks and cannot disable it. Adjust depth with `reasoning.effort` on the Responses path instead of sending a value that turns thinking off.

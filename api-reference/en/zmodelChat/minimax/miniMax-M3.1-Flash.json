@@ -1,0 +1,396 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax-M3.1-Flash",
+    "version": "1.0.0",
+    "description": "MiniMax (`type=35`) channel Chat Completions capability documentation. The unified API endpoint is `/v1/chat/completions`. The platform gateway forwards requests to the upstream provider `POST /v1/text/chatcompletion_v2`, using an OpenAI Chat Completions-compatible request and response structure.\n\n`MiniMax-M3.1-Flash` supports a 1,000,000-token context window with text, image, and video inputs. Thinking is always on and cannot be disabled; tune its depth with `reasoning_effort`. The same model is also available through `POST /v1/messages` (Anthropic Messages-compatible) and native `POST /v1/responses` (OpenAI Responses-compatible); see the Responses API page for how `reasoning.effort` maps to the same setting.\n\nThis document describes only the field subset that the platform gateway reliably passes through: `model`, `messages`, `temperature`, `top_p`, `max_tokens`, `reasoning_effort`, `stream`, `stop`."
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Chat",
+      "description": "MiniMax OpenAI-compatible Chat Completions capability"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "MiniMax-M3.1-Flash",
+        "description": "Call the MiniMax-M3.1-Flash OpenAI-compatible chat model via the baze platform. The model supports a 1,000,000-token context window with text, image, and video inputs. Thinking is always on; tune its depth with `reasoning_effort`. The same model is also available through `POST /v1/messages` and `POST /v1/responses`.",
+        "operationId": "minimaxChatCompletions",
+        "x-capability": "chat",
+        "tags": [
+          "MiniMax Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "Non-streaming chat",
+                  "value": {
+                    "model": "MiniMax-M3.1-Flash",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Describe Paris in one sentence."
+                      }
+                    ],
+                    "temperature": 0.3
+                  }
+                },
+                "stream": {
+                  "summary": "Streaming chat",
+                  "value": {
+                    "model": "MiniMax-M3.1-Flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Count from one to five."
+                      }
+                    ],
+                    "stream": true
+                  }
+                },
+                "reasoning_effort": {
+                  "summary": "Tune thinking depth",
+                  "value": {
+                    "model": "MiniMax-M3.1-Flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Analyze the time complexity of this code and suggest optimizations."
+                      }
+                    ],
+                    "reasoning_effort": "medium"
+                  }
+                },
+                "image_input": {
+                  "summary": "Image input",
+                  "value": {
+                    "model": "MiniMax-M3.1-Flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "What is wrong with the layout in this screenshot?"
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example.com/layout-bug.png",
+                              "detail": "default"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Non-streaming returns OpenAI-compatible JSON; streaming returns an OpenAI-compatible SSE event stream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE data stream. Each `data:` event can be parsed as an OpenAI Chat Completions Chunk; the stream typically ends with `data: [DONE]`."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "MiniMax-M3.1-Flash"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.7,
+            "description": "Sampling temperature. Higher values make output more random."
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.95,
+            "description": "Nucleus sampling threshold. Avoid tuning `temperature` and `top_p` at the same time."
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Maximum number of output tokens per reply. The model context window is 1,000,000 tokens, covering both input and output."
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ],
+            "default": "max",
+            "description": "Thinking depth level. `MiniMax-M3.1-Flash` always thinks and cannot disable it, so this field is the only way to control depth. Higher values produce more output tokens and longer waits. Defaults to `max` when omitted. On the Responses path, express the same setting with `reasoning.effort`."
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "Whether to return results as an SSE event stream."
+          },
+          "stop": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Stop sequences. Generation stops when a stop sequence is produced."
+          }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "user_system",
+              "group",
+              "sample_message_user",
+              "sample_message_ai"
+            ],
+            "description": "Role of the message sender\nsystem: Set the model's role and behavior\nuser: User input\nassistant: Model's historical replies\nuser_system: Set the user's role and persona\ngroup: Name of the conversation\nsample_message_user: Example user input\nsample_message_ai: Example model output"
+          },
+          "content": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "description": "Multimodal content blocks. MiniMax-M3.1-Flash supports text, image, and video inputs.",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "type"
+                  ],
+                  "description": "A multimodal content block. Use the `type` field to declare the block type, and populate only the field that matches that type.",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "text",
+                        "image_url",
+                        "video_url"
+                      ],
+                      "description": "Content block type:\n- `text`: Text block\n- `image_url`: Image input\n- `video_url`: Video input"
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "Text content (when `type` is `text`)."
+                    },
+                    "image_url": {
+                      "type": "object",
+                      "description": "Image input (when `type` is `image_url`). Maximum 10 MB per image. Supported formats: JPEG, PNG, GIF, WEBP.",
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "Image URL or Base64 data URL."
+                        },
+                        "detail": {
+                          "type": "string",
+                          "enum": [
+                            "low",
+                            "default",
+                            "high"
+                          ],
+                          "default": "default",
+                          "description": "Controls image parsing resolution. Defaults to `default`. Higher values consume more tokens."
+                        }
+                      }
+                    },
+                    "video_url": {
+                      "type": "object",
+                      "description": "Video input (when `type` is `video_url`). Supported formats: MP4, AVI, MOV, MKV.",
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "Video URL, Base64 data URL, or a Files API reference in the form `mm_file://{file_id}`. URL/Base64 videos: max 50 MB; Files API videos: max 512 MB."
+                        },
+                        "detail": {
+                          "type": "string",
+                          "enum": [
+                            "low",
+                            "default",
+                            "high"
+                          ],
+                          "default": "default",
+                          "description": "Controls video frame extraction resolution. Defaults to `default`."
+                        },
+                        "fps": {
+                          "type": "number",
+                          "minimum": 0.2,
+                          "maximum": 5,
+                          "default": 1,
+                          "description": "Video frame extraction rate. Defaults to 1, range [0.2, 5]. Higher values are more sensitive to visual changes but cost more tokens; lower values cost fewer tokens but may miss visual changes."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "description": "Message content. MiniMax-M3.1-Flash supports text, image, and video content blocks."
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          },
+          "created": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "usage": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
