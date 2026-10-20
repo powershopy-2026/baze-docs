@@ -28,6 +28,7 @@ description: "面向平台开发者，说明文本模型在 Chat Completions、A
 | `MiniMax-M2.7` | 可用 | 建议 | 可用 | Responses 需提高 `max_output_tokens` |
 | `MiniMax-M2.7-highspeed` | 可用 | 建议 | 可用 | Responses 需提高 `max_output_tokens` |
 | `MiniMax-M3` | 可用 | 建议 | 可用 | MiniMax 工具链默认推荐 |
+| `MiniMax-M3.1-Flash` | 可用 | 建议 | 可用 | 1M 上下文，思考常开；Responses 用 `reasoning.effort` 控制深度 |
 | `qwen3-coder-plus` | 可用 | 建议 | 可用 | 适合代码与工具链任务 |
 | `qwen3-max` | 可用 | 建议 | 可用 | 适合通用推理与审查 |
 | `qwen3.5-flash` | 可用 | 建议 | 可用 | Responses 可能返回 reasoning summary |
@@ -57,3 +58,4 @@ description: "面向平台开发者，说明文本模型在 Chat Completions、A
 - `seed-1-6-flash-250715` 上游不支持 `/v1/messages`；其他 Seed 模型已通过 opencode Anthropic provider 复测。
 - `deepseek-v3-2-251201` 已通过 opencode Anthropic provider 工具链复测。
 - Responses 路径下，部分 MiniMax、Qwen、Seed 模型会返回 reasoning 或 reasoning summary；调用方需从 `output[]` 提取文本。
+- `MiniMax-M3.1-Flash` 的思考过程始终开启且无法关闭，Responses 路径下用 `reasoning.effort` 调整深度，不要尝试传关闭思考的取值。

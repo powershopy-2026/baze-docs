@@ -3,7 +3,7 @@
   "info": {
     "title": "MiniMax-M2.5",
     "version": "1.0.0",
-    "description": "历史 MiniMax（`type=35`）通道对话能力文档。公开统一入口为 `/v1/chat/completions`，当前网关会将请求转发到上游 `POST /v1/text/chatcompletion_v2`，并沿用 OpenAI Chat Completions 兼容的请求与响应结构。\n\n本文档只描述当前网关已稳定透传且与 MiniMax OpenAI 兼容能力一致的字段子集：`model`、`messages`、`temperature`、`top_p`、`max_tokens`、`stream`、`stop`。"
+    "description": "历史 MiniMax（`type=35`）通道对话能力文档。公开统一入口为 `/v1/chat/completions`，当前网关会将请求转发到上游 `POST /v1/text/chatcompletion_v2`，并沿用 OpenAI Chat Completions 兼容的请求与响应结构。\n\n本文档只描述当前网关已稳定透传且与 MiniMax OpenAI 兼容能力一致的字段子集：`model`、`messages`、`temperature`、`top_p`、`max_tokens`、`stream`。"
   },
   "servers": [
     {
@@ -154,19 +154,6 @@
           "stream": {
             "type": "boolean",
             "default": true
-          },
-          "stop": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
           }
         }
       },

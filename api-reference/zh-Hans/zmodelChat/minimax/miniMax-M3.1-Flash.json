@@ -1,0 +1,382 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "MiniMax-M3.1-Flash",
+    "version": "1.0.0",
+    "description": "MiniMax（`type=35`）通道对话能力文档。公开统一入口为 `/v1/chat/completions`，当前网关会将请求转发到上游 `POST /v1/text/chatcompletion_v2`，并沿用 OpenAI Chat Completions 兼容的请求与响应结构。\n\n`MiniMax-M3.1-Flash` 支持 1,000,000 tokens 上下文，输入可为文本、图片或视频。思考过程始终开启，无法通过参数关闭，只能通过 `reasoning_effort` 调整思考深度。该模型同时支持 `POST /v1/messages`（Anthropic Messages 兼容）与原生 `POST /v1/responses`（OpenAI Responses 兼容）；Responses 调用方式与 `reasoning.effort` 的对应关系见 Responses API 页面。\n\n本文档只描述当前网关已稳定透传的字段子集：`model`、`messages`、`temperature`、`top_p`、`max_tokens`、`reasoning_effort`、`stream`。"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "MiniMax Chat",
+      "description": "MiniMax OpenAI 兼容对话能力"
+    }
+  ],
+  "paths": {
+    "/v1/chat/completions": {
+      "post": {
+        "summary": "MiniMax-M3.1-Flash",
+        "description": "调用 MiniMax-M3.1-Flash OpenAI 兼容聊天模型。该模型支持 1,000,000 tokens 上下文与文本、图片、视频输入，思考始终开启，可通过 `reasoning_effort` 调整思考深度。同一模型也可通过 `POST /v1/messages` 与 `POST /v1/responses` 调用。",
+        "operationId": "minimaxChatCompletions",
+        "x-capability": "chat",
+        "tags": [
+          "MiniMax Chat"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatCompletionRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "非流式对话",
+                  "value": {
+                    "model": "MiniMax-M3.1-Flash",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是一个简洁的助手。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "请用一句话介绍巴黎。"
+                      }
+                    ],
+                    "temperature": 0.3
+                  }
+                },
+                "stream": {
+                  "summary": "流式对话",
+                  "value": {
+                    "model": "MiniMax-M3.1-Flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Count from one to five."
+                      }
+                    ],
+                    "stream": true
+                  }
+                },
+                "reasoning_effort": {
+                  "summary": "调整思考深度",
+                  "value": {
+                    "model": "MiniMax-M3.1-Flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "分析这段代码的时间复杂度并给出优化建议。"
+                      }
+                    ],
+                    "reasoning_effort": "medium"
+                  }
+                },
+                "image_input": {
+                  "summary": "图片输入",
+                  "value": {
+                    "model": "MiniMax-M3.1-Flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "这张界面截图里的布局问题出在哪里？"
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example.com/layout-bug.png",
+                              "detail": "default"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功。非流式返回 OpenAI 兼容 JSON；流式返回 OpenAI 兼容 SSE 事件流。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChatCompletionResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "SSE 数据流。每个 `data:` 事件都可按 OpenAI Chat Completions Chunk 解析；结束时通常返回 `data: [DONE]`。"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "ChatCompletionRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "messages"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "enum": [
+              "MiniMax-M3.1-Flash"
+            ]
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          },
+          "temperature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.7,
+            "description": "采样温度，取值越高输出越随机。"
+          },
+          "top_p": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 0.95,
+            "description": "核采样阈值。建议不要同时调整 `temperature` 与 `top_p`。"
+          },
+          "max_tokens": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "单次回复的最大输出 token 数。模型上下文窗口为 1,000,000 tokens，其中包含输入与输出。"
+          },
+          "reasoning_effort": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ],
+            "default": "max",
+            "description": "思考深度档位。`MiniMax-M3.1-Flash` 的思考过程始终开启且无法关闭，只能通过该字段控制深度；取值越高输出 token 与等待时间越多。省略时使用 `max`。Responses 路径使用 `reasoning.effort` 表达同一配置。"
+          },
+          "stream": {
+            "type": "boolean",
+            "description": "是否以 SSE 事件流返回结果。"
+          }
+        }
+      },
+      "ChatMessage": {
+        "type": "object",
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "user_system",
+              "group",
+              "sample_message_user",
+              "sample_message_ai"
+            ],
+            "description": "消息发送者的角色system: 设定模型的角色和行为\nuser: 用户的输入\nassistant: 模型的历史回复\nuser_system: 设定用户的角色和人设\ngroup: 对话的名称\nsample_message_user: 示例的用户输入\nsample_message_ai: 示例的模型输出"
+          },
+          "content": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "description": "多模态消息内容块。MiniMax-M3.1-Flash 支持文本、图片和视频输入。",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "type"
+                  ],
+                  "description": "多模态消息内容块。每个内容块通过 `type` 声明类型，仅填写与该类型匹配的字段。",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "text",
+                        "image_url",
+                        "video_url"
+                      ],
+                      "description": "内容块类型：\n- `text`：文本块\n- `image_url`：图片输入\n- `video_url`：视频输入"
+                    },
+                    "text": {
+                      "type": "string",
+                      "description": "文本内容（当 `type` 为 `text` 时）。"
+                    },
+                    "image_url": {
+                      "type": "object",
+                      "description": "图片输入（当 `type` 为 `image_url` 时）。单张图片最大 10 MB。支持 JPEG、PNG、GIF、WEBP 格式。",
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "图片 URL 或 Base64 data URL。"
+                        },
+                        "detail": {
+                          "type": "string",
+                          "enum": [
+                            "low",
+                            "default",
+                            "high"
+                          ],
+                          "default": "default",
+                          "description": "控制图片解析分辨率，默认值为 default。取值越高消耗的 token 越多。"
+                        }
+                      }
+                    },
+                    "video_url": {
+                      "type": "object",
+                      "description": "视频输入（当 `type` 为 `video_url` 时）。支持 MP4、AVI、MOV、MKV 格式。",
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "视频 URL、Base64 data URL，或形如 `mm_file://{file_id}` 的 Files API 引用。URL 或 Base64 视频最大 50 MB；Files API 视频最大 512 MB。"
+                        },
+                        "detail": {
+                          "type": "string",
+                          "enum": [
+                            "low",
+                            "default",
+                            "high"
+                          ],
+                          "default": "default",
+                          "description": "控制视频抽帧分辨率，默认值为 default。"
+                        },
+                        "fps": {
+                          "type": "number",
+                          "minimum": 0.2,
+                          "maximum": 5,
+                          "default": 1,
+                          "description": "视频抽帧频率。默认值为 1，范围 [0.2, 5]。取值越高对画面变化越敏感，token 花费高；取值越低 token 花费少，但对画面变化迟钝。"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ],
+            "description": "消息内容。MiniMax-M3.1-Flash 支持文本、图片、视频内容块。"
+          }
+        }
+      },
+      "ChatCompletionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "object": {
+            "type": "string"
+          },
+          "created": {
+            "type": "integer"
+          },
+          "model": {
+            "type": "string"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "usage": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
