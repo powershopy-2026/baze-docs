@@ -3,7 +3,7 @@
   "info": {
     "title": "MiniMax-M2.5",
     "version": "1.0.0",
-    "description": "MiniMax (`type=35`) channel Chat Completions capability documentation. The unified API endpoint is `/v1/chat/completions`. The platform gateway forwards requests to the upstream provider `POST /v1/text/chatcompletion_v2`, using an OpenAI Chat Completions-compatible request and response structure.\n\nThis document describes only the field subset that the platform gateway reliably passes through and that is consistent with MiniMax OpenAI-compatible capabilities: `model`, `messages`, `temperature`, `top_p`, `max_tokens`, `stream`, `stop`."
+    "description": "MiniMax (`type=35`) channel Chat Completions capability documentation. The unified API endpoint is `/v1/chat/completions`. The platform gateway forwards requests to the upstream provider `POST /v1/text/chatcompletion_v2`, using an OpenAI Chat Completions-compatible request and response structure.\n\nThis document describes only the field subset that the platform gateway reliably passes through and that is consistent with MiniMax OpenAI-compatible capabilities: `model`, `messages`, `temperature`, `top_p`, `max_tokens`, `stream`."
   },
   "servers": [
     {
@@ -154,19 +154,6 @@
           "stream": {
             "type": "boolean",
             "default": true
-          },
-          "stop": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
           }
         }
       },

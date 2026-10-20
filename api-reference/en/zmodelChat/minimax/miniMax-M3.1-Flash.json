@@ -3,7 +3,7 @@
   "info": {
     "title": "MiniMax-M3.1-Flash",
     "version": "1.0.0",
-    "description": "MiniMax (`type=35`) channel Chat Completions capability documentation. The unified API endpoint is `/v1/chat/completions`. The platform gateway forwards requests to the upstream provider `POST /v1/text/chatcompletion_v2`, using an OpenAI Chat Completions-compatible request and response structure.\n\n`MiniMax-M3.1-Flash` supports a 1,000,000-token context window with text, image, and video inputs. Thinking is always on and cannot be disabled; tune its depth with `reasoning_effort`. The same model is also available through `POST /v1/messages` (Anthropic Messages-compatible) and native `POST /v1/responses` (OpenAI Responses-compatible); see the Responses API page for how `reasoning.effort` maps to the same setting.\n\nThis document describes only the field subset that the platform gateway reliably passes through: `model`, `messages`, `temperature`, `top_p`, `max_tokens`, `reasoning_effort`, `stream`, `stop`."
+    "description": "MiniMax (`type=35`) channel Chat Completions capability documentation. The unified API endpoint is `/v1/chat/completions`. The platform gateway forwards requests to the upstream provider `POST /v1/text/chatcompletion_v2`, using an OpenAI Chat Completions-compatible request and response structure.\n\n`MiniMax-M3.1-Flash` supports a 1,000,000-token context window with text, image, and video inputs. Thinking is always on and cannot be disabled; tune its depth with `reasoning_effort`. The same model is also available through `POST /v1/messages` (Anthropic Messages-compatible) and native `POST /v1/responses` (OpenAI Responses-compatible); see the Responses API page for how `reasoning.effort` maps to the same setting.\n\nThis document describes only the field subset that the platform gateway reliably passes through: `model`, `messages`, `temperature`, `top_p`, `max_tokens`, `reasoning_effort`, `stream`."
   },
   "servers": [
     {
@@ -205,20 +205,6 @@
           "stream": {
             "type": "boolean",
             "description": "Whether to return results as an SSE event stream."
-          },
-          "stop": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "Stop sequences. Generation stops when a stop sequence is produced."
           }
         }
       },

@@ -3,7 +3,7 @@
   "info": {
     "title": "MiniMax-M3.1-Flash",
     "version": "1.0.0",
-    "description": "MiniMax（`type=35`）通道对话能力文档。公开统一入口为 `/v1/chat/completions`，当前网关会将请求转发到上游 `POST /v1/text/chatcompletion_v2`，并沿用 OpenAI Chat Completions 兼容的请求与响应结构。\n\n`MiniMax-M3.1-Flash` 支持 1,000,000 tokens 上下文，输入可为文本、图片或视频。思考过程始终开启，无法通过参数关闭，只能通过 `reasoning_effort` 调整思考深度。该模型同时支持 `POST /v1/messages`（Anthropic Messages 兼容）与原生 `POST /v1/responses`（OpenAI Responses 兼容）；Responses 调用方式与 `reasoning.effort` 的对应关系见 Responses API 页面。\n\n本文档只描述当前网关已稳定透传的字段子集：`model`、`messages`、`temperature`、`top_p`、`max_tokens`、`reasoning_effort`、`stream`、`stop`。"
+    "description": "MiniMax（`type=35`）通道对话能力文档。公开统一入口为 `/v1/chat/completions`，当前网关会将请求转发到上游 `POST /v1/text/chatcompletion_v2`，并沿用 OpenAI Chat Completions 兼容的请求与响应结构。\n\n`MiniMax-M3.1-Flash` 支持 1,000,000 tokens 上下文，输入可为文本、图片或视频。思考过程始终开启，无法通过参数关闭，只能通过 `reasoning_effort` 调整思考深度。该模型同时支持 `POST /v1/messages`（Anthropic Messages 兼容）与原生 `POST /v1/responses`（OpenAI Responses 兼容）；Responses 调用方式与 `reasoning.effort` 的对应关系见 Responses API 页面。\n\n本文档只描述当前网关已稳定透传的字段子集：`model`、`messages`、`temperature`、`top_p`、`max_tokens`、`reasoning_effort`、`stream`。"
   },
   "servers": [
     {
@@ -205,20 +205,6 @@
           "stream": {
             "type": "boolean",
             "description": "是否以 SSE 事件流返回结果。"
-          },
-          "stop": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
-            "description": "停止词。命中后模型停止生成。"
           }
         }
       },
