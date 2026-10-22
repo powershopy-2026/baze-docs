@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "MIMO Chat",
-      "description": "MIMO text chat"
+      "description": "MIMO multimodal chat"
     }
   ],
   "paths": {
     "/v1/chat/completions": {
       "post": {
         "summary": "mimo-v2.6-flash",
-        "description": "Invoke MIMO chat completions capability",
+        "description": "Invoke MIMO multimodal chat completions capability",
         "operationId": "mimoChatCompletions_mimo_v2_6_flash_en",
         "x-capability": "chat",
         "tags": [
@@ -245,14 +245,52 @@
                           {
                             "type": "video_url",
                             "video_url": {
-                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
-                            },
-                            "fps": 2,
-                            "media_resolution": "default"
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
+                              "fps": 2,
+                              "media_resolution": "default"
+                            }
                           },
                           {
                             "type": "text",
                             "text": "please describe the content of the video"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "Multimodal Input": {
+                  "summary": "Pass text, image, audio and video together",
+                  "value": {
+                    "model": "mimo-v2.6-flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Please describe the image, the audio and the video below separately, then summarize their shared theme."
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
+                              "fps": 2,
+                              "media_resolution": "default"
+                            }
                           }
                         ]
                       }
@@ -534,6 +572,41 @@
                       }
                     }
                   },
+                  "Multimodal Input": {
+                    "summary": "Multimodal input response",
+                    "value": {
+                      "id": "5b2f1c7a9d4e4f0b8c3a6d1e2f7a9b04",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "The shared theme of the three assets is nature and life. The image shows a sunlit forest stream, the audio captures morning birdsong along with running water, and the video features a white kitten in a bright indoor room. All three revolve around light, natural elements and a sense of everyday life.",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user provided an image, an audio clip and a video at once, and asked for a separate description of each followed by a shared theme. I need to recognize each asset first, then abstract the commonality between them."
+                          }
+                        }
+                      ],
+                      "created": 1776849702,
+                      "model": "mimo-v2.6-flash",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 246,
+                        "prompt_tokens": 2394,
+                        "total_tokens": 2640,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 88
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0,
+                          "audio_tokens": 25,
+                          "image_tokens": 1024,
+                          "video_tokens": 1144
+                        }
+                      }
+                    }
+                  },
                   "Structured Output": {
                     "summary": "Structured output response",
                     "value": {
@@ -737,7 +810,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "A list of messages comprising the conversation so far.",
+            "description": "A list of messages comprising the conversation so far. The content of a user message can be either a plain string or an array of content parts mixing text, images, audio and video.",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"

@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "MIMO 对话",
-      "description": "MIMO 文本对话"
+      "description": "MIMO 多模态对话"
     }
   ],
   "paths": {
     "/v1/chat/completions": {
       "post": {
         "summary": "mimo-v2.6-pro",
-        "description": "调用 MIMO 对话补全能力",
+        "description": "调用 MIMO 多模态对话补全能力",
         "operationId": "mimoChatCompletions_mimo_v2_6_pro_zh",
         "x-capability": "chat",
         "tags": [
@@ -132,6 +132,130 @@
                       }
                     ],
                     "tool_choice": "auto"
+                  }
+                },
+                "图像输入": {
+                  "summary": "带图像输入的对话",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下图片的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "音频输入": {
+                  "summary": "带音频输入的对话",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下音频的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "视频输入": {
+                  "summary": "带视频输入的对话",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是 MiMo，由小米开发的 AI 助手。今天是 2025 年 12 月 16 日，星期二。你的知识截止日期为 2024 年 12 月。"
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
+                              "fps": 2,
+                              "media_resolution": "default"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "请描述一下视频的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "多模态混合输入": {
+                  "summary": "同时传入文本、图像、音频和视频",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "请分别描述下面这张图片、这段音频和这段视频的内容，并总结它们的共同主题。"
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
+                              "fps": 2,
+                              "media_resolution": "default"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
                   }
                 },
                 "结构化输出": {
@@ -255,8 +379,142 @@
                       }
                     }
                   },
+                  "图像输入": {
+                    "summary": "图像输入响应",
+                    "value": {
+                      "id": "e27ffa1d3e31434daa71d6b6a83f6e38",
+                      "choices": [
+                        {
+                          "finish_reason": "length",
+                          "index": 0,
+                          "message": {
+                            "content": "根据提供的图片，以下是内容的详细描述：\n\n**整体氛围**\n这张图片描绘了一个宁静、神奇且郁郁葱葱的森林场景。它具有一种空灵的气质，可能是通过数字艺术技术或人工智能生成增强的，其特点在于",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "用户的请求是描述图片内容。我先整体观察画面：这是一片被阳光穿透的森林，有一条小溪从近景流向远处。接着按前景、中景、背景分层描述：前景是苔藓覆盖的石头和蕨类植物，中景是粗壮的古树和蜿蜒的溪流，背景是弥漫的雾气与丁达尔光束。最后组织成结构化的描述。"
+                          }
+                        }
+                      ],
+                      "created": 1776849330,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 1024,
+                        "prompt_tokens": 1085,
+                        "total_tokens": 2109,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 971
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 5,
+                          "image_tokens": 1024
+                        }
+                      }
+                    }
+                  },
+                  "音频输入": {
+                    "summary": "音频输入响应",
+                    "value": {
+                      "id": "87ee7097c0f7491ea27429efcc21cc26",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Good morning. Could you tell me what the weather will be like today?"
+                          }
+                        }
+                      ],
+                      "created": 1776849418,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 17,
+                        "prompt_tokens": 86,
+                        "total_tokens": 103,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 15
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 25,
+                          "cached_tokens": 45
+                        }
+                      }
+                    }
+                  },
+                  "视频输入": {
+                    "summary": "视频输入响应",
+                    "value": {
+                      "id": "d2c3bd5a08114f78a525e09b69308dc9",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "视频中有一只白色小猫，长着明亮的蓝眼睛，坐在抛光木地板上。它靠近一扇挂着米色窗帘的窗户，阳光照进来，在地板上投下阴影。背景中可见一盆绿色的盆栽植物，类似于龟背竹。小猫好奇地环顾四周，然后张开嘴喵喵叫。",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "用户需要一段视频内容描述。我先按时间轴抽帧观察：00:00-00:03 小猫静止坐着并环顾四周，随后张嘴叫了一声。再归纳画面要素：主体是蓝眼睛的白猫，场景是铺木地板、带米色窗帘的窗边，背景有一盆龟背竹，阳光在地板上形成阴影。最后整合为一段连贯描述。"
+                          }
+                        }
+                      ],
+                      "created": 1776849614,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 590,
+                        "prompt_tokens": 1260,
+                        "total_tokens": 1850,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 514
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 19,
+                          "cached_tokens": 45,
+                          "video_tokens": 1144
+                        }
+                      }
+                    }
+                  },
+                  "多模态混合输入": {
+                    "summary": "多模态混合输入响应",
+                    "value": {
+                      "id": "5b2f1c7a9d4e4f0b8c3a6d1e2f7a9b04",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "三份素材的共同主题是「自然与生命」。图片展示了一处被阳光穿透的林间溪流，音频记录了清晨鸟鸣与流水声，视频则是一只白猫在阳光充足的室内活动。它们都以光线、自然元素和生活气息为核心。",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "用户一次性提供了图片、音频和视频三种素材，并要求分别描述后再总结共同主题。我需要先分别识别每一份素材的内容，再抽象出它们之间的共性。"
+                          }
+                        }
+                      ],
+                      "created": 1776849702,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 246,
+                        "prompt_tokens": 2394,
+                        "total_tokens": 2640,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 88
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0,
+                          "audio_tokens": 25,
+                          "image_tokens": 1024,
+                          "video_tokens": 1144
+                        }
+                      }
+                    }
+                  },
                   "结构化输出": {
-                    "summary": "结构化输出响应",
                     "value": {
                       "id": "f88d3e6c6b0043b09871487b5c52e4b4",
                       "choices": [
@@ -458,7 +716,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "包含到目前为止对话的消息列表。",
+            "description": "包含到目前为止对话的消息列表。user 消息的 content 支持两种写法：纯文本字符串，或内容部分数组（可混合文本、图像、音频和视频）。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -604,8 +862,16 @@
         "description": "用户消息。此消息的角色为 user。",
         "properties": {
           "content": {
-            "type": "string",
-            "description": "用户消息的内容。"
+            "description": "用户消息的内容。可以是纯文本字符串，也可以是内容部分数组，数组内可混合文本、图像、音频和视频。",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "纯文本内容。"
+              },
+              {
+                "$ref": "#/components/schemas/ContentPartArray"
+              }
+            ]
           },
           "role": {
             "type": "string",
@@ -1275,6 +1541,15 @@
           "oneOf": [
             {
               "$ref": "#/components/schemas/ContentPartText"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartImage"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartAudio"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartVideo"
             }
           ]
         }
@@ -1403,6 +1678,115 @@
           "code": {
             "type": "string",
             "description": "错误代码。"
+          }
+        }
+      },
+      "ContentPartImage": {
+        "type": "object",
+        "title": "Image content part · object",
+        "required": [
+          "type",
+          "image_url"
+        ],
+        "description": "用户消息中的图片内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image_url"
+            ],
+            "description": "内容部分的类型，为 image_url。"
+          },
+          "image_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "图片 URL。可以是公共图片 URL 或 Base64 编码的数据 URL。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "公共图片 URL 或 Base64 编码的数据 URL。"
+              }
+            }
+          }
+        }
+      },
+      "ContentPartAudio": {
+        "type": "object",
+        "title": "Audio content part · object",
+        "required": [
+          "type",
+          "input_audio"
+        ],
+        "description": "用户消息中的音频内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_audio"
+            ],
+            "description": "内容部分的类型，类型值为 input_audio。"
+          },
+          "input_audio": {
+            "type": "object",
+            "required": [
+              "data"
+            ],
+            "description": "音频的 URL 或 Base64 编码的音频数据。",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "音频的 URL 或 Base64 编码的音频数据。"
+              }
+            }
+          }
+        }
+      },
+      "ContentPartVideo": {
+        "type": "object",
+        "title": "Video content part · object",
+        "required": [
+          "type",
+          "video_url"
+        ],
+        "description": "用户消息中的视频内容部分。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "video_url"
+            ],
+            "description": "内容部分的类型，值为 video_url。"
+          },
+          "video_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "视频 URL。可以是公共视频 URL 或 Base64 编码的数据 URL。",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "视频的 URL 或 Base64 编码的视频数据。"
+              },
+              "fps": {
+                "type": "number",
+                "default": 2,
+                "description": "每秒抽帧数。所需范围：[0.1, 10.0]"
+              },
+              "media_resolution": {
+                "type": "string",
+                "default": "default",
+                "enum": [
+                  "default",
+                  "max"
+                ],
+                "description": "分辨率档次。可选值：default，max"
+              }
+            }
           }
         }
       }

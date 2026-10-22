@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "MIMO Chat",
-      "description": "MIMO text chat"
+      "description": "MIMO multimodal chat"
     }
   ],
   "paths": {
     "/v1/chat/completions": {
       "post": {
         "summary": "mimo-v2.6-pro",
-        "description": "Invoke MIMO chat completions capability",
+        "description": "Invoke MIMO multimodal chat completions capability",
         "operationId": "mimoChatCompletions_mimo_v2_6_pro_en",
         "x-capability": "chat",
         "tags": [
@@ -132,6 +132,130 @@
                       }
                     ],
                     "tool_choice": "auto"
+                  }
+                },
+                "Image Input": {
+                  "summary": "Chat with image input",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "please describe the content of the image"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "Audio Input": {
+                  "summary": "Chat with audio input",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "please describe the content of the audio"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "Video Input": {
+                  "summary": "Chat with video input",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
+                              "fps": 2,
+                              "media_resolution": "default"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "please describe the content of the video"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "Multimodal Input": {
+                  "summary": "Pass text, image, audio and video together",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Please describe the image, the audio and the video below separately, then summarize their shared theme."
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
+                              "fps": 2,
+                              "media_resolution": "default"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
                   }
                 },
                 "Structured Output": {
@@ -252,6 +376,141 @@
                           "reasoning_tokens": 161
                         },
                         "prompt_tokens_details": null
+                      }
+                    }
+                  },
+                  "Image Input": {
+                    "summary": "Image input response",
+                    "value": {
+                      "id": "e27ffa1d3e31434daa71d6b6a83f6e38",
+                      "choices": [
+                        {
+                          "finish_reason": "length",
+                          "index": 0,
+                          "message": {
+                            "content": "Based on the image provided, here is a detailed description of the content:\n\n**Overall Atmosphere**\nThe image depicts a serene, magical, and lush forest scene. It has an ethereal quality, likely enhanced by digital art techniques or AI generation, characterized",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user wants a description of the image. I first take in the whole scene: a forest pierced by sunlight, with a stream running from the foreground into the distance. Then I describe it layer by layer: mossy rocks and ferns in the foreground, ancient trees and a winding stream in the middle ground, and fog with crepuscular rays in the background. Finally I organize this into a structured description."
+                          }
+                        }
+                      ],
+                      "created": 1776849330,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 1024,
+                        "prompt_tokens": 1085,
+                        "total_tokens": 2109,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 971
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 5,
+                          "image_tokens": 1024
+                        }
+                      }
+                    }
+                  },
+                  "Audio Input": {
+                    "summary": "Audio input response",
+                    "value": {
+                      "id": "87ee7097c0f7491ea27429efcc21cc26",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Good morning. Could you tell me what the weather will be like today?"
+                          }
+                        }
+                      ],
+                      "created": 1776849418,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 17,
+                        "prompt_tokens": 86,
+                        "total_tokens": 103,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 15
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 25,
+                          "cached_tokens": 45
+                        }
+                      }
+                    }
+                  },
+                  "Video Input": {
+                    "summary": "Video input response",
+                    "value": {
+                      "id": "d2c3bd5a08114f78a525e09b69308dc9",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "The video features a white kitten with bright blue eyes sitting on a polished wooden floor. It is positioned near a window covered by beige curtains, with sunlight streaming in and casting shadows across the room. In the background, a green potted plant, resembling a Monstera, is visible. The kitten looks around curiously and then opens its mouth to meow.",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user wants a description of the video. I first sample frames along the timeline: from 00:00 to 00:03 the kitten sits still, looks around, then opens its mouth and meows. Then I collect the visual elements: a white kitten with blue eyes as the subject, a room with a wooden floor and a window with beige curtains, a Monstera in the background, and sunlight casting shadows on the floor. Finally I merge this into one coherent paragraph."
+                          }
+                        }
+                      ],
+                      "created": 1776849614,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 590,
+                        "prompt_tokens": 1260,
+                        "total_tokens": 1850,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 514
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 19,
+                          "cached_tokens": 45,
+                          "video_tokens": 1144
+                        }
+                      }
+                    }
+                  },
+                  "Multimodal Input": {
+                    "summary": "Multimodal input response",
+                    "value": {
+                      "id": "5b2f1c7a9d4e4f0b8c3a6d1e2f7a9b04",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "The shared theme of the three assets is nature and life. The image shows a sunlit forest stream, the audio captures morning birdsong along with running water, and the video features a white kitten in a bright indoor room. All three revolve around light, natural elements and a sense of everyday life.",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user provided an image, an audio clip and a video at once, and asked for a separate description of each followed by a shared theme. I need to recognize each asset first, then abstract the commonality between them."
+                          }
+                        }
+                      ],
+                      "created": 1776849702,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 246,
+                        "prompt_tokens": 2394,
+                        "total_tokens": 2640,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 88
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0,
+                          "audio_tokens": 25,
+                          "image_tokens": 1024,
+                          "video_tokens": 1144
+                        }
                       }
                     }
                   },
@@ -458,7 +717,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "A list of messages comprising the conversation so far.",
+            "description": "A list of messages comprising the conversation so far. The content of a user message can be either a plain string or an array of content parts mixing text, images, audio and video.",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -604,8 +863,16 @@
         "description": "User message. The role of this message is user.",
         "properties": {
           "content": {
-            "type": "string",
-            "description": "The content of the user message."
+            "description": "The content of the user message. Either a plain text string, or an array of content parts that may mix text, images, audio and video.",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Plain text content."
+              },
+              {
+                "$ref": "#/components/schemas/ContentPartArray"
+              }
+            ]
           },
           "role": {
             "type": "string",
@@ -1270,11 +1537,20 @@
       },
       "ContentPartArray": {
         "type": "array",
-        "description": "An array of content parts in a user message. May include text, .",
+        "description": "An array of content parts in a user message. May include text, images, audio, or video.",
         "items": {
           "oneOf": [
             {
               "$ref": "#/components/schemas/ContentPartText"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartImage"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartAudio"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartVideo"
             }
           ]
         }
@@ -1403,6 +1679,115 @@
           "code": {
             "type": "string",
             "description": "Error code."
+          }
+        }
+      },
+      "ContentPartImage": {
+        "type": "object",
+        "title": "Image content part · object",
+        "required": [
+          "type",
+          "image_url"
+        ],
+        "description": "An image content part within a user message.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image_url"
+            ],
+            "description": "The type of the content part, which is image_url."
+          },
+          "image_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "The image URL. May be a public image URL or a Base64-encoded data URL.",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "A public image URL or a Base64-encoded data URL."
+              }
+            }
+          }
+        }
+      },
+      "ContentPartAudio": {
+        "type": "object",
+        "title": "Audio content part · object",
+        "required": [
+          "type",
+          "input_audio"
+        ],
+        "description": "An audio content part within a user message.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_audio"
+            ],
+            "description": "The type of the content part, which is input_audio."
+          },
+          "input_audio": {
+            "type": "object",
+            "required": [
+              "data"
+            ],
+            "description": "The audio URL or Base64-encoded audio data.",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "The URL of the audio or Base64-encoded audio data."
+              }
+            }
+          }
+        }
+      },
+      "ContentPartVideo": {
+        "type": "object",
+        "title": "Video content part · object",
+        "required": [
+          "type",
+          "video_url"
+        ],
+        "description": "A video content part within a user message.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "video_url"
+            ],
+            "description": "The type of the content part, which is video_url."
+          },
+          "video_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "The video URL. May be a public video URL or a Base64-encoded data URL.",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "The URL of the video or Base64-encoded video data."
+              },
+              "fps": {
+                "type": "number",
+                "default": 2,
+                "description": "The number of frames to extract per second. Valid range: [0.1, 10.0]"
+              },
+              "media_resolution": {
+                "type": "string",
+                "default": "default",
+                "enum": [
+                  "default",
+                  "max"
+                ],
+                "description": "Resolution level. Valid values: default, max"
+              }
+            }
           }
         }
       }

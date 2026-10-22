@@ -18,14 +18,14 @@
   "tags": [
     {
       "name": "MIMO 对话",
-      "description": "MIMO 文本对话"
+      "description": "MIMO 多模态对话"
     }
   ],
   "paths": {
     "/v1/chat/completions": {
       "post": {
         "summary": "mimo-v2.6-flash",
-        "description": "调用 MIMO 对话补全能力",
+        "description": "调用 MIMO 多模态对话补全能力",
         "operationId": "mimoChatCompletions_mimo_v2_6_flash_zh",
         "x-capability": "chat",
         "tags": [
@@ -245,14 +245,52 @@
                           {
                             "type": "video_url",
                             "video_url": {
-                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
-                            },
-                            "fps": 2,
-                            "media_resolution": "default"
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
+                              "fps": 2,
+                              "media_resolution": "default"
+                            }
                           },
                           {
                             "type": "text",
                             "text": "请描述一下视频的内容"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "多模态混合输入": {
+                  "summary": "同时传入文本、图像、音频和视频",
+                  "value": {
+                    "model": "mimo-v2.6-flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "请分别描述下面这张图片、这段音频和这段视频的内容，并总结它们的共同主题。"
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
+                              "fps": 2,
+                              "media_resolution": "default"
+                            }
                           }
                         ]
                       }
@@ -534,6 +572,41 @@
                       }
                     }
                   },
+                  "多模态混合输入": {
+                    "summary": "多模态混合输入响应",
+                    "value": {
+                      "id": "5b2f1c7a9d4e4f0b8c3a6d1e2f7a9b04",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "三份素材的共同主题是「自然与生命」。图片展示了一处被阳光穿透的林间溪流，音频记录了清晨鸟鸣与流水声，视频则是一只白猫在阳光充足的室内活动。它们都以光线、自然元素和生活气息为核心。",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "用户一次性提供了图片、音频和视频三种素材，并要求分别描述后再总结共同主题。我需要先分别识别每一份素材的内容，再抽象出它们之间的共性。"
+                          }
+                        }
+                      ],
+                      "created": 1776849702,
+                      "model": "mimo-v2.6-flash",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 246,
+                        "prompt_tokens": 2394,
+                        "total_tokens": 2640,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 88
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0,
+                          "audio_tokens": 25,
+                          "image_tokens": 1024,
+                          "video_tokens": 1144
+                        }
+                      }
+                    }
+                  },
                   "结构化输出": {
                     "summary": "结构化输出响应",
                     "value": {
@@ -737,7 +810,7 @@
           },
           "messages": {
             "type": "array",
-            "description": "包含到目前为止对话的消息列表。",
+            "description": "包含到目前为止对话的消息列表。user 消息的 content 支持两种写法：纯文本字符串，或内容部分数组（可混合文本、图像、音频和视频）。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
