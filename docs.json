@@ -88,8 +88,8 @@
                   {
                     "group": "MIMO",
                     "pages": [
-                      "en/zmodelChat/mimo/mimo-v2.5",
-                      "en/zmodelChat/mimo/mimo-v2.5-pro"
+                      "en/zmodelChat/mimo/mimo-v2.6-flash",
+                      "en/zmodelChat/mimo/mimo-v2.6-pro"
                     ]
                   },
                   {
@@ -698,17 +698,17 @@
             ]
           },
           {
-            "tab": "standalone:zmodelChat/mimo/mimo-v2.5",
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.6-flash",
             "hidden": true,
             "pages": [
-              "en/standalone/zmodelChat/mimo/mimo-v2.5"
+              "en/standalone/zmodelChat/mimo/mimo-v2.6-flash"
             ]
           },
           {
-            "tab": "standalone:zmodelChat/mimo/mimo-v2.5-pro",
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.6-pro",
             "hidden": true,
             "pages": [
-              "en/standalone/zmodelChat/mimo/mimo-v2.5-pro"
+              "en/standalone/zmodelChat/mimo/mimo-v2.6-pro"
             ]
           },
           {
@@ -1849,8 +1849,8 @@
                   {
                     "group": "MIMO",
                     "pages": [
-                      "zh-Hans/zmodelChat/mimo/mimo-v2.5",
-                      "zh-Hans/zmodelChat/mimo/mimo-v2.5-pro"
+                      "zh-Hans/zmodelChat/mimo/mimo-v2.6-flash",
+                      "zh-Hans/zmodelChat/mimo/mimo-v2.6-pro"
                     ]
                   },
                   {
@@ -2466,17 +2466,17 @@
             ]
           },
           {
-            "tab": "standalone:zmodelChat/mimo/mimo-v2.5",
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.6-flash",
             "hidden": true,
             "pages": [
-              "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.5"
+              "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.6-flash"
             ]
           },
           {
-            "tab": "standalone:zmodelChat/mimo/mimo-v2.5-pro",
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.6-pro",
             "hidden": true,
             "pages": [
-              "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.5-pro"
+              "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.6-pro"
             ]
           },
           {

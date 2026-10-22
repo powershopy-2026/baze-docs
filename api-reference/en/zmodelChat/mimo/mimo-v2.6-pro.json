@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "mimo-v2.5-pro",
+    "title": "mimo-v2.6-pro",
     "version": "1.0.0",
     "description": "MIMO Chat Completions documentation",
     "license": {
@@ -24,9 +24,9 @@
   "paths": {
     "/v1/chat/completions": {
       "post": {
-        "summary": "mimo-v2.5-pro",
+        "summary": "mimo-v2.6-pro",
         "description": "Invoke MIMO chat completions capability",
-        "operationId": "mimoChatCompletions_mimo_v2_5_pro_en",
+        "operationId": "mimoChatCompletions_mimo_v2_6_pro_en",
         "x-capability": "chat",
         "tags": [
           "MIMO Chat"
@@ -42,7 +42,7 @@
                 "Basic Call": {
                   "summary": "Basic text chat",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -68,7 +68,7 @@
                 "Streaming Response": {
                   "summary": "Streaming chat response",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -91,7 +91,7 @@
                 "Function Call": {
                   "summary": "Chat with function calling",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -137,7 +137,7 @@
                 "Structured Output": {
                   "summary": "Chat with structured output (JSON mode)",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -157,7 +157,7 @@
                 "Deep Thinking": {
                   "summary": "Chat with deep thinking mode",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -203,7 +203,7 @@
                         }
                       ],
                       "created": 1776848906,
-                      "model": "mimo-v2.5-pro",
+                      "model": "mimo-v2.6-pro",
                       "object": "chat.completion",
                       "usage": {
                         "completion_tokens": 72,
@@ -242,7 +242,7 @@
                         }
                       ],
                       "created": 1776849125,
-                      "model": "mimo-v2.5-pro",
+                      "model": "mimo-v2.6-pro",
                       "object": "chat.completion",
                       "usage": {
                         "completion_tokens": 196,
@@ -271,7 +271,7 @@
                         }
                       ],
                       "created": 1776850034,
-                      "model": "mimo-v2.5-pro",
+                      "model": "mimo-v2.6-pro",
                       "object": "chat.completion",
                       "usage": {
                         "completion_tokens": 41,
@@ -301,7 +301,7 @@
                         }
                       ],
                       "created": 1776850089,
-                      "model": "mimo-v2.5-pro",
+                      "model": "mimo-v2.6-pro",
                       "object": "chat.completion",
                       "usage": {
                         "completion_tokens": 179,
@@ -323,7 +323,7 @@
                 "examples": {
                   "Streaming Response": {
                     "summary": "Streaming response with SSE events",
-                    "value": "data: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":null,\"matched_stop\":null}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\"Okay, the user\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" is asking\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" me\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\n...\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\"'m ready\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\" to help!\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":null,\"content\":null,\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":\"stop\",\"matched_stop\":151645}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":{\"completion_tokens\":123,\"prompt_tokens\":55,\"total_tokens\":178,\"completion_tokens_details\":{\"reasoning_tokens\":71},\"prompt_tokens_details\":null}}\n\ndata: [DONE]"
+                    "value": "data: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":null,\"matched_stop\":null}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\"Okay, the user\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" is asking\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" me\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\n...\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\"'m ready\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\" to help!\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":null,\"content\":null,\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":\"stop\",\"matched_stop\":151645}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[],\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":{\"completion_tokens\":123,\"prompt_tokens\":55,\"total_tokens\":178,\"completion_tokens_details\":{\"reasoning_tokens\":71},\"prompt_tokens_details\":null}}\n\ndata: [DONE]"
                   }
                 }
               }
@@ -452,9 +452,9 @@
             "type": "string",
             "description": "Model ID to use",
             "enum": [
-              "mimo-v2.5-pro"
+              "mimo-v2.6-pro"
             ],
-            "example": "mimo-v2.5-pro"
+            "example": "mimo-v2.6-pro"
           },
           "messages": {
             "type": "array",
@@ -483,7 +483,7 @@
           "max_completion_tokens": {
             "type": "integer",
             "nullable": true,
-            "description": "The upper limit of tokens that can be generated in the chat completion, including visible output tokens and reasoning tokens. Default is 131072 for mimo-v2.5-pro. Range: [1, 131072]"
+            "description": "The upper limit of tokens that can be generated in the chat completion, including visible output tokens and reasoning tokens. Default is 131072 for mimo-v2.6-pro. Range: [1, 131072]"
           },
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
@@ -519,7 +519,7 @@
             "minimum": 0,
             "maximum": 1.5,
             "default": 1,
-            "description": "Sampling temperature to use, between 0 and 1.5. Higher values (e.g., 0.8) make the output more random, while lower values (e.g., 0.2) make it more focused and deterministic. We generally recommend altering this or top_p but not both. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom temperature. Even if passed, the model will force the recommended default value of 1.0."
+            "description": "Sampling temperature to use, between 0 and 1.5. Higher values (e.g., 0.8) make the output more random, while lower values (e.g., 0.2) make it more focused and deterministic. We generally recommend altering this or top_p but not both. In thinking mode, mimo-v2.6-pro and mimo-v2.6-flash do not support custom temperature. Even if passed, the model will force the recommended default value of 1.0."
           },
           "tool_choice": {
             "$ref": "#/components/schemas/ToolChoice"
@@ -529,7 +529,7 @@
             "default": 0.95,
             "minimum": 0.01,
             "maximum": 1,
-            "description": "Probability threshold for nucleus sampling, controlling the diversity of text generation. Higher top_p values produce more diverse text; lower values produce more deterministic text. Since both temperature and top_p control text diversity, it is recommended to adjust only one of them. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom top_p. Even if passed, the model will force the recommended default value of 0.95."
+            "description": "Probability threshold for nucleus sampling, controlling the diversity of text generation. Higher top_p values produce more diverse text; lower values produce more deterministic text. Since both temperature and top_p control text diversity, it is recommended to adjust only one of them. In thinking mode, mimo-v2.6-pro and mimo-v2.6-flash do not support custom top_p. Even if passed, the model will force the recommended default value of 0.95."
           },
           "tools": {
             "type": "array",
@@ -698,7 +698,7 @@
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "Controls whether the model enables chain-of-thought (thinking) mode. Note: In multi-round tool calls under thinking mode, the model returns the reasoning_content field along with tool_calls. To continue the conversation, it is recommended to retain all historical reasoning_content in the messages array of each subsequent request for optimal performance. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom temperature and top_p parameters. Even if passed, the model will force the recommended default values of 1.0 and 0.95 respectively.",
+        "description": "Controls whether the model enables chain-of-thought (thinking) mode. Note: In multi-round tool calls under thinking mode, the model returns the reasoning_content field along with tool_calls. To continue the conversation, it is recommended to retain all historical reasoning_content in the messages array of each subsequent request for optimal performance. In thinking mode, mimo-v2.6-pro and mimo-v2.6-flash do not support custom temperature and top_p parameters. Even if passed, the model will force the recommended default values of 1.0 and 0.95 respectively.",
         "properties": {
           "type": {
             "type": "string",
@@ -707,7 +707,7 @@
               "disabled"
             ],
             "default": "enabled",
-            "description": "Whether to enable chain-of-thought. For mimo-v2.5-pro and mimo-v2.5, the default value is enabled. Allowed values: enabled, disabled"
+            "description": "Whether to enable chain-of-thought. For mimo-v2.6-pro and mimo-v2.6-flash, the default value is enabled. Allowed values: enabled, disabled"
           }
         },
         "required": [
