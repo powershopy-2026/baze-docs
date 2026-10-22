@@ -245,10 +245,10 @@
                           {
                             "type": "video_url",
                             "video_url": {
-                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
-                              "fps": 2,
-                              "media_resolution": "default"
-                            }
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
                           },
                           {
                             "type": "text",
@@ -287,10 +287,10 @@
                           {
                             "type": "video_url",
                             "video_url": {
-                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
-                              "fps": 2,
-                              "media_resolution": "default"
-                            }
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
                           }
                         ]
                       }
@@ -1039,14 +1039,14 @@
             "description": "The role of the message author, which is tool."
           },
           "content": {
-            "description": "The content of the tool message.",
+            "description": "The content of the tool message. Can be a plain text string, or an array of content parts that may mix text, image, audio, and video.",
             "oneOf": [
               {
                 "type": "string",
                 "description": "Plain text content."
               },
               {
-                "$ref": "#/components/schemas/TextContentPartArray"
+                "$ref": "#/components/schemas/ContentPartArray"
               }
             ]
           },
@@ -1865,22 +1865,22 @@
                 "type": "string",
                 "format": "uri",
                 "description": "The URL of the video or Base64-encoded video data."
-              },
-              "fps": {
-                "type": "number",
-                "default": 2,
-                "description": "The number of frames to extract per second. Valid range: [0.1, 10.0]"
-              },
-              "media_resolution": {
-                "type": "string",
-                "default": "default",
-                "enum": [
-                  "default",
-                  "max"
-                ],
-                "description": "Resolution level. Allowed values: default, max"
               }
             }
+          },
+          "fps": {
+            "type": "number",
+            "default": 2,
+            "description": "The number of frames to extract per second, controlling the temporal granularity of video understanding. Higher values produce denser frame extraction for finer motion and timing detail; lower values are faster and consume fewer tokens. Valid range: [0.1, 10.0]"
+          },
+          "media_resolution": {
+            "type": "string",
+            "default": "default",
+            "enum": [
+              "default",
+              "max"
+            ],
+            "description": "The resolution level for parsing video frames, controlling the visual granularity of per-frame understanding. default balances recognition quality and processing efficiency; max boosts recognition of small objects and fine textures."
           }
         }
       }

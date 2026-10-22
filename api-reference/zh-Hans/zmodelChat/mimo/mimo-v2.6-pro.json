@@ -205,10 +205,10 @@
                           {
                             "type": "video_url",
                             "video_url": {
-                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
-                              "fps": 2,
-                              "media_resolution": "default"
-                            }
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
                           },
                           {
                             "type": "text",
@@ -247,10 +247,10 @@
                           {
                             "type": "video_url",
                             "video_url": {
-                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4",
-                              "fps": 2,
-                              "media_resolution": "default"
-                            }
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
                           }
                         ]
                       }
@@ -945,14 +945,14 @@
             "description": "消息作者的角色，为 tool。"
           },
           "content": {
-            "description": "工具消息的内容。",
+            "description": "工具消息的内容。可以是纯文本字符串，也可以是内容部分数组，数组内可混合文本、图像、音频和视频。",
             "oneOf": [
               {
                 "type": "string",
                 "description": "工具消息的文本内容。"
               },
               {
-                "$ref": "#/components/schemas/TextContentPartArray"
+                "$ref": "#/components/schemas/ContentPartArray"
               }
             ]
           },
@@ -1751,7 +1751,7 @@
           "type",
           "video_url"
         ],
-        "description": "用户消息中的视频内容部分。",
+        "description": "用户消息中的视频内容部分。fps 和 media_resolution 为可选项，用于控制视频理解的精细度。",
         "properties": {
           "type": {
             "type": "string",
@@ -1771,22 +1771,22 @@
                 "type": "string",
                 "format": "uri",
                 "description": "视频的 URL 或 Base64 编码的视频数据。"
-              },
-              "fps": {
-                "type": "number",
-                "default": 2,
-                "description": "每秒抽帧数。所需范围：[0.1, 10.0]"
-              },
-              "media_resolution": {
-                "type": "string",
-                "default": "default",
-                "enum": [
-                  "default",
-                  "max"
-                ],
-                "description": "分辨率档次。可选值：default，max"
               }
             }
+          },
+          "fps": {
+            "type": "number",
+            "default": 2,
+            "description": "每秒抽帧数，用于控制视频时间维度的理解精细度。数值越高，抽帧越密集，对动作和时序细节感知越精细；数值越低，处理速度越快，Token 消耗越少。所需范围：[0.1, 10.0]"
+          },
+          "media_resolution": {
+            "type": "string",
+            "default": "default",
+            "enum": [
+              "default",
+              "max"
+            ],
+            "description": "视频帧的解析分辨率档次，用于控制单帧画面的视觉理解精细度。default 为默认档次，平衡识别效果与处理效率；max 为最高分辨率档次，提升对小物体、细节纹理的识别能力。"
           }
         }
       }
