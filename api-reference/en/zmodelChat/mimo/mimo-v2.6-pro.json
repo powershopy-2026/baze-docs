@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "mimo-v2.5-pro",
+    "title": "mimo-v2.6-pro",
     "version": "1.0.0",
     "description": "MIMO Chat Completions documentation",
     "license": {
@@ -18,15 +18,15 @@
   "tags": [
     {
       "name": "MIMO Chat",
-      "description": "MIMO text chat"
+      "description": "MIMO multimodal chat"
     }
   ],
   "paths": {
     "/v1/chat/completions": {
       "post": {
-        "summary": "mimo-v2.5-pro",
-        "description": "Invoke MIMO chat completions capability",
-        "operationId": "mimoChatCompletions_mimo_v2_5_pro_en",
+        "summary": "mimo-v2.6-pro",
+        "description": "Invoke MIMO multimodal chat completions capability",
+        "operationId": "mimoChatCompletions_mimo_v2_6_pro_en",
         "x-capability": "chat",
         "tags": [
           "MIMO Chat"
@@ -42,7 +42,7 @@
                 "Basic Call": {
                   "summary": "Basic text chat",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -68,7 +68,7 @@
                 "Streaming Response": {
                   "summary": "Streaming chat response",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -91,7 +91,7 @@
                 "Function Call": {
                   "summary": "Chat with function calling",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -134,10 +134,134 @@
                     "tool_choice": "auto"
                   }
                 },
+                "Image Input": {
+                  "summary": "Chat with image input",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "please describe the content of the image"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "Audio Input": {
+                  "summary": "Chat with audio input",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "text",
+                            "text": "please describe the content of the audio"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "Video Input": {
+                  "summary": "Chat with video input",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are MiMo, an AI assistant developed by Xiaomi. Today is date: Tuesday, December 16, 2025. Your knowledge cutoff date is December 2024."
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
+                          },
+                          {
+                            "type": "text",
+                            "text": "please describe the content of the video"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
+                "Multimodal Input": {
+                  "summary": "Pass text, image, audio and video together",
+                  "value": {
+                    "model": "mimo-v2.6-pro",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Please describe the image, the audio and the video below separately, then summarize their shared theme."
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/image/image_example.png"
+                            }
+                          },
+                          {
+                            "type": "input_audio",
+                            "input_audio": {
+                              "data": "https://example-files.cnbj1.mi-fds.com/example-files/audio/audio_example.wav"
+                            }
+                          },
+                          {
+                            "type": "video_url",
+                            "video_url": {
+                              "url": "https://example-files.cnbj1.mi-fds.com/example-files/video/video_example.mp4"
+                            },
+                            "fps": 2,
+                            "media_resolution": "default"
+                          }
+                        ]
+                      }
+                    ],
+                    "max_completion_tokens": 1024
+                  }
+                },
                 "Structured Output": {
                   "summary": "Chat with structured output (JSON mode)",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -157,7 +281,7 @@
                 "Deep Thinking": {
                   "summary": "Chat with deep thinking mode",
                   "value": {
-                    "model": "mimo-v2.5-pro",
+                    "model": "mimo-v2.6-pro",
                     "messages": [
                       {
                         "role": "system",
@@ -203,7 +327,7 @@
                         }
                       ],
                       "created": 1776848906,
-                      "model": "mimo-v2.5-pro",
+                      "model": "mimo-v2.6-pro",
                       "object": "chat.completion",
                       "usage": {
                         "completion_tokens": 72,
@@ -242,7 +366,7 @@
                         }
                       ],
                       "created": 1776849125,
-                      "model": "mimo-v2.5-pro",
+                      "model": "mimo-v2.6-pro",
                       "object": "chat.completion",
                       "usage": {
                         "completion_tokens": 196,
@@ -252,6 +376,141 @@
                           "reasoning_tokens": 161
                         },
                         "prompt_tokens_details": null
+                      }
+                    }
+                  },
+                  "Image Input": {
+                    "summary": "Image input response",
+                    "value": {
+                      "id": "e27ffa1d3e31434daa71d6b6a83f6e38",
+                      "choices": [
+                        {
+                          "finish_reason": "length",
+                          "index": 0,
+                          "message": {
+                            "content": "Based on the image provided, here is a detailed description of the content:\n\n**Overall Atmosphere**\nThe image depicts a serene, magical, and lush forest scene. It has an ethereal quality, likely enhanced by digital art techniques or AI generation, characterized",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user wants a description of the image. I first take in the whole scene: a forest pierced by sunlight, with a stream running from the foreground into the distance. Then I describe it layer by layer: mossy rocks and ferns in the foreground, ancient trees and a winding stream in the middle ground, and fog with crepuscular rays in the background. Finally I organize this into a structured description."
+                          }
+                        }
+                      ],
+                      "created": 1776849330,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 1024,
+                        "prompt_tokens": 1085,
+                        "total_tokens": 2109,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 971
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 5,
+                          "image_tokens": 1024
+                        }
+                      }
+                    }
+                  },
+                  "Audio Input": {
+                    "summary": "Audio input response",
+                    "value": {
+                      "id": "87ee7097c0f7491ea27429efcc21cc26",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "Good morning. Could you tell me what the weather will be like today?"
+                          }
+                        }
+                      ],
+                      "created": 1776849418,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 17,
+                        "prompt_tokens": 86,
+                        "total_tokens": 103,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 15
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 25,
+                          "cached_tokens": 45
+                        }
+                      }
+                    }
+                  },
+                  "Video Input": {
+                    "summary": "Video input response",
+                    "value": {
+                      "id": "d2c3bd5a08114f78a525e09b69308dc9",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "The video features a white kitten with bright blue eyes sitting on a polished wooden floor. It is positioned near a window covered by beige curtains, with sunlight streaming in and casting shadows across the room. In the background, a green potted plant, resembling a Monstera, is visible. The kitten looks around curiously and then opens its mouth to meow.",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user wants a description of the video. I first sample frames along the timeline: from 00:00 to 00:03 the kitten sits still, looks around, then opens its mouth and meows. Then I collect the visual elements: a white kitten with blue eyes as the subject, a room with a wooden floor and a window with beige curtains, a Monstera in the background, and sunlight casting shadows on the floor. Finally I merge this into one coherent paragraph."
+                          }
+                        }
+                      ],
+                      "created": 1776849614,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 590,
+                        "prompt_tokens": 1260,
+                        "total_tokens": 1850,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 514
+                        },
+                        "prompt_tokens_details": {
+                          "audio_tokens": 19,
+                          "cached_tokens": 45,
+                          "video_tokens": 1144
+                        }
+                      }
+                    }
+                  },
+                  "Multimodal Input": {
+                    "summary": "Multimodal input response",
+                    "value": {
+                      "id": "5b2f1c7a9d4e4f0b8c3a6d1e2f7a9b04",
+                      "choices": [
+                        {
+                          "finish_reason": "stop",
+                          "index": 0,
+                          "message": {
+                            "content": "The shared theme of the three assets is nature and life. The image shows a sunlit forest stream, the audio captures morning birdsong along with running water, and the video features a white kitten in a bright indoor room. All three revolve around light, natural elements and a sense of everyday life.",
+                            "role": "assistant",
+                            "tool_calls": null,
+                            "reasoning_content": "The user provided an image, an audio clip and a video at once, and asked for a separate description of each followed by a shared theme. I need to recognize each asset first, then abstract the commonality between them."
+                          }
+                        }
+                      ],
+                      "created": 1776849702,
+                      "model": "mimo-v2.6-pro",
+                      "object": "chat.completion",
+                      "usage": {
+                        "completion_tokens": 246,
+                        "prompt_tokens": 2394,
+                        "total_tokens": 2640,
+                        "completion_tokens_details": {
+                          "reasoning_tokens": 88
+                        },
+                        "prompt_tokens_details": {
+                          "cached_tokens": 0,
+                          "audio_tokens": 25,
+                          "image_tokens": 1024,
+                          "video_tokens": 1144
+                        }
                       }
                     }
                   },
@@ -271,7 +530,7 @@
                         }
                       ],
                       "created": 1776850034,
-                      "model": "mimo-v2.5-pro",
+                      "model": "mimo-v2.6-pro",
                       "object": "chat.completion",
                       "usage": {
                         "completion_tokens": 41,
@@ -301,7 +560,7 @@
                         }
                       ],
                       "created": 1776850089,
-                      "model": "mimo-v2.5-pro",
+                      "model": "mimo-v2.6-pro",
                       "object": "chat.completion",
                       "usage": {
                         "completion_tokens": 179,
@@ -323,7 +582,7 @@
                 "examples": {
                   "Streaming Response": {
                     "summary": "Streaming response with SSE events",
-                    "value": "data: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":null,\"matched_stop\":null}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\"Okay, the user\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" is asking\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" me\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\n...\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\"'m ready\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\" to help!\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":null,\"content\":null,\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":\"stop\",\"matched_stop\":151645}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[],\"created\":1776849044,\"model\":\"mimo-v2.5-pro\",\"object\":\"chat.completion.chunk\",\"usage\":{\"completion_tokens\":123,\"prompt_tokens\":55,\"total_tokens\":178,\"completion_tokens_details\":{\"reasoning_tokens\":71},\"prompt_tokens_details\":null}}\n\ndata: [DONE]"
+                    "value": "data: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":null,\"matched_stop\":null}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\"Okay, the user\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" is asking\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" me\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\n...\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\"'m ready\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\" to help!\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":null,\"content\":null,\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":\"stop\",\"matched_stop\":151645}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[],\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":{\"completion_tokens\":123,\"prompt_tokens\":55,\"total_tokens\":178,\"completion_tokens_details\":{\"reasoning_tokens\":71},\"prompt_tokens_details\":null}}\n\ndata: [DONE]"
                   }
                 }
               }
@@ -452,13 +711,13 @@
             "type": "string",
             "description": "Model ID to use",
             "enum": [
-              "mimo-v2.5-pro"
+              "mimo-v2.6-pro"
             ],
-            "example": "mimo-v2.5-pro"
+            "example": "mimo-v2.6-pro"
           },
           "messages": {
             "type": "array",
-            "description": "A list of messages comprising the conversation so far.",
+            "description": "A list of messages comprising the conversation so far. The content of a user message can be either a plain string or an array of content parts mixing text, images, audio and video.",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Message"
@@ -483,7 +742,7 @@
           "max_completion_tokens": {
             "type": "integer",
             "nullable": true,
-            "description": "The upper limit of tokens that can be generated in the chat completion, including visible output tokens and reasoning tokens. Default is 131072 for mimo-v2.5-pro. Range: [1, 131072]"
+            "description": "The upper limit of tokens that can be generated in the chat completion, including visible output tokens and reasoning tokens. Default is 131072 for mimo-v2.6-pro. Range: [1, 131072]"
           },
           "response_format": {
             "$ref": "#/components/schemas/ResponseFormat"
@@ -519,7 +778,7 @@
             "minimum": 0,
             "maximum": 1.5,
             "default": 1,
-            "description": "Sampling temperature to use, between 0 and 1.5. Higher values (e.g., 0.8) make the output more random, while lower values (e.g., 0.2) make it more focused and deterministic. We generally recommend altering this or top_p but not both. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom temperature. Even if passed, the model will force the recommended default value of 1.0."
+            "description": "Sampling temperature to use, between 0 and 1.5. Higher values (e.g., 0.8) make the output more random, while lower values (e.g., 0.2) make it more focused and deterministic. We generally recommend altering this or top_p but not both. In thinking mode, mimo-v2.6-pro and mimo-v2.6-flash do not support custom temperature. Even if passed, the model will force the recommended default value of 1.0."
           },
           "tool_choice": {
             "$ref": "#/components/schemas/ToolChoice"
@@ -529,7 +788,7 @@
             "default": 0.95,
             "minimum": 0.01,
             "maximum": 1,
-            "description": "Probability threshold for nucleus sampling, controlling the diversity of text generation. Higher top_p values produce more diverse text; lower values produce more deterministic text. Since both temperature and top_p control text diversity, it is recommended to adjust only one of them. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom top_p. Even if passed, the model will force the recommended default value of 0.95."
+            "description": "Probability threshold for nucleus sampling, controlling the diversity of text generation. Higher top_p values produce more diverse text; lower values produce more deterministic text. Since both temperature and top_p control text diversity, it is recommended to adjust only one of them. In thinking mode, mimo-v2.6-pro and mimo-v2.6-flash do not support custom top_p. Even if passed, the model will force the recommended default value of 0.95."
           },
           "tools": {
             "type": "array",
@@ -604,8 +863,16 @@
         "description": "User message. The role of this message is user.",
         "properties": {
           "content": {
-            "type": "string",
-            "description": "The content of the user message."
+            "description": "The content of the user message. Either a plain text string, or an array of content parts that may mix text, images, audio and video.",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Plain text content."
+              },
+              {
+                "$ref": "#/components/schemas/ContentPartArray"
+              }
+            ]
           },
           "role": {
             "type": "string",
@@ -679,14 +946,14 @@
             "description": "The role of the message author, which is tool."
           },
           "content": {
-            "description": "The content of the tool message.",
+            "description": "The content of the tool message. Can be a plain text string, or an array of content parts that may mix text, image, audio, and video.",
             "oneOf": [
               {
                 "type": "string",
                 "description": "Plain text content."
               },
               {
-                "$ref": "#/components/schemas/TextContentPartArray"
+                "$ref": "#/components/schemas/ContentPartArray"
               }
             ]
           },
@@ -698,7 +965,7 @@
       },
       "ThinkingConfig": {
         "type": "object",
-        "description": "Controls whether the model enables chain-of-thought (thinking) mode. Note: In multi-round tool calls under thinking mode, the model returns the reasoning_content field along with tool_calls. To continue the conversation, it is recommended to retain all historical reasoning_content in the messages array of each subsequent request for optimal performance. In thinking mode, mimo-v2.5-pro and mimo-v2.5 do not support custom temperature and top_p parameters. Even if passed, the model will force the recommended default values of 1.0 and 0.95 respectively.",
+        "description": "Controls whether the model enables chain-of-thought (thinking) mode. Note: In multi-round tool calls under thinking mode, the model returns the reasoning_content field along with tool_calls. To continue the conversation, it is recommended to retain all historical reasoning_content in the messages array of each subsequent request for optimal performance. In thinking mode, mimo-v2.6-pro and mimo-v2.6-flash do not support custom temperature and top_p parameters. Even if passed, the model will force the recommended default values of 1.0 and 0.95 respectively.",
         "properties": {
           "type": {
             "type": "string",
@@ -707,7 +974,7 @@
               "disabled"
             ],
             "default": "enabled",
-            "description": "Whether to enable chain-of-thought. For mimo-v2.5-pro and mimo-v2.5, the default value is enabled. Allowed values: enabled, disabled"
+            "description": "Whether to enable chain-of-thought. For mimo-v2.6-pro and mimo-v2.6-flash, the default value is enabled. Allowed values: enabled, disabled"
           }
         },
         "required": [
@@ -1270,11 +1537,20 @@
       },
       "ContentPartArray": {
         "type": "array",
-        "description": "An array of content parts in a user message. May include text, .",
+        "description": "An array of content parts in a user message. May include text, images, audio, or video.",
         "items": {
           "oneOf": [
             {
               "$ref": "#/components/schemas/ContentPartText"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartImage"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartAudio"
+            },
+            {
+              "$ref": "#/components/schemas/ContentPartVideo"
             }
           ]
         }
@@ -1403,6 +1679,115 @@
           "code": {
             "type": "string",
             "description": "Error code."
+          }
+        }
+      },
+      "ContentPartImage": {
+        "type": "object",
+        "title": "Image content part · object",
+        "required": [
+          "type",
+          "image_url"
+        ],
+        "description": "An image content part within a user message.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image_url"
+            ],
+            "description": "The type of the content part, which is image_url."
+          },
+          "image_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "The image URL. May be a public image URL or a Base64-encoded data URL.",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "A public image URL or a Base64-encoded data URL."
+              }
+            }
+          }
+        }
+      },
+      "ContentPartAudio": {
+        "type": "object",
+        "title": "Audio content part · object",
+        "required": [
+          "type",
+          "input_audio"
+        ],
+        "description": "An audio content part within a user message.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "input_audio"
+            ],
+            "description": "The type of the content part, which is input_audio."
+          },
+          "input_audio": {
+            "type": "object",
+            "required": [
+              "data"
+            ],
+            "description": "The audio URL or Base64-encoded audio data.",
+            "properties": {
+              "data": {
+                "type": "string",
+                "description": "The URL of the audio or Base64-encoded audio data."
+              }
+            }
+          }
+        }
+      },
+      "ContentPartVideo": {
+        "type": "object",
+        "title": "Video content part · object",
+        "required": [
+          "type",
+          "video_url"
+        ],
+        "description": "A video content part within a user message. fps and media_resolution are optional controls for video understanding granularity.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "video_url"
+            ],
+            "description": "The type of the content part, which is video_url."
+          },
+          "video_url": {
+            "type": "object",
+            "required": [
+              "url"
+            ],
+            "description": "The video URL. May be a public video URL or a Base64-encoded data URL.",
+            "properties": {
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "The URL of the video or Base64-encoded video data."
+              }
+            }
+          },
+          "fps": {
+            "type": "number",
+            "default": 2,
+            "description": "The number of frames to extract per second, controlling the temporal granularity of video understanding. Higher values produce denser frame extraction for finer motion and timing detail; lower values are faster and consume fewer tokens. Valid range: [0.1, 10.0]"
+          },
+          "media_resolution": {
+            "type": "string",
+            "default": "default",
+            "enum": [
+              "default",
+              "max"
+            ],
+            "description": "The resolution level for parsing video frames, controlling the visual granularity of per-frame understanding. default balances recognition quality and processing efficiency; max boosts recognition of small objects and fine textures."
           }
         }
       }
