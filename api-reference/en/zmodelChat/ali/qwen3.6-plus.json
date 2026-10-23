@@ -1,4 +1,4 @@
-{
+﻿{
   "openapi": "3.0.1",
   "info": {
     "title": "qwen3.6-plus Chat Completions",
@@ -310,6 +310,9 @@
               "$ref": "#/components/schemas/Message"
             }
           },
+          "thinking": {
+            "$ref": "#/components/schemas/ThinkingConfig"
+          },
           "stream": {
             "type": "boolean",
             "description": "Whether to use streaming output. Defaults to false.",
@@ -547,7 +550,21 @@
           }
         }
       },
-      "ErrorResponse": {
+      "ThinkingConfig": {
+        "type": "object",
+        "description": "Controls switching between thinking and non-thinking modes.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "enabled",
+              "disabled"
+            ],
+            "default": "enabled",
+            "description": "If set to enabled, thinking mode is used. If set to disabled, non-thinking mode is used."
+          }
+        }
+      },      "ErrorResponse": {
         "type": "object",
         "properties": {
           "error": {

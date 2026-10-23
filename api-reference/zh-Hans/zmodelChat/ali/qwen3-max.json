@@ -1,4 +1,4 @@
-{
+﻿{
   "openapi": "3.0.1",
   "info": {
     "title": "qwen3-max 对话补全",
@@ -264,6 +264,9 @@
               "$ref": "#/components/schemas/Message"
             }
           },
+          "thinking": {
+            "$ref": "#/components/schemas/ThinkingConfig"
+          },
           "stream": {
             "type": "boolean",
             "description": "是否使用流式输出。默认为 false。",
@@ -449,7 +452,21 @@
           }
         }
       },
-      "ErrorResponse": {
+      "ThinkingConfig": {
+        "type": "object",
+        "description": "控制思考模式与非思考模式的转换。",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "enabled",
+              "disabled"
+            ],
+            "default": "enabled",
+            "description": "如果设为 enabled，则使用思考模式。如果设为 disabled，则使用非思考模式。"
+          }
+        }
+      },      "ErrorResponse": {
         "type": "object",
         "properties": {
           "error": {
