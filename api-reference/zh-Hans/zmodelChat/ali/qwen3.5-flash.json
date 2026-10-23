@@ -106,7 +106,7 @@
                 "streaming_chat": {
                   "summary": "流式输出",
                   "value": {
-                    "model": "qwen3-max",
+                    "model": "qwen3.5-flash",
                     "messages": [
                       {
                         "role": "user",
@@ -564,7 +564,8 @@
             "description": "如果设为 enabled，则使用思考模式。如果设为 disabled，则使用非思考模式。"
           }
         }
-      },      "ErrorResponse": {
+      },
+      "ErrorResponse": {
         "type": "object",
         "properties": {
           "error": {

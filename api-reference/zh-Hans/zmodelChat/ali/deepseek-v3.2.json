@@ -60,7 +60,7 @@
                 "streaming_chat": {
                   "summary": "流式输出",
                   "value": {
-                    "model": "qwen3-max",
+                    "model": "deepseek-v3.2",
                     "messages": [
                       {
                         "role": "user",
@@ -270,7 +270,7 @@
           "stream": {
             "type": "boolean",
             "description": "是否使用流式输出。默认为 false。",
-            "default": true
+            "default": false
           },
           "temperature": {
             "type": "number",
@@ -466,7 +466,8 @@
             "description": "如果设为 enabled，则使用思考模式。如果设为 disabled，则使用非思考模式。"
           }
         }
-      },      "ErrorResponse": {
+      },
+      "ErrorResponse": {
         "type": "object",
         "properties": {
           "error": {

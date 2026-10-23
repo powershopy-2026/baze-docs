@@ -1,4 +1,4 @@
-﻿{
+{
   "openapi": "3.0.1",
   "info": {
     "title": "deepseek-v3.2 Chat Completions",
@@ -270,7 +270,7 @@
           "stream": {
             "type": "boolean",
             "description": "Whether to use streaming output. Defaults to false.",
-            "default": true
+            "default": false
           },
           "temperature": {
             "type": "number",
@@ -466,7 +466,8 @@
             "description": "If set to enabled, thinking mode is used. If set to disabled, non-thinking mode is used."
           }
         }
-      },      "ErrorResponse": {
+      },
+      "ErrorResponse": {
         "type": "object",
         "properties": {
           "error": {
