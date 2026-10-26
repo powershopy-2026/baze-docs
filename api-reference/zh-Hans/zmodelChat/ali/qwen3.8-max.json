@@ -563,7 +563,8 @@
             "description": "如果设为 enabled，则使用思考模式。如果设为 disabled，则使用非思考模式。"
           }
         }
-      },      "ErrorResponse": {
+      },
+      "ErrorResponse": {
         "type": "object",
         "properties": {
           "error": {

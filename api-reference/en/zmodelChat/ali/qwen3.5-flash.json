@@ -106,7 +106,7 @@
                 "streaming_chat": {
                   "summary": "Streaming output",
                   "value": {
-                    "model": "qwen3-max",
+                    "model": "qwen3.5-flash",
                     "messages": [
                       {
                         "role": "user",
@@ -564,7 +564,8 @@
             "description": "If set to enabled, thinking mode is used. If set to disabled, non-thinking mode is used."
           }
         }
-      },      "ErrorResponse": {
+      },
+      "ErrorResponse": {
         "type": "object",
         "properties": {
           "error": {
