@@ -222,9 +222,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "wan2.7-image-pro"
+              "wan2.7-image-pro",
+              "wan2.7-image"
             ],
-            "description": "Model name. Available value: `wan2.7-image-pro`."
+            "description": "Model name. Available values: `wan2.7-image-pro`, `wan2.7-image`."
           },
           "response_format": {
             "type": "string",

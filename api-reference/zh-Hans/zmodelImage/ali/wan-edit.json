@@ -222,9 +222,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "wan2.7-image-pro"
+              "wan2.7-image-pro",
+              "wan2.7-image"
             ],
-            "description": "模型名称。可选值：`wan2.7-image-pro`。"
+            "description": "模型名称。可选值：`wan2.7-image-pro`、`wan2.7-image`。"
           },
           "response_format": {
             "type": "string",
