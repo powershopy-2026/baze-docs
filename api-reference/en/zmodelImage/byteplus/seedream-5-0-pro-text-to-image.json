@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream 5.0 Pro Text-to-Image",
-        "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Text-to-Image scenarios. Public fields include `model`, `prompt`, `size`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Text-to-Image: Input text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
+        "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Text-to-Image scenarios. Public fields include `model`, `prompt`, `size`, `output_format`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Text-to-Image: Input text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
         "operationId": "byteplusTextToImage50Pro",
         "x-capability": "text_to_image",
         "tags": [
@@ -203,6 +203,15 @@
               "1.5K",
               "2K"
             ]
+          },
+          "output_format": {
+            "type": "string",
+            "enum": [
+              "png",
+              "jpeg"
+            ],
+            "description": "Specifies the file format of the generated image. Valid values:\n- `png`\n- `jpeg`",
+            "default": "jpeg"
           },
           "response_format": {
             "type": "string",
