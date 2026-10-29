@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream 5.0 Pro 文生图",
-        "description": "支持模型包括 `dola-seedream-5-0-pro-260628`。本文档覆盖文生图场景。公开字段包括 `model`、`prompt`、`size`、`response_format`、`watermark`。\n\n**模型能力**\n- 生成单图（不支持配置 sequential_image_generation）\n- 文生图：输入文本提示词，生成单张图片。\n- 暂不支持组图生成、联网搜索、流式输出。",
+        "description": "支持模型包括 `dola-seedream-5-0-pro-260628`。本文档覆盖文生图场景。公开字段包括 `model`、`prompt`、`size`、`output_format`、`response_format`、`watermark`。\n\n**模型能力**\n- 生成单图（不支持配置 sequential_image_generation）\n- 文生图：输入文本提示词，生成单张图片。\n- 暂不支持组图生成、联网搜索、流式输出。",
         "operationId": "byteplusTextToImage50Pro",
         "x-capability": "text_to_image",
         "tags": [
@@ -203,6 +203,15 @@
               "1.5K",
               "2K"
             ]
+          },
+          "output_format": {
+            "type": "string",
+            "enum": [
+              "png",
+              "jpeg"
+            ],
+            "description": "指定生成图像的文件格式。可选值：\n- `png`\n- `jpeg`",
+            "default": "jpeg"
           },
           "response_format": {
             "type": "string",

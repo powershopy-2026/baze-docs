@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Seedream 5.0 Pro Image-to-Image",
-        "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Image-to-Image, Multi-Image Reference Generation, and Layer Decomposition scenarios. Public fields include `model`, `prompt`, `image`, `size`, `background`, `layer_decomposition`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Layer decomposition: Supports decomposing a single image into one base image and multiple output layers, with up to 16 layers.\n- Interactive editing: Supports specifying edit locations in multiple ways, such as coordinates, selection boxes, and arrows, for precise image editing.\n- Multi-Image Reference Generation: Input multiple reference images (2-10) + text prompt to generate a single image.\n- Single Image Generation: Input a single reference image + text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
+        "description": "Supported models include `dola-seedream-5-0-pro-260628`. This document covers Image-to-Image, Multi-Image Reference Generation, and Layer Decomposition scenarios. Public fields include `model`, `prompt`, `image`, `size`, `background`, `layer_decomposition`, `output_format`, `response_format`, and `watermark`.\n\n**Model Capabilities**\n- Generate single image (does not support sequential_image_generation)\n- Layer decomposition: Supports decomposing a single image into one base image and multiple output layers, with up to 16 layers.\n- Interactive editing: Supports specifying edit locations in multiple ways, such as coordinates, selection boxes, and arrows, for precise image editing.\n- Multi-Image Reference Generation: Input multiple reference images (2-10) + text prompt to generate a single image.\n- Single Image Generation: Input a single reference image + text prompt to generate a single image.\n- Sequential image generation, web search, and streaming output are not supported.",
         "operationId": "byteplusImageToImage50Pro",
         "x-capability": "image_to_image",
         "tags": [
@@ -274,6 +274,15 @@
             "type": "boolean",
             "description": "Controls whether to enable layer decomposition. Layer decomposition automatically decomposes subjects, backgrounds, text, and other content in a single image into one base image and up to 16 independently editable layers. Each layer is a PNG image with an alpha channel.\n- `true`: Layer decomposition mode. The model decomposes the input image into one base image and multiple layers.\n- `false`: Image generation mode (default). Layer decomposition is not performed.\n\n**Usage notes**:\n- Only one image to be decomposed is supported. Passing multiple images causes an error.\n- If any layer fails to generate, the entire request fails. Partial success is not supported.\n- If the prompt requests more layers than the upper limit (16), some layer information may be lost.\n- The `data` response object returns the position and content information of each output layer, including layer order (`z_index`), bounding box information (`bounding_box`), name (`name`), and description (`description`).\n\n**Supported model**: `dola-seedream-5-0-pro-260628` (Seedream 5.0 pro).",
             "default": false
+          },
+          "output_format": {
+            "type": "string",
+            "enum": [
+              "png",
+              "jpeg"
+            ],
+            "description": "Specifies the file format of the generated image. Valid values:\n- `png`\n- `jpeg`\n\n**Note**\n- In layer decomposition scenarios, `output_format` controls only the output format of the base image. Layers are always output in `png` format.",
+            "default": "jpeg"
           },
           "response_format": {
             "type": "string",
