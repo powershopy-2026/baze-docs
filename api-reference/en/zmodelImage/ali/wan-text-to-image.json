@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan text-to-image",
     "version": "1.0.0",
-    "description": "Ali Wan text-to-image capability documentation. The unified API endpoint is `/v1/images/generations`. This document describes the public gateway contract for `wan2.7-image-pro`: `input.messages[].content[].text` carries the prompt, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
+    "description": "Ali Wan text-to-image capability documentation. The unified API endpoint is `/v1/images/generations`. This document describes the public gateway contract for `wan2.7-image-pro` and `wan2.7-image`: `input.messages[].content[].text` carries the prompt, while other control fields use top-level OpenAI-style fields that the gateway maps to upstream `parameters`.",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Wan text-to-image",
-        "description": "Calls Ali `wan2.7-image-pro` to perform text-to-image generation.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `size`, `n`, `watermark`, `thinking_mode`, `enable_sequential`, `color_palette`, `seed` as top-level fields. The prompt is placed in `input.messages[0].content[0].text`. The request body does not accept a top-level `parameters` field.",
+        "description": "Calls Ali `wan2.7-image-pro` or `wan2.7-image` to perform text-to-image generation.\n\nThe public calling convention keeps top-level `model`, `input`, `response_format`, and exposes `size`, `n`, `watermark`, `thinking_mode`, `enable_sequential`, `color_palette`, `seed` as top-level fields. The prompt is placed in `input.messages[0].content[0].text`. The request body does not accept a top-level `parameters` field.",
         "operationId": "aliWanTextToImage",
         "x-capability": "text_to_image",
         "tags": [
@@ -213,9 +213,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "wan2.7-image-pro"
+              "wan2.7-image-pro",
+              "wan2.7-image"
             ],
-            "description": "Model name. Available value: `wan2.7-image-pro`."
+            "description": "Model name. Available values: `wan2.7-image-pro` and `wan2.7-image`."
           },
           "response_format": {
             "type": "string",

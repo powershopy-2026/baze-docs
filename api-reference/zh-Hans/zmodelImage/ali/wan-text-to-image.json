@@ -3,7 +3,7 @@
   "info": {
     "title": "Wan 文生图",
     "version": "1.0.0",
-    "description": "阿里 Wan 文生图能力文档。公开统一入口为 `/v1/images/generations`，当前文档描述 `wan2.7-image-pro` 对外公开的网关契约：保留 `input.messages[].content[].text` 承载提示词，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
+    "description": "阿里 Wan 文生图能力文档。公开统一入口为 `/v1/images/generations`，当前文档描述 `wan2.7-image-pro`、`wan2.7-image` 对外公开的网关契约：保留 `input.messages[].content[].text` 承载提示词，其余控制字段使用顶层 OpenAI 风格字段，由网关映射到上游 `parameters`。",
     "license": {
       "name": "Project License",
       "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
@@ -25,7 +25,7 @@
     "/v1/images/generations": {
       "post": {
         "summary": "Wan 文生图",
-        "description": "调用 Ali `wan2.7-image-pro` 执行文生图。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `size`、`n`、`watermark`、`thinking_mode`、`enable_sequential`、`color_palette`、`seed` 设计为顶层字段。提示词位于 `input.messages[0].content[0].text`。请求体不接受顶层 `parameters`。",
+        "description": "调用 Ali `wan2.7-image-pro` 或 `wan2.7-image` 执行文生图。\n\n公开调用方案保留顶层 `model`、`input`、`response_format`，并将 `size`、`n`、`watermark`、`thinking_mode`、`enable_sequential`、`color_palette`、`seed` 设计为顶层字段。提示词位于 `input.messages[0].content[0].text`。请求体不接受顶层 `parameters`。",
         "operationId": "aliWanTextToImage",
         "x-capability": "text_to_image",
         "tags": [
@@ -213,9 +213,10 @@
           "model": {
             "type": "string",
             "enum": [
-              "wan2.7-image-pro"
+              "wan2.7-image-pro",
+              "wan2.7-image"
             ],
-            "description": "模型名称。可选值：`wan2.7-image-pro`。"
+            "description": "模型名称。可选值：`wan2.7-image-pro`、`wan2.7-image`。"
           },
           "response_format": {
             "type": "string",
