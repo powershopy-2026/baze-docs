@@ -89,7 +89,8 @@
                     "group": "MIMO",
                     "pages": [
                       "en/zmodelChat/mimo/mimo-v2.6-flash",
-                      "en/zmodelChat/mimo/mimo-v2.6-pro"
+                      "en/zmodelChat/mimo/mimo-v2.6-pro",
+                      "en/zmodelChat/mimo/mimo-v2.6-pro-ultraspeed"
                     ]
                   },
                   {
@@ -709,6 +710,13 @@
             "hidden": true,
             "pages": [
               "en/standalone/zmodelChat/mimo/mimo-v2.6-pro"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.6-pro-ultraspeed",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/mimo/mimo-v2.6-pro-ultraspeed"
             ]
           },
           {
@@ -1850,7 +1858,8 @@
                     "group": "MIMO",
                     "pages": [
                       "zh-Hans/zmodelChat/mimo/mimo-v2.6-flash",
-                      "zh-Hans/zmodelChat/mimo/mimo-v2.6-pro"
+                      "zh-Hans/zmodelChat/mimo/mimo-v2.6-pro",
+                      "zh-Hans/zmodelChat/mimo/mimo-v2.6-pro-ultraspeed"
                     ]
                   },
                   {
@@ -2477,6 +2486,13 @@
             "hidden": true,
             "pages": [
               "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.6-pro"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/mimo/mimo-v2.6-pro-ultraspeed",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/mimo/mimo-v2.6-pro-ultraspeed"
             ]
           },
           {
