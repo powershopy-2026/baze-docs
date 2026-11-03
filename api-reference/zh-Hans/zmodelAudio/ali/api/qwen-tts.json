@@ -194,9 +194,11 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "模型名称，可用选项：`qwen3-tts-instruct-flash`。",
+            "description": "模型名称，可用选项：`qwen3-tts-instruct-flash`、`qwen3-tts-flash`、`qwen-tts`。",
             "enum": [
-              "qwen3-tts-instruct-flash"
+              "qwen3-tts-instruct-flash",
+              "qwen3-tts-flash",
+              "qwen-tts"
             ]
           },
           "input": {
