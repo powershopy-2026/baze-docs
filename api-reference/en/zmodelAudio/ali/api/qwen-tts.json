@@ -194,9 +194,11 @@
         "properties": {
           "model": {
             "type": "string",
-            "description": "Model name. Available options: `qwen3-tts-instruct-flash`.",
+            "description": "Model name. Available options: `qwen3-tts-instruct-flash`, `qwen3-tts-flash`, `qwen-tts`.",
             "enum": [
-              "qwen3-tts-instruct-flash"
+              "qwen3-tts-instruct-flash",
+              "qwen3-tts-flash",
+              "qwen-tts"
             ]
           },
           "input": {
