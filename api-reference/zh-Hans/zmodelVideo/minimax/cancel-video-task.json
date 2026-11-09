@@ -25,7 +25,7 @@
     "/v1/videos/{task_id}": {
       "delete": {
         "summary": "取消视频任务",
-        "description": "取消仍在队列中的异步视频任务。当前支持 BytePlus（Seedance 系列）与 MiniMax Overseas H3 两个渠道。\n\n调用前需满足以下条件，任一条件不满足时网关不会触达上游 DELETE，直接返回错误：\n\n1. 任务属于受支持渠道（BytePlus `platform=58` 或 MiniMax Overseas H3 `platform=59`）。\n2. 网关会先查询上游真实状态，只有当上游任务仍在队列中时才允许取消。BytePlus 放行 `pending` / `queued` / `submitted`，MiniMax H3 放行 `queued`；运行中或已进入终态的任务返回 400。\n3. 任务未被软删除，且只能操作当前账号创建的任务。\n\n取消成功后，网关按渠道规则同步本地任务状态（`CANCELLED` 或软删除），并触发对应的计费终态处理。响应状态码与响应体由网关原样透传上游 DELETE 结果；建议随后再调用 `GET /v1/videos/{task_id}` 确认任务已进入终态。\n\n### 支持渠道\n\n当前仅以下两个渠道支持取消（去掉）视频任务：\n\n| 渠道 | platform | 上游 DELETE 端点 | 放行的上游队列状态 |\n| --- | --- | --- | --- |\n| BytePlus（Seedance 系列） | `58` | `DELETE /api/v3/contents/generations/tasks/{id}` | `pending` `queued` `submitted` |\n| MiniMax Overseas H3 | `59` | `DELETE /v2/video_generation/{task_id}` | `queued` |\n\nKling、Vidu、Ali（百炼）、Sora 等其他渠道暂不支持，调用会返回 400 `unsupported_platform`，且不会触达上游。\n\n请求示例：\n\n```bash\ncurl -X DELETE \"https://baze-api.powerbuyin.top/v1/videos/task_abc123xyz\" \\\n  -H \"Authorization: Bearer sk-your-token\"\n```",
+        "description": "取消仍在队列中的异步视频任务。当前支持 BytePlus（Seedance 系列）与 MiniMax Overseas H3 两个渠道。",
         "operationId": "cancelVideoTask",
         "tags": [
           "Hailuo Video"
