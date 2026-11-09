@@ -1,0 +1,311 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Cancel Video Task",
+    "version": "1.0.0",
+    "description": "Unified asynchronous video task cancellation endpoint. BytePlus (Seedance and other ByteDance video models) and MiniMax Overseas H3 are currently supported.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Hailuo Video",
+      "description": "Hailuo video task status query and cancellation"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}": {
+      "delete": {
+        "summary": "Cancel Video Task",
+        "description": "Cancel an asynchronous video task that is still queued. BytePlus (Seedance series) and MiniMax Overseas H3 are currently supported.\n\nThe following conditions must be met. If any condition fails, the gateway does not send the upstream DELETE and returns an error directly:\n\n1. The task belongs to a supported channel (BytePlus `platform=58` or MiniMax Overseas H3 `platform=59`).\n2. The gateway first queries the real upstream status, and only allows cancellation when the upstream task is still queued. BytePlus allows `pending` / `queued` / `submitted`; MiniMax H3 allows `queued`. Tasks that are running or in a terminal state return 400.\n3. The task has not been soft-deleted, and it must belong to the current account.\n\nAfter a successful cancellation, the gateway syncs the local task status (`CANCELLED` or soft-deleted) according to the channel rules and triggers the corresponding terminal billing handling. The status code and response body are passed through from the upstream DELETE response. Call `GET /v1/videos/{task_id}` afterwards to confirm the task reaches a terminal state.\n\n### Supported channels\n\nOnly the following two channels currently support cancelling (removing) video tasks:\n\n| Channel | platform | Upstream DELETE endpoint | Allowed upstream queue statuses |\n| --- | --- | --- | --- |\n| BytePlus (Seedance series) | `58` | `DELETE /api/v3/contents/generations/tasks/{id}` | `pending` `queued` `submitted` |\n| MiniMax Overseas H3 | `59` | `DELETE /v2/video_generation/{task_id}` | `queued` |\n\nKling, Vidu, Ali (Bailian), Sora, and other channels are not supported yet. Calls return 400 `unsupported_platform` and never reach the upstream provider.\n\nRequest example:\n\n```bash\ncurl -X DELETE \"https://baze-api.powerbuyin.top/v1/videos/task_abc123xyz\" \\\n  -H \"Authorization: Bearer sk-your-token\"\n```",
+        "operationId": "cancelVideoTask",
+        "tags": [
+          "Hailuo Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Public task ID to cancel. This is the gateway task ID (`tasks.task_id`), not the upstream `provider_task_id`. Only tasks created by the current account can be cancelled."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cancellation succeeded. The gateway passes through the upstream DELETE status code and response body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelVideoTaskResponse"
+                },
+                "examples": {
+                  "byteplus_cancelled": {
+                    "summary": "BytePlus cancellation succeeded",
+                    "value": {
+                      "id": "upstream_task_id",
+                      "status": "cancelled"
+                    }
+                  },
+                  "minimax_cancelled": {
+                    "summary": "MiniMax H3 cancellation succeeded",
+                    "value": {
+                      "action": "cancel",
+                      "status": "cancelled"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Preconditions are not met. The gateway builds the error response and does not send the upstream DELETE.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "task_not_queueing": {
+                    "summary": "Upstream task is not queued",
+                    "value": {
+                      "error": {
+                        "code": "task_not_queueing",
+                        "message": "upstream task status is running, only queued tasks can be cancelled",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "unsupported_platform": {
+                    "summary": "Channel does not support cancellation",
+                    "value": {
+                      "error": {
+                        "code": "unsupported_platform",
+                        "message": "task cancellation is not supported for this platform",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "invalid_request": {
+                    "summary": "Invalid request parameter",
+                    "value": {
+                      "error": {
+                        "code": "invalid_request",
+                        "message": "task_id is required",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "Unauthorized",
+                    "value": {
+                      "error": {
+                        "code": "access_denied",
+                        "message": "Invalid token",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task does not exist, does not belong to the current account, or the upstream returned 404 while querying its status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "task_not_found": {
+                    "summary": "Task not found",
+                    "value": {
+                      "error": {
+                        "code": "task_not_found",
+                        "message": "task not found",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "upstream_task_not_found": {
+                    "summary": "Upstream task not found",
+                    "value": {
+                      "error": {
+                        "code": "upstream_task_not_found",
+                        "message": "upstream task not found",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal gateway failure, e.g. failed to query the local task or channel information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "db_error": {
+                    "summary": "Failed to query the local task",
+                    "value": {
+                      "error": {
+                        "code": "db_error",
+                        "message": "failed to query task",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "channel_not_found": {
+                    "summary": "Channel configuration missing",
+                    "value": {
+                      "error": {
+                        "code": "channel_not_found",
+                        "message": "channel not found",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Network failure while calling the upstream provider. The request may not have been sent; the client can retry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "upstream_query_failed": {
+                    "summary": "Failed to query upstream status",
+                    "value": {
+                      "error": {
+                        "code": "upstream_query_failed",
+                        "message": "failed to query upstream task status",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "upstream_request_failed": {
+                    "summary": "Upstream DELETE request failed",
+                    "value": {
+                      "error": {
+                        "code": "upstream_request_failed",
+                        "message": "failed to request upstream cancellation",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "upstream_read_failed": {
+                    "summary": "Failed to read upstream response",
+                    "value": {
+                      "error": {
+                        "code": "upstream_read_failed",
+                        "message": "failed to read upstream response",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "CancelVideoTaskResponse": {
+        "type": "object",
+        "description": "The cancellation result is passed through from the upstream provider; fields vary slightly by channel.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Upstream task ID (BytePlus)."
+          },
+          "task_id": {
+            "type": "string",
+            "description": "Upstream task ID (MiniMax H3)."
+          },
+          "action": {
+            "type": "string",
+            "description": "Operation performed (MiniMax H3), e.g. `cancel`."
+          },
+          "status": {
+            "type": "string",
+            "description": "Operation result: `cancelled` (cancelled successfully) or `deleted` (record deleted).",
+            "enum": [
+              "cancelled",
+              "deleted"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code, e.g. `task_not_queueing`, `unsupported_platform`, `task_not_found`."
+              },
+              "message": {
+                "type": "string",
+                "description": "Error message."
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type, e.g. `invalid_request_error`."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

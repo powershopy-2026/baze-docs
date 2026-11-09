@@ -1,0 +1,311 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "取消视频任务",
+    "version": "1.0.0",
+    "description": "网关统一异步视频任务取消接口。当前支持 BytePlus（Seedance 等字节跳动视频模型）与 MiniMax Overseas H3 两个渠道。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Hailuo Video",
+      "description": "Hailuo 视频任务状态查询与取消"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}": {
+      "delete": {
+        "summary": "取消视频任务",
+        "description": "取消仍在队列中的异步视频任务。当前支持 BytePlus（Seedance 系列）与 MiniMax Overseas H3 两个渠道。\n\n调用前需满足以下条件，任一条件不满足时网关不会触达上游 DELETE，直接返回错误：\n\n1. 任务属于受支持渠道（BytePlus `platform=58` 或 MiniMax Overseas H3 `platform=59`）。\n2. 网关会先查询上游真实状态，只有当上游任务仍在队列中时才允许取消。BytePlus 放行 `pending` / `queued` / `submitted`，MiniMax H3 放行 `queued`；运行中或已进入终态的任务返回 400。\n3. 任务未被软删除，且只能操作当前账号创建的任务。\n\n取消成功后，网关按渠道规则同步本地任务状态（`CANCELLED` 或软删除），并触发对应的计费终态处理。响应状态码与响应体由网关原样透传上游 DELETE 结果；建议随后再调用 `GET /v1/videos/{task_id}` 确认任务已进入终态。\n\n### 支持渠道\n\n当前仅以下两个渠道支持取消（去掉）视频任务：\n\n| 渠道 | platform | 上游 DELETE 端点 | 放行的上游队列状态 |\n| --- | --- | --- | --- |\n| BytePlus（Seedance 系列） | `58` | `DELETE /api/v3/contents/generations/tasks/{id}` | `pending` `queued` `submitted` |\n| MiniMax Overseas H3 | `59` | `DELETE /v2/video_generation/{task_id}` | `queued` |\n\nKling、Vidu、Ali（百炼）、Sora 等其他渠道暂不支持，调用会返回 400 `unsupported_platform`，且不会触达上游。\n\n请求示例：\n\n```bash\ncurl -X DELETE \"https://baze-api.powerbuyin.top/v1/videos/task_abc123xyz\" \\\n  -H \"Authorization: Bearer sk-your-token\"\n```",
+        "operationId": "cancelVideoTask",
+        "tags": [
+          "Hailuo Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "待取消的任务 ID。必须是本网关公开的任务 ID（`tasks.task_id`），不是上游 `provider_task_id`。只能取消当前账号创建的任务"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取消成功。网关原样透传上游 DELETE 的状态码与响应体。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelVideoTaskResponse"
+                },
+                "examples": {
+                  "byteplus_cancelled": {
+                    "summary": "BytePlus 取消成功",
+                    "value": {
+                      "id": "upstream_task_id",
+                      "status": "cancelled"
+                    }
+                  },
+                  "minimax_cancelled": {
+                    "summary": "MiniMax H3 取消成功",
+                    "value": {
+                      "action": "cancel",
+                      "status": "cancelled"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "前置条件不满足，网关自行组装错误响应，不会触达上游 DELETE。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "task_not_queueing": {
+                    "summary": "上游任务非队列中",
+                    "value": {
+                      "error": {
+                        "code": "task_not_queueing",
+                        "message": "upstream task status is running, only queued tasks can be cancelled",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "unsupported_platform": {
+                    "summary": "渠道不支持取消",
+                    "value": {
+                      "error": {
+                        "code": "unsupported_platform",
+                        "message": "task cancellation is not supported for this platform",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "invalid_request": {
+                    "summary": "请求参数无效",
+                    "value": {
+                      "error": {
+                        "code": "invalid_request",
+                        "message": "task_id is required",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unauthorized": {
+                    "summary": "未授权",
+                    "value": {
+                      "error": {
+                        "code": "access_denied",
+                        "message": "无效的令牌",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在、不属于当前账号，或查询上游状态时上游返回 404。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "task_not_found": {
+                    "summary": "任务不存在",
+                    "value": {
+                      "error": {
+                        "code": "task_not_found",
+                        "message": "task not found",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "upstream_task_not_found": {
+                    "summary": "上游任务不存在",
+                    "value": {
+                      "error": {
+                        "code": "upstream_task_not_found",
+                        "message": "upstream task not found",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "网关内部处理失败，例如查询本地任务或渠道信息失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "db_error": {
+                    "summary": "查询本地任务失败",
+                    "value": {
+                      "error": {
+                        "code": "db_error",
+                        "message": "failed to query task",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "channel_not_found": {
+                    "summary": "渠道配置缺失",
+                    "value": {
+                      "error": {
+                        "code": "channel_not_found",
+                        "message": "channel not found",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "网关访问上游时发生网络故障。请求可能未成功发出，客户端可主动重试。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "upstream_query_failed": {
+                    "summary": "查询上游状态失败",
+                    "value": {
+                      "error": {
+                        "code": "upstream_query_failed",
+                        "message": "failed to query upstream task status",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "upstream_request_failed": {
+                    "summary": "上游 DELETE 请求失败",
+                    "value": {
+                      "error": {
+                        "code": "upstream_request_failed",
+                        "message": "failed to request upstream cancellation",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "upstream_read_failed": {
+                    "summary": "读取上游响应失败",
+                    "value": {
+                      "error": {
+                        "code": "upstream_read_failed",
+                        "message": "failed to read upstream response",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "CancelVideoTaskResponse": {
+        "type": "object",
+        "description": "取消结果由上游原样返回，不同渠道字段略有差异。",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "上游任务 ID（BytePlus）。"
+          },
+          "task_id": {
+            "type": "string",
+            "description": "上游任务 ID（MiniMax H3）。"
+          },
+          "action": {
+            "type": "string",
+            "description": "执行的操作（MiniMax H3），例如 `cancel`。"
+          },
+          "status": {
+            "type": "string",
+            "description": "操作结果：`cancelled`（取消成功）或 `deleted`（记录已删除）。",
+            "enum": [
+              "cancelled",
+              "deleted"
+            ]
+          }
+        },
+        "additionalProperties": true
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "错误码，如 `task_not_queueing`、`unsupported_platform`、`task_not_found`。"
+              },
+              "message": {
+                "type": "string",
+                "description": "错误说明。"
+              },
+              "type": {
+                "type": "string",
+                "description": "错误类型，例如 `invalid_request_error`。"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
