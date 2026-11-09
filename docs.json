@@ -1793,7 +1793,8 @@
                   "zh-Hans/guides/seedance2-quick-start",
                   "zh-Hans/guides/vercel-ai-sdk",
                   "zh-Hans/guides/goose",
-                  "zh-Hans/guides/powertokens-cli"
+                  "zh-Hans/guides/powertokens-cli",
+                  "zh-Hans/guides/async-task-polling-429-5xx"
                 ]
               }
             ]
