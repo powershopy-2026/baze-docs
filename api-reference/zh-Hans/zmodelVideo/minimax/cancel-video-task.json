@@ -56,8 +56,8 @@
               }
             }
           },
-          "4xx": {
-            "description": "请求被拒绝。",
+          "400": {
+            "description": "请求被拒绝，前置条件不满足。",
             "content": {
               "application/json": {
                 "schema": {
@@ -83,38 +83,74 @@
                         "type": "invalid_request_error"
                       }
                     }
-                  },
-                  "task_not_found": {
-                    "summary": "任务不存在",
-                    "value": {
-                      "error": {
-                        "code": "task_not_found",
-                        "message": "task not found",
-                        "type": "invalid_request_error"
-                      }
-                    }
                   }
                 }
               }
             }
           },
-          "5xx": {
-            "description": "网关或上游内部错误。",
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
-                "examples": {
-                  "upstream_delete_failed": {
-                    "summary": "上游 DELETE 失败",
-                    "value": {
-                      "error": {
-                        "code": "upstream_delete_failed",
-                        "message": "upstream returned 500: ...",
-                        "type": "upstream_error"
-                      }
-                    }
+                "example": {
+                  "error": {
+                    "code": "access_denied",
+                    "message": "invalid token",
+                    "type": "invalid_request_error"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在，或不属于当前账号。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "task_not_found",
+                    "message": "task not found",
+                    "type": "invalid_request_error"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "网关内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "upstream_delete_failed",
+                    "message": "upstream returned 500: ...",
+                    "type": "upstream_error"
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "网关访问上游失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "upstream_delete_failed",
+                    "message": "upstream returned 502: ...",
+                    "type": "upstream_error"
                   }
                 }
               }
@@ -168,7 +204,7 @@
             "properties": {
               "code": {
                 "type": "string",
-                "description": "错误码，如 `task_not_queueing`、`unsupported_platform`、`task_not_found`。"
+                "description": "错误码，例如 `upstream_delete_failed`、`task_not_queueing`。"
               },
               "message": {
                 "type": "string",
@@ -176,7 +212,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "错误类型，例如 `invalid_request_error`。"
+                "description": "错误类型，例如 `upstream_error`、`invalid_request_error`。"
               }
             }
           }

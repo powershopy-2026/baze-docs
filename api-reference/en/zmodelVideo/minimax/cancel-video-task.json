@@ -56,8 +56,8 @@
               }
             }
           },
-          "4xx": {
-            "description": "Request rejected.",
+          "400": {
+            "description": "Request rejected, preconditions not met.",
             "content": {
               "application/json": {
                 "schema": {
@@ -83,38 +83,74 @@
                         "type": "invalid_request_error"
                       }
                     }
-                  },
-                  "task_not_found": {
-                    "summary": "Task not found",
-                    "value": {
-                      "error": {
-                        "code": "task_not_found",
-                        "message": "task not found",
-                        "type": "invalid_request_error"
-                      }
-                    }
                   }
                 }
               }
             }
           },
-          "5xx": {
-            "description": "Gateway or upstream internal error.",
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
-                "examples": {
-                  "upstream_delete_failed": {
-                    "summary": "Upstream DELETE failed",
-                    "value": {
-                      "error": {
-                        "code": "upstream_delete_failed",
-                        "message": "upstream returned 500: ...",
-                        "type": "upstream_error"
-                      }
-                    }
+                "example": {
+                  "error": {
+                    "code": "access_denied",
+                    "message": "invalid token",
+                    "type": "invalid_request_error"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task does not exist, or does not belong to the current account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "task_not_found",
+                    "message": "task not found",
+                    "type": "invalid_request_error"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal gateway error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "upstream_delete_failed",
+                    "message": "upstream returned 500: ...",
+                    "type": "upstream_error"
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Gateway failed to reach upstream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "upstream_delete_failed",
+                    "message": "upstream returned 502: ...",
+                    "type": "upstream_error"
                   }
                 }
               }
@@ -168,7 +204,7 @@
             "properties": {
               "code": {
                 "type": "string",
-                "description": "Error code, e.g. `task_not_queueing`, `unsupported_platform`, `task_not_found`."
+                "description": "Error code, e.g. `upstream_delete_failed`, `task_not_queueing`."
               },
               "message": {
                 "type": "string",
@@ -176,7 +212,7 @@
               },
               "type": {
                 "type": "string",
-                "description": "Error type, e.g. `invalid_request_error`."
+                "description": "Error type, e.g. `upstream_error`, `invalid_request_error`."
               }
             }
           }
