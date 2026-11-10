@@ -43,33 +43,21 @@
         ],
         "responses": {
           "200": {
-            "description": "取消成功。网关原样透传上游 DELETE 的状态码与响应体。",
+            "description": "取消成功。",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CancelVideoTaskResponse"
                 },
-                "examples": {
-                  "byteplus_cancelled": {
-                    "summary": "BytePlus 取消成功",
-                    "value": {
-                      "id": "upstream_task_id",
-                      "status": "cancelled"
-                    }
-                  },
-                  "minimax_cancelled": {
-                    "summary": "MiniMax H3 取消成功",
-                    "value": {
-                      "action": "cancel",
-                      "status": "cancelled"
-                    }
-                  }
+                "example": {
+                  "task_id": "task_20260101xxxx",
+                  "status": "cancelled"
                 }
               }
             }
           },
-          "400": {
-            "description": "前置条件不满足，网关自行组装错误响应，不会触达上游 DELETE。",
+          "4xx": {
+            "description": "请求被拒绝。",
             "content": {
               "application/json": {
                 "schema": {
@@ -96,50 +84,6 @@
                       }
                     }
                   },
-                  "invalid_request": {
-                    "summary": "请求参数无效",
-                    "value": {
-                      "error": {
-                        "code": "invalid_request",
-                        "message": "task_id is required",
-                        "type": "invalid_request_error"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "鉴权失败，例如未提供令牌或令牌无效。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "unauthorized": {
-                    "summary": "未授权",
-                    "value": {
-                      "error": {
-                        "code": "access_denied",
-                        "message": "无效的令牌",
-                        "type": "invalid_request_error"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "任务不存在、不属于当前账号，或查询上游状态时上游返回 404。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
                   "task_not_found": {
                     "summary": "任务不存在",
                     "value": {
@@ -149,88 +93,26 @@
                         "type": "invalid_request_error"
                       }
                     }
-                  },
-                  "upstream_task_not_found": {
-                    "summary": "上游任务不存在",
-                    "value": {
-                      "error": {
-                        "code": "upstream_task_not_found",
-                        "message": "upstream task not found",
-                        "type": "invalid_request_error"
-                      }
-                    }
                   }
                 }
               }
             }
           },
-          "500": {
-            "description": "网关内部处理失败，例如查询本地任务或渠道信息失败。",
+          "5xx": {
+            "description": "网关或上游内部错误。",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
                 "examples": {
-                  "db_error": {
-                    "summary": "查询本地任务失败",
+                  "upstream_delete_failed": {
+                    "summary": "上游 DELETE 失败",
                     "value": {
                       "error": {
-                        "code": "db_error",
-                        "message": "failed to query task",
-                        "type": "invalid_request_error"
-                      }
-                    }
-                  },
-                  "channel_not_found": {
-                    "summary": "渠道配置缺失",
-                    "value": {
-                      "error": {
-                        "code": "channel_not_found",
-                        "message": "channel not found",
-                        "type": "invalid_request_error"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "网关访问上游时发生网络故障。请求可能未成功发出，客户端可主动重试。",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "examples": {
-                  "upstream_query_failed": {
-                    "summary": "查询上游状态失败",
-                    "value": {
-                      "error": {
-                        "code": "upstream_query_failed",
-                        "message": "failed to query upstream task status",
-                        "type": "invalid_request_error"
-                      }
-                    }
-                  },
-                  "upstream_request_failed": {
-                    "summary": "上游 DELETE 请求失败",
-                    "value": {
-                      "error": {
-                        "code": "upstream_request_failed",
-                        "message": "failed to request upstream cancellation",
-                        "type": "invalid_request_error"
-                      }
-                    }
-                  },
-                  "upstream_read_failed": {
-                    "summary": "读取上游响应失败",
-                    "value": {
-                      "error": {
-                        "code": "upstream_read_failed",
-                        "message": "failed to read upstream response",
-                        "type": "invalid_request_error"
+                        "code": "upstream_delete_failed",
+                        "message": "upstream returned 500: ...",
+                        "type": "upstream_error"
                       }
                     }
                   }
@@ -259,30 +141,24 @@
     "schemas": {
       "CancelVideoTaskResponse": {
         "type": "object",
-        "description": "取消结果由上游原样返回，不同渠道字段略有差异。",
+        "description": "取消成功的网关响应。",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "上游任务 ID（BytePlus）。"
-          },
           "task_id": {
             "type": "string",
-            "description": "上游任务 ID（MiniMax H3）。"
-          },
-          "action": {
-            "type": "string",
-            "description": "执行的操作（MiniMax H3），例如 `cancel`。"
+            "description": "被取消的任务 ID。"
           },
           "status": {
             "type": "string",
-            "description": "操作结果：`cancelled`（取消成功）或 `deleted`（记录已删除）。",
+            "description": "任务终态，固定为 `cancelled`。",
             "enum": [
-              "cancelled",
-              "deleted"
+              "cancelled"
             ]
           }
         },
-        "additionalProperties": true
+        "required": [
+          "task_id",
+          "status"
+        ]
       },
       "ErrorResponse": {
         "type": "object",
