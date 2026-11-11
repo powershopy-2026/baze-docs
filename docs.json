@@ -25,7 +25,8 @@
                   "en/guides/seedance2-quick-start",
                   "en/guides/vercel-ai-sdk",
                   "en/guides/goose",
-                  "en/guides/powertokens-cli"
+                  "en/guides/powertokens-cli",
+                  "en/guides/async-task-polling-429-5xx"
                 ]
               }
             ]
