@@ -25,7 +25,8 @@
                   "en/guides/seedance2-quick-start",
                   "en/guides/vercel-ai-sdk",
                   "en/guides/goose",
-                  "en/guides/powertokens-cli"
+                  "en/guides/powertokens-cli",
+                  "en/guides/async-task-polling-429-5xx"
                 ]
               }
             ]
@@ -324,7 +325,8 @@
                     ]
                   },
                   "en/zmodelVideo/minimax/download-video-file",
-                  "en/zmodelVideo/minimax/query-video-status"
+                  "en/zmodelVideo/minimax/query-video-status",
+                  "en/zmodelVideo/minimax/cancel-video-task"
                 ]
               },
               {
@@ -1658,6 +1660,13 @@
             ]
           },
           {
+            "tab": "standalone:zmodelVideo/minimax/cancel-video-task",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/minimax/cancel-video-task"
+            ]
+          },
+          {
             "tab": "standalone:zmodelVideo/minimax/video-generation/download-video-file",
             "hidden": true,
             "pages": [
@@ -1793,7 +1802,8 @@
                   "zh-Hans/guides/seedance2-quick-start",
                   "zh-Hans/guides/vercel-ai-sdk",
                   "zh-Hans/guides/goose",
-                  "zh-Hans/guides/powertokens-cli"
+                  "zh-Hans/guides/powertokens-cli",
+                  "zh-Hans/guides/async-task-polling-429-5xx"
                 ]
               }
             ]
@@ -2093,7 +2103,8 @@
                     ]
                   },
                   "zh-Hans/zmodelVideo/minimax/download-video-file",
-                  "zh-Hans/zmodelVideo/minimax/query-video-status"
+                  "zh-Hans/zmodelVideo/minimax/query-video-status",
+                  "zh-Hans/zmodelVideo/minimax/cancel-video-task"
                 ]
               },
               {
@@ -3410,6 +3421,13 @@
             "hidden": true,
             "pages": [
               "zh-Hans/standalone/zmodelVideo/minimax/query-video-status"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/minimax/cancel-video-task",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/minimax/cancel-video-task"
             ]
           },
           {

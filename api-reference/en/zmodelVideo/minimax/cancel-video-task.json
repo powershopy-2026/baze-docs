@@ -1,0 +1,223 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Cancel Video Task",
+    "version": "1.0.0",
+    "description": "Unified asynchronous video task cancellation endpoint. BytePlus (Seedance and other ByteDance video models) and MiniMax Overseas H3 are currently supported.",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API server endpoint"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Hailuo Video",
+      "description": "Hailuo video task status query and cancellation"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}": {
+      "delete": {
+        "summary": "Cancel Video Task",
+        "description": "Cancel an asynchronous video task that is still queued. BytePlus (Seedance series) and MiniMax Overseas H3 are currently supported.",
+        "operationId": "cancelVideoTask",
+        "tags": [
+          "Hailuo Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Public task ID to cancel. This is the gateway task ID (`tasks.task_id`), not the upstream `provider_task_id`. Only tasks created by the current account can be cancelled."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cancellation succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelVideoTaskResponse"
+                },
+                "example": {
+                  "task_id": "task_20260101xxxx",
+                  "status": "cancelled"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request rejected, preconditions not met.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "task_not_queueing": {
+                    "summary": "Upstream task is not queued",
+                    "value": {
+                      "error": {
+                        "code": "task_not_queueing",
+                        "message": "upstream task status is running, only queued tasks can be cancelled",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "unsupported_platform": {
+                    "summary": "Channel does not support cancellation",
+                    "value": {
+                      "error": {
+                        "code": "unsupported_platform",
+                        "message": "task cancellation is not supported for this platform",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed, e.g. missing or invalid token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "access_denied",
+                    "message": "invalid token",
+                    "type": "invalid_request_error"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task does not exist, or does not belong to the current account.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "task_not_found",
+                    "message": "task not found",
+                    "type": "invalid_request_error"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal gateway error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "upstream_delete_failed",
+                    "message": "upstream returned 500: ...",
+                    "type": "upstream_error"
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Gateway failed to reach upstream.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "upstream_delete_failed",
+                    "message": "upstream returned 502: ...",
+                    "type": "upstream_error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "CancelVideoTaskResponse": {
+        "type": "object",
+        "description": "Gateway response on successful cancellation.",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "ID of the cancelled task."
+          },
+          "status": {
+            "type": "string",
+            "description": "Terminal status of the task, fixed as `cancelled`.",
+            "enum": [
+              "cancelled"
+            ]
+          }
+        },
+        "required": [
+          "task_id",
+          "status"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Error code, e.g. `upstream_delete_failed`, `task_not_queueing`."
+              },
+              "message": {
+                "type": "string",
+                "description": "Error message."
+              },
+              "type": {
+                "type": "string",
+                "description": "Error type, e.g. `upstream_error`, `invalid_request_error`."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

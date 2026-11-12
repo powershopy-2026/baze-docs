@@ -1,0 +1,58 @@
+---
+title: "Async Task Polling: 429 / 5xx Handling Convention"
+description: "How to handle 429 rate limits and 5xx transient failures when polling async task status endpoints."
+---
+
+This document defines the expected behavior of asynchronous task (video, image generation, etc.) status query endpoints under `429` and `5xx` responses, as a reference for client-side polling implementations.
+
+## Scope
+
+- `GET /v1/videos/:task_id`
+- `GET /kling/v1/videos/:action/:task_id`
+- `GET /kling/v1/images/:action/:task_id`
+- `GET /vidu/ent/v2/tasks/:task_id/creations`
+- `GET /minimax/v1/query/video_generation`
+- `GET /minimax/v2/query/video_generation/:task_id`
+- `GET /byteplus/api/v3/contents/generations/tasks/:id`
+
+## 429 Too Many Requests
+
+- Semantics: transient rate limiting (request frequency, concurrency, or per-group load) **does NOT mean the task has failed**.
+- `Retry-After`: baze platform guarantees that **all** `429` responses carry a `Retry-After` response header with an integer second value (default `5`). If the downstream provider has explicitly set this header, its value is preserved as-is.
+- Expected client handling:
+  1. Read `Retry-After`, wait for that many seconds, then issue the next query.
+  2. Do **not** treat `429` as a terminal task status, and do not count it towards any "task failure" counter.
+  3. If `Retry-After` is missing (e.g. stripped by an opaque proxy), fall back to a default `5` second backoff.
+
+## 5xx Internal Error / Gateway Error / Service Unavailable
+
+- Semantics: a transient failure in the platform or upstream provider. The task may still be running normally upstream, or it may have already failed — **a `5xx` response does not directly imply the task's terminal state**.
+- Expected handling: **fail fast or retry with a bounded limit**. Do not retry indefinitely.
+  1. Exponential backoff is recommended (e.g. `5s`, `10s`, `20s`… with an upper bound of `60s`).
+  2. Enforce a maximum retry count or total duration; once the threshold is exceeded, stop polling and surface a clear error to the user while preserving the `task_id` so it can be queried again later once the service recovers.
+  3. Do **not** keep retrying forever just because you did not receive a `status` field — the absence of a status is not the same as "still queued".
+- Response body convention: async task query endpoints still return a JSON response body on `5xx`, with a `status` field and error details to distinguish "endpoint error" from "task still queued", for example:
+
+```json
+{
+  "code": "query_failed",
+  "message": "query task failed",
+  "data": null,
+  "status": "running"
+}
+```
+
+- `Retry-After`: async task query endpoints also return `Retry-After` on `5xx` (default `5` seconds), but this header is **globally guaranteed only for `429`**. Clients should not rely on `5xx` responses always including it.
+
+## Other 4xx
+
+`4xx` responses other than `429` (e.g. `task_not_exist`, parameter errors, auth failures) are deterministic errors. Stop polling immediately and handle them according to the error details.
+
+## Guarantee Matrix
+
+| Status code | Implies task failure? | Response body includes `status` | `Retry-After` | Client recommendation |
+| --- | --- | --- | --- | --- |
+| `200` | No | Yes | No | Use `status` to decide whether to keep polling |
+| `429` | No | Depends on the endpoint | **Guaranteed present** | Wait according to `Retry-After` then retry |
+| `5xx` (async query endpoints) | No | Yes (`running`) | Returned, but not globally guaranteed | Bounded retries with exponential backoff; abort above threshold |
+| Other `4xx` | Yes (deterministic error) | No | No | Stop polling and handle the error |

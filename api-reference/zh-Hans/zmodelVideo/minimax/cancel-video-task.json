@@ -1,0 +1,223 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "取消视频任务",
+    "version": "1.0.0",
+    "description": "网关统一异步视频任务取消接口。当前支持 BytePlus（Seedance 等字节跳动视频模型）与 MiniMax Overseas H3 两个渠道。",
+    "license": {
+      "name": "Project License",
+      "url": "https://github.com/QuantumNous/new-api/blob/main/LICENSE"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Hailuo Video",
+      "description": "Hailuo 视频任务状态查询与取消"
+    }
+  ],
+  "paths": {
+    "/v1/videos/{task_id}": {
+      "delete": {
+        "summary": "取消视频任务",
+        "description": "取消仍在队列中的异步视频任务。当前支持 BytePlus（Seedance 系列）与 MiniMax Overseas H3 两个渠道。",
+        "operationId": "cancelVideoTask",
+        "tags": [
+          "Hailuo Video"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "待取消的任务 ID。必须是本网关公开的任务 ID（`tasks.task_id`），不是上游 `provider_task_id`。只能取消当前账号创建的任务"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "取消成功。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelVideoTaskResponse"
+                },
+                "example": {
+                  "task_id": "task_20260101xxxx",
+                  "status": "cancelled"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求被拒绝，前置条件不满足。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "task_not_queueing": {
+                    "summary": "上游任务非队列中",
+                    "value": {
+                      "error": {
+                        "code": "task_not_queueing",
+                        "message": "upstream task status is running, only queued tasks can be cancelled",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  },
+                  "unsupported_platform": {
+                    "summary": "渠道不支持取消",
+                    "value": {
+                      "error": {
+                        "code": "unsupported_platform",
+                        "message": "task cancellation is not supported for this platform",
+                        "type": "invalid_request_error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "鉴权失败，例如未提供令牌或令牌无效。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "access_denied",
+                    "message": "invalid token",
+                    "type": "invalid_request_error"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "任务不存在，或不属于当前账号。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "task_not_found",
+                    "message": "task not found",
+                    "type": "invalid_request_error"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "网关内部错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "upstream_delete_failed",
+                    "message": "upstream returned 500: ...",
+                    "type": "upstream_error"
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "网关访问上游失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": {
+                    "code": "upstream_delete_failed",
+                    "message": "upstream returned 502: ...",
+                    "type": "upstream_error"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "CancelVideoTaskResponse": {
+        "type": "object",
+        "description": "取消成功的网关响应。",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "被取消的任务 ID。"
+          },
+          "status": {
+            "type": "string",
+            "description": "任务终态，固定为 `cancelled`。",
+            "enum": [
+              "cancelled"
+            ]
+          }
+        },
+        "required": [
+          "task_id",
+          "status"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "错误码，例如 `upstream_delete_failed`、`task_not_queueing`。"
+              },
+              "message": {
+                "type": "string",
+                "description": "错误说明。"
+              },
+              "type": {
+                "type": "string",
+                "description": "错误类型，例如 `upstream_error`、`invalid_request_error`。"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
