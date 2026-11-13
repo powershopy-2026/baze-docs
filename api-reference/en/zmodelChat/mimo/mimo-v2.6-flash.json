@@ -337,6 +337,133 @@
                       "type": "enabled"
                     }
                   }
+                },
+                "multi_turn_chat": {
+                  "summary": "Multi-turn conversation with history context",
+                  "value": {
+                    "model": "mimo-v2.6-flash",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise and accurate assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Introduce typical use cases of vector databases."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "Vector databases are widely used in semantic search, recommendation systems, and RAG knowledge bases: data is encoded into vectors, then the most relevant results are recalled by similarity."
+                      },
+                      {
+                        "role": "user",
+                        "content": "What role does it play in RAG?"
+                      }
+                    ],
+                    "stream": false
+                  }
+                },
+                "tool_result_continuation": {
+                  "summary": "Tool result continuation (send tool output back)",
+                  "value": {
+                    "model": "mimo-v2.6-flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Check today's weather in Beijing for me."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "",
+                        "tool_calls": [
+                          {
+                            "id": "call_get_weather_001",
+                            "type": "function",
+                            "function": {
+                              "name": "get_weather",
+                              "arguments": "{\"city\":\"Beijing\"}"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "role": "tool",
+                        "tool_call_id": "call_get_weather_001",
+                        "content": "Beijing: sunny today, 18-26°C, wind level 2, excellent air quality."
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "根据城市名查询实时天气 / Query real-time weather by city name",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "城市名称 / City name"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": false
+                  }
+                },
+                "image_input_url": {
+                  "summary": "Image input via URL",
+                  "value": {
+                    "model": "mimo-v2.6-flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Describe the main content of this image."
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example.com/sample.jpg"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "stream": false
+                  }
+                },
+                "image_input_base64": {
+                  "summary": "Image input via Base64",
+                  "value": {
+                    "model": "mimo-v2.6-flash",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Recognize the text in this Base64-encoded image."
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQ..."
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "stream": false
+                  }
                 }
               }
             }
@@ -377,7 +504,9 @@
                           "reasoning_tokens": 0
                         },
                         "prompt_tokens_details": null
-                      }
+                      },
+                      "requested_model": "mimo-v2.6-flash",
+                      "resolved_model": "mimo-v2.6-flash"
                     }
                   },
                   "Function Call": {
@@ -416,7 +545,9 @@
                           "reasoning_tokens": 161
                         },
                         "prompt_tokens_details": null
-                      }
+                      },
+                      "requested_model": "mimo-v2.6-flash",
+                      "resolved_model": "mimo-v2.6-flash"
                     }
                   },
                   "Web Search": {
@@ -469,7 +600,9 @@
                           "tool_usage": 3,
                           "page_usage": 2
                         }
-                      }
+                      },
+                      "requested_model": "mimo-v2.6-flash",
+                      "resolved_model": "mimo-v2.6-flash"
                     }
                   },
                   "Image Input": {
@@ -502,7 +635,9 @@
                           "cached_tokens": 5,
                           "image_tokens": 1024
                         }
-                      }
+                      },
+                      "requested_model": "mimo-v2.6-flash",
+                      "resolved_model": "mimo-v2.6-flash"
                     }
                   },
                   "Audio Input": {
@@ -535,7 +670,9 @@
                           "audio_tokens": 25,
                           "cached_tokens": 45
                         }
-                      }
+                      },
+                      "requested_model": "mimo-v2.6-flash",
+                      "resolved_model": "mimo-v2.6-flash"
                     }
                   },
                   "Video Input": {
@@ -569,7 +706,9 @@
                           "cached_tokens": 45,
                           "video_tokens": 1144
                         }
-                      }
+                      },
+                      "requested_model": "mimo-v2.6-flash",
+                      "resolved_model": "mimo-v2.6-flash"
                     }
                   },
                   "Multimodal Input": {
@@ -604,7 +743,9 @@
                           "image_tokens": 1024,
                           "video_tokens": 1144
                         }
-                      }
+                      },
+                      "requested_model": "mimo-v2.6-flash",
+                      "resolved_model": "mimo-v2.6-flash"
                     }
                   },
                   "Structured Output": {
@@ -633,7 +774,9 @@
                           "reasoning_tokens": 0
                         },
                         "prompt_tokens_details": null
-                      }
+                      },
+                      "requested_model": "mimo-v2.6-flash",
+                      "resolved_model": "mimo-v2.6-flash"
                     }
                   },
                   "Deep Thinking": {
@@ -663,7 +806,9 @@
                           "reasoning_tokens": 121
                         },
                         "prompt_tokens_details": null
-                      }
+                      },
+                      "requested_model": "mimo-v2.6-flash",
+                      "resolved_model": "mimo-v2.6-flash"
                     }
                   }
                 }
@@ -676,8 +821,14 @@
                   "Streaming Response": {
                     "summary": "Streaming response with SSE events",
                     "value": "data: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\",\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":null,\"matched_stop\":null}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\"Okay, the user\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" is asking\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":null,\"role\":null,\"tool_calls\":null,\"reasoning_content\":\" me\"},\"finish_reason\":null,\"index\":0}],\"created\":1776849042,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\n...\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\"'m ready\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[{\"delta\":{\"content\":\" to help!\",\"role\":null,\"tool_calls\":null,\"reasoning_content\":null},\"finish_reason\":null,\"index\":0}],\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"object\":\"chat.completion.chunk\",\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":null,\"content\":null,\"reasoning_content\":null,\"tool_calls\":null},\"logprobs\":null,\"finish_reason\":\"stop\",\"matched_stop\":151645}],\"usage\":null}\n\ndata: {\"id\":\"7ccecae1cc6445f395e0d41c85115663\",\"choices\":[],\"created\":1776849044,\"model\":\"mimo-v2.6-pro\",\"object\":\"chat.completion.chunk\",\"usage\":{\"completion_tokens\":123,\"prompt_tokens\":55,\"total_tokens\":178,\"completion_tokens_details\":{\"reasoning_tokens\":71},\"prompt_tokens_details\":null}}\n\ndata: [DONE]"
+                  },
+                  "stream_interrupted": {
+                    "summary": "Usage stays unknown when the stream is interrupted (never 0)",
+                    "description": "Client disconnected before the stream finished: received chunks contain no final usage and no closing usage chunk will arrive; usage stays unknown.",
+                    "value": "data: {\"id\":\"chatcmpl_interrupted_001\",\"object\":\"chat.completion.chunk\",\"created\":1763000000,\"model\":\"mimo-v2.6-flash\",\"requested_model\":\"mimo-v2.6-flash\",\"resolved_model\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"…\"},\"finish_reason\":null}]}\n\n"
                   }
-                }
+                },
+                "description": "Streaming chunks also carry `requested_model` and `resolved_model`. If the client disconnects before the stream completes, the platform stops forwarding chunks; without a full usage report, `usage` stays unknown (never filled with `0`). Do not count omitted usage as zero cost."
               }
             }
           },
@@ -697,6 +848,28 @@
                         "type": "invalid_request_error",
                         "param": "messages",
                         "code": "bad_request_body"
+                      }
+                    }
+                  },
+                  "unsupported_parameter": {
+                    "summary": "Explicit error when passing an unsupported parameter (never silently ignored)",
+                    "value": {
+                      "error": {
+                        "message": "Model mimo-v2.6-flash does not support the parameter `reasoning_effort`. The platform never silently ignores unsupported parameters; please remove it and retry.",
+                        "type": "invalid_request_error",
+                        "param": "reasoning_effort",
+                        "code": "unsupported_parameter"
+                      }
+                    }
+                  },
+                  "json_schema_not_supported": {
+                    "summary": "Explicit error when json_schema is not supported",
+                    "value": {
+                      "error": {
+                        "message": "Model mimo-v2.6-flash does not support `response_format.type=json_schema`. Use `json_object` instead, or remove the parameter.",
+                        "type": "invalid_request_error",
+                        "param": "response_format",
+                        "code": "json_schema_not_supported"
                       }
                     }
                   }
@@ -1387,6 +1560,15 @@
           },
           "usage": {
             "$ref": "#/components/schemas/Usage"
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "The original value of the `model` field in the request received by the platform, i.e. the requested model."
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "The model actually executed. Returns `null` when the upstream provider does not disclose the resolved model; the platform never fabricates this value."
           }
         }
       },
@@ -1716,7 +1898,7 @@
       },
       "Usage": {
         "type": "object",
-        "description": "Usage information for this chat completion request.",
+        "description": "Usage information for this chat completion request.\n\nBilling: both input and output tokens are billed; cache-hit tokens are billed at cache rates; reasoning (chain-of-thought) tokens are billed as output. If a streaming request is interrupted before completion and no full usage is obtained, `usage` stays unknown (fields omitted) and is never filled with `0`.",
         "properties": {
           "prompt_tokens": {
             "type": "integer",

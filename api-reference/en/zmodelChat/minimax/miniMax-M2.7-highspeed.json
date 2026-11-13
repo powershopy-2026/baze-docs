@@ -64,6 +64,31 @@
                     ],
                     "stream": true
                   }
+                },
+                "multi_turn_chat": {
+                  "summary": "Multi-turn conversation with history context",
+                  "value": {
+                    "model": "MiniMax-M2.7-highspeed",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise and accurate assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Introduce typical use cases of vector databases."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "Vector databases are widely used in semantic search, recommendation systems, and RAG knowledge bases: data is encoded into vectors, then the most relevant results are recalled by similarity."
+                      },
+                      {
+                        "role": "user",
+                        "content": "What role does it play in RAG?"
+                      }
+                    ],
+                    "stream": false
+                  }
                 }
               }
             }
@@ -82,6 +107,14 @@
                 "schema": {
                   "type": "string",
                   "description": "SSE data stream. Each `data:` event can be parsed as an OpenAI Chat Completions Chunk; the stream typically ends with `data: [DONE]`."
+                },
+                "description": "Streaming chunks also carry `requested_model` and `resolved_model`. If the client disconnects before the stream completes, the platform stops forwarding chunks; without a full usage report, `usage` stays unknown (never filled with `0`). Do not count omitted usage as zero cost.",
+                "examples": {
+                  "stream_interrupted": {
+                    "summary": "Usage stays unknown when the stream is interrupted (never 0)",
+                    "description": "Client disconnected before the stream finished: received chunks contain no final usage and no closing usage chunk will arrive; usage stays unknown.",
+                    "value": "data: {\"id\":\"chatcmpl_interrupted_001\",\"object\":\"chat.completion.chunk\",\"created\":1763000000,\"model\":\"MiniMax-M2.7-highspeed\",\"requested_model\":\"MiniMax-M2.7-highspeed\",\"resolved_model\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"…\"},\"finish_reason\":null}]}\n\n"
+                  }
                 }
               }
             }
@@ -92,6 +125,30 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unsupported_parameter": {
+                    "summary": "Explicit error when passing an unsupported parameter (never silently ignored)",
+                    "value": {
+                      "error": {
+                        "message": "Model MiniMax-M2.7-highspeed does not support the parameter `reasoning_effort`. The platform never silently ignores unsupported parameters; please remove it and retry.",
+                        "type": "invalid_request_error",
+                        "param": "reasoning_effort",
+                        "code": "unsupported_parameter"
+                      }
+                    }
+                  },
+                  "json_schema_not_supported": {
+                    "summary": "Explicit error when json_schema is not supported",
+                    "value": {
+                      "error": {
+                        "message": "Model MiniMax-M2.7-highspeed does not support the `response_format` parameter (including `json_schema`); the platform never silently ignores it. Please remove it and retry.",
+                        "type": "invalid_request_error",
+                        "param": "response_format",
+                        "code": "json_schema_not_supported"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -205,7 +262,17 @@
             }
           },
           "usage": {
-            "type": "object"
+            "type": "object",
+            "description": "Billing: both input and output tokens are billed. This model does not expose cache/reasoning token details; usage is subject to the platform bill. If a streaming request is interrupted before completion and no full usage is obtained, `usage` stays unknown (fields omitted) and is never filled with `0`."
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "The original value of the `model` field in the request received by the platform, i.e. the requested model."
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "The model actually executed. Returns `null` when the upstream provider does not disclose the resolved model; the platform never fabricates this value."
           }
         }
       },

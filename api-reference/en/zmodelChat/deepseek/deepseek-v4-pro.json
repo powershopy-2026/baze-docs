@@ -71,6 +71,99 @@
                     "logprobs": false,
                     "top_logprobs": null
                   }
+                },
+                "multi_turn_chat": {
+                  "summary": "Multi-turn conversation with history context",
+                  "value": {
+                    "model": "deepseek-v4-pro",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise and accurate assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Introduce typical use cases of vector databases."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "Vector databases are widely used in semantic search, recommendation systems, and RAG knowledge bases: data is encoded into vectors, then the most relevant results are recalled by similarity."
+                      },
+                      {
+                        "role": "user",
+                        "content": "What role does it play in RAG?"
+                      }
+                    ],
+                    "stream": false
+                  }
+                },
+                "tool_result_continuation": {
+                  "summary": "Tool result continuation (send tool output back)",
+                  "value": {
+                    "model": "deepseek-v4-pro",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Check today's weather in Beijing for me."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "",
+                        "tool_calls": [
+                          {
+                            "id": "call_get_weather_001",
+                            "type": "function",
+                            "function": {
+                              "name": "get_weather",
+                              "arguments": "{\"city\":\"Beijing\"}"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "role": "tool",
+                        "tool_call_id": "call_get_weather_001",
+                        "content": "Beijing: sunny today, 18-26°C, wind level 2, excellent air quality."
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "根据城市名查询实时天气 / Query real-time weather by city name",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "城市名称 / City name"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": false
+                  }
+                },
+                "reasoning_effort_switch": {
+                  "summary": "Reasoning effort level switch（high / max）",
+                  "value": {
+                    "model": "deepseek-v4-pro",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Explain idempotency in one sentence."
+                      }
+                    ],
+                    "reasoning_effort": "high",
+                    "stream": false
+                  }
                 }
               }
             }
@@ -117,7 +210,9 @@
                         "prompt_cache_hit_tokens": 0,
                         "prompt_cache_miss_tokens": 10
                       },
-                      "system_fingerprint": "fp_9954bca7_prod0820_fp8_kvcache_20260402"
+                      "system_fingerprint": "fp_9954bca7_prod0820_fp8_kvcache_20260402",
+                      "requested_model": "deepseek-v4-pro",
+                      "resolved_model": "deepseek-v4-pro"
                     }
                   }
                 }
@@ -131,8 +226,14 @@
                   "stream": {
                     "summary": "Streaming response chunk",
                     "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"deepseek-v4-pro\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                  },
+                  "stream_interrupted": {
+                    "summary": "Usage stays unknown when the stream is interrupted (never 0)",
+                    "description": "Client disconnected before the stream finished: received chunks contain no final usage and no closing usage chunk will arrive; usage stays unknown.",
+                    "value": "data: {\"id\":\"chatcmpl_interrupted_001\",\"object\":\"chat.completion.chunk\",\"created\":1763000000,\"model\":\"deepseek-v4-pro\",\"requested_model\":\"deepseek-v4-pro\",\"resolved_model\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"…\"},\"finish_reason\":null}]}\n\n"
                   }
-                }
+                },
+                "description": "Streaming chunks also carry `requested_model` and `resolved_model`. If the client disconnects before the stream completes, the platform stops forwarding chunks; without a full usage report, `usage` stays unknown (never filled with `0`). Do not count omitted usage as zero cost."
               }
             }
           },
@@ -152,6 +253,28 @@
                         "type": "invalid_request_error",
                         "param": "messages",
                         "code": "bad_request_body"
+                      }
+                    }
+                  },
+                  "unsupported_parameter": {
+                    "summary": "Explicit error when passing an unsupported parameter (never silently ignored)",
+                    "value": {
+                      "error": {
+                        "message": "Model deepseek-v4-pro does not support the parameter `enable_search`. The platform never silently ignores unsupported parameters; please remove it and retry.",
+                        "type": "invalid_request_error",
+                        "param": "enable_search",
+                        "code": "unsupported_parameter"
+                      }
+                    }
+                  },
+                  "json_schema_not_supported": {
+                    "summary": "Explicit error when json_schema is not supported",
+                    "value": {
+                      "error": {
+                        "message": "Model deepseek-v4-pro does not support `response_format.type=json_schema`. Use `json_object` instead, or remove the parameter.",
+                        "type": "invalid_request_error",
+                        "param": "response_format",
+                        "code": "json_schema_not_supported"
                       }
                     }
                   }
@@ -709,6 +832,15 @@
           },
           "usage": {
             "$ref": "#/components/schemas/Usage"
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "The original value of the `model` field in the request received by the platform, i.e. the requested model."
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "The model actually executed. Returns `null` when the upstream provider does not disclose the resolved model; the platform never fabricates this value."
           }
         }
       },
@@ -811,7 +943,7 @@
       },
       "Usage": {
         "type": "object",
-        "description": "Usage information for this chat completion request.",
+        "description": "Usage information for this chat completion request.\n\nBilling: both input and output tokens are billed; cache-hit tokens are billed at cache rates; reasoning (chain-of-thought) tokens are billed as output. If a streaming request is interrupted before completion and no full usage is obtained, `usage` stays unknown (fields omitted) and is never filled with `0`.",
         "properties": {
           "prompt_tokens": {
             "type": "integer",

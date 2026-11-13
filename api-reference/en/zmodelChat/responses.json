@@ -120,6 +120,39 @@
                       }
                     ]
                   }
+                },
+                "image_input_url": {
+                  "summary": "Image input via URL",
+                  "value": {
+                    "model": "seed-1-6-250915",
+                    "input": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Describe the main content of this image."
+                          },
+                          {
+                            "type": "input_image",
+                            "image_url": "https://example.com/sample.jpg"
+                          }
+                        ]
+                      }
+                    ],
+                    "stream": false
+                  }
+                },
+                "reasoning_effort_switch": {
+                  "summary": "Reasoning effort level switch（reasoning.effort）",
+                  "value": {
+                    "model": "seed-2-0-pro-260328",
+                    "input": "Explain idempotency in one sentence.",
+                    "reasoning": {
+                      "effort": "high"
+                    },
+                    "stream": false
+                  }
                 }
               }
             }
@@ -137,6 +170,14 @@
               "text/event-stream": {
                 "schema": {
                   "$ref": "#/components/schemas/ResponseStreamEvent"
+                },
+                "description": "Streaming chunks also carry `requested_model` and `resolved_model`. If the client disconnects before the stream completes, the platform stops forwarding chunks; without a full usage report, `usage` stays unknown (never filled with `0`). Do not count omitted usage as zero cost.",
+                "examples": {
+                  "stream_interrupted": {
+                    "summary": "Usage stays unknown when the stream is interrupted (never 0)",
+                    "description": "Client disconnected before the stream finished: received chunks contain no final usage and no closing usage chunk will arrive; usage stays unknown.",
+                    "value": "event: response.output_text.delta\ndata: {\"type\":\"response.output_text.delta\",\"item_id\":\"item_001\",\"output_index\":0,\"content_index\":0,\"delta\":\"…\"}\n"
+                  }
                 }
               }
             }
@@ -157,6 +198,28 @@
                         "type": "invalid_request_error",
                         "code": "bad_request_body",
                         "param": "input"
+                      }
+                    }
+                  },
+                  "unsupported_parameter": {
+                    "summary": "Explicit error when passing an unsupported parameter (never silently ignored)",
+                    "value": {
+                      "error": {
+                        "message": "The requested model does not support the parameter `reasoning_effort`. The platform never silently ignores unsupported parameters; please remove it and retry.",
+                        "type": "invalid_request_error",
+                        "param": "reasoning_effort",
+                        "code": "unsupported_parameter"
+                      }
+                    }
+                  },
+                  "json_schema_not_supported": {
+                    "summary": "Explicit error when json_schema is not supported",
+                    "value": {
+                      "error": {
+                        "message": "The requested model does not support the `response_format` parameter (including `json_schema`); the platform never silently ignores it. Please remove it and retry.",
+                        "type": "invalid_request_error",
+                        "param": "response_format",
+                        "code": "json_schema_not_supported"
                       }
                     }
                   }
@@ -1059,6 +1122,15 @@
             "type": "object",
             "nullable": true,
             "description": "Error object when generation fails; usually `null` on success."
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "The original value of the `model` field in the request received by the platform, i.e. the requested model."
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "The model actually executed. Returns `null` when the upstream provider does not disclose the resolved model; the platform never fabricates this value."
           }
         },
         "additionalProperties": true
@@ -1295,7 +1367,7 @@
       },
       "ResponseUsage": {
         "type": "object",
-        "description": "Token usage statistics. When tools, cache, OCR, or multimodal input are enabled, extra detail fields may be returned.",
+        "description": "Token usage statistics. When tools, cache, OCR, or multimodal input are enabled, extra detail fields may be returned.\n\nBilling: both input and output tokens are billed; cache-hit tokens are billed at cache rates; reasoning (chain-of-thought) tokens are billed as output. If a streaming request is interrupted before completion and no full usage is obtained, `usage` stays unknown (fields omitted) and is never filled with `0`.",
         "properties": {
           "input_tokens": {
             "type": "integer",

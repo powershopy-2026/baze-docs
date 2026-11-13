@@ -1,4 +1,4 @@
-{
+﻿{
   "openapi": "3.0.1",
   "info": {
     "title": "智谱对话补全",
@@ -95,6 +95,109 @@
                     "tool_choice": "auto",
                     "stream": true
                   }
+                },
+                "multi_turn_chat": {
+                  "summary": "多轮对话（携带历史上下文续聊）",
+                  "value": {
+                    "model": "glm-5.1",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是一个简洁、准确的中文助手。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "介绍一下向量数据库的典型使用场景。"
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "向量数据库常用于语义检索、推荐系统和 RAG 知识库：先把文本等数据编码为向量，再按相似度召回最相关的结果。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "那它在 RAG 中承担什么职责？"
+                      }
+                    ],
+                    "stream": false
+                  }
+                },
+                "tool_result_continuation": {
+                  "summary": "工具结果续轮（回传 tool 结果继续对话）",
+                  "value": {
+                    "model": "glm-5.1",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "帮我查一下北京今天的天气。"
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "",
+                        "tool_calls": [
+                          {
+                            "id": "call_get_weather_001",
+                            "type": "function",
+                            "function": {
+                              "name": "get_weather",
+                              "arguments": "{\"city\":\"Beijing\"}"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "role": "tool",
+                        "tool_call_id": "call_get_weather_001",
+                        "content": "北京今天晴，气温 18-26 度，风力 2 级，空气质量优。"
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "根据城市名查询实时天气 / Query real-time weather by city name",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "城市名称 / City name"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": false
+                  }
+                },
+                "image_input_url": {
+                  "summary": "图片 URL 输入",
+                  "value": {
+                    "model": "glm-5.1",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "请描述这张图片的主要内容。"
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://example.com/sample.jpg"
+                            }
+                          }
+                        ]
+                      }
+                    ],
+                    "stream": false
+                  }
                 }
               }
             }
@@ -134,7 +237,9 @@
                         "prompt_tokens_details": {
                           "cached_tokens": 0
                         }
-                      }
+                      },
+                      "requested_model": "glm-5.1",
+                      "resolved_model": "glm-5.1"
                     }
                   }
                 }
@@ -148,8 +253,14 @@
                   "stream": {
                     "summary": "流式响应片段",
                     "value": "data: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-5.1\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"今天天气\"},\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl_zhipu_123\",\"object\":\"chat.completion.chunk\",\"created\":1775174400,\"model\":\"glm-5.1\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"晴，适合外出。\"},\"finish_reason\":\"stop\"}]}\n\ndata: [DONE]\n"
+                  },
+                  "stream_interrupted": {
+                    "summary": "流被中断时 usage 保持未知（不填 0）",
+                    "description": "客户端在流完成前断开连接：已收到的 chunk 不含最终 usage，且不会收到收尾的 usage chunk，用量保持未知。",
+                    "value": "data: {\"id\":\"chatcmpl_interrupted_001\",\"object\":\"chat.completion.chunk\",\"created\":1763000000,\"model\":\"glm-5.1\",\"requested_model\":\"glm-5.1\",\"resolved_model\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"…\"},\"finish_reason\":null}]}\n\n"
                   }
-                }
+                },
+                "description": "流式 chunk 同样携带 `requested_model` 与 `resolved_model` 字段。若客户端在流完成前断开连接，平台将停止转发后续 chunk；此时未收到完整用量，`usage` 保持未知（不会以 `0` 填充），请勿将缺省用量计入成本。"
               }
             }
           },
@@ -169,6 +280,28 @@
                         "type": "invalid_request_error",
                         "param": "messages",
                         "code": "bad_request_body"
+                      }
+                    }
+                  },
+                  "unsupported_parameter": {
+                    "summary": "传入模型不支持的参数时显式报错（不静默忽略）",
+                    "value": {
+                      "error": {
+                        "message": "模型 glm-5.1 不支持参数 `reasoning_effort`。平台不会静默忽略不支持的参数，请移除该参数后重试。",
+                        "type": "invalid_request_error",
+                        "param": "reasoning_effort",
+                        "code": "unsupported_parameter"
+                      }
+                    }
+                  },
+                  "json_schema_not_supported": {
+                    "summary": "不支持 json_schema 时显式报错",
+                    "value": {
+                      "error": {
+                        "message": "模型 glm-5.1 不支持 `response_format` 参数（含 `json_schema`），平台不会静默忽略该参数，请移除后重试。",
+                        "type": "invalid_request_error",
+                        "param": "response_format",
+                        "code": "json_schema_not_supported"
                       }
                     }
                   }
@@ -519,6 +652,15 @@
           },
           "usage": {
             "$ref": "#/components/schemas/Usage"
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "平台收到的请求中 `model` 字段的原始值，即我方请求的模型。"
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "实际执行的模型。当上游渠道未披露实际模型时返回 `null`，平台不会伪造该值。"
           }
         }
       },
@@ -610,7 +752,7 @@
       },
       "Usage": {
         "type": "object",
-        "description": "Token 使用统计。",
+        "description": "Token 使用统计。\n\n计费口径：输入与输出 token 均计费；缓存命中部分按缓存价计费；推理（思维链）token 按输出计费。流式请求在完成前被中断且未取得完整用量时，`usage` 保持未知状态（相关字段缺省），不会以 `0` 填充。",
         "properties": {
           "prompt_tokens": {
             "type": "integer",

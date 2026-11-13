@@ -1,4 +1,4 @@
-{
+﻿{
   "openapi": "3.0.1",
   "info": {
     "title": "Claude 消息接口",
@@ -67,6 +67,125 @@
                     ],
                     "max_tokens": 100
                   }
+                },
+                "reasoning_effort_switch": {
+                  "summary": "推理强度档位切换（high / max）",
+                  "value": {
+                    "model": "seed-2-0-pro-260328",
+                    "max_tokens": 1024,
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "用一句话解释什么是幂等性。"
+                      }
+                    ],
+                    "reasoning_effort": "high"
+                  }
+                },
+                "image_input_url": {
+                  "summary": "图片 URL 输入",
+                  "value": {
+                    "model": "seed-1-6-250915",
+                    "max_tokens": 1024,
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "请描述这张图片的主要内容。"
+                          },
+                          {
+                            "type": "image",
+                            "source": {
+                              "type": "url",
+                              "url": "https://example.com/sample.jpg"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "image_input_base64": {
+                  "summary": "图片 Base64 输入",
+                  "value": {
+                    "model": "seed-1-6-250915",
+                    "max_tokens": 1024,
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "请识别这张 Base64 编码图片中的文字。"
+                          },
+                          {
+                            "type": "image",
+                            "source": {
+                              "type": "base64",
+                              "media_type": "image/jpeg",
+                              "data": "/9j/4AAQSkZJRgABAQ..."
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "tool_result_continuation": {
+                  "summary": "工具结果续轮（回传 tool 结果继续对话）",
+                  "value": {
+                    "model": "seed-1-6-250915",
+                    "max_tokens": 1024,
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "帮我查一下北京今天的天气。"
+                      },
+                      {
+                        "role": "assistant",
+                        "content": [
+                          {
+                            "type": "tool_use",
+                            "id": "toolu_weather_001",
+                            "name": "get_weather",
+                            "input": {
+                              "city": "Beijing"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "tool_result",
+                            "tool_use_id": "toolu_weather_001",
+                            "content": "北京今天晴，气温 18-26 度，风力 2 级，空气质量优。"
+                          }
+                        ]
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "name": "get_weather",
+                        "description": "根据城市名查询实时天气 / Query real-time weather by city name",
+                        "input_schema": {
+                          "type": "object",
+                          "properties": {
+                            "city": {
+                              "type": "string",
+                              "description": "城市名称 / City name"
+                            }
+                          },
+                          "required": [
+                            "city"
+                          ]
+                        }
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -85,6 +204,14 @@
                 "schema": {
                   "type": "string",
                   "description": "当 `stream` 为 true 时的 Claude 风格 SSE 流。"
+                },
+                "description": "流式 chunk 同样携带 `requested_model` 与 `resolved_model` 字段。若客户端在流完成前断开连接，平台将停止转发后续 chunk；此时未收到完整用量，`usage` 保持未知（不会以 `0` 填充），请勿将缺省用量计入成本。",
+                "examples": {
+                  "stream_interrupted": {
+                    "summary": "流被中断时 usage 保持未知（不填 0）",
+                    "description": "客户端在流完成前断开连接：已收到的 chunk 不含最终 usage，且不会收到收尾的 usage chunk，用量保持未知。",
+                    "value": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_interrupted_001\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"seed-1-6-250915\",\"requested_model\":\"seed-1-6-250915\",\"resolved_model\":null,\"content\":[],\"stop_reason\":null,\"usage\":{\"input_tokens\":128,\"output_tokens\":1}}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"…\"}}\n"
+                  }
                 }
               }
             }
@@ -95,6 +222,28 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ClaudeErrorResponse"
+                },
+                "examples": {
+                  "unsupported_parameter": {
+                    "summary": "传入模型不支持的参数时显式报错（不静默忽略）",
+                    "value": {
+                      "type": "error",
+                      "error": {
+                        "type": "invalid_request_error",
+                        "message": "请求中的模型不支持参数 `frequency_penalty`。平台不会静默忽略不支持的参数，请移除该参数后重试。"
+                      }
+                    }
+                  },
+                  "json_schema_not_supported": {
+                    "summary": "不支持 json_schema 时显式报错",
+                    "value": {
+                      "type": "error",
+                      "error": {
+                        "type": "invalid_request_error",
+                        "message": "请求中的模型不支持 `response_format` 参数（含 `json_schema`），平台不会静默忽略该参数，请移除后重试。"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -755,7 +904,7 @@
       },
       "UsageStats": {
         "type": "object",
-        "description": "Token 用量统计。流式调用中，message_start 事件的 usage 仅包含 input_tokens 和 output_tokens；完整 4 个字段在 message_delta 事件中返回。",
+        "description": "Token 用量统计。流式调用中，message_start 事件的 usage 仅包含 input_tokens 和 output_tokens；完整 4 个字段在 message_delta 事件中返回。\n\n计费口径：输入与输出 token 均计费；缓存命中部分按缓存价计费；推理（思维链）token 按输出计费。流式请求在完成前被中断且未取得完整用量时，`usage` 保持未知状态（相关字段缺省），不会以 `0` 填充。",
         "properties": {
           "input_tokens": {
             "type": "integer",
@@ -833,6 +982,15 @@
           },
           "usage": {
             "$ref": "#/components/schemas/UsageStats"
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "平台收到的请求中 `model` 字段的原始值，即我方请求的模型。"
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "实际执行的模型。当上游渠道未披露实际模型时返回 `null`，平台不会伪造该值。"
           }
         },
         "description": "Claude 兼容消息响应。"

@@ -67,6 +67,125 @@
                     ],
                     "max_tokens": 100
                   }
+                },
+                "reasoning_effort_switch": {
+                  "summary": "Reasoning effort level switch（high / max）",
+                  "value": {
+                    "model": "seed-2-0-pro-260328",
+                    "max_tokens": 1024,
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Explain idempotency in one sentence."
+                      }
+                    ],
+                    "reasoning_effort": "high"
+                  }
+                },
+                "image_input_url": {
+                  "summary": "Image input via URL",
+                  "value": {
+                    "model": "seed-1-6-250915",
+                    "max_tokens": 1024,
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Describe the main content of this image."
+                          },
+                          {
+                            "type": "image",
+                            "source": {
+                              "type": "url",
+                              "url": "https://example.com/sample.jpg"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "image_input_base64": {
+                  "summary": "Image input via Base64",
+                  "value": {
+                    "model": "seed-1-6-250915",
+                    "max_tokens": 1024,
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "Recognize the text in this Base64-encoded image."
+                          },
+                          {
+                            "type": "image",
+                            "source": {
+                              "type": "base64",
+                              "media_type": "image/jpeg",
+                              "data": "/9j/4AAQSkZJRgABAQ..."
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "tool_result_continuation": {
+                  "summary": "Tool result continuation (send tool output back)",
+                  "value": {
+                    "model": "seed-1-6-250915",
+                    "max_tokens": 1024,
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Check today's weather in Beijing for me."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": [
+                          {
+                            "type": "tool_use",
+                            "id": "toolu_weather_001",
+                            "name": "get_weather",
+                            "input": {
+                              "city": "Beijing"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "tool_result",
+                            "tool_use_id": "toolu_weather_001",
+                            "content": "Beijing: sunny today, 18-26°C, wind level 2, excellent air quality."
+                          }
+                        ]
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "name": "get_weather",
+                        "description": "根据城市名查询实时天气 / Query real-time weather by city name",
+                        "input_schema": {
+                          "type": "object",
+                          "properties": {
+                            "city": {
+                              "type": "string",
+                              "description": "城市名称 / City name"
+                            }
+                          },
+                          "required": [
+                            "city"
+                          ]
+                        }
+                      }
+                    ]
+                  }
                 }
               }
             }
@@ -85,6 +204,14 @@
                 "schema": {
                   "type": "string",
                   "description": "Claude-style SSE stream when `stream` is true."
+                },
+                "description": "Streaming chunks also carry `requested_model` and `resolved_model`. If the client disconnects before the stream completes, the platform stops forwarding chunks; without a full usage report, `usage` stays unknown (never filled with `0`). Do not count omitted usage as zero cost.",
+                "examples": {
+                  "stream_interrupted": {
+                    "summary": "Usage stays unknown when the stream is interrupted (never 0)",
+                    "description": "Client disconnected before the stream finished: received chunks contain no final usage and no closing usage chunk will arrive; usage stays unknown.",
+                    "value": "event: message_start\ndata: {\"type\":\"message_start\",\"message\":{\"id\":\"msg_interrupted_001\",\"type\":\"message\",\"role\":\"assistant\",\"model\":\"seed-1-6-250915\",\"requested_model\":\"seed-1-6-250915\",\"resolved_model\":null,\"content\":[],\"stop_reason\":null,\"usage\":{\"input_tokens\":128,\"output_tokens\":1}}}\n\nevent: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"text_delta\",\"text\":\"…\"}}\n"
+                  }
                 }
               }
             }
@@ -95,6 +222,28 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ClaudeErrorResponse"
+                },
+                "examples": {
+                  "unsupported_parameter": {
+                    "summary": "Explicit error when passing an unsupported parameter (never silently ignored)",
+                    "value": {
+                      "type": "error",
+                      "error": {
+                        "type": "invalid_request_error",
+                        "message": "The requested model does not support the parameter `frequency_penalty`. The platform never silently ignores unsupported parameters; please remove it and retry."
+                      }
+                    }
+                  },
+                  "json_schema_not_supported": {
+                    "summary": "Explicit error when json_schema is not supported",
+                    "value": {
+                      "type": "error",
+                      "error": {
+                        "type": "invalid_request_error",
+                        "message": "The requested model does not support the `response_format` parameter (including `json_schema`); the platform never silently ignores it. Please remove it and retry."
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -755,7 +904,7 @@
       },
       "UsageStats": {
         "type": "object",
-        "description": "Token usage statistics. In streaming calls, the `usage` in the `message_start` event only includes `input_tokens` and `output_tokens`; all four fields are returned in the `message_delta` event.",
+        "description": "Token usage statistics. In streaming calls, the `usage` in the `message_start` event only includes `input_tokens` and `output_tokens`; all four fields are returned in the `message_delta` event.\n\nBilling: both input and output tokens are billed; cache-hit tokens are billed at cache rates; reasoning (chain-of-thought) tokens are billed as output. If a streaming request is interrupted before completion and no full usage is obtained, `usage` stays unknown (fields omitted) and is never filled with `0`.",
         "properties": {
           "input_tokens": {
             "type": "integer",
@@ -833,6 +982,15 @@
           },
           "usage": {
             "$ref": "#/components/schemas/UsageStats"
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "The original value of the `model` field in the request received by the platform, i.e. the requested model."
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "The model actually executed. Returns `null` when the upstream provider does not disclose the resolved model; the platform never fabricates this value."
           }
         },
         "description": "Claude-compatible message response."

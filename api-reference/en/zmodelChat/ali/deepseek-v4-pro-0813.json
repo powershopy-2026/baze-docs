@@ -69,6 +69,85 @@
                     ],
                     "stream": true
                   }
+                },
+                "multi_turn_chat": {
+                  "summary": "Multi-turn conversation with history context",
+                  "value": {
+                    "model": "deepseek-v4-pro-0813",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise and accurate assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Introduce typical use cases of vector databases."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "Vector databases are widely used in semantic search, recommendation systems, and RAG knowledge bases: data is encoded into vectors, then the most relevant results are recalled by similarity."
+                      },
+                      {
+                        "role": "user",
+                        "content": "What role does it play in RAG?"
+                      }
+                    ],
+                    "stream": false
+                  }
+                },
+                "tool_result_continuation": {
+                  "summary": "Tool result continuation (send tool output back)",
+                  "value": {
+                    "model": "deepseek-v4-pro-0813",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Check today's weather in Beijing for me."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "",
+                        "tool_calls": [
+                          {
+                            "id": "call_get_weather_001",
+                            "type": "function",
+                            "function": {
+                              "name": "get_weather",
+                              "arguments": "{\"city\":\"Beijing\"}"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "role": "tool",
+                        "tool_call_id": "call_get_weather_001",
+                        "content": "Beijing: sunny today, 18-26°C, wind level 2, excellent air quality."
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "根据城市名查询实时天气 / Query real-time weather by city name",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "城市名称 / City name"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": false
+                  }
                 }
               }
             }
@@ -101,6 +180,28 @@
                         "type": "invalid_request_error",
                         "code": "bad_request_body",
                         "param": "messages"
+                      }
+                    }
+                  },
+                  "unsupported_parameter": {
+                    "summary": "Explicit error when passing an unsupported parameter (never silently ignored)",
+                    "value": {
+                      "error": {
+                        "message": "Model deepseek-v4-pro-0813 does not support the parameter `reasoning_effort`. The platform never silently ignores unsupported parameters; please remove it and retry.",
+                        "type": "invalid_request_error",
+                        "param": "reasoning_effort",
+                        "code": "unsupported_parameter"
+                      }
+                    }
+                  },
+                  "json_schema_not_supported": {
+                    "summary": "Explicit error when json_schema is not supported",
+                    "value": {
+                      "error": {
+                        "message": "Model deepseek-v4-pro-0813 does not support `response_format.type=json_schema`. Use `json_object` instead, or remove the parameter.",
+                        "type": "invalid_request_error",
+                        "param": "response_format",
+                        "code": "json_schema_not_supported"
                       }
                     }
                   }
@@ -416,6 +517,15 @@
           },
           "usage": {
             "$ref": "#/components/schemas/Usage"
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "The original value of the `model` field in the request received by the platform, i.e. the requested model."
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "The model actually executed. Returns `null` when the upstream provider does not disclose the resolved model; the platform never fabricates this value."
           }
         }
       },
@@ -449,7 +559,8 @@
             "type": "integer",
             "description": "Total number of tokens."
           }
-        }
+        },
+        "description": "Billing: both input and output tokens are billed. This model does not expose cache/reasoning token details; usage is subject to the platform bill. If a streaming request is interrupted before completion and no full usage is obtained, `usage` stays unknown (fields omitted) and is never filled with `0`."
       },
       "ThinkingConfig": {
         "type": "object",

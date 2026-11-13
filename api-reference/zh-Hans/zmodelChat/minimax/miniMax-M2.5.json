@@ -1,4 +1,4 @@
-{
+﻿{
   "openapi": "3.0.1",
   "info": {
     "title": "MiniMax-M2.5",
@@ -64,6 +64,31 @@
                     ],
                     "stream": true
                   }
+                },
+                "multi_turn_chat": {
+                  "summary": "多轮对话（携带历史上下文续聊）",
+                  "value": {
+                    "model": "MiniMax-M2.5",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "你是一个简洁、准确的中文助手。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "介绍一下向量数据库的典型使用场景。"
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "向量数据库常用于语义检索、推荐系统和 RAG 知识库：先把文本等数据编码为向量，再按相似度召回最相关的结果。"
+                      },
+                      {
+                        "role": "user",
+                        "content": "那它在 RAG 中承担什么职责？"
+                      }
+                    ],
+                    "stream": false
+                  }
                 }
               }
             }
@@ -82,6 +107,14 @@
                 "schema": {
                   "type": "string",
                   "description": "SSE 数据流。每个 `data:` 事件都可按 OpenAI Chat Completions Chunk 解析；结束时通常返回 `data: [DONE]`。"
+                },
+                "description": "流式 chunk 同样携带 `requested_model` 与 `resolved_model` 字段。若客户端在流完成前断开连接，平台将停止转发后续 chunk；此时未收到完整用量，`usage` 保持未知（不会以 `0` 填充），请勿将缺省用量计入成本。",
+                "examples": {
+                  "stream_interrupted": {
+                    "summary": "流被中断时 usage 保持未知（不填 0）",
+                    "description": "客户端在流完成前断开连接：已收到的 chunk 不含最终 usage，且不会收到收尾的 usage chunk，用量保持未知。",
+                    "value": "data: {\"id\":\"chatcmpl_interrupted_001\",\"object\":\"chat.completion.chunk\",\"created\":1763000000,\"model\":\"MiniMax-M2.5\",\"requested_model\":\"MiniMax-M2.5\",\"resolved_model\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"…\"},\"finish_reason\":null}]}\n\n"
+                  }
                 }
               }
             }
@@ -92,6 +125,30 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "unsupported_parameter": {
+                    "summary": "传入模型不支持的参数时显式报错（不静默忽略）",
+                    "value": {
+                      "error": {
+                        "message": "模型 MiniMax-M2.5 不支持参数 `reasoning_effort`。平台不会静默忽略不支持的参数，请移除该参数后重试。",
+                        "type": "invalid_request_error",
+                        "param": "reasoning_effort",
+                        "code": "unsupported_parameter"
+                      }
+                    }
+                  },
+                  "json_schema_not_supported": {
+                    "summary": "不支持 json_schema 时显式报错",
+                    "value": {
+                      "error": {
+                        "message": "模型 MiniMax-M2.5 不支持 `response_format` 参数（含 `json_schema`），平台不会静默忽略该参数，请移除后重试。",
+                        "type": "invalid_request_error",
+                        "param": "response_format",
+                        "code": "json_schema_not_supported"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -205,7 +262,17 @@
             }
           },
           "usage": {
-            "type": "object"
+            "type": "object",
+            "description": "计费口径：输入与输出 token 均计费。该模型未公开缓存/推理 token 明细，用量以平台账单为准。流式请求在完成前被中断且未取得完整用量时，`usage` 保持未知状态（相关字段缺省），不会以 `0` 填充。"
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "平台收到的请求中 `model` 字段的原始值，即我方请求的模型。"
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "实际执行的模型。当上游渠道未披露实际模型时返回 `null`，平台不会伪造该值。"
           }
         }
       },

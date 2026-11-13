@@ -97,6 +97,124 @@
                       "chunk_include_usage": true
                     }
                   }
+                },
+                "multi_turn_chat": {
+                  "summary": "Multi-turn conversation with history context",
+                  "value": {
+                    "model": "dola-seed-2-1-turbo-260628",
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": "You are a concise and accurate assistant."
+                      },
+                      {
+                        "role": "user",
+                        "content": "Introduce typical use cases of vector databases."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "Vector databases are widely used in semantic search, recommendation systems, and RAG knowledge bases: data is encoded into vectors, then the most relevant results are recalled by similarity."
+                      },
+                      {
+                        "role": "user",
+                        "content": "What role does it play in RAG?"
+                      }
+                    ],
+                    "stream": false
+                  }
+                },
+                "tool_result_continuation": {
+                  "summary": "Tool result continuation (send tool output back)",
+                  "value": {
+                    "model": "dola-seed-2-1-turbo-260628",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Check today's weather in Beijing for me."
+                      },
+                      {
+                        "role": "assistant",
+                        "content": "",
+                        "tool_calls": [
+                          {
+                            "id": "call_get_weather_001",
+                            "type": "function",
+                            "function": {
+                              "name": "get_weather",
+                              "arguments": "{\"city\":\"Beijing\"}"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "role": "tool",
+                        "tool_call_id": "call_get_weather_001",
+                        "content": "Beijing: sunny today, 18-26°C, wind level 2, excellent air quality."
+                      }
+                    ],
+                    "tools": [
+                      {
+                        "type": "function",
+                        "function": {
+                          "name": "get_weather",
+                          "description": "根据城市名查询实时天气 / Query real-time weather by city name",
+                          "parameters": {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "type": "string",
+                                "description": "城市名称 / City name"
+                              }
+                            },
+                            "required": [
+                              "city"
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    "tool_choice": "auto",
+                    "stream": false
+                  }
+                },
+                "structured_output_json_schema": {
+                  "summary": "Structured JSON output (json_schema)",
+                  "value": {
+                    "model": "dola-seed-2-1-turbo-260628",
+                    "messages": [
+                      {
+                        "role": "user",
+                        "content": "Extract the city and weather from: \"Beijing is sunny today, 26 degrees\", and return JSON following the schema."
+                      }
+                    ],
+                    "response_format": {
+                      "type": "json_schema",
+                      "json_schema": {
+                        "name": "weather_extraction",
+                        "description": "从文本中抽取城市与天气 / Extract city and weather from text",
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "city": {
+                              "type": "string",
+                              "description": "城市 / City"
+                            },
+                            "weather": {
+                              "type": "string",
+                              "description": "天气 / Weather"
+                            }
+                          },
+                          "required": [
+                            "city",
+                            "weather"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "strict": true
+                      }
+                    },
+                    "stream": false
+                  }
                 }
               }
             }
@@ -132,7 +250,9 @@
                         "prompt_tokens": 123,
                         "completion_tokens": 98,
                         "total_tokens": 221
-                      }
+                      },
+                      "requested_model": "dola-seed-2-1-turbo-260628",
+                      "resolved_model": "dola-seed-2-1-turbo-260628"
                     }
                   }
                 }
@@ -146,8 +266,14 @@
                   "stream": {
                     "summary": "Streaming response fragment",
                     "value": "data: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342400,\"model\":\"dola-seed-2-1-turbo-260628\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"Calling weather tool\"},\"finish_reason\":null}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":6,\"total_tokens\":54}}\n\ndata: {\"id\":\"chatcmpl_bp_123\",\"object\":\"chat.completion.chunk\",\"created\":1742342401,\"model\":\"dola-seed-2-1-turbo-260628\",\"choices\":[{\"index\":0,\"delta\":{\"tool_calls\":[{\"index\":0,\"id\":\"call_weather\",\"type\":\"function\",\"function\":{\"name\":\"get_weather\",\"arguments\":\"{\\\"city\\\":\\\"Beijing\\\"}\"}}]},\"finish_reason\":\"tool_calls\"}],\"usage\":{\"prompt_tokens\":48,\"completion_tokens\":22,\"total_tokens\":70}}\n\ndata: [DONE]\n"
+                  },
+                  "stream_interrupted": {
+                    "summary": "Usage stays unknown when the stream is interrupted (never 0)",
+                    "description": "Client disconnected before the stream finished: received chunks contain no final usage and no closing usage chunk will arrive; usage stays unknown.",
+                    "value": "data: {\"id\":\"chatcmpl_interrupted_001\",\"object\":\"chat.completion.chunk\",\"created\":1763000000,\"model\":\"dola-seed-2-1-turbo-260628\",\"requested_model\":\"dola-seed-2-1-turbo-260628\",\"resolved_model\":null,\"choices\":[{\"index\":0,\"delta\":{\"content\":\"…\"},\"finish_reason\":null}]}\n\n"
                   }
-                }
+                },
+                "description": "Streaming chunks also carry `requested_model` and `resolved_model`. If the client disconnects before the stream completes, the platform stops forwarding chunks; without a full usage report, `usage` stays unknown (never filled with `0`). Do not count omitted usage as zero cost."
               }
             }
           },
@@ -167,6 +293,17 @@
                         "type": "invalid_request_error",
                         "param": "messages",
                         "code": "bad_request_body"
+                      }
+                    }
+                  },
+                  "unsupported_parameter": {
+                    "summary": "Explicit error when passing an unsupported parameter (never silently ignored)",
+                    "value": {
+                      "error": {
+                        "message": "Model dola-seed-2-1-turbo-260628 does not support the parameter `reasoning_effort`. The platform never silently ignores unsupported parameters; please remove it and retry.",
+                        "type": "invalid_request_error",
+                        "param": "reasoning_effort",
+                        "code": "unsupported_parameter"
                       }
                     }
                   }
@@ -596,6 +733,15 @@
           },
           "usage": {
             "$ref": "#/components/schemas/Usage"
+          },
+          "requested_model": {
+            "type": "string",
+            "description": "The original value of the `model` field in the request received by the platform, i.e. the requested model."
+          },
+          "resolved_model": {
+            "type": "string",
+            "nullable": true,
+            "description": "The model actually executed. Returns `null` when the upstream provider does not disclose the resolved model; the platform never fabricates this value."
           }
         }
       },
@@ -638,7 +784,7 @@
       },
       "Usage": {
         "type": "object",
-        "description": "Token usage statistics.",
+        "description": "Token usage statistics.\n\nBilling: both input and output tokens are billed. This model does not expose cache/reasoning token details; usage is subject to the platform bill. If a streaming request is interrupted before completion and no full usage is obtained, `usage` stays unknown (fields omitted) and is never filled with `0`.",
         "properties": {
           "prompt_tokens": {
             "type": "integer",
