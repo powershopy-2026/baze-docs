@@ -17,9 +17,9 @@ The Asset Library is divided into three types of assets for different scenarios:
 
 Before calling any Asset Library API, complete the following steps:
 
-1. **Sign up / Log in**: Register and log in at [powertokens.ai](https://baze.powerbuyin.top)
-2. **Get an API Key**: Go to the [API Keys management page](https://baze.powerbuyin.top/api-keys), click to create a new key, copy and store it securely (it will not be visible again after closing the page)
-3. **Enable Asset Library**: Go to the [Asset Library page](https://baze.powerbuyin.top/zh-Hans/assets-library?tab=1), read and agree to the Asset Library User Agreement before using
+1. **Sign up / Log in**: Register and log in at [powertokens.ai](https://powertokens.ai)
+2. **Get an API Key**: Go to the [API Keys management page](https://powertokens.ai/api-keys), click to create a new key, copy and store it securely (it will not be visible again after closing the page)
+3. **Enable Asset Library**: Go to the [Asset Library page](https://powertokens.ai/zh-Hans/assets-library?tab=1), read and agree to the Asset Library User Agreement before using
 
 > **Note:** Using the Asset Library **does not require a top-up** — it's free to use once enabled. However, if you need to call generation models like Seedance 2.0, you will need to top up first.
 
@@ -60,7 +60,7 @@ Get asset group list ──→ Find official asset group ──→ Get asset lis
 **Endpoint:** [`POST /v1/asset/groups/list`](https://docs.powertokens.ai/en/assetLibrary/group-list)
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -79,7 +79,7 @@ After obtaining an official `group_id`, query all assets under that group:
 **Endpoint:** [`POST /v1/asset/groups/assets`](https://docs.powertokens.ai/en/assetLibrary/group-asset-list)
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/assets \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/assets \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -117,7 +117,7 @@ Create asset group ──→ Upload file (specify group_id) ──→ Get task_i
 **Endpoint:** [`POST /v1/asset/groups/create`](https://docs.powertokens.ai/en/assetLibrary/group-create)
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/create \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/create \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -143,7 +143,7 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/create \
 **Content-Type:** `multipart/form-data`
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/upload \
+curl -X POST https://powertokens.ai/api/v1/asset/upload \
   -H "Authorization: YOUR_API_KEY" \
   -F "file=@/path/to/your-image.jpg" \
   -F "group_id=XXXX"
@@ -172,7 +172,7 @@ Uploading is asynchronous. Use the returned `task_id` to poll and obtain a perma
 > **Note:** This endpoint **does not require authentication** — no `Authorization` header is needed.
 
 ```bash
-curl "https://baze.powerbuyin.top/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
+curl "https://powertokens.ai/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
 ```
 
 **Response:**
@@ -194,7 +194,7 @@ curl "https://baze.powerbuyin.top/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
 **List virtual asset groups:**
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -207,7 +207,7 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
 **Rename an asset group:** [`POST /v1/asset/groups/rename`](https://docs.powertokens.ai/en/assetLibrary/group-rename)
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/rename \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/rename \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -219,7 +219,7 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/rename \
 **Delete an asset group:** [`POST /v1/asset/groups/delete`](https://docs.powertokens.ai/en/assetLibrary/group-delete)
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/delete \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/delete \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -244,7 +244,7 @@ Get authorization URL ──→ Complete real-person verification ──→ Obta
 **Endpoint:** [`POST /v1/asset/get-authorize-url`](https://docs.powertokens.ai/en/assetLibrary/get-authorize-url)
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/get-authorize-url \
+curl -X POST https://powertokens.ai/api/v1/asset/get-authorize-url \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -254,7 +254,7 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/get-authorize-url \
 ```json
 {
   "code": 200,
-  "data": "https://baze.powerbuyin.top/auth/real-human-authorization?uuid=9eff6f20-87c0-4f04-a158-30c145126eee",
+  "data": "https://powertokens.ai/auth/real-human-authorization?uuid=9eff6f20-87c0-4f04-a158-30c145126eee",
   "msg": ""
 }
 ```
@@ -268,7 +268,7 @@ Open the returned authorization URL in a browser and follow the on-screen instru
 After successful verification, use the Asset Group List endpoint (the same endpoint used in [1. Official Assets](#1-official-assets)) to query your real-person asset group and obtain the `group_id`:
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -295,7 +295,7 @@ Find your real-person asset group from the response `list` and take its `group_i
 After obtaining the real-person asset group's `group_id`, upload that real person's assets:
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/upload \
+curl -X POST https://powertokens.ai/api/v1/asset/upload \
   -H "Authorization: YOUR_API_KEY" \
   -F "file=@/path/to/real-person-video.mp4" \
   -F "group_id=XXXX"
@@ -310,7 +310,7 @@ Subsequent steps (obtaining `asset_id`, using it in generation) are the same as 
 Once you have an `asset_id` (regardless of the asset type), you can reference it in any generation request that supports media input:
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/videos \
+curl -X POST https://powertokens.ai/api/v1/videos \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -338,7 +338,7 @@ import requests
 import time
 
 API_KEY = "YOUR_API_KEY"
-BASE_URL = "https://baze.powerbuyin.top/api"
+BASE_URL = "https://powertokens.ai/api"
 HEADERS = {"Authorization": f"Bearer {API_KEY}"}
 
 
@@ -430,14 +430,14 @@ print(f"Generation task submitted → task_id: {result['data']['task_id']}")
 
 ## API Quick Reference
 
-> **Base URL:** `https://baze.powerbuyin.top/api` — ensure all requests include the `/api` prefix; do not concatenate directly to `powertokens.ai/v1/...`.
+> **Base URL:** `https://powertokens.ai/api` — ensure all requests include the `/api` prefix; do not concatenate directly to `powertokens.ai/v1/...`.
 
 ### Asset Operations
 
 #### Upload File — `POST /v1/asset/upload` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/upload-file))
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/upload \
+curl -X POST https://powertokens.ai/api/v1/asset/upload \
   -H "Authorization: YOUR_API_KEY" \
   -F "file=@/path/to/file.jpg" \
   -F "group_id=XXXX"
@@ -448,13 +448,13 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/upload \
 > This endpoint **does not require authentication**.
 
 ```bash
-curl "https://baze.powerbuyin.top/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
+curl "https://powertokens.ai/api/v1/asset/jobs/get-asset-id?task_id=XXXX"
 ```
 
 #### Get Real-Person Authorization URL — `POST /v1/asset/get-authorize-url` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/get-authorize-url))
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/get-authorize-url \
+curl -X POST https://powertokens.ai/api/v1/asset/get-authorize-url \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json"
 ```
@@ -464,7 +464,7 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/get-authorize-url \
 #### Create Virtual Asset Group — `POST /v1/asset/groups/create` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/group-create))
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/create \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/create \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"group_name": "My Project Assets"}'
@@ -473,7 +473,7 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/create \
 #### List Asset Groups — `POST /v1/asset/groups/list` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/group-list))
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/list \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"page": 1, "page_size": 20, "group_type": 0}'
@@ -482,7 +482,7 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/list \
 #### List Assets in Group — `POST /v1/asset/groups/assets` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/group-asset-list))
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/assets \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/assets \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"page": 1, "page_size": 12, "group_id": "XXXX"}'
@@ -491,7 +491,7 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/assets \
 #### Rename Asset Group — `POST /v1/asset/groups/rename` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/group-rename))
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/rename \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/rename \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"group_id": "XXXX", "group_name": "New Name"}'
@@ -500,7 +500,7 @@ curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/rename \
 #### Delete Asset Group — `POST /v1/asset/groups/delete` ([API Reference](https://docs.powertokens.ai/en/assetLibrary/group-delete))
 
 ```bash
-curl -X POST https://baze.powerbuyin.top/api/v1/asset/groups/delete \
+curl -X POST https://powertokens.ai/api/v1/asset/groups/delete \
   -H "Authorization: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"group_id": "XXXX"}'

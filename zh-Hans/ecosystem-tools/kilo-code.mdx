@@ -16,9 +16,9 @@ Kilo Code 可以通过两条路径接入 `powertokens 平台`：
 
 | 目标 | Kilo Code provider | Base URL | 模型范围 |
 | --- | --- | --- | --- |
-| 使用 OpenAI-compatible 文本模型 | OpenAI Compatible 或 OpenAI (Compatible) | `https://baze-api.powerbuyin.top/v1` | 支持 `/v1/chat/completions` 的文本模型 |
-| 使用 Claude/Anthropic 路径模型 | Anthropic，并启用 custom base URL | `https://baze-api.powerbuyin.top/v1` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
-| 使用 OpenAI-compatible 优先模型 | OpenAI Compatible | `https://baze-api.powerbuyin.top/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
+| 使用 OpenAI-compatible 文本模型 | OpenAI Compatible 或 OpenAI (Compatible) | `https://api.powertokens.ai/v1` | 支持 `/v1/chat/completions` 的文本模型 |
+| 使用 Claude/Anthropic 路径模型 | Anthropic，并启用 custom base URL | `https://api.powertokens.ai/v1` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
+| 使用 OpenAI-compatible 优先模型 | OpenAI Compatible | `https://api.powertokens.ai/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
 
 ## OpenAI Compatible 配置
 
@@ -27,7 +27,7 @@ Kilo Code 可以通过两条路径接入 `powertokens 平台`：
 | 字段 | 填写 |
 | --- | --- |
 | **API Provider** | **OpenAI Compatible** 或 **OpenAI (Compatible)** |
-| **Base URL** | `https://baze-api.powerbuyin.top/v1` |
+| **Base URL** | `https://api.powertokens.ai/v1` |
 | **API Key** | 你的 `powertokens 平台` API Key |
 | **Model** | 例如 `glm-5.2`、`MiniMax-M3`、`seed-2-0-pro-260328` |
 | **Max output tokens** | 按模型和任务需要设置 |
@@ -37,7 +37,7 @@ Kilo Code 可以通过两条路径接入 `powertokens 平台`：
 最小验证请求可以用同一个接口口径：
 
 ```bash
-curl -X POST "https://baze-api.powerbuyin.top/v1/chat/completions" \
+curl -X POST "https://api.powertokens.ai/v1/chat/completions" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_POWERTOKENS_API_KEY" \
   --data '{
@@ -57,11 +57,11 @@ curl -X POST "https://baze-api.powerbuyin.top/v1/chat/completions" \
 | --- | --- |
 | **API Provider** | **Anthropic** |
 | **Use custom base URL** | 开启 |
-| **Custom base URL** | `https://baze-api.powerbuyin.top/v1` |
+| **Custom base URL** | `https://api.powertokens.ai/v1` |
 | **Anthropic API Key** | 你的 `powertokens 平台` API Key |
 | **Model** | 选择或手动填写下方推荐模型之一 |
 
-Kilo Code 的 Anthropic provider 会在 **Custom base URL** 后拼接 `/messages`。因此 **Custom base URL** 需要填到版本路径 `https://baze-api.powerbuyin.top/v1`，最终请求才会落到平台的 `/v1/messages`。
+Kilo Code 的 Anthropic provider 会在 **Custom base URL** 后拼接 `/messages`。因此 **Custom base URL** 需要填到版本路径 `https://api.powertokens.ai/v1`，最终请求才会落到平台的 `/v1/messages`。
 
 Anthropic 工具链推荐模型：
 
@@ -76,7 +76,7 @@ Anthropic 工具链推荐模型：
 用平台接口验证 Anthropic 路径时，curl 需要写完整接口路径：
 
 ```bash
-curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
+curl -X POST "https://api.powertokens.ai/v1/messages" \
   -H "Content-Type: application/json" \
   -H "x-api-key: YOUR_POWERTOKENS_API_KEY" \
   -H "anthropic-version: 2023-06-01" \
