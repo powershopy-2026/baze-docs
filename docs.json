@@ -61,6 +61,7 @@
                       "en/zmodelChat/ali/qwen3.7-max",
                       "en/zmodelChat/ali/qwen3.8-max",
                       "en/zmodelChat/ali/qwen3.8-flash",
+                      "en/zmodelChat/ali/qwen4-max",
                       "en/zmodelChat/ali/qwen3-coder-plus",
                       "en/zmodelChat/ali/qwen3-max"
                     ]
@@ -616,6 +617,13 @@
             "hidden": true,
             "pages": [
               "en/standalone/zmodelChat/ali/qwen3.8-max"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen4-max",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelChat/ali/qwen4-max"
             ]
           },
           {
@@ -1855,6 +1863,7 @@
                       "zh-Hans/zmodelChat/ali/qwen3.7-max",
                       "zh-Hans/zmodelChat/ali/qwen3.8-max",
                       "zh-Hans/zmodelChat/ali/qwen3.8-flash",
+                      "zh-Hans/zmodelChat/ali/qwen4-max",
                       "zh-Hans/zmodelChat/ali/qwen3-coder-plus",
                       "zh-Hans/zmodelChat/ali/qwen3-max"
                     ]
@@ -2417,6 +2426,13 @@
             "hidden": true,
             "pages": [
               "zh-Hans/standalone/zmodelChat/ali/qwen3.8-max"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelChat/ali/qwen4-max",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelChat/ali/qwen4-max"
             ]
           },
           {
