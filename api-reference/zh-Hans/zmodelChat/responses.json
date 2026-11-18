@@ -286,6 +286,7 @@
               "qwen3.7-plus",
               "qwen3.8-max",
               "qwen3.8-flash",
+              "qwen4-max",
               "deepseek-v3-2-251201",
               "deepseek-v4-pro-0813",
               "deepseek-v4-flash-0731",
