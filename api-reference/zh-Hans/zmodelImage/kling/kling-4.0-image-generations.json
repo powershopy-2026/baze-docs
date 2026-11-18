@@ -1,0 +1,372 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling 4.0 图像生成任务 - 提交任务",
+    "version": "1.0.0",
+    "description": "通过 `/kling/image-generation/kling-4.0` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling 原生异步任务端点"
+    }
+  ],
+  "paths": {
+    "/kling/image-generation/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 图像生成任务",
+        "description": "通过 `/kling/image-generation/kling-4.0` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。单图模式可生成多张独立图片，组图模式生成内容关联的一组图片。",
+        "operationId": "createKlingImageGeneration4",
+        "x-capability": "image_generation",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "数据交换格式"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Kling4Request"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "文生单图",
+                  "value": {
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "生成一张三维动画风格的角色海报，暖色灯光，背景简洁。"
+                      }
+                    ],
+                    "settings": {
+                      "result_type": "single",
+                      "n": 1,
+                      "resolution": "2k",
+                      "aspect_ratio": "1:1"
+                    }
+                  }
+                },
+                "image_to_series": {
+                  "summary": "图生组图",
+                  "value": {
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "以 @dog 中的小狗为主角，生成四张连贯的三维动画风格故事图片，依次表现：走进咖啡馆、在窗边落座、闻咖啡香、在门口告别。保持小狗的毛色、外观和画面风格一致，每张图片对应一个情节。"
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://p1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/dog.png",
+                        "id": "dog"
+                      }
+                    ],
+                    "settings": {
+                      "result_type": "series",
+                      "series_amount": 4,
+                      "resolution": "2k",
+                      "aspect_ratio": "3:4"
+                    },
+                    "options": {
+                      "watermark_info": {
+                        "enabled": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "任务已受理。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "响应示例",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "example-request-id",
+                      "data": {
+                        "id": "example-task-id",
+                        "status": "submitted",
+                        "create_time": 1790000000000,
+                        "update_time": 1790000000000,
+                        "external_id": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "Kling4Content": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "prompt",
+              "refer_image",
+              "element"
+            ],
+            "description": "素材类型，支持提示词（`prompt`）、参考图（`refer_image`）、主体（`element`）。"
+          },
+          "text": {
+            "type": "string",
+            "description": "提示词内容，`type=prompt` 时必填。\n- 纯英文不超过 50,000 字符，纯非英文不超过 21,000 字符\n- 混合输入需满足：英文字符数/50000 + 非英文字符数/21000 ≤ 1\n- 可通过 `@<id>` 引用参考图或主体",
+            "x-valid-when": {
+              "type": [
+                "prompt"
+              ]
+            }
+          },
+          "url": {
+            "type": "string",
+            "description": "参考图地址，`type=refer_image` 时必填。支持图片 URL 或 Base64 编码，URL 必须可访问。\n- 图片格式支持 .jpg / .jpeg / .png\n- 单张图片不超过 30 MB，宽、高均不小于 300 px，宽高比 2:5–5:2",
+            "x-valid-when": {
+              "type": [
+                "refer_image"
+              ]
+            }
+          },
+          "element_id": {
+            "type": "string",
+            "description": "主体 ID，由系统生成，可通过查询主体 API 获取，`type=element` 时必填。仅支持多图主体（通过图片定制的主体）。",
+            "x-valid-when": {
+              "type": [
+                "element"
+              ]
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "素材索引 ID，用于在提示词中通过 `@<id>` 指定。同一任务内不得重复。"
+          }
+        }
+      },
+      "Kling4Settings": {
+        "type": "object",
+        "properties": {
+          "result_type": {
+            "type": "string",
+            "enum": [
+              "single",
+              "series"
+            ],
+            "default": "single",
+            "description": "生成结果类型。\n- `single`：独立图片，可通过 `n` 生成多张\n- `series`：关联组图，同组图片共享 `group_id`，按组内顺序返回"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9,
+            "default": 1,
+            "description": "单图模式下生成独立图片的数量。组图模式下本参数无效，组图数量由 `series_amount` 指定。",
+            "x-valid-when": {
+              "result_type": [
+                "single"
+              ]
+            }
+          },
+          "series_amount": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 10
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "auto"
+                ]
+              }
+            ],
+            "default": 4,
+            "description": "组图张数，取值 [2,10] 或 `auto`。`auto` 根据输入内容智能决定 2–10 张，占用与实际生成张数对应的并发量。",
+            "x-valid-when": {
+              "result_type": [
+                "series"
+              ]
+            }
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "2k",
+              "4k",
+              "8k"
+            ],
+            "default": "2k",
+            "description": "生成图片的清晰度。单图与组图均适用。\n- `2k`：2K 高清\n- `4k`：4K 高清\n- `8k`：8K 超清"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4",
+              "3:2",
+              "2:3",
+              "21:9",
+              "auto"
+            ],
+            "default": "auto",
+            "description": "生成图片的宽高比。`auto` 表示根据传入内容智能生成图片宽高比，单图与组图均适用。"
+          }
+        }
+      },
+      "Kling4Options": {
+        "type": "object",
+        "properties": {
+          "callback_url": {
+            "type": "string",
+            "description": "本次任务结果回调通知地址。如果配置，服务端会在任务状态发生变更时主动通知。"
+          },
+          "external_task_id": {
+            "type": "string",
+            "description": "自定义任务ID。\n- 传入不会覆盖系统生成的任务ID，但支持通过该ID进行任务查询\n- 请注意，单用户下需要保证唯一性"
+          },
+          "watermark_info": {
+            "type": "object",
+            "description": "是否同时生成含水印的结果。通过 `enabled` 参数定义，暂不支持自定义水印。",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": false,
+                "description": "true 表示生成含水印结果，false 表示不生成。"
+              }
+            }
+          }
+        }
+      },
+      "Kling4Request": {
+        "type": "object",
+        "required": [
+          "contents"
+        ],
+        "properties": {
+          "contents": {
+            "type": "array",
+            "description": "参考素材合集，如提示词、参考图、主体。必须包含 `type=prompt` 的提示词，且提示词非空。\n- 图片和主体合计最多 10 个，提示词不占参考名额\n- 提示词、参考图、主体的排列顺序即为分析顺序",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/Kling4Content"
+            }
+          },
+          "settings": {
+            "$ref": "#/components/schemas/Kling4Settings"
+          },
+          "options": {
+            "$ref": "#/components/schemas/Kling4Options"
+          }
+        }
+      },
+      "SubmitResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "错误码；0 为成功，具体定义见错误码文档。",
+            "example": 0
+          },
+          "message": {
+            "type": "string",
+            "description": "接口消息。",
+            "example": "SUCCEED"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求跟踪 ID，由系统生成，用于跟踪请求、排查问题。",
+            "example": "example-request-id"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "系统任务 ID，由平台生成。",
+                "example": "example-task-id"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeeded",
+                  "failed"
+                ],
+                "description": "任务状态：submitted（已提交）、processing（处理中）、succeeded（成功）、failed（失败）。",
+                "example": "submitted"
+              },
+              "create_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "任务创建时间，Unix 毫秒时间戳。",
+                "example": 1790000000000
+              },
+              "update_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "任务更新时间，Unix 毫秒时间戳。",
+                "example": 1790000000000
+              },
+              "external_id": {
+                "type": "string",
+                "description": "创建时指定的自定义任务 ID（如有）。",
+                "example": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

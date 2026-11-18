@@ -1,0 +1,264 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling 4.0 图像生成任务 - 查询任务",
+    "version": "1.0.0",
+    "description": "通过 `/kling/tasks` 查询 Kling 4.0 图像生成任务状态。支持按系统任务 ID 或自定义任务 ID 批量查询。"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling 原生异步任务端点"
+    }
+  ],
+  "paths": {
+    "/kling/tasks": {
+      "get": {
+        "summary": "查询 Kling 4.0 任务",
+        "description": "通过 `/kling/tasks` 查询 Kling 4.0 图像生成任务状态。当前接口仅支持查询非实时/异步任务。",
+        "operationId": "getKlingTasks4",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "数据交换格式"
+          },
+          {
+            "name": "task_ids",
+            "in": "query",
+            "required": false,
+            "description": "需要查询的系统定义任务 ID。与 `external_task_ids` 至少且只能选择一种，不可同时使用。支持批量查询，多个 ID 用英文逗号分隔。",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "external_task_ids",
+            "in": "query",
+            "required": false,
+            "description": "需要查询的自定义任务 ID。与 `task_ids` 至少且只能选择一种，不可同时使用。支持批量查询，多个 ID 用英文逗号分隔。",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "任务状态响应。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskListResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "响应示例",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": [
+                        {
+                          "id": "893605946402811985",
+                          "status": "succeeded",
+                          "message": "string",
+                          "create_time": 1781080778802,
+                          "update_time": 1781080794151,
+                          "external_id": "string",
+                          "outputs": [
+                            {
+                              "type": "image",
+                              "url": "string",
+                              "watermark_url": "string",
+                              "group_id": "string"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "TaskOutput": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image",
+              "video",
+              "audio",
+              "element",
+              "voice"
+            ],
+            "description": "生成结果类型。不同内容类型的返回字段会有区别。"
+          },
+          "id": {
+            "type": "string",
+            "description": "结果 ID，由系统生成（视频、音频、音色、主体类型返回）。"
+          },
+          "url": {
+            "type": "string",
+            "description": "生成结果的 URL，防盗链格式（请注意，为保障信息安全，生成的图片/视频会在 30 天后被清理，请及时转存）。"
+          },
+          "watermark_url": {
+            "type": "string",
+            "description": "含水印结果的下载 URL，防盗链格式。"
+          },
+          "group_id": {
+            "type": "string",
+            "description": "仅在生成组图时出现，用于标记分组关系。"
+          }
+        }
+      },
+      "TaskItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "被查询的任务 ID。"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "submitted",
+              "processing",
+              "succeeded",
+              "failed"
+            ],
+            "description": "任务状态：submitted（已提交）、processing（处理中）、succeeded（成功）、failed（失败）。"
+          },
+          "message": {
+            "type": "string",
+            "description": "任务状态信息，当任务失败时展示失败原因（如触发平台的内容风控等）。"
+          },
+          "create_time": {
+            "type": "integer",
+            "format": "int64",
+            "description": "任务创建时间，Unix 毫秒时间戳。"
+          },
+          "update_time": {
+            "type": "integer",
+            "format": "int64",
+            "description": "任务更新时间，Unix 毫秒时间戳。"
+          },
+          "external_id": {
+            "type": "string",
+            "description": "该任务的自定义任务 ID（如有）。"
+          },
+          "outputs": {
+            "type": "array",
+            "description": "任务生成结果列表。",
+            "items": {
+              "$ref": "#/components/schemas/TaskOutput"
+            }
+          },
+          "billing": {
+            "type": "array",
+            "description": "当任务产生多账户类型的余额消耗时，系统将返回多条数据。",
+            "items": {
+              "$ref": "#/components/schemas/BillingItem"
+            }
+          }
+        }
+      },
+      "BillingItem": {
+        "type": "object",
+        "properties": {
+          "charge_type": {
+            "type": "string",
+            "description": "消耗账户类型。消耗额度时为 `cash`，消耗资源包时为 `unit`。"
+          },
+          "cash_type": {
+            "type": "string",
+            "description": "额度类型，仅存在于消耗额度场景（charge_type=cash）：`balance`（正式额度）、`test_balance`（测试金）、`reward_balance`（奖励金）。"
+          },
+          "amount": {
+            "type": "string",
+            "description": "扣减数额。消耗额度场景代表额度扣减折扣价，消耗资源包场景代表积分扣减量；十进制。"
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "CNY",
+              "USD"
+            ],
+            "description": "消耗单位，仅存在于消耗额度场景（charge_type=cash）。"
+          },
+          "package_type": {
+            "type": "string",
+            "enum": [
+              "video",
+              "image",
+              "audio"
+            ],
+            "description": "消耗资源包类型，仅存在于消耗资源包场景（charge_type=unit）。"
+          },
+          "list_price": {
+            "type": "string",
+            "description": "额度扣减刊例价，仅存在于消耗额度场景（charge_type=cash）。"
+          }
+        }
+      },
+      "TaskListResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "错误码；0 为成功，具体定义见错误码文档。",
+            "example": 0
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息。"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求 ID，系统生成，用于跟踪请求、排查问题。"
+          },
+          "data": {
+            "type": "array",
+            "description": "任务结果列表，批量查询时返回多条。",
+            "items": {
+              "$ref": "#/components/schemas/TaskItem"
+            }
+          }
+        }
+      }
+    }
+  }
+}

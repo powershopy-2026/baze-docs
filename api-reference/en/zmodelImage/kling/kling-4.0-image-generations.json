@@ -1,0 +1,372 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling 4.0 Image Generation Task - Submit Task",
+    "version": "1.0.0",
+    "description": "Submit a Kling 4.0 text-to-image, image-to-image, text-to-series, or image-to-series task via `/kling/image-generation/kling-4.0`."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling native async task endpoints"
+    }
+  ],
+  "paths": {
+    "/kling/image-generation/kling-4.0": {
+      "post": {
+        "summary": "Kling 4.0 Image Generation Task",
+        "description": "Submit a Kling 4.0 text-to-image, image-to-image, text-to-series, or image-to-series task via `/kling/image-generation/kling-4.0`. Single mode generates multiple independent images; series mode generates a related set of images.",
+        "operationId": "createKlingImageGeneration4",
+        "x-capability": "image_generation",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "Data exchange format"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Kling4Request"
+              },
+              "examples": {
+                "text_to_image": {
+                  "summary": "Text to single image",
+                  "value": {
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "Generate a 3D animation style character poster, warm lighting, simple background."
+                      }
+                    ],
+                    "settings": {
+                      "result_type": "single",
+                      "n": 1,
+                      "resolution": "2k",
+                      "aspect_ratio": "1:1"
+                    }
+                  }
+                },
+                "image_to_series": {
+                  "summary": "Image to series",
+                  "value": {
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "Using the puppy in @dog as the main character, generate four connected 3D animation style story images: walking into a cafe, sitting by the window, smelling the coffee, saying goodbye at the door. Keep the puppy's coat color, appearance, and visual style consistent."
+                      },
+                      {
+                        "type": "refer_image",
+                        "url": "https://p1-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/dog.png",
+                        "id": "dog"
+                      }
+                    ],
+                    "settings": {
+                      "result_type": "series",
+                      "series_amount": 4,
+                      "resolution": "2k",
+                      "aspect_ratio": "3:4"
+                    },
+                    "options": {
+                      "watermark_info": {
+                        "enabled": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "Response example",
+                    "value": {
+                      "code": 0,
+                      "message": "SUCCEED",
+                      "request_id": "example-request-id",
+                      "data": {
+                        "id": "example-task-id",
+                        "status": "submitted",
+                        "create_time": 1790000000000,
+                        "update_time": 1790000000000,
+                        "external_id": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "Kling4Content": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "prompt",
+              "refer_image",
+              "element"
+            ],
+            "description": "Material type: prompt (`prompt`), reference image (`refer_image`), or element (`element`)."
+          },
+          "text": {
+            "type": "string",
+            "description": "Prompt content, required when `type=prompt`.\n- Up to 50,000 characters for pure English, 21,000 characters for pure non-English\n- Mixed input must satisfy: English characters/50000 + non-English characters/21000 ≤ 1\n- Reference images or elements can be referenced with `@<id>`",
+            "x-valid-when": {
+              "type": [
+                "prompt"
+              ]
+            }
+          },
+          "url": {
+            "type": "string",
+            "description": "Reference image, required when `type=refer_image`. Accepts an image URL or Base64 content; the URL must be accessible.\n- Supported formats: .jpg / .jpeg / .png\n- Each image must be under 30 MB, at least 300 px in width and height, with an aspect ratio between 2:5 and 5:2",
+            "x-valid-when": {
+              "type": [
+                "refer_image"
+              ]
+            }
+          },
+          "element_id": {
+            "type": "string",
+            "description": "Element ID generated by the system, required when `type=element`. You can retrieve it via the element query API. Only multi-image elements (created from images) are supported.",
+            "x-valid-when": {
+              "type": [
+                "element"
+              ]
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "Material index ID used to reference the material in the prompt via `@<id>`. Must be unique within the same task."
+          }
+        }
+      },
+      "Kling4Settings": {
+        "type": "object",
+        "properties": {
+          "result_type": {
+            "type": "string",
+            "enum": [
+              "single",
+              "series"
+            ],
+            "default": "single",
+            "description": "Result type.\n- `single`: independent images, generate multiple with `n`\n- `series`: related image set; images in the same group share `group_id` and are returned in order"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9,
+            "default": 1,
+            "description": "Number of independent images in single mode. Ignored when `result_type=series`; use `series_amount` instead.",
+            "x-valid-when": {
+              "result_type": [
+                "single"
+              ]
+            }
+          },
+          "series_amount": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 2,
+                "maximum": 10
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "auto"
+                ]
+              }
+            ],
+            "default": 4,
+            "description": "Number of images in the series, either [2,10] or `auto`. `auto` decides 2–10 images based on the input and consumes concurrency equal to the actual number generated.",
+            "x-valid-when": {
+              "result_type": [
+                "series"
+              ]
+            }
+          },
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "2k",
+              "4k",
+              "8k"
+            ],
+            "default": "2k",
+            "description": "Image resolution. Applies to both single and series results.\n- `2k`: 2K HD\n- `4k`: 4K HD\n- `8k`: 8K ultra HD"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4",
+              "3:2",
+              "2:3",
+              "21:9",
+              "auto"
+            ],
+            "default": "auto",
+            "description": "Aspect ratio of the generated image. `auto` means the ratio is determined from the input. Applies to both single and series results."
+          }
+        }
+      },
+      "Kling4Options": {
+        "type": "object",
+        "properties": {
+          "callback_url": {
+            "type": "string",
+            "description": "Callback URL for task results. When configured, the server notifies you whenever the task status changes."
+          },
+          "external_task_id": {
+            "type": "string",
+            "description": "Custom task ID.\n- It does not override the system-generated task ID, but can be used to query the task\n- Must be unique per user"
+          },
+          "watermark_info": {
+            "type": "object",
+            "description": "Whether to also generate a watermarked result. Configured with `enabled`; custom watermarks are not supported.",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": false,
+                "description": "`true` generates a watermarked result, `false` does not."
+              }
+            }
+          }
+        }
+      },
+      "Kling4Request": {
+        "type": "object",
+        "required": [
+          "contents"
+        ],
+        "properties": {
+          "contents": {
+            "type": "array",
+            "description": "Materials for generation, such as prompts, reference images, and elements. Must include a non-empty `type=prompt` item.\n- Images plus elements are limited to 10 in total; the prompt does not count toward this limit\n- The order of prompts, reference images, and elements is the analysis order",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/Kling4Content"
+            }
+          },
+          "settings": {
+            "$ref": "#/components/schemas/Kling4Settings"
+          },
+          "options": {
+            "$ref": "#/components/schemas/Kling4Options"
+          }
+        }
+      },
+      "SubmitResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Error code; 0 means success. See the error code documentation for details.",
+            "example": 0
+          },
+          "message": {
+            "type": "string",
+            "description": "Response message.",
+            "example": "SUCCEED"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request tracking ID generated by the system for troubleshooting.",
+            "example": "example-request-id"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "System task ID generated by the platform.",
+                "example": "example-task-id"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeeded",
+                  "failed"
+                ],
+                "description": "Task status: submitted, processing, succeeded, or failed.",
+                "example": "submitted"
+              },
+              "create_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Task creation time as a Unix timestamp in milliseconds.",
+                "example": 1790000000000
+              },
+              "update_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Task update time as a Unix timestamp in milliseconds.",
+                "example": 1790000000000
+              },
+              "external_id": {
+                "type": "string",
+                "description": "Custom task ID specified at creation, if any.",
+                "example": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

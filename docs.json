@@ -171,6 +171,8 @@
                       "en/zmodelImage/kling/kling-v2-image-generations",
                       "en/zmodelImage/kling/kling-v2-new-image-generations",
                       "en/zmodelImage/kling/kling-v3-image-generations",
+                      "en/zmodelImage/kling/kling-4.0-image-generations",
+                      "en/zmodelImage/kling/kling-4.0-tasks",
                       "en/zmodelImage/kling/image-generations-status",
                       "en/zmodelImage/kling/kling-image-o1-image-omni",
                       "en/zmodelImage/kling/kling-v3-omni-image-omni",
@@ -1013,6 +1015,20 @@
             "hidden": true,
             "pages": [
               "en/standalone/zmodelImage/kling/kling-v3-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-4.0-image-generations",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/kling-4.0-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-4.0-tasks",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelImage/kling/kling-4.0-tasks"
             ]
           },
           {
@@ -1949,6 +1965,8 @@
                       "zh-Hans/zmodelImage/kling/kling-v2-image-generations",
                       "zh-Hans/zmodelImage/kling/kling-v2-new-image-generations",
                       "zh-Hans/zmodelImage/kling/kling-v3-image-generations",
+                      "zh-Hans/zmodelImage/kling/kling-4.0-image-generations",
+                      "zh-Hans/zmodelImage/kling/kling-4.0-tasks",
                       "zh-Hans/zmodelImage/kling/image-generations-status",
                       "zh-Hans/zmodelImage/kling/kling-image-o1-image-omni",
                       "zh-Hans/zmodelImage/kling/kling-v3-omni-image-omni",
@@ -2777,6 +2795,20 @@
             "hidden": true,
             "pages": [
               "zh-Hans/standalone/zmodelImage/kling/kling-v3-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-4.0-image-generations",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/kling-4.0-image-generations"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelImage/kling/kling-4.0-tasks",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelImage/kling/kling-4.0-tasks"
             ]
           },
           {
