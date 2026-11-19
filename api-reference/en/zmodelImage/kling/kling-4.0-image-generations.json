@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 Image Generation Task - Submit Task",
     "version": "1.0.0",
-    "description": "Submit a Kling 4.0 text-to-image, image-to-image, text-to-series, or image-to-series task via `/kling/image-generation/kling-4.0`."
+    "description": "Submit a Kling 4.0 text-to-image, image-to-image, text-to-series, or image-to-series task via `/kling/image-generation`."
   },
   "servers": [
     {
@@ -18,10 +18,10 @@
     }
   ],
   "paths": {
-    "/kling/image-generation/kling-4.0": {
+    "/kling/image-generation": {
       "post": {
         "summary": "Kling 4.0 Image Generation Task",
-        "description": "Submit a Kling 4.0 text-to-image, image-to-image, text-to-series, or image-to-series task via `/kling/image-generation/kling-4.0`. Single mode generates multiple independent images; series mode generates a related set of images.",
+        "description": "Submit a Kling 4.0 text-to-image, image-to-image, text-to-series, or image-to-series task via `/kling/image-generation`. Single mode generates multiple independent images; series mode generates a related set of images.",
         "operationId": "createKlingImageGeneration4",
         "x-capability": "image_generation",
         "tags": [
@@ -55,6 +55,7 @@
                 "text_to_image": {
                   "summary": "Text to single image",
                   "value": {
+                    "model_name": "kling-4.0",
                     "contents": [
                       {
                         "type": "prompt",
@@ -72,6 +73,7 @@
                 "image_to_series": {
                   "summary": "Image to series",
                   "value": {
+                    "model_name": "kling-4.0",
                     "contents": [
                       {
                         "type": "prompt",
@@ -290,9 +292,18 @@
       "Kling4Request": {
         "type": "object",
         "required": [
+          "model_name",
           "contents"
         ],
         "properties": {
+          "model_name": {
+            "type": "string",
+            "enum": [
+              "kling-4.0"
+            ],
+            "description": "Model name",
+            "example": "kling-4.0"
+          },
           "contents": {
             "type": "array",
             "description": "Materials for generation, such as prompts, reference images, and elements. Must include a non-empty `type=prompt` item.\n- Images plus elements are limited to 10 in total; the prompt does not count toward this limit\n- The order of prompts, reference images, and elements is the analysis order",

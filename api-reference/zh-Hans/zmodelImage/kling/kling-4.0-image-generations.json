@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 图像生成任务 - 提交任务",
     "version": "1.0.0",
-    "description": "通过 `/kling/image-generation/kling-4.0` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。"
+    "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。"
   },
   "servers": [
     {
@@ -18,10 +18,10 @@
     }
   ],
   "paths": {
-    "/kling/image-generation/kling-4.0": {
+    "/kling/image-generation": {
       "post": {
         "summary": "Kling 4.0 图像生成任务",
-        "description": "通过 `/kling/image-generation/kling-4.0` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。单图模式可生成多张独立图片，组图模式生成内容关联的一组图片。",
+        "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。单图模式可生成多张独立图片，组图模式生成内容关联的一组图片。",
         "operationId": "createKlingImageGeneration4",
         "x-capability": "image_generation",
         "tags": [
@@ -55,6 +55,7 @@
                 "text_to_image": {
                   "summary": "文生单图",
                   "value": {
+                    "model_name": "kling-4.0",
                     "contents": [
                       {
                         "type": "prompt",
@@ -72,6 +73,7 @@
                 "image_to_series": {
                   "summary": "图生组图",
                   "value": {
+                    "model_name": "kling-4.0",
                     "contents": [
                       {
                         "type": "prompt",
@@ -290,9 +292,18 @@
       "Kling4Request": {
         "type": "object",
         "required": [
+          "model_name",
           "contents"
         ],
         "properties": {
+          "model_name": {
+            "type": "string",
+            "enum": [
+              "kling-4.0"
+            ],
+            "description": "模型名称",
+            "example": "kling-4.0"
+          },
           "contents": {
             "type": "array",
             "description": "参考素材合集，如提示词、参考图、主体。必须包含 `type=prompt` 的提示词，且提示词非空。\n- 图片和主体合计最多 10 个，提示词不占参考名额\n- 提示词、参考图、主体的排列顺序即为分析顺序",

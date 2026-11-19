@@ -1,0 +1,329 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling 4.0 Image-to-Video Task - Submit Task",
+    "version": "1.0.0",
+    "description": "Submit a Kling 4.0 image-to-video task via `/kling/image-to-video`, supporting multi-keyframe video generation from first, middle, and last frames. Query task status with `GET /kling/tasks`."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling native async task endpoints"
+    }
+  ],
+  "paths": {
+    "/kling/image-to-video": {
+      "post": {
+        "summary": "Kling 4.0 Image-to-Video Task",
+        "description": "Submit a Kling 4.0 image-to-video task via `/kling/image-to-video`; the model is specified by `model_name`. Supports multi-keyframe generation (first, middle, and last frames) with up to 10 images. Query task status with `GET /kling/tasks`.",
+        "operationId": "createKlingImage2Video4",
+        "x-capability": "image_to_video",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "Data exchange format"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Kling4VideoRequest"
+              },
+              "examples": {
+                "first_frame": {
+                  "summary": "First frame to video",
+                  "value": {
+                    "model_name": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "A girl sits on a train looking out the window with a melancholic expression, her head swaying with the train."
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-tob-release_note/image_25.png"
+                      }
+                    ],
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {
+                      "callback_url": "",
+                      "external_task_id": "",
+                      "watermark_info": {
+                        "enabled": false
+                      }
+                    }
+                  }
+                },
+                "multi_keyframes": {
+                  "summary": "Multi-keyframe: first + middle + last frame",
+                  "value": {
+                    "model_name": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "Start from the female model in @image_1, keeping facial features, hairstyle, and clothing consistent. She begins to move, transitions smoothly to the pose and composition in @image_2, and finally reaches the pose and scene in @image_3, with seamless transitions between keyframes."
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/file_size/person-ref-pad-2x3-2MB.jpg",
+                        "id": "image_1"
+                      },
+                      {
+                        "type": "middle_frame",
+                        "url": "https://p4-kling.klingai.com/kcdn/cdn-kcdn112452/chrome-plugin-upload/2026-10-13/1791892036356.caca59ef0c55e171.png",
+                        "id": "image_2"
+                      },
+                      {
+                        "type": "last_frame",
+                        "url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/chrome-plugin-upload/2026-10-13/1791892087071.f32f7a727b1832bf.png",
+                        "id": "image_3"
+                      }
+                    ],
+                    "options": {
+                      "external_task_id": "i2v_v4_three_frames_1013",
+                      "watermark_info": {
+                        "enabled": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "Response example",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": {
+                        "id": "string",
+                        "status": "submitted",
+                        "create_time": 1781080778802,
+                        "update_time": 1781080794151,
+                        "external_id": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "Kling4VideoContent": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "prompt",
+              "first_frame",
+              "middle_frame",
+              "last_frame"
+            ],
+            "description": "Material type: prompt (`prompt`), first frame (`first_frame`), middle frame (`middle_frame`), or last frame (`last_frame`)."
+          },
+          "text": {
+            "type": "string",
+            "description": "Prompt text, required when `type=prompt`.\n- Up to 26,000 characters for pure English, 11,000 for pure non-English\n- Mixed input must satisfy: English characters/26000 + non-English characters/11000 ≤ 1\n- Reference images with `@id` and describe changes in the order they appear in the video",
+            "x-valid-when": {
+              "type": [
+                "prompt"
+              ]
+            }
+          },
+          "url": {
+            "type": "string",
+            "description": "Frame image URL, required for frame types. Accepts an image URL or Base64 content.\n- Supported formats: .jpg / .jpeg / .png\n- Each image must be under 30 MB\n- At least 300 px in width and height, aspect ratio between 2:5 and 5:2",
+            "x-valid-when": {
+              "type": [
+                "first_frame",
+                "middle_frame",
+                "last_frame"
+              ]
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "Material index ID used to reference the material in the prompt via `@<id>`. Must be unique within the same task."
+          }
+        }
+      },
+      "Kling4VideoSettings": {
+        "type": "object",
+        "properties": {
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "720p",
+              "1080p"
+            ],
+            "default": "1080p",
+            "description": "Video resolution.\n- `720p`: 720P output\n- `1080p`: 1080P output"
+          },
+          "duration": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 30,
+            "description": "Target video duration in seconds; supports integers from 3 to 30.\n- When set, this value takes precedence over any duration in the prompt\n- When omitted, the explicit duration recognized from the prompt is used\n- When omitted and no explicit duration is found in the prompt, defaults to 10 seconds\n\nThe final target duration is used for billing and is available as `usage.output_duration` in the task query response."
+          }
+        }
+      },
+      "Kling4VideoOptions": {
+        "type": "object",
+        "properties": {
+          "callback_url": {
+            "type": "string",
+            "description": "Callback URL for task results. When configured, the server notifies you whenever the task status changes."
+          },
+          "external_task_id": {
+            "type": "string",
+            "description": "Custom task ID.\n- It does not override the system-generated task ID, but can be used to query the task\n- Must be unique per user"
+          },
+          "watermark_info": {
+            "type": "object",
+            "description": "Whether to also generate a watermarked result. Configured with `enabled`; custom watermarks are not supported.",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": false,
+                "description": "`true` generates a watermarked result, `false` does not."
+              }
+            }
+          }
+        }
+      },
+      "Kling4VideoRequest": {
+        "type": "object",
+        "required": [
+          "model_name",
+          "contents"
+        ],
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "enum": [
+              "kling-4.0"
+            ],
+            "description": "Model name",
+            "example": "kling-4.0"
+          },
+          "contents": {
+            "type": "array",
+            "description": "Materials for generation, such as a prompt and first/middle/last frame images. Must include a `type=prompt` item.\n- Up to 10 images\n- When passing first, middle, and last frames, order them as first, middle, last; multiple middle frames follow their order in the video\n- Reference images with `@id` in the prompt and explain their roles",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/Kling4VideoContent"
+            }
+          },
+          "settings": {
+            "$ref": "#/components/schemas/Kling4VideoSettings"
+          },
+          "options": {
+            "$ref": "#/components/schemas/Kling4VideoOptions"
+          }
+        }
+      },
+      "SubmitResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Error code; see the error code documentation."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request ID generated by the system for tracking and troubleshooting."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "System-generated task ID."
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeeded",
+                  "failed"
+                ],
+                "description": "Task status: submitted, processing, succeeded, or failed."
+              },
+              "create_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Task creation time as a Unix timestamp in milliseconds."
+              },
+              "update_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Task update time as a Unix timestamp in milliseconds."
+              },
+              "external_id": {
+                "type": "string",
+                "description": "Custom task ID of this task, if any."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

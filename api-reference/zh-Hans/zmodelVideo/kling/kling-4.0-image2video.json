@@ -1,0 +1,329 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling 4.0 图生视频任务 - 提交任务",
+    "version": "1.0.0",
+    "description": "通过 `/kling/image-to-video` 提交 Kling 4.0 图生视频任务，支持首帧、中间帧、尾帧多关键帧生视频。任务状态查询请使用 `GET /kling/tasks`。"
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling 原生异步任务端点"
+    }
+  ],
+  "paths": {
+    "/kling/image-to-video": {
+      "post": {
+        "summary": "Kling 4.0 图生视频任务",
+        "description": "通过 `/kling/image-to-video` 提交 Kling 4.0 图生视频任务，模型由 `model_name` 指定。支持多关键帧生视频（首帧、中间帧、尾帧），图片最多 10 张。任务状态查询请使用 `GET /kling/tasks`。",
+        "operationId": "createKlingImage2Video4",
+        "x-capability": "image_to_video",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "数据交换格式"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Kling4VideoRequest"
+              },
+              "examples": {
+                "first_frame": {
+                  "summary": "首帧生视频",
+                  "value": {
+                    "model_name": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "一个女孩坐在火车上，望向窗外，神情忧郁，头部随车身晃动。"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-tob-release_note/image_25.png"
+                      }
+                    ],
+                    "settings": {
+                      "resolution": "1080p",
+                      "duration": 10
+                    },
+                    "options": {
+                      "callback_url": "",
+                      "external_task_id": "",
+                      "watermark_info": {
+                        "enabled": false
+                      }
+                    }
+                  }
+                },
+                "multi_keyframes": {
+                  "summary": "多关键帧：首帧 + 中间帧 + 尾帧",
+                  "value": {
+                    "model_name": "kling-4.0",
+                    "contents": [
+                      {
+                        "type": "prompt",
+                        "text": "以 @image_1 中的女性模特作为起始画面，保持人物面部特征、发型和服装一致。模特开始运动，流畅过渡到 @image_2 的姿势和构图，最后过渡到 @image_3 的最终姿势和场景，三个关键帧之间自然衔接。"
+                      },
+                      {
+                        "type": "first_frame",
+                        "url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/kling-qa-test/file_size/person-ref-pad-2x3-2MB.jpg",
+                        "id": "image_1"
+                      },
+                      {
+                        "type": "middle_frame",
+                        "url": "https://p4-kling.klingai.com/kcdn/cdn-kcdn112452/chrome-plugin-upload/2026-10-13/1791892036356.caca59ef0c55e171.png",
+                        "id": "image_2"
+                      },
+                      {
+                        "type": "last_frame",
+                        "url": "https://p2-kling.klingai.com/kcdn/cdn-kcdn112452/chrome-plugin-upload/2026-10-13/1791892087071.f32f7a727b1832bf.png",
+                        "id": "image_3"
+                      }
+                    ],
+                    "options": {
+                      "external_task_id": "i2v_v4_three_frames_1013",
+                      "watermark_info": {
+                        "enabled": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "任务已受理。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "响应示例",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": {
+                        "id": "string",
+                        "status": "submitted",
+                        "create_time": 1781080778802,
+                        "update_time": 1781080794151,
+                        "external_id": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "Kling4VideoContent": {
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "prompt",
+              "first_frame",
+              "middle_frame",
+              "last_frame"
+            ],
+            "description": "素材类型：提示词（`prompt`）、首帧图（`first_frame`）、中间帧图（`middle_frame`）、尾帧图（`last_frame`）。"
+          },
+          "text": {
+            "type": "string",
+            "description": "文本提示词内容，`type=prompt` 时必填。\n- 纯英文不超过 26,000 个字符，纯非英文不超过 11,000 个字符\n- 混合输入需满足：英文字符数/26000 + 非英文字符数/11000 ≤ 1\n- 建议按图片在视频中出现的先后顺序，通过 `@id` 引用并描述画面变化",
+            "x-valid-when": {
+              "type": [
+                "prompt"
+              ]
+            }
+          },
+          "url": {
+            "type": "string",
+            "description": "帧图地址，`type` 为帧图类型时必填。支持图片 URL 或 Base64 编码。\n- 图片格式支持 .jpg / .jpeg / .png\n- 单张图片不超过 30 MB\n- 图片宽高尺寸不小于 300 px，宽高比需在 2:5–5:2 之间",
+            "x-valid-when": {
+              "type": [
+                "first_frame",
+                "middle_frame",
+                "last_frame"
+              ]
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "素材索引 ID，用于在提示词中通过 `@<id>` 指定。同一任务内不得重复。"
+          }
+        }
+      },
+      "Kling4VideoSettings": {
+        "type": "object",
+        "properties": {
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "720p",
+              "1080p"
+            ],
+            "default": "1080p",
+            "description": "生成视频的清晰度。\n- `720p`：输出 720P 视频\n- `1080p`：输出 1080P 视频"
+          },
+          "duration": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 30,
+            "description": "生成视频的目标时长，单位秒，支持 3–30 的整数值。\n- 指定本参数时以参数值为准，优先于 Prompt 中的时长要求\n- 未指定时采用模型从 Prompt 中识别到的明确时长要求\n- 未指定且 Prompt 中未识别到明确时长时，默认 10 秒\n\n最终采用的目标时长用于计费，可通过任务查询响应的 `usage.output_duration` 获取。"
+          }
+        }
+      },
+      "Kling4VideoOptions": {
+        "type": "object",
+        "properties": {
+          "callback_url": {
+            "type": "string",
+            "description": "本次任务结果回调通知地址。如果配置，服务端会在任务状态发生变更时主动通知。"
+          },
+          "external_task_id": {
+            "type": "string",
+            "description": "自定义任务ID。\n- 传入不会覆盖系统生成的任务ID，但支持通过该ID进行任务查询\n- 请注意，单用户下需要保证唯一性"
+          },
+          "watermark_info": {
+            "type": "object",
+            "description": "是否同时生成含水印的结果。通过 `enabled` 参数定义，暂不支持自定义水印。",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": false,
+                "description": "true 表示生成含水印结果，false 表示不生成。"
+              }
+            }
+          }
+        }
+      },
+      "Kling4VideoRequest": {
+        "type": "object",
+        "required": [
+          "model_name",
+          "contents"
+        ],
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "enum": [
+              "kling-4.0"
+            ],
+            "description": "模型名称",
+            "example": "kling-4.0"
+          },
+          "contents": {
+            "type": "array",
+            "description": "参考素材合集，如提示词、首帧图、中间帧图、尾帧图。必须包含 `type=prompt` 的提示词。\n- 图片数量不得超过 10 张\n- 如同时传入首帧、中间帧和尾帧，请按首帧、中间帧、尾帧的顺序排列；多张中间帧按其在视频中出现的先后顺序排列\n- 建议在提示词中通过 `@id` 引用图片并说明各图片的作用",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/Kling4VideoContent"
+            }
+          },
+          "settings": {
+            "$ref": "#/components/schemas/Kling4VideoSettings"
+          },
+          "options": {
+            "$ref": "#/components/schemas/Kling4VideoOptions"
+          }
+        }
+      },
+      "SubmitResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "错误码；具体定义见错误码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "错误信息。"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "请求ID，系统生成，用于跟踪请求、排查问题。"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "系统生成的任务ID。"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeeded",
+                  "failed"
+                ],
+                "description": "任务状态：submitted（已提交）、processing（处理中）、succeeded（成功）、failed（失败）。"
+              },
+              "create_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "任务创建时间，Unix 时间戳，单位 ms。"
+              },
+              "update_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "任务更新时间，Unix 时间戳，单位 ms。"
+              },
+              "external_id": {
+                "type": "string",
+                "description": "该任务的自定义任务ID（如有）。"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

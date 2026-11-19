@@ -1,0 +1,255 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling 4.0 Text-to-Video Task - Submit Task",
+    "version": "1.0.0",
+    "description": "Submit a Kling 4.0 text-to-video task via `/kling/text-to-video`. Query task status with `GET /kling/tasks`."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling native async task endpoints"
+    }
+  ],
+  "paths": {
+    "/kling/text-to-video": {
+      "post": {
+        "summary": "Kling 4.0 Text-to-Video Task",
+        "description": "Submit a Kling 4.0 text-to-video task via `/kling/text-to-video`; the model is specified by `model_name`. Query task status with `GET /kling/tasks`.",
+        "operationId": "createKlingText2Video4",
+        "x-capability": "text_to_video",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "Data exchange format"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Kling4VideoRequest"
+              },
+              "examples": {
+                "request": {
+                  "summary": "Request example",
+                  "value": {
+                    "model_name": "kling-4.0",
+                    "prompt": "A man in a white shirt walks along the beach at dusk, camera slowly following, realistic cinematic style.",
+                    "settings": {
+                      "duration": 10,
+                      "resolution": "1080p",
+                      "aspect_ratio": "16:9"
+                    },
+                    "options": {
+                      "callback_url": "",
+                      "external_task_id": "",
+                      "watermark_info": {
+                        "enabled": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "Response example",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": {
+                        "id": "string",
+                        "status": "submitted",
+                        "create_time": 1781080778802,
+                        "update_time": 1781080794151,
+                        "external_id": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "Kling4VideoSettings": {
+        "type": "object",
+        "properties": {
+          "resolution": {
+            "type": "string",
+            "enum": [
+              "720p",
+              "1080p"
+            ],
+            "default": "1080p",
+            "description": "Video resolution.\n- `720p`: 720P output\n- `1080p`: 1080P output"
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "enum": [
+              "21:9",
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4"
+            ],
+            "default": "16:9",
+            "description": "Aspect ratio (width:height) of the generated video."
+          },
+          "duration": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 30,
+            "description": "Target video duration in seconds; supports integers from 3 to 30.\n- When set, this value takes precedence over any duration in the prompt\n- When omitted, the explicit duration recognized from the prompt is used\n- When omitted and no explicit duration is found in the prompt, defaults to 10 seconds\n\nThe final target duration is used for billing and is available as `usage.output_duration` in the task query response."
+          }
+        }
+      },
+      "Kling4VideoOptions": {
+        "type": "object",
+        "properties": {
+          "callback_url": {
+            "type": "string",
+            "description": "Callback URL for task results. When configured, the server notifies you whenever the task status changes."
+          },
+          "external_task_id": {
+            "type": "string",
+            "description": "Custom task ID.\n- It does not override the system-generated task ID, but can be used to query the task\n- Must be unique per user"
+          },
+          "watermark_info": {
+            "type": "object",
+            "description": "Whether to also generate a watermarked result. Configured with `enabled`; custom watermarks are not supported.",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "default": false,
+                "description": "`true` generates a watermarked result, `false` does not."
+              }
+            }
+          }
+        }
+      },
+      "Kling4VideoRequest": {
+        "type": "object",
+        "required": [
+          "model_name",
+          "prompt"
+        ],
+        "properties": {
+          "model_name": {
+            "type": "string",
+            "enum": [
+              "kling-4.0"
+            ],
+            "description": "Model name",
+            "example": "kling-4.0"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "Text prompt, which may contain both positive and negative descriptions.\n- Up to 26,000 characters for pure English, 11,000 characters for pure non-English\n- Mixed input must satisfy: English characters/26000 + non-English characters/11000 ≤ 1\n- Describe the visual content, actions, camera movement, and event order\n- To use images, videos, or elements as references, use the omni reference endpoint"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/Kling4VideoSettings"
+          },
+          "options": {
+            "$ref": "#/components/schemas/Kling4VideoOptions"
+          }
+        }
+      },
+      "SubmitResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Error code; see the error code documentation."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request ID generated by the system for tracking and troubleshooting."
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "System-generated task ID."
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "submitted",
+                  "processing",
+                  "succeeded",
+                  "failed"
+                ],
+                "description": "Task status: submitted, processing, succeeded, or failed."
+              },
+              "create_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Task creation time as a Unix timestamp in milliseconds."
+              },
+              "update_time": {
+                "type": "integer",
+                "format": "int64",
+                "description": "Task update time as a Unix timestamp in milliseconds."
+              },
+              "external_id": {
+                "type": "string",
+                "description": "Custom task ID of this task, if any."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
