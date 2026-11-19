@@ -1,0 +1,282 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Kling 4.0 Video Generation Task - Query Task",
+    "version": "1.0.0",
+    "description": "Query Kling 4.0 video generation task status via `/kling/tasks`, covering text-to-video, image-to-video, and omni reference video tasks. Supports batch queries by system task ID or custom task ID."
+  },
+  "servers": [
+    {
+      "url": "https://baze-api.powerbuyin.top",
+      "description": ""
+    }
+  ],
+  "tags": [
+    {
+      "name": "Kling",
+      "description": "Kling native async task endpoints"
+    }
+  ],
+  "paths": {
+    "/kling/tasks": {
+      "get": {
+        "summary": "Query Kling 4.0 Video Task",
+        "description": "Query Kling 4.0 video generation task status via `/kling/tasks`, covering text-to-video, image-to-video, and omni reference video tasks. This API only supports non-realtime/asynchronous tasks.",
+        "operationId": "getKlingVideoTasks4",
+        "tags": [
+          "Kling"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "application/json"
+            },
+            "description": "Data exchange format"
+          },
+          {
+            "name": "task_ids",
+            "in": "query",
+            "required": false,
+            "description": "System-defined task IDs to query. Use exactly one of `task_ids` or `external_task_ids`. Supports batch queries; separate multiple IDs with commas.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "external_task_ids",
+            "in": "query",
+            "required": false,
+            "description": "Custom task IDs to query. Use exactly one of `task_ids` or `external_task_ids`. Supports batch queries; separate multiple IDs with commas.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task status response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskListResponse"
+                },
+                "examples": {
+                  "response": {
+                    "summary": "Response example",
+                    "value": {
+                      "code": 0,
+                      "message": "string",
+                      "request_id": "string",
+                      "data": [
+                        {
+                          "id": "893605946402811985",
+                          "status": "succeeded",
+                          "message": "string",
+                          "create_time": 1781080778802,
+                          "update_time": 1781080794151,
+                          "external_id": "string",
+                          "outputs": [
+                            {
+                              "type": "video",
+                              "id": "string",
+                              "url": "string",
+                              "watermark_url": "string",
+                              "duration": "10"
+                            }
+                          ],
+                          "usage": {
+                            "output_duration": 10
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Pass `Authorization: Bearer <token>` in the request header."
+      }
+    },
+    "schemas": {
+      "TaskOutput": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "video",
+              "image",
+              "audio",
+              "element",
+              "voice"
+            ],
+            "description": "Result type. Video generation tasks usually return `video`; fields differ by content type."
+          },
+          "id": {
+            "type": "string",
+            "description": "System-generated result ID (returned for video, audio, voice, and element types)."
+          },
+          "url": {
+            "type": "string",
+            "description": "URL of the generated result in hotlink-protected format. Generated images and videos are cleaned up after 30 days, so transfer them promptly."
+          },
+          "watermark_url": {
+            "type": "string",
+            "description": "Download URL of the watermarked result in hotlink-protected format."
+          },
+          "duration": {
+            "type": "string",
+            "description": "Duration of the generated video in seconds. Returned only for video results."
+          },
+          "group_id": {
+            "type": "string",
+            "description": "Present only for image series, marking the group relationship."
+          }
+        }
+      },
+      "TaskItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the queried task."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "submitted",
+              "processing",
+              "succeeded",
+              "failed"
+            ],
+            "description": "Task status: submitted, processing, succeeded, or failed."
+          },
+          "message": {
+            "type": "string",
+            "description": "Task status message; on failure it shows the reason, such as platform content moderation."
+          },
+          "create_time": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Task creation time as a Unix timestamp in milliseconds."
+          },
+          "update_time": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Task update time as a Unix timestamp in milliseconds."
+          },
+          "external_id": {
+            "type": "string",
+            "description": "Custom task ID of this task, if any."
+          },
+          "outputs": {
+            "type": "array",
+            "description": "List of generation results.",
+            "items": {
+              "$ref": "#/components/schemas/TaskOutput"
+            }
+          },
+          "usage": {
+            "type": "object",
+            "description": "Task usage information.",
+            "properties": {
+              "output_duration": {
+                "type": "integer",
+                "description": "Final target duration in seconds. Video generation is billed by this value."
+              }
+            }
+          },
+          "billing": {
+            "type": "array",
+            "description": "Multiple entries are returned when a task consumes multiple account balance types.",
+            "items": {
+              "$ref": "#/components/schemas/BillingItem"
+            }
+          }
+        }
+      },
+      "BillingItem": {
+        "type": "object",
+        "properties": {
+          "charge_type": {
+            "type": "string",
+            "description": "Account type consumed: `cash` for balance or `unit` for resource packages."
+          },
+          "cash_type": {
+            "type": "string",
+            "description": "Balance type, only for `charge_type=cash`: `balance`, `test_balance`, or `reward_balance`."
+          },
+          "amount": {
+            "type": "string",
+            "description": "Amount deducted. For `cash` it is the discounted price, for `unit` the number of credits; decimal."
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "CNY",
+              "USD"
+            ],
+            "description": "Currency, only for `charge_type=cash`."
+          },
+          "package_type": {
+            "type": "string",
+            "enum": [
+              "video",
+              "image",
+              "audio"
+            ],
+            "description": "Resource package type, only for `charge_type=unit`."
+          },
+          "list_price": {
+            "type": "string",
+            "description": "List price of the deduction, only for `charge_type=cash`."
+          }
+        }
+      },
+      "TaskListResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "description": "Error code; 0 means success. See the error code documentation.",
+            "example": 0
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message."
+          },
+          "request_id": {
+            "type": "string",
+            "description": "Request ID generated by the system for tracking and troubleshooting."
+          },
+          "data": {
+            "type": "array",
+            "description": "Task result list; multiple entries are returned for batch queries.",
+            "items": {
+              "$ref": "#/components/schemas/TaskItem"
+            }
+          }
+        }
+      }
+    }
+  }
+}

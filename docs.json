@@ -306,6 +306,7 @@
                       "en/zmodelVideo/kling/kling-v3-motion-control",
                       "en/zmodelVideo/kling/kling-v3-omni-video-omni",
                       "en/zmodelVideo/kling/kling-4.0-omni-video",
+                      "en/zmodelVideo/kling/kling-4.0-tasks",
                       "en/zmodelVideo/kling/kling-video-o1-video-omni",
                       "en/zmodelVideo/kling/text2video-status",
                       "en/zmodelVideo/kling/image2video-status",
@@ -1575,6 +1576,13 @@
             ]
           },
           {
+            "tab": "standalone:zmodelVideo/kling/kling-4.0-tasks",
+            "hidden": true,
+            "pages": [
+              "en/standalone/zmodelVideo/kling/kling-4.0-tasks"
+            ]
+          },
+          {
             "tab": "standalone:zmodelVideo/kling/kling-video-o1-video-omni",
             "hidden": true,
             "pages": [
@@ -2132,6 +2140,7 @@
                       "zh-Hans/zmodelVideo/kling/kling-v3-motion-control",
                       "zh-Hans/zmodelVideo/kling/kling-v3-omni-video-omni",
                       "zh-Hans/zmodelVideo/kling/kling-4.0-omni-video",
+                      "zh-Hans/zmodelVideo/kling/kling-4.0-tasks",
                       "zh-Hans/zmodelVideo/kling/kling-video-o1-video-omni",
                       "zh-Hans/zmodelVideo/kling/text2video-status",
                       "zh-Hans/zmodelVideo/kling/image2video-status",
@@ -3349,6 +3358,13 @@
             "hidden": true,
             "pages": [
               "zh-Hans/standalone/zmodelVideo/kling/kling-4.0-omni-video"
+            ]
+          },
+          {
+            "tab": "standalone:zmodelVideo/kling/kling-4.0-tasks",
+            "hidden": true,
+            "pages": [
+              "zh-Hans/standalone/zmodelVideo/kling/kling-4.0-tasks"
             ]
           },
           {
