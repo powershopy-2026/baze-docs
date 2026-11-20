@@ -61,21 +61,13 @@
                       "en/zmodelChat/ali/qwen3.7-max",
                       "en/zmodelChat/ali/qwen3.8-max",
                       "en/zmodelChat/ali/qwen3.8-flash",
-                      "en/zmodelChat/ali/qwen4-max",
-                      "en/zmodelChat/ali/qwen3-coder-plus",
-                      "en/zmodelChat/ali/qwen3-max"
+                      "en/zmodelChat/ali/qwen4-max"
                     ]
                   },
                   {
                     "group": "BytePlus",
                     "pages": [
-                      "en/zmodelChat/byteplus/deepseek-v3-2-251201",
                       "en/zmodelChat/byteplus/deepseek-v4-1-flash-260910",
-                      "en/zmodelChat/byteplus/seed-1-6-250915",
-                      "en/zmodelChat/byteplus/seed-1-6-flash-250715",
-                      "en/zmodelChat/byteplus/seed-1-8-251228",
-                      "en/zmodelChat/byteplus/seed-2-0-lite-260228",
-                      "en/zmodelChat/byteplus/seed-2-0-mini-260215",
                       "en/zmodelChat/byteplus/seed-2-0-pro-260328",
                       "en/zmodelChat/byteplus/dola-seed-2-1-turbo-260628"
                     ]
@@ -169,8 +161,6 @@
                   {
                     "group": "Kling",
                     "pages": [
-                      "en/zmodelImage/kling/kling-v2-image-generations",
-                      "en/zmodelImage/kling/kling-v2-new-image-generations",
                       "en/zmodelImage/kling/kling-v3-image-generations",
                       "en/zmodelImage/kling/kling-4.0-image-generations",
                       "en/zmodelImage/kling/kling-4.0-tasks",
@@ -262,9 +252,6 @@
                       "en/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
                       "en/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
                       "en/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
-                      "en/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
-                      "en/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
-                      "en/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
                       "en/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
                       "en/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
                       "en/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
@@ -295,11 +282,9 @@
                   {
                     "group": "Kling",
                     "pages": [
-                      "en/zmodelVideo/kling/kling-v2-1-master-text2video",
                       "en/zmodelVideo/kling/kling-v2-5-turbo-text2video",
                       "en/zmodelVideo/kling/kling-v3-text2video",
                       "en/zmodelVideo/kling/kling-4.0-text2video",
-                      "en/zmodelVideo/kling/kling-v2-1-master-image2video",
                       "en/zmodelVideo/kling/kling-v2-5-turbo-image2video",
                       "en/zmodelVideo/kling/kling-v3-image2video",
                       "en/zmodelVideo/kling/kling-4.0-image2video",
@@ -359,7 +344,6 @@
                   {
                     "group": "Alibaba",
                     "pages": [
-                      "en/zmodelAudio/ali/qwen3-tts-instruct-flash",
                       {
                         "group": "Alibaba Native Passthrough",
                         "pages": [
@@ -469,13 +453,7 @@
               "en/standalone/zmodelAudio/ali/api/qwen-tts"
             ]
           },
-          {
-            "tab": "standalone:zmodelAudio/ali/qwen3-tts-instruct-flash",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelAudio/ali/qwen3-tts-instruct-flash"
-            ]
-          },
+          
           {
             "tab": "standalone:zmodelAudio/minimax/audio-generation/t2a-v2",
             "hidden": true,
@@ -567,20 +545,8 @@
               "en/standalone/zmodelChat/ali/deepseek-v4-pro-0813"
             ]
           },
-          {
-            "tab": "standalone:zmodelChat/ali/qwen3-coder-plus",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelChat/ali/qwen3-coder-plus"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/ali/qwen3-max",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelChat/ali/qwen3-max"
-            ]
-          },
+          
+          
           {
             "tab": "standalone:zmodelChat/ali/qwen3.5-flash",
             "hidden": true,
@@ -630,13 +596,7 @@
               "en/standalone/zmodelChat/ali/qwen4-max"
             ]
           },
-          {
-            "tab": "standalone:zmodelChat/byteplus/deepseek-v3-2-251201",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelChat/byteplus/deepseek-v3-2-251201"
-            ]
-          },
+          
           {
             "tab": "standalone:zmodelChat/byteplus/deepseek-v4-1-flash-260910",
             "hidden": true,
@@ -651,41 +611,11 @@
               "en/standalone/zmodelChat/byteplus/dola-seed-2-1-turbo-260628"
             ]
           },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-1-6-250915",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelChat/byteplus/seed-1-6-250915"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-1-6-flash-250715",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelChat/byteplus/seed-1-6-flash-250715"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-1-8-251228",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelChat/byteplus/seed-1-8-251228"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-2-0-lite-260228",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelChat/byteplus/seed-2-0-lite-260228"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-2-0-mini-260215",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelChat/byteplus/seed-2-0-mini-260215"
-            ]
-          },
+          
+          
+          
+          
+          
           {
             "tab": "standalone:zmodelChat/byteplus/seed-2-0-pro-260328",
             "hidden": true,
@@ -1008,20 +938,8 @@
               "en/standalone/zmodelImage/kling/kling-image-o1-image-omni"
             ]
           },
-          {
-            "tab": "standalone:zmodelImage/kling/kling-v2-image-generations",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelImage/kling/kling-v2-image-generations"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelImage/kling/kling-v2-new-image-generations",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelImage/kling/kling-v2-new-image-generations"
-            ]
-          },
+          
+          
           {
             "tab": "standalone:zmodelImage/kling/kling-v3-image-generations",
             "hidden": true,
@@ -1421,34 +1339,10 @@
               "en/standalone/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video"
             ]
           },
-          {
-            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video"
-            ]
-          },
+          
+          
+          
+          
           {
             "tab": "standalone:zmodelVideo/byteplus/seedance-tasks-query",
             "hidden": true,
@@ -1498,20 +1392,8 @@
               "en/standalone/zmodelVideo/kling/image2video-status"
             ]
           },
-          {
-            "tab": "standalone:zmodelVideo/kling/kling-v2-1-master-image2video",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelVideo/kling/kling-v2-1-master-image2video"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelVideo/kling/kling-v2-1-master-text2video",
-            "hidden": true,
-            "pages": [
-              "en/standalone/zmodelVideo/kling/kling-v2-1-master-text2video"
-            ]
-          },
+          
+          
           {
             "tab": "standalone:zmodelVideo/kling/kling-v2-5-turbo-image2video",
             "hidden": true,
@@ -1895,21 +1777,13 @@
                       "zh-Hans/zmodelChat/ali/qwen3.7-max",
                       "zh-Hans/zmodelChat/ali/qwen3.8-max",
                       "zh-Hans/zmodelChat/ali/qwen3.8-flash",
-                      "zh-Hans/zmodelChat/ali/qwen4-max",
-                      "zh-Hans/zmodelChat/ali/qwen3-coder-plus",
-                      "zh-Hans/zmodelChat/ali/qwen3-max"
+                      "zh-Hans/zmodelChat/ali/qwen4-max"
                     ]
                   },
                   {
                     "group": "字节",
                     "pages": [
-                      "zh-Hans/zmodelChat/byteplus/deepseek-v3-2-251201",
                       "zh-Hans/zmodelChat/byteplus/deepseek-v4-1-flash-260910",
-                      "zh-Hans/zmodelChat/byteplus/seed-1-6-250915",
-                      "zh-Hans/zmodelChat/byteplus/seed-1-6-flash-250715",
-                      "zh-Hans/zmodelChat/byteplus/seed-1-8-251228",
-                      "zh-Hans/zmodelChat/byteplus/seed-2-0-lite-260228",
-                      "zh-Hans/zmodelChat/byteplus/seed-2-0-mini-260215",
                       "zh-Hans/zmodelChat/byteplus/seed-2-0-pro-260328",
                       "zh-Hans/zmodelChat/byteplus/dola-seed-2-1-turbo-260628"
                     ]
@@ -2003,8 +1877,6 @@
                   {
                     "group": "Kling",
                     "pages": [
-                      "zh-Hans/zmodelImage/kling/kling-v2-image-generations",
-                      "zh-Hans/zmodelImage/kling/kling-v2-new-image-generations",
                       "zh-Hans/zmodelImage/kling/kling-v3-image-generations",
                       "zh-Hans/zmodelImage/kling/kling-4.0-image-generations",
                       "zh-Hans/zmodelImage/kling/kling-4.0-tasks",
@@ -2096,9 +1968,6 @@
                       "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-first-last-frame-to-video",
                       "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast-text-to-video",
                       "zh-Hans/zmodelVideo/byteplus/seedance-1-0-pro-fast-image-to-video",
-                      "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
-                      "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
-                      "zh-Hans/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-text-to-video",
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-image-to-video",
                       "zh-Hans/zmodelVideo/byteplus/dreamina-seedance-2-0-first-last-frame-to-video",
@@ -2129,11 +1998,9 @@
                   {
                     "group": "Kling",
                     "pages": [
-                      "zh-Hans/zmodelVideo/kling/kling-v2-1-master-text2video",
                       "zh-Hans/zmodelVideo/kling/kling-v2-5-turbo-text2video",
                       "zh-Hans/zmodelVideo/kling/kling-v3-text2video",
                       "zh-Hans/zmodelVideo/kling/kling-4.0-text2video",
-                      "zh-Hans/zmodelVideo/kling/kling-v2-1-master-image2video",
                       "zh-Hans/zmodelVideo/kling/kling-v2-5-turbo-image2video",
                       "zh-Hans/zmodelVideo/kling/kling-v3-image2video",
                       "zh-Hans/zmodelVideo/kling/kling-4.0-image2video",
@@ -2193,7 +2060,6 @@
                   {
                     "group": "阿里巴巴",
                     "pages": [
-                      "zh-Hans/zmodelAudio/ali/qwen3-tts-instruct-flash",
                       {
                         "group": "原生透传",
                         "pages": [
@@ -2310,13 +2176,7 @@
               "zh-Hans/standalone/zmodelAudio/ali/api/qwen-tts"
             ]
           },
-          {
-            "tab": "standalone:zmodelAudio/ali/qwen3-tts-instruct-flash",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelAudio/ali/qwen3-tts-instruct-flash"
-            ]
-          },
+          
           {
             "tab": "standalone:zmodelAudio/minimax/minimax/t2a-v2",
             "hidden": true,
@@ -2408,20 +2268,8 @@
               "zh-Hans/standalone/zmodelChat/ali/deepseek-v4-pro-0813"
             ]
           },
-          {
-            "tab": "standalone:zmodelChat/ali/qwen3-coder-plus",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelChat/ali/qwen3-coder-plus"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/ali/qwen3-max",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelChat/ali/qwen3-max"
-            ]
-          },
+          
+          
           {
             "tab": "standalone:zmodelChat/ali/qwen3.5-flash",
             "hidden": true,
@@ -2471,13 +2319,7 @@
               "zh-Hans/standalone/zmodelChat/ali/qwen4-max"
             ]
           },
-          {
-            "tab": "standalone:zmodelChat/byteplus/deepseek-v3-2-251201",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelChat/byteplus/deepseek-v3-2-251201"
-            ]
-          },
+          
           {
             "tab": "standalone:zmodelChat/byteplus/deepseek-v4-1-flash-260910",
             "hidden": true,
@@ -2492,41 +2334,11 @@
               "zh-Hans/standalone/zmodelChat/byteplus/dola-seed-2-1-turbo-260628"
             ]
           },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-1-6-250915",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-1-6-250915"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-1-6-flash-250715",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-1-6-flash-250715"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-1-8-251228",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-1-8-251228"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-2-0-lite-260228",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-2-0-lite-260228"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelChat/byteplus/seed-2-0-mini-260215",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelChat/byteplus/seed-2-0-mini-260215"
-            ]
-          },
+          
+          
+          
+          
+          
           {
             "tab": "standalone:zmodelChat/byteplus/seed-2-0-pro-260328",
             "hidden": true,
@@ -2828,20 +2640,8 @@
               "zh-Hans/standalone/zmodelImage/kling/kling-image-o1-image-omni"
             ]
           },
-          {
-            "tab": "standalone:zmodelImage/kling/kling-v2-image-generations",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelImage/kling/kling-v2-image-generations"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelImage/kling/kling-v2-new-image-generations",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelImage/kling/kling-v2-new-image-generations"
-            ]
-          },
+          
+          
           {
             "tab": "standalone:zmodelImage/kling/kling-v3-image-generations",
             "hidden": true,
@@ -3213,27 +3013,9 @@
               "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-0-pro-text-to-video"
             ]
           },
-          {
-            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-5-pro-first-last-frame-to-video"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-image-to-video",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-5-pro-image-to-video"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelVideo/byteplus/seedance-1-5-pro-text-to-video",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelVideo/byteplus/seedance-1-5-pro-text-to-video"
-            ]
-          },
+          
+          
+          
           {
             "tab": "standalone:zmodelVideo/byteplus/seedance-tasks-query",
             "hidden": true,
@@ -3283,20 +3065,8 @@
               "zh-Hans/standalone/zmodelVideo/kling/image2video-status"
             ]
           },
-          {
-            "tab": "standalone:zmodelVideo/kling/kling-v2-1-master-image2video",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-1-master-image2video"
-            ]
-          },
-          {
-            "tab": "standalone:zmodelVideo/kling/kling-v2-1-master-text2video",
-            "hidden": true,
-            "pages": [
-              "zh-Hans/standalone/zmodelVideo/kling/kling-v2-1-master-text2video"
-            ]
-          },
+          
+          
           {
             "tab": "standalone:zmodelVideo/kling/kling-v2-5-turbo-image2video",
             "hidden": true,

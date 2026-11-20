@@ -70,7 +70,7 @@
                 },
                 "有声视频-首帧": {
                   "value": {
-                    "model": "seedance-1-5-pro-251215",
+                    "model": "dreamina-seedance-2-0-260128",
                     "content": [
                       {
                         "type": "text",
@@ -91,7 +91,7 @@
                 },
                 "有声视频-首尾帧": {
                   "value": {
-                    "model": "seedance-1-5-pro-251215",
+                    "model": "dreamina-seedance-2-0-260128",
                     "content": [
                       {
                         "type": "text",
@@ -268,7 +268,6 @@
           "model": {
             "type": "string",
             "enum": [
-              "seedance-1-5-pro-251215",
               "seedance-1-0-pro-250528",
               "seedance-1-0-pro-fast-251015",
               "dreamina-seedance-2-0-260128",

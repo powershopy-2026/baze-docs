@@ -15,7 +15,7 @@ If you need to choose the endpoint first, see [Text model protocols and endpoint
 | --- | --- | --- | --- |
 | Quick text-model setup | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | OpenAI-compatible text models |
 | Anthropic Messages verification | Use `api_mode: anthropic_messages` only after your Hermes version is confirmed to request `/v1/messages` | `https://baze-api.powerbuyin.top` | Recommended Zhipu, MiniMax, Qwen, BytePlus DeepSeek, and re-validated Seed models that support Messages |
-| OpenAI-compatible preferred models | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | Text models whose upstream provider does not support `/v1/messages`, such as `seed-1-6-flash-250715` |
+| OpenAI-compatible preferred models | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | Text models whose upstream provider does not support `/v1/messages` |
 
 ## OpenAI-compatible endpoint
 
@@ -62,7 +62,6 @@ After configuring it, inspect the Hermes request dump or debug log. The final re
 | OpenAI-compatible | `seed-2-0-pro-260328` | BytePlus text path |
 | `anthropic_messages` version check | `glm-5.2` | Use only after Hermes actually requests `/v1/messages` |
 | `anthropic_messages` version check | `MiniMax-M3` | Use only after Hermes actually requests `/v1/messages` |
-| `anthropic_messages` version check | `deepseek-v3-2-251201` | Use only after Hermes actually requests `/v1/messages` |
 
 Recommended Anthropic tool-workflow model IDs:
 
@@ -78,15 +77,8 @@ MiniMax-M2.5-highspeed
 MiniMax-M2.7
 MiniMax-M2.7-highspeed
 MiniMax-M3
-qwen3-coder-plus
-qwen3-max
 qwen3.5-flash
 qwen3.6-plus
-deepseek-v3-2-251201
-seed-1-6-250915
-seed-1-8-251228
-seed-2-0-lite-260228
-seed-2-0-mini-260215
 seed-2-0-pro-260328
 ```
 

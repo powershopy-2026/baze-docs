@@ -24,15 +24,8 @@ Claude Code 通过 Anthropic Messages 协议工作。接入 `powertokens 平台`
 | MiniMax | `MiniMax-M2.7` | 通用开发与长任务 |
 | MiniMax | `MiniMax-M2.7-highspeed` | 速度优先的长任务 |
 | MiniMax | `MiniMax-M3` | 复杂代码代理任务 |
-| 阿里 Qwen | `qwen3-coder-plus` | 可选代码模型 |
-| 阿里 Qwen | `qwen3-max` | 可选通用推理模型 |
 | 阿里 Qwen | `qwen3.5-flash` | 可选轻量模型 |
 | 阿里 Qwen | `qwen3.6-plus` | 可选均衡模型 |
-| BytePlus DeepSeek | `deepseek-v3-2-251201` | 可选文本模型；已通过 opencode Anthropic 工具链复测 |
-| BytePlus Seed | `seed-1-6-250915` | 可选文本模型 |
-| BytePlus Seed | `seed-1-8-251228` | 可选文本模型 |
-| BytePlus Seed | `seed-2-0-lite-260228` | 可选轻量模型 |
-| BytePlus Seed | `seed-2-0-mini-260215` | 可选轻量模型 |
 | BytePlus Seed | `seed-2-0-pro-260328` | 可选高强度文本模型 |
 
 ## 准备工作
@@ -134,11 +127,3 @@ curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
 | 复杂代码审查 | `glm-5.2` 或 `MiniMax-M3` |
 | 多子任务并发 | `glm-5.2` 作为主模型，`glm-5-turbo` 作为轻量模型 |
 | MiniMax 代码代理路径 | `MiniMax-M3` |
-
-## 当前不作为默认模型
-
-以下模型虽然在模型发现中可能声明 `anthropic`，但当前Agent工具端到端验收仍不建议作为 Claude Code 默认模型：
-
-| 模型 | 原因 |
-| --- | --- |
-| `seed-1-6-flash-250715` | 上游不支持 `/v1/messages`，请走 OpenAI-compatible provider |

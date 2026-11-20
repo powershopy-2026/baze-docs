@@ -24,15 +24,8 @@ Use the following model IDs with Claude Code. For coding-agent workflows, prefer
 | MiniMax | `MiniMax-M2.7` | General development and longer tasks |
 | MiniMax | `MiniMax-M2.7-highspeed` | Faster long tasks |
 | MiniMax | `MiniMax-M3` | Complex coding-agent work |
-| Alibaba Qwen | `qwen3-coder-plus` | Optional coding model |
-| Alibaba Qwen | `qwen3-max` | Optional general reasoning model |
 | Alibaba Qwen | `qwen3.5-flash` | Optional lightweight model |
 | Alibaba Qwen | `qwen3.6-plus` | Optional balanced model |
-| BytePlus DeepSeek | `deepseek-v3-2-251201` | Optional text model; passed opencode Anthropic-provider tool validation |
-| BytePlus Seed | `seed-1-6-250915` | Optional text model |
-| BytePlus Seed | `seed-1-8-251228` | Optional text model |
-| BytePlus Seed | `seed-2-0-lite-260228` | Optional lightweight model |
-| BytePlus Seed | `seed-2-0-mini-260215` | Optional lightweight model |
 | BytePlus Seed | `seed-2-0-pro-260328` | Optional heavier text model |
 
 ## Prepare your environment
@@ -132,11 +125,3 @@ curl -X POST "https://baze-api.powerbuyin.top/v1/messages" \
 | Complex code review | `glm-5.2` or `MiniMax-M3` |
 | Parallel subagents | `glm-5.2` as main model and `glm-5-turbo` as the lightweight model |
 | MiniMax coding-agent path | `MiniMax-M3` |
-
-## Not default recommendations
-
-The following models may declare `anthropic` in model discovery, but current Agent tool validation does not recommend them as Claude Code defaults:
-
-| Model | Reason |
-| --- | --- |
-| `seed-1-6-flash-250715` | The upstream provider does not support `/v1/messages`; use an OpenAI-compatible provider |
