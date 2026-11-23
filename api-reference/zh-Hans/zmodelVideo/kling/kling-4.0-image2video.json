@@ -206,10 +206,11 @@
             "type": "string",
             "enum": [
               "720p",
-              "1080p"
+              "1080p",
+              "4k"
             ],
             "default": "1080p",
-            "description": "生成视频的清晰度。\n- `720p`：输出 720P 视频\n- `1080p`：输出 1080P 视频"
+            "description": "生成视频的清晰度。\n- `720p`：输出 720P 视频\n- `1080p`：输出 1080P 视频\n- `4k`：输出 4K 视频"
           },
           "duration": {
             "type": "integer",

@@ -233,10 +233,11 @@
             "type": "string",
             "enum": [
               "720p",
-              "1080p"
+              "1080p",
+              "4k"
             ],
             "default": "1080p",
-            "description": "Video resolution.\n- `720p`: 720P output\n- `1080p`: 1080P output"
+            "description": "Video resolution.\n- `720p`: 720P output\n- `1080p`: 1080P output\n- `4k`: 4K output"
           },
           "aspect_ratio": {
             "type": "string",
