@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 图像生成任务 - 查询任务",
     "version": "1.0.0",
-    "description": "通过 `/kling/tasks` 查询 Kling 4.0 图像生成任务状态。支持按系统任务 ID 或自定义任务 ID 批量查询。"
+    "description": "通过 `/kling/tasks` 查询 Kling 4.0 图像生成任务状态。支持按系统任务 ID 或自定义任务 ID 批量查询。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，任务结果暂不会返回相应类型。"
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/kling/tasks": {
       "get": {
         "summary": "查询 Kling 4.0 任务",
-        "description": "通过 `/kling/tasks` 查询 Kling 4.0 图像生成任务状态。当前接口仅支持查询非实时/异步任务。",
+        "description": "通过 `/kling/tasks` 查询 Kling 4.0 图像生成任务状态。当前接口仅支持查询非实时/异步任务。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，任务结果暂不会返回相应类型。",
         "operationId": "getKlingTasks4",
         "tags": [
           "Kling"
@@ -125,7 +125,7 @@
               "element",
               "voice"
             ],
-            "description": "生成结果类型。不同内容类型的返回字段会有区别。"
+            "description": "生成结果类型。不同内容类型的返回字段会有区别。\n\n注意：主体（`element`）和音色（`voice`）类型暂不对接，暂不会返回。"
           },
           "id": {
             "type": "string",

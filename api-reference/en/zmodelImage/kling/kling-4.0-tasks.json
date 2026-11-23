@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 Image Generation Task - Query Tasks",
     "version": "1.0.0",
-    "description": "Query Kling 4.0 image generation task status via `/kling/tasks`. Supports batch queries by system task ID or custom task ID."
+    "description": "Query Kling 4.0 image generation task status via `/kling/tasks`. Supports batch queries by system task ID or custom task ID. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); task results do not return these types yet."
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/kling/tasks": {
       "get": {
         "summary": "Query Kling 4.0 Tasks",
-        "description": "Query Kling 4.0 image generation task status via `/kling/tasks`. Only non-realtime/asynchronous tasks are supported.",
+        "description": "Query Kling 4.0 image generation task status via `/kling/tasks`. Only non-realtime/asynchronous tasks are supported. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); task results do not return these types yet.",
         "operationId": "getKlingTasks4",
         "tags": [
           "Kling"
@@ -125,7 +125,7 @@
               "element",
               "voice"
             ],
-            "description": "Result type. Returned fields vary by content type."
+            "description": "Result type. Returned fields vary by content type.\n\nNote: `element` and `voice` result types are not yet integrated and are not returned yet."
           },
           "id": {
             "type": "string",

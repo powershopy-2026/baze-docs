@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 图像生成任务 - 提交任务",
     "version": "1.0.0",
-    "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。"
+    "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。"
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/kling/image-generation": {
       "post": {
         "summary": "Kling 4.0 图像生成任务",
-        "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。单图模式可生成多张独立图片，组图模式生成内容关联的一组图片。",
+        "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。单图模式可生成多张独立图片，组图模式生成内容关联的一组图片。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。",
         "operationId": "createKlingImageGeneration4",
         "x-capability": "image_generation",
         "tags": [
@@ -156,11 +156,11 @@
               "refer_image",
               "element"
             ],
-            "description": "素材类型，支持提示词（`prompt`）、参考图（`refer_image`）、主体（`element`）。"
+            "description": "素材类型，支持：提示词、参考图、主体。\n\n枚举值：`prompt` / `refer_image` / `element`\n\n素材必须包含提示词，`prompt` 必填且非空。\n\n图片和主体合计最多 10 个，提示词不占参考名额。\n\n注意：主体（`element`）暂不对接，暂不支持传入。"
           },
           "text": {
             "type": "string",
-            "description": "提示词内容，`type=prompt` 时必填。\n- 纯英文不超过 50,000 字符，纯非英文不超过 21,000 字符\n- 混合输入需满足：英文字符数/50000 + 非英文字符数/21000 ≤ 1\n- 可通过 `@<id>` 引用参考图或主体",
+            "description": "文本提示词，必填非空，可包含正向与负向描述。\n\n可将提示词模板化来满足不同的图像生成需求。\n\n提示词长度，纯英文不超过 50,000 字符，纯非英文不超过 21,000 字符；混合输入需满足：英文字符数/50000 + 非英文字符数/21000 ≤ 1。\n\n可通过 `@<id>` 引用参考图或主体。\n\n并通过 JSON 的格式定义，具体如下：\n\n```json\n{ \"type\": \"prompt\", \"text\": \"string\" }\n```",
             "x-valid-when": {
               "type": [
                 "prompt"
@@ -169,7 +169,7 @@
           },
           "url": {
             "type": "string",
-            "description": "参考图地址，`type=refer_image` 时必填。支持图片 URL 或 Base64 编码，URL 必须可访问。\n- 图片格式支持 .jpg / .jpeg / .png\n- 单张图片不超过 30 MB，宽、高均不小于 300 px，宽高比 2:5–5:2",
+            "description": "支持传入图片 URL 或 Base64 编码，URL 必须可访问，值不得为空。\n\n图片格式支持 .jpg / .jpeg / .png。\n\n单张图片文件不超过 30 MB，宽、高均不小于 300 px，宽高比为 2:5–5:2。\n\n并通过 JSON 的格式定义，具体如下：\n\n```json\n{\n  \"type\": \"refer_image\",\n  \"url\": \"string\", // 参考图 URL 或 Base64 编码\n  \"id\": \"string\" // 素材索引 ID，用于在提示词中通过 @<id> 引用\n}\n```",
             "x-valid-when": {
               "type": [
                 "refer_image"
@@ -178,7 +178,7 @@
           },
           "element_id": {
             "type": "string",
-            "description": "主体 ID，由系统生成，可通过查询主体 API 获取，`type=element` 时必填。仅支持多图主体（通过图片定制的主体）。",
+            "description": "主体 ID，由系统生成，可通过查询主体 API 获取，`type=element` 时必填。注意：主体暂不对接，该参数暂不支持传入。\n\n仅支持多图主体（通过图片定制的主体）。不同类型主体，适用范围不同，请注意区分。\n\n参考图片数量与主体数量之和不得超过 10。\n\n更多官方主体信息详见：[主体库](https://app.klingai.com/cn/dev/document-api/apiReference/model/customElements)。\n\n并通过 JSON 的格式定义，具体如下：\n\n```json\n{\n  \"type\": \"element\",\n  \"element_id\": \"string\", // 主体 ID，通过查询主体 API 获取\n  \"id\": \"string\" // 素材索引 ID，用于在提示词中通过 @<id> 引用\n}\n```",
             "x-valid-when": {
               "type": [
                 "element"
@@ -187,12 +187,13 @@
           },
           "id": {
             "type": "string",
-            "description": "素材索引 ID，用于在提示词中通过 `@<id>` 指定。同一任务内不得重复。"
+            "description": "素材索引ID，用于在 prompt 中指定，同任务中当前参数不得重复"
           }
         }
       },
       "Kling4Settings": {
         "type": "object",
+        "description": "输出配置相关参数，如清晰度、宽高比等。",
         "properties": {
           "result_type": {
             "type": "string",
@@ -201,14 +202,14 @@
               "series"
             ],
             "default": "single",
-            "description": "生成结果类型。\n- `single`：独立图片，可通过 `n` 生成多张\n- `series`：关联组图，同组图片共享 `group_id`，按组内顺序返回"
+            "description": "生成结果类型：单图/组图（枚举 `single` / `series`）。\n- `single`：为独立图片。可通过 `n` 生成多张；\n- `series`：为关联组图。组图模式下同组图片共享 `group_id`，按组内顺序返回"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 9,
             "default": 1,
-            "description": "单图模式下生成独立图片的数量。组图模式下本参数无效，组图数量由 `series_amount` 指定。",
+            "description": "生成独立图片数量。单图模式选填；取值范围：[1,9]；当 `result_type=series` 时本参数无效，组图数量由 `series_amount` 指定。",
             "x-valid-when": {
               "result_type": [
                 "single"
@@ -230,7 +231,7 @@
               }
             ],
             "default": 4,
-            "description": "组图张数，取值 [2,10] 或 `auto`。`auto` 根据输入内容智能决定 2–10 张，占用与实际生成张数对应的并发量。",
+            "description": "生成组图张数。类型：integer/string；组图模式选填；取值范围：[2,10] 或字符串 `auto`。`auto` 根据输入内容智能决定 2–10 张，占用与实际生成张数对应的并发量。仅 `result_type=series` 时生效。",
             "x-valid-when": {
               "result_type": [
                 "series"
@@ -267,10 +268,11 @@
       },
       "Kling4Options": {
         "type": "object",
+        "description": "通用配置，如回调地址、是否含水印等。",
         "properties": {
           "callback_url": {
             "type": "string",
-            "description": "本次任务结果回调通知地址。如果配置，服务端会在任务状态发生变更时主动通知。"
+            "description": "本次任务结果回调通知地址。如果配置，服务端会在任务状态发生变更时主动通知。具体通知的消息 schema 见 [Callback 协议](https://app.klingai.com/cn/dev/document-api/api/get-started/callbacks)。"
           },
           "external_task_id": {
             "type": "string",
@@ -278,12 +280,12 @@
           },
           "watermark_info": {
             "type": "object",
-            "description": "是否同时生成含水印的结果。通过 `enabled` 参数定义，暂不支持自定义水印。",
+            "description": "是否同时生成含水印的结果。通过 `enabled` 参数定义，暂不支持自定义水印。\n\n```json\n\"watermark_info\": {\n  \"enabled\": false // 是否生成含水印结果，true 为生成，false 为不生成；默认为 false\n}\n```",
             "properties": {
               "enabled": {
                 "type": "boolean",
                 "default": false,
-                "description": "true 表示生成含水印结果，false 表示不生成。"
+                "description": "true 为生成，false 为不生成，默认 false。"
               }
             }
           }
@@ -306,7 +308,7 @@
           },
           "contents": {
             "type": "array",
-            "description": "参考素材合集，如提示词、参考图、主体。必须包含 `type=prompt` 的提示词，且提示词非空。\n- 图片和主体合计最多 10 个，提示词不占参考名额\n- 提示词、参考图、主体的排列顺序即为分析顺序",
+            "description": "参考素材合集，如：提示词、图片、主体。\n\n参考格式如下，参数说明详见下文：\n\n```json\n\"contents\": [\n  {\n    \"type\": \"prompt\",\n    \"text\": \"string\"\n  },\n  {\n    \"type\": \"refer_image\",\n    \"url\": \"string\",\n    \"id\": \"string\"\n  },\n  {\n    \"type\": \"element\",\n    \"element_id\": \"string\",\n    \"id\": \"string\"\n  }\n]\n```\n\n- 提示词、参考图、主体的排列顺序即为分析顺序\n\n注意：主体（`element`）暂不对接，暂不支持传入。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Kling4Content"

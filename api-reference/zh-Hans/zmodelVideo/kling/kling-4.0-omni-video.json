@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 全能参考生视频任务 - 提交任务",
     "version": "1.0.0",
-    "description": "通过 `/kling/omni-video` 提交 Kling 4.0 全能参考生视频任务，支持图片、视频、主体、音色等多素材参考与视频编辑。任务状态查询请使用 `GET /kling/tasks`。"
+    "description": "通过 `/kling/omni-video` 提交 Kling 4.0 全能参考生视频任务，支持图片、视频等多素材参考与视频编辑。任务状态查询请使用 `GET /kling/tasks`。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。"
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/kling/omni-video": {
       "post": {
         "summary": "Kling 4.0 全能参考生视频任务",
-        "description": "通过 `/kling/omni-video` 提交 Kling 4.0 全能参考生视频任务，模型由 `model_name` 指定。支持以图片、视频、主体、音色作为参考素材，也可传入待编辑视频进行视频编辑。任务状态查询请使用 `GET /kling/tasks`。",
+        "description": "通过 `/kling/omni-video` 提交 Kling 4.0 全能参考生视频任务，模型由 `model_name` 指定。支持以图片、视频作为参考素材，也可传入待编辑视频进行视频编辑。任务状态查询请使用 `GET /kling/tasks`。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。",
         "operationId": "createKlingOmniVideo4",
         "x-capability": "reference_to_video",
         "tags": [
@@ -168,7 +168,7 @@
               "element",
               "voice"
             ],
-            "description": "素材类型：提示词（`prompt`）、关键帧图（`first_frame` / `middle_frame` / `last_frame`）、参考图（`refer_image`）、特征参考视频（`feature_video`）、待编辑视频（`base_video`）、主体（`element`）、音色（`voice`）。"
+            "description": "素材类型：提示词（`prompt`）、关键帧图（`first_frame` / `middle_frame` / `last_frame`）、参考图（`refer_image`）、特征参考视频（`feature_video`）、待编辑视频（`base_video`）、主体（`element`）、音色（`voice`）。主体（`element`）和音色（`voice`）暂不对接，暂不支持传入。"
           },
           "text": {
             "type": "string",
@@ -195,7 +195,7 @@
           },
           "element_id": {
             "type": "string",
-            "description": "主体 ID，由系统生成，可通过查询主体相关 API 获取，`type=element` 时必填。主体分为视频角色主体和多图主体，适用范围不同。",
+            "description": "主体 ID，由系统生成，可通过查询主体相关 API 获取，`type=element` 时必填。主体分为视频角色主体和多图主体，适用范围不同。注意：主体暂不对接，该参数暂不支持传入。",
             "x-valid-when": {
               "type": [
                 "element"
@@ -204,7 +204,7 @@
           },
           "voice_id": {
             "type": "string",
-            "description": "音色 ID，由系统生成，可通过音色定制相关 API 或系统预置音色获取，`type=voice` 时必填。至多引用 3 个音色。",
+            "description": "音色 ID，由系统生成，可通过音色定制相关 API 或系统预置音色获取，`type=voice` 时必填。至多引用 3 个音色。注意：音色暂不对接，该参数暂不支持传入。",
             "x-valid-when": {
               "type": [
                 "voice"
@@ -227,7 +227,7 @@
               "original"
             ],
             "default": "native",
-            "description": "生成视频的声音处理方式。\n- `native`：音画同出，生成与画面匹配的声音\n- `original`：保留输入视频的原声。不可同时引用音色参考；必须至少传入一段 `base_video` 或 `feature_video`"
+            "description": "生成视频的声音处理方式。\n- `native`：音画同出，生成与画面匹配的声音\n- `original`：保留输入视频的原声。不可同时引用音色参考；必须至少传入一段 `base_video` 或 `feature_video`\n\n注意：音色参考暂不对接。"
           },
           "resolution": {
             "type": "string",
@@ -302,7 +302,7 @@
           },
           "contents": {
             "type": "array",
-            "description": "参考素材合集，如提示词、图片、视频、主体、音色等。必须包含 `type=prompt` 的提示词。\n- 图片数量不超过 10 张\n- 图片 + 视频 + 主体 + 音色数量之和不得超过 15\n- 最多支持 7 个主体，其中视频角色主体不得超过 3 个\n- 参考视频最多 5 个；有视频角色主体时，视频角色主体与参考视频合计不超过 5 个；其中最多 1 段 `base_video`\n- 至多引用 3 个音色\n- 如同时存在 `first_frame`、`last_frame`、`refer_image`，请保持 `first_frame` 为第一张，`last_frame` 为最后一张",
+            "description": "参考素材合集，如提示词、图片、视频、主体、音色等。必须包含 `type=prompt` 的提示词。\n- 图片数量不超过 10 张\n- 图片 + 视频 + 主体 + 音色数量之和不得超过 15\n- 最多支持 7 个主体，其中视频角色主体不得超过 3 个\n- 参考视频最多 5 个；有视频角色主体时，视频角色主体与参考视频合计不超过 5 个；其中最多 1 段 `base_video`\n- 至多引用 3 个音色\n- 如同时存在 `first_frame`、`last_frame`、`refer_image`，请保持 `first_frame` 为第一张，`last_frame` 为最后一张\n\n注意：主体（`element`）和音色（`voice`）暂不对接，暂不支持传入。",
             "minItems": 1,
             "items": {
               "$ref": "#/components/schemas/Kling4OmniContent"

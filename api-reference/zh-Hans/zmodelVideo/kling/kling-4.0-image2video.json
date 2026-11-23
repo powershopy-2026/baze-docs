@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 图生视频任务 - 提交任务",
     "version": "1.0.0",
-    "description": "通过 `/kling/image-to-video` 提交 Kling 4.0 图生视频任务，支持首帧、中间帧、尾帧多关键帧生视频。任务状态查询请使用 `GET /kling/tasks`。"
+    "description": "通过 `/kling/image-to-video` 提交 Kling 4.0 图生视频任务，支持首帧、中间帧、尾帧多关键帧生视频。任务状态查询请使用 `GET /kling/tasks`。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。"
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/kling/image-to-video": {
       "post": {
         "summary": "Kling 4.0 图生视频任务",
-        "description": "通过 `/kling/image-to-video` 提交 Kling 4.0 图生视频任务，模型由 `model_name` 指定。支持多关键帧生视频（首帧、中间帧、尾帧），图片最多 10 张。任务状态查询请使用 `GET /kling/tasks`。",
+        "description": "通过 `/kling/image-to-video` 提交 Kling 4.0 图生视频任务，模型由 `model_name` 指定。支持多关键帧生视频（首帧、中间帧、尾帧），图片最多 10 张。任务状态查询请使用 `GET /kling/tasks`。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。",
         "operationId": "createKlingImage2Video4",
         "x-capability": "image_to_video",
         "tags": [

@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 Image-to-Video Task - Submit Task",
     "version": "1.0.0",
-    "description": "Submit a Kling 4.0 image-to-video task via `/kling/image-to-video`, supporting multi-keyframe video generation from first, middle, and last frames. Query task status with `GET /kling/tasks`."
+    "description": "Submit a Kling 4.0 image-to-video task via `/kling/image-to-video`, supporting multi-keyframe video generation from first, middle, and last frames. Query task status with `GET /kling/tasks`. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); the related parameters are not supported yet."
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/kling/image-to-video": {
       "post": {
         "summary": "Kling 4.0 Image-to-Video Task",
-        "description": "Submit a Kling 4.0 image-to-video task via `/kling/image-to-video`; the model is specified by `model_name`. Supports multi-keyframe generation (first, middle, and last frames) with up to 10 images. Query task status with `GET /kling/tasks`.",
+        "description": "Submit a Kling 4.0 image-to-video task via `/kling/image-to-video`; the model is specified by `model_name`. Supports multi-keyframe generation (first, middle, and last frames) with up to 10 images. Query task status with `GET /kling/tasks`. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); the related parameters are not supported yet.",
         "operationId": "createKlingImage2Video4",
         "x-capability": "image_to_video",
         "tags": [

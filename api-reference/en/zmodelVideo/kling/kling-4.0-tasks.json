@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 Video Generation Task - Query Task",
     "version": "1.0.0",
-    "description": "Query Kling 4.0 video generation task status via `/kling/tasks`, covering text-to-video, image-to-video, and omni reference video tasks. Supports batch queries by system task ID or custom task ID."
+    "description": "Query Kling 4.0 video generation task status via `/kling/tasks`, covering text-to-video, image-to-video, and omni reference video tasks. Supports batch queries by system task ID or custom task ID. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); task results do not return these types yet."
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/kling/tasks": {
       "get": {
         "summary": "Query Kling 4.0 Video Task",
-        "description": "Query Kling 4.0 video generation task status via `/kling/tasks`, covering text-to-video, image-to-video, and omni reference video tasks. This API only supports non-realtime/asynchronous tasks.",
+        "description": "Query Kling 4.0 video generation task status via `/kling/tasks`, covering text-to-video, image-to-video, and omni reference video tasks. This API only supports non-realtime/asynchronous tasks. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); task results do not return these types yet.",
         "operationId": "getKlingVideoTasks4",
         "tags": [
           "Kling"
@@ -129,7 +129,7 @@
               "element",
               "voice"
             ],
-            "description": "Result type. Video generation tasks usually return `video`; fields differ by content type."
+            "description": "Result type. Video generation tasks usually return `video`; fields differ by content type.\n\nNote: `element` and `voice` result types are not yet integrated and are not returned yet."
           },
           "id": {
             "type": "string",
