@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 图像生成任务 - 提交任务",
     "version": "1.0.0",
-    "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。"
+    "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图或图生单图任务。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。"
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/kling/image-generation": {
       "post": {
         "summary": "Kling 4.0 图像生成任务",
-        "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图、图生单图、文生组图或图生组图任务。单图模式可生成多张独立图片，组图模式生成内容关联的一组图片。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。",
+        "description": "通过 `/kling/image-generation` 提交 Kling 4.0 文生单图或图生单图任务，单图模式可通过 `n` 生成多张独立图片。注意：平台暂时不对接主体（`element`）和音色（`voice`）相关能力，相关参数暂不支持传入。",
         "operationId": "createKlingImageGeneration4",
         "x-capability": "image_generation",
         "tags": [
@@ -70,14 +70,14 @@
                     }
                   }
                 },
-                "image_to_series": {
-                  "summary": "图生组图",
+                "image_to_image": {
+                  "summary": "图生单图",
                   "value": {
                     "model_name": "kling-4.0",
                     "contents": [
                       {
                         "type": "prompt",
-                        "text": "以 @dog 中的小狗为主角，生成四张连贯的三维动画风格故事图片，依次表现：走进咖啡馆、在窗边落座、闻咖啡香、在门口告别。保持小狗的毛色、外观和画面风格一致，每张图片对应一个情节。"
+                        "text": "以 @dog 中的小狗为主角，生成一张三维动画风格的故事图片，表现小狗在咖啡馆窗边落座的场景。保持小狗的毛色、外观和画面风格一致。"
                       },
                       {
                         "type": "refer_image",
@@ -86,8 +86,8 @@
                       }
                     ],
                     "settings": {
-                      "result_type": "series",
-                      "series_amount": 4,
+                      "result_type": "single",
+                      "n": 1,
                       "resolution": "2k",
                       "aspect_ratio": "3:4"
                     },
@@ -198,45 +198,17 @@
           "result_type": {
             "type": "string",
             "enum": [
-              "single",
-              "series"
+              "single"
             ],
             "default": "single",
-            "description": "生成结果类型：单图/组图（枚举 `single` / `series`）。\n- `single`：为独立图片。可通过 `n` 生成多张；\n- `series`：为关联组图。组图模式下同组图片共享 `group_id`，按组内顺序返回"
+            "description": "生成结果类型，当前仅支持单图（`single`）：独立图片，可通过 `n` 生成多张。"
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 9,
             "default": 1,
-            "description": "生成独立图片数量。单图模式选填；取值范围：[1,9]；当 `result_type=series` 时本参数无效，组图数量由 `series_amount` 指定。",
-            "x-valid-when": {
-              "result_type": [
-                "single"
-              ]
-            }
-          },
-          "series_amount": {
-            "oneOf": [
-              {
-                "type": "integer",
-                "minimum": 2,
-                "maximum": 10
-              },
-              {
-                "type": "string",
-                "enum": [
-                  "auto"
-                ]
-              }
-            ],
-            "default": 4,
-            "description": "生成组图张数。类型：integer/string；组图模式选填；取值范围：[2,10] 或字符串 `auto`。`auto` 根据输入内容智能决定 2–10 张，占用与实际生成张数对应的并发量。仅 `result_type=series` 时生效。",
-            "x-valid-when": {
-              "result_type": [
-                "series"
-              ]
-            }
+            "description": "生成独立图片数量。选填；取值范围：[1,9]。"
           },
           "resolution": {
             "type": "string",
@@ -246,7 +218,7 @@
               "8k"
             ],
             "default": "2k",
-            "description": "生成图片的清晰度。单图与组图均适用。\n- `2k`：2K 高清\n- `4k`：4K 高清\n- `8k`：8K 超清"
+            "description": "生成图片的清晰度。\n- `2k`：2K 高清\n- `4k`：4K 高清\n- `8k`：8K 超清"
           },
           "aspect_ratio": {
             "type": "string",
@@ -262,7 +234,7 @@
               "auto"
             ],
             "default": "auto",
-            "description": "生成图片的宽高比。`auto` 表示根据传入内容智能生成图片宽高比，单图与组图均适用。"
+            "description": "生成图片的宽高比。`auto` 表示根据传入内容智能生成图片宽高比。"
           }
         }
       },

@@ -3,7 +3,7 @@
   "info": {
     "title": "Kling 4.0 Image Generation Task - Submit Task",
     "version": "1.0.0",
-    "description": "Submit a Kling 4.0 text-to-image, image-to-image, text-to-series, or image-to-series task via `/kling/image-generation`. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); the related parameters are not supported yet."
+    "description": "Submit a Kling 4.0 text-to-image or image-to-image task via `/kling/image-generation`. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); the related parameters are not supported yet."
   },
   "servers": [
     {
@@ -21,7 +21,7 @@
     "/kling/image-generation": {
       "post": {
         "summary": "Kling 4.0 Image Generation Task",
-        "description": "Submit a Kling 4.0 text-to-image, image-to-image, text-to-series, or image-to-series task via `/kling/image-generation`. Single mode generates multiple independent images; series mode generates a related set of images. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); the related parameters are not supported yet.",
+        "description": "Submit a Kling 4.0 text-to-image or image-to-image task via `/kling/image-generation`. The single-image mode can generate multiple independent images via `n`. Note: The platform does not yet integrate elements (`element`) or voices (`voice`); the related parameters are not supported yet.",
         "operationId": "createKlingImageGeneration4",
         "x-capability": "image_generation",
         "tags": [
@@ -70,14 +70,14 @@
                     }
                   }
                 },
-                "image_to_series": {
-                  "summary": "Image to series",
+                "image_to_image": {
+                  "summary": "Image to single image",
                   "value": {
                     "model_name": "kling-4.0",
                     "contents": [
                       {
                         "type": "prompt",
-                        "text": "Using the puppy in @dog as the main character, generate four connected 3D animation style story images: walking into a cafe, sitting by the window, smelling the coffee, saying goodbye at the door. Keep the puppy's coat color, appearance, and visual style consistent."
+                        "text": "Using the puppy in @dog as the main character, generate a 3D animation style story image of the puppy sitting by the cafe window. Keep the puppy's coat color, appearance, and visual style consistent."
                       },
                       {
                         "type": "refer_image",
@@ -86,8 +86,8 @@
                       }
                     ],
                     "settings": {
-                      "result_type": "series",
-                      "series_amount": 4,
+                      "result_type": "single",
+                      "n": 1,
                       "resolution": "2k",
                       "aspect_ratio": "3:4"
                     },
@@ -198,45 +198,17 @@
           "result_type": {
             "type": "string",
             "enum": [
-              "single",
-              "series"
+              "single"
             ],
             "default": "single",
-            "description": "Result type: single image / series (enum `single` / `series`).\n- `single`: independent images. Generate multiple with `n`;\n- `series`: related image set. In series mode, images in the same group share `group_id` and are returned in order"
+            "description": "Result type. Only `single` (independent images) is currently supported; generate multiple images with `n`."
           },
           "n": {
             "type": "integer",
             "minimum": 1,
             "maximum": 9,
             "default": 1,
-            "description": "Number of independent images to generate. Optional in single mode; value range: [1,9]; ignored when `result_type=series`, in which case the series size is specified by `series_amount`.",
-            "x-valid-when": {
-              "result_type": [
-                "single"
-              ]
-            }
-          },
-          "series_amount": {
-            "oneOf": [
-              {
-                "type": "integer",
-                "minimum": 2,
-                "maximum": 10
-              },
-              {
-                "type": "string",
-                "enum": [
-                  "auto"
-                ]
-              }
-            ],
-            "default": 4,
-            "description": "Number of images in the series. Type: integer/string; optional in series mode; value range: [2,10] or the string `auto`. `auto` decides 2–10 images based on the input and consumes concurrency equal to the actual number generated. Effective only when `result_type=series`.",
-            "x-valid-when": {
-              "result_type": [
-                "series"
-              ]
-            }
+            "description": "Number of independent images to generate. Optional; value range: [1,9]."
           },
           "resolution": {
             "type": "string",
@@ -246,7 +218,7 @@
               "8k"
             ],
             "default": "2k",
-            "description": "Image resolution. Applies to both single and series results.\n- `2k`: 2K HD\n- `4k`: 4K HD\n- `8k`: 8K ultra HD"
+            "description": "Image resolution.\n- `2k`: 2K HD\n- `4k`: 4K HD\n- `8k`: 8K ultra HD"
           },
           "aspect_ratio": {
             "type": "string",
@@ -262,7 +234,7 @@
               "auto"
             ],
             "default": "auto",
-            "description": "Aspect ratio of the generated image. `auto` means the ratio is determined from the input. Applies to both single and series results."
+            "description": "Aspect ratio of the generated image. `auto` means the ratio is determined from the input."
           }
         }
       },
