@@ -1,0 +1,318 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "阿里语音合成",
+    "version": "1.0.0",
+    "description": "阿里通道语音合成能力文档。公开统一入口为 `/v1/audio/speech`，当前项目已实现 `qwen3-tts-instruct-flash` 的官方字段子集。\n\n本文档只描述项目当前已实现、且与阿里官方能力一致的字段：`model`、`input`、`voice`、`instructions`、`optimize_instructions`、`language_type`。\n\n流式输出遵循阿里 HTTP 官方语义：客户端需要在请求头中显式设置 `X-DashScope-SSE: enable`。本通道不公开 `stream_format` 字段。\n\n项目计费说明：网关会把上游 `usage.characters` 映射到统一 usage 的 `prompt_tokens_details.audio_tokens`，并保留 `usage.output_tokens -> usage.completion_tokens_details.audio_tokens`；同时会把阿里原始 usage 与归一化 usage 快照写入 consume_detail，便于计费回溯。"
+  },
+  "servers": [
+    {
+      "url": "https://api.powertokens.ai",
+      "description": "Baze API 服务地址"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Ali Audio",
+      "description": "阿里语音合成能力"
+    }
+  ],
+  "paths": {
+    "/v1/audio/speech": {
+      "post": {
+        "summary": "阿里语音合成",
+        "description": "调用阿里 `qwen3-tts-instruct-flash` 生成语音。\n\n响应约定：\n- 非流式返回阿里官方 JSON 响应；\n- 流式返回 `text/event-stream`，透传阿里 SSE 数据。",
+        "operationId": "aliAudioSpeech",
+        "x-capability": "text_to_speech",
+        "tags": [
+          "Ali Audio"
+        ],
+        "parameters": [
+          {
+            "name": "X-DashScope-SSE",
+            "in": "header",
+            "required": false,
+            "description": "阿里官方 HTTP 流式开关。传 `enable` 时返回 `text/event-stream`。",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "enable"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AliSpeechRequest"
+              },
+              "examples": {
+                "basic": {
+                  "summary": "非流式请求",
+                  "value": {
+                    "model": "qwen3-tts-instruct-flash",
+                    "input": "请用略快的语速介绍这款产品。",
+                    "voice": "Cherry",
+                    "instructions": "语速较快，带有上扬语调。",
+                    "optimize_instructions": false,
+                    "language_type": "Chinese"
+                  }
+                },
+                "stream": {
+                  "summary": "流式请求",
+                  "value": {
+                    "model": "qwen3-tts-instruct-flash",
+                    "input": "Today is a wonderful day to build something people love.",
+                    "voice": "Cherry",
+                    "language_type": "English"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "调用成功。非流式时返回阿里官方 JSON；流式时返回阿里 SSE 数据。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AliSpeechResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string",
+                  "description": "阿里 SSE 事件流。每个事件体可解析为阿里语音响应片段 JSON。"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数错误。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Token",
+        "description": "在请求头中传入 `Authorization: Bearer <token>`。"
+      }
+    },
+    "schemas": {
+      "AliSpeechRequest": {
+        "type": "object",
+        "required": [
+          "model",
+          "input",
+          "voice"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "模型名称，可用选项：`qwen3-tts-instruct-flash`、`qwen3-tts-flash`。",
+            "enum": [
+              "qwen3-tts-instruct-flash",
+              "qwen3-tts-flash"
+            ]
+          },
+          "input": {
+            "type": "string",
+            "description": "要合成的文本。该字段支持多语种输入。"
+          },
+          "voice": {
+            "type": "string",
+            "description": "使用的音色。参见支持的系统音色。",
+            "enum": [
+              "Cherry",
+              "Serena",
+              "Ethan",
+              "Chelsie",
+              "Momo",
+              "Vivian",
+              "Moon",
+              "Maia",
+              "Kai",
+              "Nofish",
+              "Bella",
+              "Eldric Sage",
+              "Mia",
+              "Mochi",
+              "Bellona",
+              "Vincent",
+              "Bunny",
+              "Neil",
+              "Elias",
+              "Arthur",
+              "Nini",
+              "Seren",
+              "Pip",
+              "Stella"
+            ]
+          },
+          "instructions": {
+            "type": "string",
+            "description": "设置指令，参见指令控制。\n\n默认值：无，不设置时不生效。\n最大长度：1600 Token。\n支持语言：仅支持中文和英文。\n适用范围：该功能仅适用于千问3-TTS-Instruct-Flash-Realtime 系列模型。"
+          },
+          "optimize_instructions": {
+            "type": "boolean",
+            "description": "对 `instructions` 进行语义优化，以提升语音合成的自然度和表现力。\n\n默认值：`false`。\n行为说明：当设置为 `true` 时，系统将对 `instructions` 的内容进行语义增强与重写，生成更适合语音合成的内部指令。\n推荐在追求高品质、精细化语音表达时开启。\n依赖 `instructions` 参数。若 `instructions` 为空，此参数不生效。\n适用范围：该功能仅适用于千问3-TTS-Instruct-Flash 系列模型。"
+          },
+          "language_type": {
+            "type": "string",
+            "description": "合成音频的语种。默认为 `Auto`。\n\n- `Auto`：适用于文本包含多种语言或语种不确定的场景。模型自动为不同语言片段匹配发音，但无法保证完全精准。\n- 指定语种：适用于单一语种文本。指定具体语种能显著提升合成质量，效果通常优于 `Auto`。",
+            "enum": [
+              "Auto",
+              "Chinese",
+              "English",
+              "German",
+              "Italian",
+              "Portuguese",
+              "Spanish",
+              "Japanese",
+              "Korean",
+              "French",
+              "Russian"
+            ]
+          }
+        }
+      },
+      "AliSpeechResponse": {
+        "type": "object",
+        "properties": {
+          "status_code": {
+            "type": "integer",
+            "description": "HTTP 状态码。遵循 RFC 9110 标准定义。例如：\n- 200：请求成功，正常返回结果\n- 400：客户端请求参数错误\n- 401：未授权访问\n- 404：资源未找到\n- 500：服务器内部错误"
+          },
+          "request_id": {
+            "type": "string",
+            "description": "本次请求的唯一标识，可用于问题排查。"
+          },
+          "code": {
+            "type": "string",
+            "description": "请求失败时展示的错误码。"
+          },
+          "message": {
+            "type": "string",
+            "description": "请求失败时展示的错误信息。"
+          },
+          "output": {
+            "type": "object",
+            "description": "模型的输出。",
+            "properties": {
+              "text": {
+                "nullable": true,
+                "description": "始终为 null，无需关注。"
+              },
+              "finish_reason": {
+                "type": "string",
+                "description": "生成状态标识：正在生成时为 `null`；模型输出自然结束或触发停止条件时为 `stop`。"
+              },
+              "choices": {
+                "nullable": true,
+                "description": "始终为 null，无需关注。"
+              },
+              "audio": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "string",
+                    "description": "流式输出时的 Base64 音频数据。"
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "完整音频文件的 URL，有效期 24 小时。"
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "音频唯一标识。"
+                  },
+                  "expires_at": {
+                    "type": "integer",
+                    "description": "URL 过期时间的 UNIX 时间戳。"
+                  }
+                }
+              }
+            }
+          },
+          "usage": {
+            "type": "object",
+            "description": "本次请求的 Token 或字符消耗信息。千问-TTS 模型返回 Token 消耗信息，千问3-TTS-Flash 模型返回字符消耗信息。",
+            "properties": {
+              "input_tokens": {
+                "type": "integer",
+                "description": "输入文本的 token 消耗量。对于 `qwen3-tts-flash`，该字段固定为 0。"
+              },
+              "output_tokens": {
+                "type": "integer",
+                "description": "输出音频的 token 消耗量。对于 `qwen3-tts-flash`，该字段固定为 0。"
+              },
+              "total_tokens": {
+                "type": "integer",
+                "description": "本次请求总共消耗的 token 量。仅 `qwen-tts` 返回。"
+              },
+              "characters": {
+                "type": "integer",
+                "description": "输入文本的字符数。仅 `qwen3-tts-flash` 返回。"
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorObject"
+          }
+        }
+      },
+      "ErrorObject": {
+        "type": "object",
+        "required": [
+          "message",
+          "type",
+          "param",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "param": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
