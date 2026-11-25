@@ -13,15 +13,9 @@ Hermes Agent 支持自定义 OpenAI-compatible endpoint。接入 `powertokens �
 
 | 目标 | Hermes 配置方向 | Base URL | 模型范围 |
 | --- | --- | --- | --- |
-<<<<<<< HEAD
-| 快速接入文本模型 | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | OpenAI-compatible 文本模型 |
-| 复核 Anthropic Messages 路径 | 仅在当前 Hermes 版本确认会请求 `/v1/messages` 后使用 `api_mode: anthropic_messages` | `https://baze-api.powerbuyin.top` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
-| 使用 OpenAI-compatible 优先模型 | Custom endpoint | `https://baze-api.powerbuyin.top/v1` | 上游不支持 `/v1/messages` 的文本模型 |
-=======
 | 快速接入文本模型 | Custom endpoint | `https://api.powertokens.ai/v1` | OpenAI-compatible 文本模型 |
 | 复核 Anthropic Messages 路径 | 仅在当前 Hermes 版本确认会请求 `/v1/messages` 后使用 `api_mode: anthropic_messages` | `https://api.powertokens.ai` | 智谱、MiniMax、Qwen、BytePlus DeepSeek、已复测且支持 Messages 的 Seed 模型 |
 | 使用 OpenAI-compatible 优先模型 | Custom endpoint | `https://api.powertokens.ai/v1` | 上游不支持 `/v1/messages` 的 `seed-1-6-flash-250715` 等文本模型 |
->>>>>>> 22dc99ad76fca30b828b585a427b8e6841574192
 
 ## OpenAI-compatible endpoint
 
